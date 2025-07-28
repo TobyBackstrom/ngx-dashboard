@@ -1,5 +1,49 @@
 # ngx-dashboard
 
+<!-- Badges -->
+<p align="center">
+  <!-- CI Status -->
+  <a href="https://github.com/TobyBackstrom/ngx-dashboard/actions/workflows/ci.yml">
+    <img src="https://github.com/TobyBackstrom/ngx-dashboard/actions/workflows/ci.yml/badge.svg" alt="CI Pipeline">
+  </a>
+  <!-- Angular Version -->
+  <!-- Typescript version -->
+  <img src="https://img.shields.io/badge/TypeScript-5.8-blue.svg?logo=typescript" alt="TypeScript 5.8">
+  <img src="https://img.shields.io/badge/Angular-v20-dd0031.svg?logo=angular" alt="Angular 20">
+  <!-- License -->
+  <a href="https://github.com/TobyBackstrom/ngx-dashboard/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="License">
+  </a>
+  <!-- PRs Welcome -->
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
+</p>
+
+<p align="center">
+  <!-- NPM Version - Core -->
+  <a href="https://www.npmjs.com/package/@dragonworks/ngx-dashboard">
+    <img src="https://img.shields.io/npm/v/@dragonworks/ngx-dashboard.svg?label=@dragonworks/ngx-dashboard" alt="npm version">
+  </a>
+  <!-- NPM Downloads - Core -->
+  <!-- <a href="https://www.npmjs.com/package/@dragonworks/ngx-dashboard">
+    <img src="https://img.shields.io/npm/dm/@dragonworks/ngx-dashboard.svg" alt="npm downloads">
+  </a> -->
+  <!-- NPM Version - Widgets -->
+  <a href="https://www.npmjs.com/package/@dragonworks/ngx-dashboard-widgets">
+    <img src="https://img.shields.io/npm/v/@dragonworks/ngx-dashboard-widgets.svg?label=@dragonworks/ngx-dashboard-widgets" alt="npm version">
+  </a>
+</p>
+
+<!-- <p align="center">
+  <!-- GitHub Stars -->
+  <!-- <a href="https://github.com/TobyBackstrom/ngx-dashboard/stargazers">
+    <img src="https://img.shields.io/github/stars/TobyBackstrom/ngx-dashboard.svg?style=social" alt="GitHub stars">
+  </a> -->
+  <!-- GitHub Issues -->
+  <!-- <a href="https://github.com/TobyBackstrom/ngx-dashboard/issues">
+    <img src="https://img.shields.io/github/issues/TobyBackstrom/ngx-dashboard.svg" alt="GitHub issues">
+  </a>
+</p> -->
+
 Angular libraries for building drag-and-drop grid dashboards with resizable cells and customizable widgets. Built with modern Angular patterns, NgRx Signals state management, and Material Design 3 compliance.
 
 ## 📦 Libraries
@@ -56,6 +100,7 @@ npm install @angular/material @angular/cdk
 The libraries maintain major version parity with Angular. While major versions are aligned, minor and patch versions may differ.
 
 For example:
+
 - Angular 20.x.x → ngx-dashboard 20.y.z
 - Angular 21.x.x → ngx-dashboard 21.y.z
 
@@ -64,23 +109,17 @@ This ensures compatibility with your Angular version while allowing independent 
 ### Basic Usage
 
 ```typescript
-import { DashboardComponent, createEmptyDashboard } from '@dragonworks/ngx-dashboard';
-import { provideNgxDashboard } from '@dragonworks/ngx-dashboard';
+import { DashboardComponent, createEmptyDashboard } from "@dragonworks/ngx-dashboard";
+import { provideNgxDashboard } from "@dragonworks/ngx-dashboard";
 
 @Component({
-  template: `
-    <ngx-dashboard 
-      [dashboardData]="dashboard" 
-      [editMode]="true"
-      (dashboardChange)="onDashboardChange($event)">
-    </ngx-dashboard>
-  `,
+  template: ` <ngx-dashboard [dashboardData]="dashboard" [editMode]="true" (dashboardChange)="onDashboardChange($event)"> </ngx-dashboard> `,
   imports: [DashboardComponent],
-  providers: [provideNgxDashboard()]
+  providers: [provideNgxDashboard()],
 })
 export class MyComponent {
-  dashboard = createEmptyDashboard('my-dashboard', 12, 8);
-  
+  dashboard = createEmptyDashboard("my-dashboard", 12, 8);
+
   onDashboardChange(data: DashboardData) {
     // Handle dashboard updates
   }
