@@ -21,28 +21,22 @@ npm install @dragonworks/ngx-dashboard
 ## Usage
 
 ```typescript
-import { DashboardComponent, createEmptyDashboard } from '@dragonworks/ngx-dashboard';
-import { provideNgxDashboard } from '@dragonworks/ngx-dashboard';
+import { DashboardComponent, createEmptyDashboard } from "@dragonworks/ngx-dashboard";
+import { provideNgxDashboard } from "@dragonworks/ngx-dashboard";
 
 @Component({
-  template: `
-    <ngx-dashboard 
-      [dashboardData]="dashboard" 
-      [editMode]="true"
-      (dashboardChange)="onDashboardChange($event)">
-    </ngx-dashboard>
-  `,
+  template: ` <ngx-dashboard [dashboardData]="dashboard" [editMode]="true" (dashboardChange)="onDashboardChange($event)"> </ngx-dashboard> `,
   imports: [DashboardComponent],
-  providers: [provideNgxDashboard()]
+  providers: [provideNgxDashboard()],
 })
 export class MyComponent {
-  dashboard = createEmptyDashboard('my-dashboard', 12, 8);
+  dashboard = createEmptyDashboard("my-dashboard", 12, 8);
 }
 ```
 
 ## Documentation
 
-See the [main repository](https://github.com/dragonworks/ngx-dashboard) for full documentation and examples.
+See the [main repository](https://github.com/TobyBackstrom/ngx-dashboard) for full documentation and examples.
 
 ## License
 

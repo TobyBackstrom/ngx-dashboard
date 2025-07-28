@@ -18,8 +18,8 @@ npm install @dragonworks/ngx-dashboard-widgets @dragonworks/ngx-dashboard
 ## Usage
 
 ```typescript
-import { DashboardService } from '@dragonworks/ngx-dashboard';
-import { ArrowWidgetComponent } from '@dragonworks/ngx-dashboard-widgets';
+import { DashboardService } from "@dragonworks/ngx-dashboard";
+import { ArrowWidgetComponent } from "@dragonworks/ngx-dashboard-widgets";
 
 export class AppComponent {
   constructor(dashboardService: DashboardService) {
@@ -33,25 +33,25 @@ export class AppComponent {
 
 ```typescript
 @Component({
-  selector: 'my-widget',
+  selector: "my-widget",
   template: `<div>{{ state?.text }}</div>`,
-  standalone: true
+  standalone: true,
 })
 export class MyWidgetComponent {
   state = signal<any>({});
-  
+
   static readonly metadata = {
-    widgetTypeId: 'my-widget',
-    displayName: 'My Widget',
-    iconName: 'star',
-    description: 'Custom widget example'
+    widgetTypeId: "my-widget",
+    displayName: "My Widget",
+    iconName: "star",
+    description: "Custom widget example",
   };
 }
 ```
 
 ## Documentation
 
-See the [main repository](https://github.com/dragonworks/ngx-dashboard) for full documentation.
+See the [main repository](https://github.com/TobyBackstrom/ngx-dashboard) for full documentation.
 
 ## License
 

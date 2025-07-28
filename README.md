@@ -55,7 +55,7 @@ Demonstration app showcasing:
 - Local storage and file persistence
 
 You can use the demo app as a playground for your own widgets.
-The theme switcher makes it easy to verify your widgets can be used with a MD3 theme, both in light and dark mode.
+The theme switcher makes it easy to verify your widgets can be used with MD3 themes, both in light and dark mode.
 
 ## 🚀 Quick Start
 
