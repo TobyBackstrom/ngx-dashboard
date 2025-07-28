@@ -16,7 +16,7 @@
     "url": "git+https://github.com/TobyBackstrom/ngx-dashboard.git"
   },
   "author": "Toby Backstrom",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/TobyBackstrom/ngx-dashboard/issues"
   },
