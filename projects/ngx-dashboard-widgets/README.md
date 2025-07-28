@@ -1,63 +1,58 @@
-# NgxDashboardWidgets
+# @dragonworks/ngx-dashboard-widgets
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.0.
+Widget collection for ngx-dashboard with Material Design 3 compliance.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Installation
 
 ```bash
-ng generate component component-name
+npm install @dragonworks/ngx-dashboard-widgets @dragonworks/ngx-dashboard
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Included Widgets
 
-```bash
-ng generate --help
+- **Arrow Widget** - Directional indicators with rotation
+- **Label Widget** - Text display with responsive sizing
+- **Clock Widget** - Analog/digital clock with real-time updates
+- **ResponsiveText Directive** - Canvas-optimized text sizing
+
+## Usage
+
+```typescript
+import { DashboardService } from '@dragonworks/ngx-dashboard';
+import { ArrowWidgetComponent } from '@dragonworks/ngx-dashboard-widgets';
+
+export class AppComponent {
+  constructor(dashboardService: DashboardService) {
+    // Register widgets
+    dashboardService.registerWidgetType(ArrowWidgetComponent);
+  }
+}
 ```
 
-## Building
+## Creating Custom Widgets
 
-To build the library, run:
-
-```bash
-ng build ngx-dashboard-widgets
+```typescript
+@Component({
+  selector: 'my-widget',
+  template: `<div>{{ state?.text }}</div>`,
+  standalone: true
+})
+export class MyWidgetComponent {
+  state = signal<any>({});
+  
+  static readonly metadata = {
+    widgetTypeId: 'my-widget',
+    displayName: 'My Widget',
+    iconName: 'star',
+    description: 'Custom widget example'
+  };
+}
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+## Documentation
 
-### Publishing the Library
+See the [main repository](https://github.com/dragonworks/ngx-dashboard) for full documentation.
 
-Once the project is built, you can publish your library by following these steps:
+## License
 
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/ngx-dashboard-widgets
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT
