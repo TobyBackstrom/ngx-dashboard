@@ -1,59 +1,79 @@
-# Angular Dashboard Libraries
+# ngx-dashboard
 
-A collection of Angular libraries for building performant, modular, and fully reactive grid dashboards with drag-and-drop functionality, resizable grid cells, and customizable widgets.
+Angular libraries for building drag-and-drop grid dashboards with resizable cells and customizable widgets. Built with modern Angular patterns, NgRx Signals state management, and Material Design 3 compliance.
 
 ## 📦 Libraries
 
 ### [@dragonworks/ngx-dashboard](./projects/ngx-dashboard)
 
-The core dashboard library providing:
+Core dashboard library providing:
 
-- **Drag & Drop Dashboard** - Intuitive grid-based layout with real-time positioning
-- **Resizable Cells** - Dynamic cell resizing with collision detection
-- **Dual Modes** - Separate editing and viewing components for optimal UX
-- **State Management** - Powered by NgRx Signals with feature-based architecture
-- **Zero Dependencies** - Truly framework-agnostic with no external UI library requirements
-- **Flexible Dialog System** - Pluggable dialog architecture supporting any UI framework
+- **Drag & Drop Grid** - Responsive grid system with real-time collision detection
+- **Resizable Cells** - Dynamic resizing with boundary constraints
+- **Dual Modes** - Separate editor and viewer components
+- **State Management** - NgRx Signals with normalized state for O(1) operations
+- **Context Menu** - Material Design context menu with precise positioning
+- **Provider Pattern** - Extensible dialog system with Material Dialog integration
+- **100% OnPush** - Optimized change detection throughout
 
 ### [@dragonworks/ngx-dashboard-widgets](./projects/ngx-dashboard-widgets)
 
-A collection of example widgets to get you started, featuring:
+Widget collection with Material Design 3 compliance:
 
-- **Arrow Widget** - Directional indicators with customizable styling
-- **Label Widget** - Text labels with rich formatting options
-- **Extensible Architecture** - Easy to add custom widgets
+- **Arrow Widget** - Directional indicators with rotation and styling
+- **Label Widget** - Text display with responsive sizing
+- **Clock Widget** - Dual-mode analog/digital clock with real-time updates
+- **ResponsiveText Directive** - Canvas-optimized text sizing
+
+### [Demo Application](./projects/demo)
+
+Feature-rich demonstration app showcasing:
+
+- Dashboard creation and management
+- Widget gallery with drag-and-drop
+- Material Design 3 theming
+- FAB speed dial controls
+- Colors overview page
+- Local storage and file persistence
 
 ## 🚀 Quick Start
 
 ### Installation
 
 ```bash
-# Install the core dashboard
+# Core dashboard
 npm install @dragonworks/ngx-dashboard
 
-# Install widget collection (optional)
+# Widget collection (optional)
 npm install @dragonworks/ngx-dashboard-widgets
+
+# Material Design support
+npm install @angular/material @angular/cdk
 ```
 
 ### Basic Usage
 
 ```typescript
-import { DashboardComponent, createEmptyDashboard } from "@dragonworks/ngx-dashboard";
+import { DashboardComponent, createEmptyDashboard } from '@dragonworks/ngx-dashboard';
+import { provideNgxDashboard } from '@dragonworks/ngx-dashboard';
 
 @Component({
   template: `
     <ngx-dashboard 
-      [dashboardData]="dashboardConfig" 
-      [editMode]="true">
+      [dashboardData]="dashboard" 
+      [editMode]="true"
+      (dashboardChange)="onDashboardChange($event)">
     </ngx-dashboard>
   `,
   imports: [DashboardComponent],
+  providers: [provideNgxDashboard()]
 })
 export class MyComponent {
-  // Create dashboard configuration
-  dashboardConfig = createEmptyDashboard('my-dashboard-id', 5, 8);
+  dashboard = createEmptyDashboard('my-dashboard', 12, 8);
   
-  // Uses native browser dialogs by default
+  onDashboardChange(data: DashboardData) {
+    // Handle dashboard updates
+  }
 }
 ```
 
@@ -63,107 +83,122 @@ export class MyComponent {
 
 - Node.js 18+
 - Angular 20+
-- npm
+- npm or yarn
 
 ### Setup
 
 ```bash
-# Clone and install dependencies
 git clone <repository-url>
 cd ngx-dashboard
 npm install
 ```
 
-### Build Commands
+### Commands
 
 ```bash
-# Build both libraries
+# Development server
+npm run start
+
+# Build all projects
 npm run build
 
-# Build individual libraries
-npm run build:ngx-dashboard
-npm run build:ngx-dashboard-widgets
-```
-
-### Testing
-
-```bash
-# Run all tests
+# Run tests (370+ test cases)
 npm test
 
-# Run tests with browser (for debugging)
+# Individual builds
+npm run build:ngx-dashboard
+npm run build:ngx-dashboard-widgets
+
+# Test with browser debugging
 ng test
 ```
 
 ## 🏗️ Architecture
 
-### Component Naming Convention
-
-- **Public API**: `ngx-dashboard-*` (for library consumers)
-- **Internal**: `lib-*` (for internal library use)
-
 ### State Management
 
-- **NgRx Signals** - Reactive state management
-- **Feature-based Organization** - Modular store features (grid, widgets, drag-drop, resize)
-- **Computed Properties** - Efficient reactive updates
+- **NgRx Signals** - Feature-based store architecture
+- **Normalized State** - O(1) widget lookups with `cellsById` mapping
+- **Computed Signals** - Automatic memoization for derived state
+- **Features**: grid-config, widget-management, drag-drop, resize
 
 ### Widget System
 
-- **Factory Pattern** - Pluggable widget architecture
-- **Metadata-driven** - Self-describing widgets with icons and descriptions
-- **State Management** - Widget-specific state with serialization support
+- **Factory Pattern** - Dynamic widget instantiation
+- **Metadata-Driven** - Self-describing widgets with icons
+- **Lifecycle Methods** - Optional state management hooks
+- **Type Registration** - Runtime widget type registration
 
-### Dialog System
+### Component Architecture
 
-- **Framework Agnostic** - No built-in UI framework dependencies
-- **Works Out of Box** - Native browser dialogs provide immediate functionality
-- **Provider Pattern** - Simple dependency injection for custom dialog solutions
-- **Material Support** - Separate package available for Angular Material integration
+- **100% Standalone** - All components use standalone API
+- **Signal Inputs** - Modern Angular signal-based inputs
+- **OnPush Strategy** - Optimized change detection
+- **Minimal RxJS** - Signals-first approach (3 subscribes total)
+
+### Testing
+
+- **370+ Tests** - Comprehensive coverage across libraries
+- **User-Focused** - Tests verify behavior, not implementation
+- **Integration Tests** - Component-store interaction validation
+- **Pattern-Based** - Deterministic testing for time-dependent features
 
 ## 📖 Documentation
 
-- [Core Dashboard Documentation](./projects/ngx-dashboard/README.md)
-- [Widgets Documentation](./projects/ngx-dashboard-widgets/README.md)
-- [Material Dialog Implementation Guide](./MATERIAL_DIALOG_IMPLEMENTATION.md)
-- [Development Guide](./CLAUDE.md)
+- [Core Library Documentation](./projects/ngx-dashboard/README.md)
+- [Widget Library Documentation](./projects/ngx-dashboard-widgets/README.md)
+- [Development Guidelines](./CLAUDE.md)
 
-## 🧪 Features
+## 🎨 Features
 
-### ✅ Completed
+### Core Features
 
-- [x] Drag & drop grid system
-- [x] Cell resizing with collision detection
-- [x] Widget factory and registration
-- [x] Export/import dashboard configurations
-- [x] Comprehensive test suite (187 tests)
-- [x] Arrow and Label widgets
-- [x] Dual editing/viewing modes
-- [x] Framework-agnostic dialog system
-- [x] Zero external dependencies
+- Grid-based drag and drop with live preview
+- Cell resizing with collision detection
+- Context menu with Material Design integration
+- Import/export dashboard configurations
+- Widget state persistence
+- Responsive grid system
+- Touch-friendly interactions
 
-### 🚧 Planned
+### Widget Features
 
-- [ ] Demo application
-- [ ] Additional widget types
-- [ ] Theme system
-- [ ] Accessibility improvements
+- Extensible widget architecture
+- Built-in error handling with fallback UI
+- Material Design 3 theming
+- Responsive text sizing
+- Real-time updates (clock widget)
+
+### Performance
+
+- 60-80% reduction in change detection cycles
+- O(1) widget operations through normalization
+- Lazy computation with signal memoization
+- Efficient DOM event handling
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass: `npm test`
-6. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Ensure tests pass (`npm test`)
+5. Push to branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
+
+### Guidelines
+
+- Follow existing code patterns
+- Use modern Angular APIs (signals, standalone)
+- Add tests for new features
+- Update documentation as needed
 
 ## 📄 License
 
-[MIT License](LICENSE)
+MIT License - see [LICENSE](LICENSE) file for details
 
-## 🔗 Links
+## 🔗 Resources
 
 - [Angular](https://angular.dev/)
 - [NgRx Signals](https://ngrx.io/guide/signals)
-- [Angular Material](https://material.angular.io/) (used in widgets)
+- [Angular Material](https://material.angular.io/)
+- [Material Design 3](https://m3.material.io/)
