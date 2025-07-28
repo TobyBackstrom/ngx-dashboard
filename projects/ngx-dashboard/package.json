@@ -24,11 +24,11 @@
   "homepage": "https://github.com/TobyBackstrom/ngx-dashboard#readme",
   "keywords": [
     "angular",
-    "material-design",
-    "md3",
     "dashboard",
+    "widgets",
     "grid",
     "drag-drop",
-    "widgets"
+    "material-design",
+    "md3"
   ]
 }
