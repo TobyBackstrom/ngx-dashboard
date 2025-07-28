@@ -2,6 +2,21 @@
 
 <!-- Badges -->
 <p align="center">
+  <!-- NPM Version - Core -->
+  <a href="https://www.npmjs.com/package/@dragonworks/ngx-dashboard">
+    <img src="https://img.shields.io/npm/v/@dragonworks/ngx-dashboard.svg?label=@dragonworks/ngx-dashboard" alt="npm version">
+  </a>
+  <!-- NPM Downloads - Core -->
+  <!-- <a href="https://www.npmjs.com/package/@dragonworks/ngx-dashboard">
+    <img src="https://img.shields.io/npm/dm/@dragonworks/ngx-dashboard.svg" alt="npm downloads">
+  </a> -->
+  <!-- NPM Version - Widgets -->
+  <a href="https://www.npmjs.com/package/@dragonworks/ngx-dashboard-widgets">
+    <img src="https://img.shields.io/npm/v/@dragonworks/ngx-dashboard-widgets.svg?label=@dragonworks/ngx-dashboard-widgets" alt="npm version">
+  </a>
+</p>
+
+<p align="center">
   <!-- CI Status -->
   <a href="https://github.com/TobyBackstrom/ngx-dashboard/actions/workflows/ci.yml">
     <img src="https://github.com/TobyBackstrom/ngx-dashboard/actions/workflows/ci.yml/badge.svg" alt="CI Pipeline">
@@ -16,21 +31,6 @@
   </a>
   <!-- PRs Welcome -->
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
-</p>
-
-<p align="center">
-  <!-- NPM Version - Core -->
-  <a href="https://www.npmjs.com/package/@dragonworks/ngx-dashboard">
-    <img src="https://img.shields.io/npm/v/@dragonworks/ngx-dashboard.svg?label=@dragonworks/ngx-dashboard" alt="npm version">
-  </a>
-  <!-- NPM Downloads - Core -->
-  <!-- <a href="https://www.npmjs.com/package/@dragonworks/ngx-dashboard">
-    <img src="https://img.shields.io/npm/dm/@dragonworks/ngx-dashboard.svg" alt="npm downloads">
-  </a> -->
-  <!-- NPM Version - Widgets -->
-  <a href="https://www.npmjs.com/package/@dragonworks/ngx-dashboard-widgets">
-    <img src="https://img.shields.io/npm/v/@dragonworks/ngx-dashboard-widgets.svg?label=@dragonworks/ngx-dashboard-widgets" alt="npm version">
-  </a>
 </p>
 
 <!-- <p align="center">
