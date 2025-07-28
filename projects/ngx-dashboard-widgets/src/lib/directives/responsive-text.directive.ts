@@ -18,7 +18,7 @@ import { isPlatformBrowser } from '@angular/common';
  *
  * @example
  * <div class="container">
- *   <span responsiveText [min]="12" [max]="72">Dynamic text here</span>
+ *   <span responsiveText [minFontSize]="12" [maxFontSize]="72">Dynamic text here</span>
  * </div>
  */
 @Directive({
@@ -28,17 +28,16 @@ import { isPlatformBrowser } from '@angular/common';
     '[style.display]': '"block"',
     '[style.width]': '"100%"',
     '[style.white-space]': '"nowrap"',
-    '[style.overflow]': '"hidden"',
-    '[style.text-overflow]': '"ellipsis"',
+    '[style.overflow]': '"visible"',
   },
 })
 export class ResponsiveTextDirective implements AfterViewInit, OnDestroy {
   /* ───────────────────────── Inputs with transforms ─────────────── */
   /** Minimum font-size in pixels (accessibility floor) */
-  min = input(8, { transform: numberAttribute });
+  minFontSize = input(8, { transform: numberAttribute });
 
   /** Maximum font-size in pixels (layout ceiling) */
-  max = input(512, { transform: numberAttribute });
+  maxFontSize = input(512, { transform: numberAttribute });
 
   /**
    * Line-height: pass a multiplier (e.g. 1.1) or absolute px value.
@@ -128,11 +127,10 @@ export class ResponsiveTextDirective implements AfterViewInit, OnDestroy {
 
     const text = span.textContent?.trim() || '';
     if (!text) {
-      span.style.fontSize = `${this.min()}px`;
+      span.style.fontSize = `${this.minFontSize()}px`;
       return;
     }
 
-    // Get available space
     const { maxW, maxH } = this.getAvailableSpace(parent);
 
     // Check cache to avoid redundant calculations
@@ -145,8 +143,9 @@ export class ResponsiveTextDirective implements AfterViewInit, OnDestroy {
       return;
     }
 
-    // Calculate ideal font size
-    const ideal = this.calcFit(text, maxW, maxH);
+    // Calculate with conservative buffer for sub-pixel accuracy
+    const ideal = this.calcFit(text, maxW * 0.98, maxH * 0.98);
+
     span.style.fontSize = `${ideal}px`;
 
     // DOM verification pass
@@ -188,19 +187,25 @@ export class ResponsiveTextDirective implements AfterViewInit, OnDestroy {
     maxH: number,
     ideal: number
   ) {
-    // Use requestAnimationFrame to ensure layout is complete
-    requestAnimationFrame(() => {
-      if (span.scrollWidth > maxW || span.scrollHeight > maxH) {
-        let safe = ideal;
-        while (
-          safe > this.min() &&
-          (span.scrollWidth > maxW || span.scrollHeight > maxH)
-        ) {
-          safe -= 0.5; // Finer adjustments
-          span.style.fontSize = `${safe}px`;
-        }
+    // Simple synchronous verification
+    if (span.scrollWidth > maxW || span.scrollHeight > maxH) {
+      let safe = ideal;
+      let iterations = 0;
+      const maxIterations = 10;
+
+      while (
+        iterations < maxIterations &&
+        safe > this.minFontSize() &&
+        (span.scrollWidth > maxW || span.scrollHeight > maxH)
+      ) {
+        safe -= 0.25;
+        span.style.fontSize = `${safe}px`;
+        iterations++;
       }
-    });
+
+      // Update cache with verified size
+      this.lastFontSize = safe;
+    }
   }
 
   /* ───────────────────── Binary search algorithm ────────────────── */
@@ -213,15 +218,15 @@ export class ResponsiveTextDirective implements AfterViewInit, OnDestroy {
     maxH: number,
     precision = 0.1
   ): number {
-    if (maxW <= 0 || maxH <= 0) return this.min();
+    if (maxW <= 0 || maxH <= 0) return this.minFontSize();
 
     const computedStyle = getComputedStyle(this.el.nativeElement);
     const fontFamily = computedStyle.fontFamily || 'sans-serif';
     const fontWeight = computedStyle.fontWeight || '400';
 
-    let lo = this.min();
-    let hi = this.max();
-    let bestFit = this.min();
+    let lo = this.minFontSize();
+    let hi = this.maxFontSize();
+    let bestFit = this.minFontSize();
 
     while (hi - lo > precision) {
       const mid = (hi + lo) / 2;

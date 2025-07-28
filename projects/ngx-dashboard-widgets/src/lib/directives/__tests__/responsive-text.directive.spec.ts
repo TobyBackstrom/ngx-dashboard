@@ -8,8 +8,8 @@ import { ResponsiveTextDirective } from '../responsive-text.directive';
     <div class="container" [style.width.px]="containerWidth" [style.height.px]="containerHeight" [style.padding.px]="padding">
       <span 
         responsiveText 
-        [min]="minFont" 
-        [max]="maxFont" 
+        [minFontSize]="minFont" 
+        [maxFontSize]="maxFont" 
         [lineHeight]="lineHeight"
         [observeMutations]="observeMutations"
         [debounceMs]="debounceMs">
@@ -120,8 +120,8 @@ describe('ResponsiveTextDirective', () => {
       expect(spanElement.style.display).toBe('block');
       expect(spanElement.style.width).toBe('100%');
       expect(spanElement.style.whiteSpace).toBe('nowrap');
-      expect(spanElement.style.overflow).toBe('hidden');
-      expect(spanElement.style.textOverflow).toBe('ellipsis');
+      expect(spanElement.style.overflow).toBe('visible');
+      expect(spanElement.style.textOverflow).toBe('');
     });
 
     it('should set transition style on init', fakeAsync(() => {
@@ -273,8 +273,8 @@ describe('ResponsiveTextDirective', () => {
       fixture.detectChanges();
       tick();
 
-      expect(directive.min()).toBe(15);
-      expect(directive.max()).toBe(60);
+      expect(directive.minFontSize()).toBe(15);
+      expect(directive.maxFontSize()).toBe(60);
       expect(directive.lineHeight()).toBe(1.5);
       expect(directive.observeMutations()).toBe(true);
       expect(directive.debounceMs()).toBe(50);
