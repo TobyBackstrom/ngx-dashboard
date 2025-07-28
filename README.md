@@ -51,6 +51,16 @@ npm install @dragonworks/ngx-dashboard-widgets
 npm install @angular/material @angular/cdk
 ```
 
+### Versioning
+
+The libraries maintain major version parity with Angular. While major versions are aligned, minor and patch versions may differ.
+
+For example:
+- Angular 20.x.x → ngx-dashboard 20.y.z
+- Angular 21.x.x → ngx-dashboard 21.y.z
+
+This ensures compatibility with your Angular version while allowing independent feature releases and bug fixes.
+
 ### Basic Usage
 
 ```typescript
