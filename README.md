@@ -160,7 +160,7 @@ ng test
 - **100% Standalone** - All components use standalone API
 - **Signal Inputs** - Modern Angular signal-based inputs
 - **OnPush Strategy** - Optimized change detection
-- **Minimal RxJS** - Signals-first approach (3 subscribes total)
+- **Minimal RxJS** - Signals-first approach
 
 ### Testing
 
