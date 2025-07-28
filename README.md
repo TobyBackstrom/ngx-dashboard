@@ -36,23 +36,26 @@ Core dashboard library providing:
 
 ### [@dragonworks/ngx-dashboard-widgets](./projects/ngx-dashboard-widgets)
 
-Widget collection with Material Design 3 compliance:
+Widget examples with Material Design 3 compliance:
 
 - **Arrow Widget** - Directional indicators with rotation and styling
 - **Label Widget** - Text display with responsive sizing
 - **Clock Widget** - Dual-mode analog/digital clock with real-time updates
-- **ResponsiveText Directive** - Canvas-optimized text sizing
+
+Use these as a base for your own widgets.
 
 ### [Demo Application](./projects/demo)
 
-Feature-rich demonstration app showcasing:
+Demonstration app showcasing:
 
 - Dashboard creation and management
 - Widget gallery with drag-and-drop
-- Material Design 3 theming
-- FAB speed dial controls
-- Colors overview page
+- How to apply Material Design 3 theming to widgets
+- Theme colors overview page
 - Local storage and file persistence
+
+You can use the demo app as a playground for your own widgets.
+The theme switcher makes it easy to verify your widgets can be used with a MD3 theme, both in light and dark mode.
 
 ## 🚀 Quick Start
 
