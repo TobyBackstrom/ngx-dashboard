@@ -1,7 +1,7 @@
 # ngx-dashboard
 
 <!-- Badges -->
-<p align="center">
+<p>
   <!-- CI Status -->
   <a href="https://github.com/TobyBackstrom/ngx-dashboard/actions/workflows/ci.yml">
     <img src="https://github.com/TobyBackstrom/ngx-dashboard/actions/workflows/ci.yml/badge.svg" alt="CI Pipeline">
