@@ -29,8 +29,8 @@ Core dashboard library providing:
 - **Drag & Drop Grid** - Responsive grid system with real-time collision detection
 - **Resizable Cells** - Dynamic resizing with boundary constraints
 - **Dual Modes** - Separate editor and viewer components
-- **State Management** - NgRx Signals with normalized state for O(1) operations
-- **Context Menu** - Material Design context menu with precise positioning
+- **State Management** - NgRx Signals with normalized state
+- **Context Menu** - Widget cell context menu
 - **Provider Pattern** - Extensible dialog system with Material Dialog integration
 - **100% OnPush** - Optimized change detection throughout
 
@@ -55,7 +55,7 @@ Demonstration app showcasing:
 - Local storage and file persistence
 
 You can use the demo app as a playground for your own widgets.
-The theme switcher makes it easy to verify your widgets can be used with MD3 themes, both in light and dark mode.
+The theme switcher makes it easy to verify your widgets works with MD3 themes, both in light and dark mode.
 
 ## 🚀 Quick Start
 
@@ -174,33 +174,6 @@ ng test
 - [Core Library Documentation](./projects/ngx-dashboard/README.md)
 - [Widget Library Documentation](./projects/ngx-dashboard-widgets/README.md)
 - [Development Guidelines](./CLAUDE.md)
-
-## 🎨 Features
-
-### Core Features
-
-- Grid-based drag and drop with live preview
-- Cell resizing with collision detection
-- Context menu with Material Design integration
-- Import/export dashboard configurations
-- Widget state persistence
-- Responsive grid system
-- Touch-friendly interactions
-
-### Widget Features
-
-- Extensible widget architecture
-- Built-in error handling with fallback UI
-- Material Design 3 theming
-- Responsive text sizing
-- Real-time updates (clock widget)
-
-### Performance
-
-- 60-80% reduction in change detection cycles
-- O(1) widget operations through normalization
-- Lazy computation with signal memoization
-- Efficient DOM event handling
 
 ## 🤝 Contributing
 
