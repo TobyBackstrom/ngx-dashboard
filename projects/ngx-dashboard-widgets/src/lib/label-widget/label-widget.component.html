@@ -9,7 +9,7 @@
   [class.has-background]="state().hasBackground"
 >
   @if (state().responsive) {
-    <div class="label-text" responsiveText>{{ label }}</div>
+    <div class="label-text" responsiveText [minFontSize]="minFontSize()" [maxFontSize]="maxFontSize()">{{ label }}</div>
   } @else {
     <div class="label-text">{{ label }}</div>
   }

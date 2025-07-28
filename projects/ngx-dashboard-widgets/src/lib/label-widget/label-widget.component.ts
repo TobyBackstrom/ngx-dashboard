@@ -1,5 +1,5 @@
 // label-widget.component.ts
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { Widget, WidgetMetadata } from '@dragonworks/ngx-dashboard';
 import { svgIcon } from './label-widget.metadata';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -15,6 +15,9 @@ export interface LabelWidgetState {
   opacity?: number;
   hasBackground?: boolean;
   responsive?: boolean;
+  // Font size constraints for responsive text (px values)
+  minFontSize?: number; // Default: 8px (accessible minimum)
+  maxFontSize?: number; // Default: 64px (practical widget maximum)
 }
 
 @Component({
@@ -44,6 +47,8 @@ export class LabelWidgetComponent implements Widget {
     opacity: 1,
     hasBackground: true,
     responsive: false,
+    minFontSize: 8, // Accessible minimum for responsive text
+    maxFontSize: 64, // Practical maximum for widget display
   });
 
   dashboardSetState(state?: unknown) {
@@ -84,4 +89,8 @@ export class LabelWidgetComponent implements Widget {
   get label(): string {
     return this.state().label?.trim();
   }
+
+  // Computed properties for responsive font size limits with fallbacks
+  readonly minFontSize = computed(() => this.state().minFontSize ?? 8);
+  readonly maxFontSize = computed(() => this.state().maxFontSize ?? 64);
 }
