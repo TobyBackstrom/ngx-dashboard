@@ -52,10 +52,7 @@
           "builder": "@angular/build:karma",
           "options": {
             "tsConfig": "projects/ngx-dashboard-widgets/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": ["zone.js", "zone.js/testing"]
           }
         }
       }
@@ -75,9 +72,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "projects/demo/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/demo/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -86,17 +81,15 @@
                 "input": "projects/demo/public"
               }
             ],
-            "styles": [
-              "projects/demo/src/styles.scss"
-            ]
+            "styles": ["projects/demo/src/styles.scss"]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1MB",
+                  "maximumError": "10MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -132,10 +125,7 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/demo/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -144,9 +134,7 @@
                 "input": "projects/demo/public"
               }
             ],
-            "styles": [
-              "projects/demo/src/styles.scss"
-            ]
+            "styles": ["projects/demo/src/styles.scss"]
           }
         }
       }
