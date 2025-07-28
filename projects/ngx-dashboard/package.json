@@ -1,6 +1,7 @@
 {
   "name": "@dragonworks/ngx-dashboard",
-  "version": "20.0.1",
+  "version": "20.0.2",
+  "description": "Angular library for building drag-and-drop grid dashboards with resizable cells and customizable widgets",
   "peerDependencies": {
     "@angular/common": "^20.0.0",
     "@angular/core": "^20.0.0",
@@ -10,5 +11,24 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TobyBackstrom/ngx-dashboard.git"
+  },
+  "author": "Toby Backstrom",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/TobyBackstrom/ngx-dashboard/issues"
+  },
+  "homepage": "https://github.com/TobyBackstrom/ngx-dashboard#readme",
+  "keywords": [
+    "angular",
+    "material-design",
+    "md3",
+    "dashboard",
+    "grid",
+    "drag-drop",
+    "widgets"
+  ]
 }
