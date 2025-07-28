@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build ngx-dashboard && ng build ngx-dashboard-widgets && ng build demo",
-    "build:ci": "ng build ngx-dashboard && ng build ngx-dashboard-widgets",
+    "build:ci": "ng build ngx-dashboard && ng build ngx-dashboard-widgets && ng build demo",
     "build:ngx-dashboard": "ng build ngx-dashboard",
     "build:ngx-dashboard-widgets": "ng build ngx-dashboard-widgets",
     "build:demo": "ng build demo",
