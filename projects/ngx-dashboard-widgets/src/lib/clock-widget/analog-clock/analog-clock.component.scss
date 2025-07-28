@@ -1,0 +1,92 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.analog-clock-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Modern aspect ratio approach
+  .aspect-ratio-box {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1 / 1;
+
+    // Fallback for browsers without aspect-ratio support
+    @supports not (aspect-ratio: 1 / 1) {
+      &::before {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
+      }
+
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+
+      // Clock face styling
+      // circle {
+      //   fill: transparent;
+      //   stroke: var(--mat-sys-outline, #79747e);
+      //   stroke-width: 2;
+      // }
+
+      // Hour markers and tick marks
+      path:not(.clock-hour-hand):not(.clock-minute-hand):not(
+          .clock-second-hand
+        ) {
+        stroke: var(--mat-sys-on-surface, #1d1b20);
+      }
+
+      // Clock hands
+      .clock-hour-hand {
+        fill: var(--mat-sys-on-surface, #1d1b20);
+      }
+
+      .clock-minute-hand {
+        fill: var(--mat-sys-on-surface, #1d1b20);
+      }
+
+      .clock-second-hand {
+        fill: var(--mat-sys-primary, #6750a4);
+      }
+    }
+  }
+}
+
+// Hide second hand when showSeconds is false
+:host:not(.show-seconds) {
+  .clock-second-hand {
+    display: none;
+  }
+}
+
+// Background styling based on hasBackground setting
+:host.has-background {
+  svg circle {
+    fill: var(--mat-sys-surface, #fffbfe);
+  }
+}
+
+// Host class styling for consistency with digital clock
+:host.clock-widget.analog {
+  container-type: size;
+  container-name: analog-clock;
+}

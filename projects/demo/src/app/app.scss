@@ -1,0 +1,178 @@
+/* Toolbar layout */
+.toolbar {
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  height: 56px;
+  z-index: 10;
+  position: relative;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.title {
+  text-align: center;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* Navigation menu button */
+button[matMenuTriggerFor="navigationMenu"] {
+  display: flex !important;
+  align-items: center;
+  gap: 4px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Theme selector button */
+.theme-selector {
+  margin-right: 8px;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Main container for router content */
+.main-content {
+  height: calc(100vh - 56px); /* Full height minus toolbar */
+  overflow: auto;
+}
+
+/* Material icon alignment styles */
+mat-icon {
+  vertical-align: middle;
+}
+
+/* Menu items with icons */
+.mat-mdc-menu-item {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+
+  mat-icon {
+    margin-right: 0;
+  }
+}
+
+/* General menu trigger buttons */
+button[matMenuTriggerFor] {
+  display: flex !important;
+  align-items: center;
+  gap: 4px;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Button hover states */
+.toolbar button {
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container-high);
+  }
+}
+
+/* Edit toggle button - fixed width to prevent title shifting */
+.edit-toggle {
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-left: 8px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &[aria-label*="view mode"] {
+    background-color: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+    border-color: var(--mat-sys-primary);
+  }
+}
+
+/* Dark mode specific adjustments */
+body.dark-mode {
+  .toolbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Theme radio group - compact vertical layout with swatches */
+.theme-radio-group {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+}
+
+.theme-option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 12px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container-high);
+  }
+
+  // Selected state styling
+  &:has(.theme-option.mat-mdc-radio-checked) {
+    background-color: var(--mat-sys-primary-container);
+
+    .theme-option {
+      color: var(--mat-sys-on-primary-container);
+
+      ::ng-deep .mdc-form-field label {
+        color: var(--mat-sys-on-primary-container);
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.theme-option {
+  flex-grow: 1;
+
+  ::ng-deep .mdc-form-field {
+    padding: 4px 0;
+    margin: 0;
+  }
+
+  ::ng-deep .mdc-radio {
+    padding: 6px;
+  }
+
+  ::ng-deep .mdc-form-field label {
+    font-size: 14px;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+.color-swatch {
+  width: 24px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-left: 12px;
+}

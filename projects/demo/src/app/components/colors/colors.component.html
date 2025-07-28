@@ -1,0 +1,48 @@
+<div class="colors-container">
+  <mat-card class="colors-card">
+    <mat-card-header>
+      <mat-card-title>Color System Overview</mat-card-title>
+      <mat-card-subtitle
+        >Current theme's Material Design 3 color tokens</mat-card-subtitle
+      >
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="colors()" class="colors-table">
+          <!-- Variable Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Variable Name</th>
+            <td mat-cell *matCellDef="let color" class="variable-name">
+              {{ color.name }}
+            </td>
+          </ng-container>
+
+          <!-- Color Value Column -->
+          <ng-container matColumnDef="value">
+            <th mat-header-cell *matHeaderCellDef>Color Value</th>
+            <td mat-cell *matCellDef="let color" class="color-value">
+              {{ color.value }}
+            </td>
+          </ng-container>
+
+          <!-- Preview Column -->
+          <ng-container matColumnDef="preview">
+            <th mat-header-cell *matHeaderCellDef>Preview</th>
+            <td mat-cell *matCellDef="let color" class="color-preview">
+              <span
+                class="color-swatch"
+                [style.backgroundColor]="color.value"
+                [attr.aria-label]="'Color preview for ' + color.name"
+              >
+              </span>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

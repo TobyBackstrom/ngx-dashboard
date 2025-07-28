@@ -1,0 +1,37 @@
+<!-- cell.component.html -->
+<div
+  class="cell"
+  [class.is-resizing]="isResizing()"
+  [class.flat]="flat() === true"
+  [draggable]="draggable()"
+  (dragstart)="onDragStart($event)"
+  (dragend)="onDragEnd()"
+  (contextmenu)="onContextMenu($event)"
+>
+  <div class="content-area">
+    <ng-template #container></ng-template>
+  </div>
+  @if (isEditMode() && !isDragging()) {
+  <!-- Right resize handle -->
+  <div
+    class="resize-handle resize-handle--right"
+    (mousedown)="onResizeStart($event, 'horizontal')"
+  >
+    <div class="resize-handle-line"></div>
+  </div>
+  <!-- Bottom resize handle -->
+  <div
+    class="resize-handle resize-handle--bottom"
+    (mousedown)="onResizeStart($event, 'vertical')"
+  >
+    <div class="resize-handle-line"></div>
+  </div>
+  }
+</div>
+
+@if (isResizing()) {
+<div class="resize-preview">
+  {{ resizeData()?.previewColSpan ?? colSpan() }} ×
+  {{ resizeData()?.previewRowSpan ?? rowSpan() }}
+</div>
+}

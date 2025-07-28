@@ -1,0 +1,50 @@
+/* dashboard-viewer.component.scss */
+@use "../styles/dashboard-grid-vars" as *;
+
+:host {
+  @include dashboard-grid-vars;
+
+  display: block;
+  container-type: inline-size;
+  box-sizing: border-box;
+  aspect-ratio: var(--columns) / var(--rows);
+  width: 100%;
+  height: auto;
+
+  background-color: var(--mat-sys-surface-container);
+}
+
+.grid {
+  display: grid;
+  gap: var(--gutter-size);
+  padding: var(--gutter-size);
+
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+
+  /* ←―― single-source-of-truth for the cell geometry */
+  grid-template-columns: repeat(var(--columns), var(--cell-size));
+  grid-template-rows: repeat(var(--rows), var(--cell-size));
+
+  // background-color: var(--mat-sys-surface);
+}
+
+/* Interaction rules */
+.grid-cell {
+  pointer-events: none;
+}
+
+.grid-cell:not(.flat) {
+  pointer-events: auto;
+  cursor: default;
+
+  .content-area {
+    pointer-events: none;
+  }
+}
+
+.top-grid {
+  z-index: 2;
+  pointer-events: none;
+}

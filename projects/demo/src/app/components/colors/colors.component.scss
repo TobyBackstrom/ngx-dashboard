@@ -1,0 +1,118 @@
+.colors-toolbar {
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  
+  .toolbar-title {
+    margin-left: 16px;
+    font-weight: 500;
+  }
+}
+
+.colors-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.colors-card {
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.colors-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  .mat-mdc-header-cell {
+    background: var(--mat-sys-surface-container-high);
+    color: var(--mat-sys-on-surface);
+    font-weight: 600;
+    padding: 16px;
+    border-bottom: 2px solid var(--mat-sys-outline-variant);
+  }
+
+  .mat-mdc-cell {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    vertical-align: middle;
+  }
+
+  .mat-mdc-row {
+    &:hover {
+      background: var(--mat-sys-surface-container-low);
+    }
+  }
+
+  .variable-name {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    color: var(--mat-sys-primary);
+    font-weight: 500;
+  }
+
+  .color-value {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .color-preview {
+    text-align: center;
+  }
+
+  .color-swatch {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 2px solid var(--mat-sys-outline);
+    vertical-align: middle;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .colors-container {
+    padding: 16px;
+  }
+
+  .colors-table {
+    .mat-mdc-header-cell,
+    .mat-mdc-cell {
+      padding: 8px 12px;
+    }
+
+    .variable-name,
+    .color-value {
+      font-size: 12px;
+    }
+
+    .color-swatch {
+      width: 32px;
+      height: 32px;
+    }
+  }
+}
+
+// Dark theme specific adjustments
+@media (prefers-color-scheme: dark) {
+  .color-swatch {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+  }
+}

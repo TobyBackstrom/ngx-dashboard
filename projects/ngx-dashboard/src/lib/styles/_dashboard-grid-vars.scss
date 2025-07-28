@@ -1,0 +1,11 @@
+@mixin dashboard-grid-vars {
+  /* grid geometry derived once, reused everywhere */
+  --cell-size: calc(
+    100cqi / var(--columns) - var(--gutter-size) * var(--gutters) /
+      var(--columns)
+  );
+  --tile-size: calc(var(--cell-size) + var(--gutter-size));
+  --tile-offset: calc(
+    var(--gutter-size) + var(--cell-size) + var(--gutter-size) / 2
+  );
+}

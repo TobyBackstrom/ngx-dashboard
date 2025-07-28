@@ -1,0 +1,17 @@
+/* dashboard.component.scss */
+:host {
+  display: block;
+  container-type: inline-size;
+  box-sizing: border-box;
+  aspect-ratio: var(--columns) / var(--rows);
+  width: 100%;
+  height: auto;
+
+  // background-color: var(--mat-sys-surface-container);
+}
+
+.grid-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}

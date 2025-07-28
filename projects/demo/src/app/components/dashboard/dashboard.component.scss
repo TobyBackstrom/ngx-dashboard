@@ -1,0 +1,45 @@
+.dashboard-viewport-container {
+  display: flex;
+  width: 100vw;
+  height: calc(100vh - 56px); /* Full height minus compact toolbar */
+  overflow: hidden;
+  align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 16px;
+  gap: 16px;
+
+  &:hover .is-edit-mode-toggle {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.dashboard-wrapper {
+  flex: 1;
+  background-color: var(--mat-sys-surface-container);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ngx-dashboard {
+    // Component maintains its own dimensions without interference
+    flex-shrink: 0;
+  }
+}
+
+.widget-list {
+  flex-shrink: 0;
+  width: 320px;
+  align-self: stretch;
+  overflow-y: auto;
+  background-color: var(--mat-sys-surface-container);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}

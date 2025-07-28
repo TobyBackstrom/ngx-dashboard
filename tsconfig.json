@@ -7,6 +7,16 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
+    "paths": {
+      "@dragonworks/ngx-dashboard": [
+        "./dist/ngx-dashboard",
+        "./projects/ngx-dashboard/src/public-api.ts"
+      ],
+      "@dragonworks/ngx-dashboard-widgets": [
+        "./dist/ngx-dashboard-widgets",
+        "./projects/ngx-dashboard-widgets/src/public-api.ts"
+      ]
+    },
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
@@ -22,5 +32,25 @@
     "typeCheckHostBindings": true,
     "strictTemplates": true
   },
-  "files": []
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/ngx-dashboard/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ngx-dashboard/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ngx-dashboard-widgets/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ngx-dashboard-widgets/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/demo/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/demo/tsconfig.spec.json"
+    }
+  ]
 }

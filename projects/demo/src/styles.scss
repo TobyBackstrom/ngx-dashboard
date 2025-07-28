@@ -1,0 +1,191 @@
+// https://material-foundation.github.io/material-theme-builder/
+// https://material.angular.dev/guide/system-variables
+// https://github.com/material-components/material-web/blob/main/docs/theming/color.md
+// ng generate @angular/material:theme-color --primary-color=#37618E --secondary-color=#535F70 --tertiary-color=#6B5778 --error-color=#BA1A1A --is-scss=true --include-high-contrast=false --neutral-color= --neutral-variant-color= --directory=projects\demo\src\styles\
+
+@use "@angular/material" as mat;
+@use "sass:map";
+@use "./styles/_theme-colors.scss" as app-theme;
+
+:root {
+  // ngx-dashboard demo app custom theme
+  --theme-palette-custom: #{map.get(app-theme.$primary-palette, 40)};
+  // Material Design default palettes, primary colors
+  --theme-palette-red: #{map.get(mat.$red-palette, 40)};
+  --theme-palette-green: #{map.get(mat.$green-palette, 40)};
+  --theme-palette-blue: #{map.get(mat.$blue-palette, 40)};
+  --theme-palette-yellow: #{map.get(mat.$yellow-palette, 40)};
+  --theme-palette-cyan: #{map.get(mat.$cyan-palette, 40)};
+  --theme-palette-magenta: #{map.get(mat.$magenta-palette, 40)};
+  --theme-palette-orange: #{map.get(mat.$orange-palette, 40)};
+  --theme-palette-chartreuse: #{map.get(mat.$chartreuse-palette, 40)};
+  --theme-palette-spring-green: #{map.get(mat.$spring-green-palette, 40)};
+  --theme-palette-azure: #{map.get(mat.$azure-palette, 40)};
+  --theme-palette-violet: #{map.get(mat.$violet-palette, 40)};
+  --theme-palette-rose: #{map.get(mat.$rose-palette, 40)};
+}
+
+// Default theme (custom)
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: app-theme.$primary-palette,
+        tertiary: app-theme.$tertiary-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+  @include mat.form-field-density(
+    -2
+  ); // density 0, the default, is almost comically spacious...
+}
+
+// Predefined Material Design palette themes
+html.theme-red {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$red-palette,
+        tertiary: mat.$orange-palette,
+      ),
+    )
+  );
+}
+
+html.theme-green {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$green-palette,
+        tertiary: mat.$spring-green-palette,
+      ),
+    )
+  );
+}
+
+html.theme-blue {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$blue-palette,
+        tertiary: mat.$cyan-palette,
+      ),
+    )
+  );
+}
+
+html.theme-yellow {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$yellow-palette,
+        tertiary: mat.$orange-palette,
+      ),
+    )
+  );
+}
+
+html.theme-cyan {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$cyan-palette,
+        tertiary: mat.$azure-palette,
+      ),
+    )
+  );
+}
+
+html.theme-magenta {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$magenta-palette,
+        tertiary: mat.$violet-palette,
+      ),
+    )
+  );
+}
+
+html.theme-violet {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$violet-palette,
+        tertiary: mat.$rose-palette,
+      ),
+    )
+  );
+}
+
+html.theme-orange {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$orange-palette,
+        tertiary: mat.$red-palette,
+      ),
+    )
+  );
+}
+
+html.theme-chartreuse {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$chartreuse-palette,
+        tertiary: mat.$green-palette,
+      ),
+    )
+  );
+}
+
+html.theme-spring-green {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$spring-green-palette,
+        tertiary: mat.$cyan-palette,
+      ),
+    )
+  );
+}
+
+html.theme-azure {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+    )
+  );
+}
+
+html.theme-rose {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$rose-palette,
+        tertiary: mat.$magenta-palette,
+      ),
+    )
+  );
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--mat-sys-surface);
+
+  &.dark-mode {
+    color-scheme: dark;
+    background-color: var(--mat-sys-surface);
+  }
+}

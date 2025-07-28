@@ -1,0 +1,87 @@
+/* dashboard-editor.component.scss */
+@use "../styles/dashboard-grid-vars" as *;
+
+:host {
+  @include dashboard-grid-vars;
+
+  display: block;
+  container-type: inline-size;
+  box-sizing: border-box;
+  aspect-ratio: var(--columns) / var(--rows);
+  width: 100%;
+  height: auto;
+}
+
+/* ── Grid-line overlay (visual only) ──────────────────────────────── */
+:host .grid {
+  /* Three layers:
+     1) vertical hair-lines (repeat)
+     2) horizontal centred hair-lines (repeat)
+     3) *single* horizontal hair-line flush with the bottom edge (no-repeat) */
+  background-image: linear-gradient(
+      to right,
+      rgba(100 100 100 / 0.12) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(100 100 100 / 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(100 100 100 / 0.12) 1px, transparent 1px);
+
+  background-size: var(--tile-size) var(--tile-size),
+    /* vertical lines tile */ var(--tile-size) var(--tile-size),
+    /* horizontal centred lines tile */ 100% 1px; /* bottom edge only  */
+
+  background-position: var(--tile-offset) var(--tile-offset),
+    /* vertical-line grid   */ var(--tile-offset) var(--tile-offset),
+    /* horizontal centred   */ bottom; /* bottom hair-line     */
+
+  background-repeat: repeat, repeat, no-repeat;
+
+  // background-color: rgba(245 245 245 / 0.5);
+  //border: 1px solid rgba(245 245 245 / 0.1);
+}
+/* ── Structural wrappers ─────────────────────────────────────────── */
+.grid-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  // background-color: var(--grid-background-color);
+}
+
+/* Real CSS Grid that holds widgets */
+.grid {
+  display: grid;
+  gap: var(--gutter-size);
+  padding: var(--gutter-size);
+
+  position: absolute;
+  inset: 0; /* top/right/bottom/left: 0 */
+
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+
+  align-items: stretch;
+  justify-items: stretch;
+
+  grid-template-columns: repeat(var(--columns), var(--cell-size));
+  grid-template-rows: repeat(var(--rows), var(--cell-size));
+}
+
+/* ── Layering & DnD helpers ──────────────────────────────────────── */
+#bottom-grid {
+  z-index: 1;
+}
+
+#top-grid {
+  z-index: 2;
+  pointer-events: none; /* overlay shouldn’t block interactions */
+}
+
+.grid-cell {
+  pointer-events: auto; /* re-enable for actual content */
+}
+
+.grid-cell.is-dragging {
+  pointer-events: none; /* don’t block drop zones while lifted */
+  opacity: 0.5;
+}

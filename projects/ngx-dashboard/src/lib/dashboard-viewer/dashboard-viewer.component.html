@@ -1,0 +1,19 @@
+<!-- Dashboard viewer - read-only grid -->
+<div class="grid top-grid">
+  @for (cell of cells(); track cell.cellId) {
+    <lib-cell
+      class="grid-cell"
+      [id]="cell.cellId"
+      [isEditMode]="false"
+      [draggable]="false"
+      [row]="cell.row"
+      [column]="cell.col"
+      [rowSpan]="cell.rowSpan"
+      [colSpan]="cell.colSpan"
+      [flat]="cell.flat"
+      [widgetFactory]="cell.widgetFactory"
+      [widgetState]="cell.widgetState"
+    >
+    </lib-cell>
+  }
+</div>

@@ -1,0 +1,67 @@
+// drop-zone.component.scss
+
+.drop-zone {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+
+  // Ensure proper alignment when explicitly positioned in CSS Grid
+  align-self: stretch;
+  justify-self: stretch;
+
+  // Ensure the drop zone takes up the full grid area
+  display: block;
+  box-sizing: border-box;
+}
+
+.drop-zone--active {
+  background-color: rgba(128, 128, 128, 0.5);
+  // background-color: var(--mat-sys-surface-dim);
+}
+
+.drop-zone--highlight {
+  background-color: rgba(128, 128, 128, 0.5);
+  // background-color: var(--mat-sys-surface-dim);
+}
+
+.drop-zone--invalid {
+  // background-color: var(--mat-sys-error);
+  // background-color: color-mix(in srgb, var(--mat-sys-error) 50%, transparent);
+  //background-color: rgba(255, 0, 0, 0.2);
+
+  background-color: light-dark(
+    color-mix(in srgb, var(--mat-sys-error) 40%, white),
+    color-mix(in srgb, var(--mat-sys-error) 80%, black)
+  );
+}
+
+.drop-zone--resize {
+  background-color: rgba(33, 150, 243, 0.3);
+  outline: 1px solid rgba(33, 150, 243, 0.6);
+}
+
+// Edit mode cell numbers - centered in cell
+.edit-mode-cell-number {
+  // Text styling
+  font-size: 10px;
+  // color: var(-mat-sys-surface-container-highest);
+  color: rgba(100, 100, 100, 0.6);
+  // color: color-mix(in srgb, var(--mat-sys-surface-on-dim) 40%, transparent);
+
+  pointer-events: none;
+  user-select: none;
+  z-index: -1;
+
+  // Center in cell
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  // Take up entire cell area
+  width: 100%;
+  height: 100%;
+
+  // background-color: rgba(255, 255, 255, 0.1);
+}

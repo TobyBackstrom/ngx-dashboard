@@ -1,0 +1,92 @@
+<!-- Speed Dial Container -->
+<div class="speed-dial-container">
+  <!-- Speed Dial Actions (appear when open) -->
+  @if (isSpeedDialOpen()) {
+  <div class="speed-dial-actions">
+    <!-- File Operations -->
+    <button
+      mat-mini-fab
+      class="speed-dial-action"
+      (click)="onAction('export')"
+      matTooltip="Export to File"
+      matTooltipPosition="left"
+    >
+      <mat-icon>file_download</mat-icon>
+    </button>
+
+    <button
+      mat-mini-fab
+      class="speed-dial-action"
+      (click)="onAction('import')"
+      matTooltip="Import from File"
+      matTooltipPosition="left"
+    >
+      <mat-icon>file_upload</mat-icon>
+    </button>
+
+    <!-- Local Storage Operations -->
+    <button
+      mat-mini-fab
+      class="speed-dial-action"
+      (click)="onAction('save')"
+      matTooltip="Save to Browser"
+      matTooltipPosition="left"
+    >
+      <mat-icon>arrow_circle_down</mat-icon>
+    </button>
+
+    <button
+      mat-mini-fab
+      class="speed-dial-action"
+      (click)="onAction('load')"
+      matTooltip="Load from Browser"
+      matTooltipPosition="left"
+    >
+      <mat-icon>arrow_circle_up</mat-icon>
+    </button>
+
+    <!-- Clear Dashboard -->
+    <button
+      mat-mini-fab
+      class="speed-dial-action"
+      (click)="onAction('clear')"
+      matTooltip="Clear Dashboard"
+      matTooltipPosition="left"
+      color="warn"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+
+    <!-- Edit/View Mode Toggle -->
+    <button
+      mat-mini-fab
+      class="speed-dial-action"
+      (click)="onAction('editMode')"
+      [matTooltip]="editMode() ? 'Switch to View Mode' : 'Switch to Edit Mode'"
+      matTooltipPosition="left"
+      [color]="editMode() ? 'accent' : 'primary'"
+    >
+      <mat-icon>{{ editMode() ? "visibility" : "edit" }}</mat-icon>
+    </button>
+  </div>
+  }
+
+  <!-- Main FAB (always visible) -->
+  <button
+    mat-fab
+    class="main-fab"
+    (click)="toggleSpeedDial()"
+    [matTooltip]="isSpeedDialOpen() ? 'Close menu' : 'Dashboard actions'"
+    matTooltipPosition="left"
+    color="primary"
+  >
+    <mat-icon [class.rotated]="isSpeedDialOpen()">
+      {{ isSpeedDialOpen() ? "close" : "dashboard_customize" }}
+    </mat-icon>
+  </button>
+</div>
+
+<!-- Backdrop (closes speed dial when clicked) -->
+@if (isSpeedDialOpen()) {
+<div class="speed-dial-backdrop" (click)="closeSpeedDial()"></div>
+}

@@ -1,5 +1,9 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
+CLAUDE.md
+prompts
+.claude
+
 # Compiled output
 /dist
 /tmp
@@ -36,6 +40,8 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+docs - internal
+docs/sessions
 
 # System files
 .DS_Store

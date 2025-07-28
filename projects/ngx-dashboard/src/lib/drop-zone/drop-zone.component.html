@@ -1,0 +1,20 @@
+<!-- drop-zone.component.html -->
+<div
+  class="drop-zone"
+  [class.drop-zone--highlight]="highlight() && !highlightInvalid()"
+  [class.drop-zone--invalid]="highlightInvalid()"
+  [class.drop-zone--resize]="highlightResize()"
+  [style.grid-row]="row()"
+  [style.grid-column]="col()"
+  (dragenter)="onDragEnter($event)"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+>
+  @if (editMode()) {
+    <div class="edit-mode-cell-number">
+      {{ index() }}<br />
+      {{ row() }},{{ col() }}
+    </div>
+  }
+</div>

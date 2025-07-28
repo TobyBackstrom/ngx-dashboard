@@ -1,0 +1,18 @@
+<!-- widget-list.component.html -->
+<div class="widget-list">
+  @for (widget of widgets(); track widget.widgetTypeid) {
+  <div
+    class="widget-list-item"
+    [class.active]="activeWidget() === widget.widgetTypeid"
+    draggable="true"
+    (dragstart)="onDragStart($event, widget)"
+    (dragend)="onDragEnd()"
+  >
+    <div class="icon" [innerHTML]="widget.safeSvgIcon"></div>
+    <div class="content">
+      <strong>{{ widget.name }}</strong>
+      <small>{{ widget.description }}</small>
+    </div>
+  </div>
+  }
+</div>

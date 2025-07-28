@@ -1,0 +1,56 @@
+<!-- dashboard-editor.component.html -->
+<div class="grid-container">
+  <!-- Bottom grid with drop zones -->
+  <div class="grid" id="bottom-grid" #bottomGrid>
+    @for (position of dropzonePositions(); track position.id) {
+    <lib-drop-zone
+      class="drop-zone"
+      [row]="position.row"
+      [col]="position.col"
+      [index]="position.index"
+      [highlight]="highlightMap().has(createCellId(position.row, position.col))"
+      [highlightInvalid]="
+        invalidHighlightMap().has(createCellId(position.row, position.col))
+      "
+      [highlightResize]="
+        resizePreviewMap().has(createCellId(position.row, position.col))
+      "
+      [editMode]="true"
+      (dragEnter)="onDragEnter($event)"
+      (dragExit)="onDragExit()"
+      (dragOver)="onDragOver($event)"
+      (dragDrop)="onDragDrop($event)"
+    ></lib-drop-zone>
+    }
+  </div>
+
+  <!-- Top grid with interactive cells -->
+  <div class="grid" id="top-grid">
+    @for (cell of cells(); track cell.cellId) {
+    <lib-cell
+      class="grid-cell"
+      [id]="cell.cellId"
+      [isEditMode]="true"
+      [draggable]="true"
+      [row]="cell.row"
+      [column]="cell.col"
+      [rowSpan]="cell.rowSpan"
+      [colSpan]="cell.colSpan"
+      [flat]="cell.flat"
+      [widgetFactory]="cell.widgetFactory"
+      [widgetState]="cell.widgetState"
+      (dragStart)="onCellDragStart($event)"
+      (dragEnd)="dragEnd()"
+      (delete)="onCellDelete($event)"
+      (settings)="onCellSettings($event)"
+      (resizeStart)="onCellResizeStart($event)"
+      (resizeMove)="onCellResizeMove($event)"
+      (resizeEnd)="onCellResizeEnd($event)"
+    >
+    </lib-cell>
+    }
+  </div>
+</div>
+
+<!-- Context menu -->
+<lib-cell-context-menu></lib-cell-context-menu>

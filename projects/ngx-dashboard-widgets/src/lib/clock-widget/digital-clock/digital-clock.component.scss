@@ -1,0 +1,43 @@
+// Digital Clock Component Styles
+
+:host {
+  // Base widget styles
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color var(--mat-sys-motion-duration-medium2)
+    var(--mat-sys-motion-easing-standard);
+  
+  // Clock widget padding and colors
+  padding: var(--mat-sys-spacing-4);
+  color: var(--mat-sys-on-surface-variant, #6c757d);
+
+  &.has-background {
+    background-color: var(--mat-sys-surface-container-high);
+    border-radius: 4px;
+    color: var(--mat-sys-on-surface, #1f1f1f);
+  }
+
+  &:hover {
+    opacity: 0.8;
+    color: var(--mat-sys-primary, #6750a4);
+  }
+}
+
+// Digital time display
+.digital-time {
+  // Default: when NO PM is shown (regardless of seconds)
+  font-size: clamp(12px, min(20cqw, 50cqh), 200px);
+  font-family: monospace;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  transition: color 0.2s ease;
+}
+
+// Smaller font when showing both PM AND seconds
+:host.show-pm.show-seconds .digital-time {
+  font-size: clamp(12px, min(15cqw, 50cqh), 200px);
+}

@@ -1,0 +1,26 @@
+<div class="dashboard-viewport-container">
+  <div class="dashboard-wrapper">
+    <ngx-dashboard
+      #dashboard
+      [dashboardData]="dashboardConfig"
+      [editMode]="editMode()"
+      [reservedSpace]="dashboardReservedSpace()"
+    >
+    </ngx-dashboard>
+  </div>
+
+  @if (editMode()) {
+  <ngx-dashboard-widget-list class="widget-list"></ngx-dashboard-widget-list>
+  }
+</div>
+
+<!-- Dashboard FAB with Speed Dial -->
+<app-dashboard-fab
+  #fab
+  (editModeToggle)="onEditModeToggle()"
+  (exportToFile)="onExportToFile()"
+  (importFromFile)="onImportFromFile()"
+  (saveToLocalStorage)="onSaveToLocalStorage()"
+  (loadFromLocalStorage)="onLoadFromLocalStorage()"
+  (clearDashboard)="onClearDashboard()"
+></app-dashboard-fab>

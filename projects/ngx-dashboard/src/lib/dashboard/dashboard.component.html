@@ -1,0 +1,18 @@
+<!-- dashboard.component.html -->
+<div class="grid-container">
+  @if (editMode()) {
+  <!-- Full editor with drag & drop capabilities -->
+  <ngx-dashboard-editor
+    [rows]="store.rows()"
+    [columns]="store.columns()"
+    [gutterSize]="store.gutterSize()"
+  ></ngx-dashboard-editor>
+  } @else {
+  <!-- Read-only viewer -->
+  <ngx-dashboard-viewer
+    [rows]="store.rows()"
+    [columns]="store.columns()"
+    [gutterSize]="store.gutterSize()"
+  ></ngx-dashboard-viewer>
+  }
+</div>

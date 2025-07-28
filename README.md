@@ -1,59 +1,169 @@
-# NgxDashboard
+# Angular Dashboard Libraries
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.5.
+A collection of Angular libraries for building performant, modular, and fully reactive grid dashboards with drag-and-drop functionality, resizable grid cells, and customizable widgets.
 
-## Development server
+## 📦 Libraries
 
-To start a local development server, run:
+### [@dragonworks/ngx-dashboard](./projects/ngx-dashboard)
+
+The core dashboard library providing:
+
+- **Drag & Drop Dashboard** - Intuitive grid-based layout with real-time positioning
+- **Resizable Cells** - Dynamic cell resizing with collision detection
+- **Dual Modes** - Separate editing and viewing components for optimal UX
+- **State Management** - Powered by NgRx Signals with feature-based architecture
+- **Zero Dependencies** - Truly framework-agnostic with no external UI library requirements
+- **Flexible Dialog System** - Pluggable dialog architecture supporting any UI framework
+
+### [@dragonworks/ngx-dashboard-widgets](./projects/ngx-dashboard-widgets)
+
+A collection of example widgets to get you started, featuring:
+
+- **Arrow Widget** - Directional indicators with customizable styling
+- **Label Widget** - Text labels with rich formatting options
+- **Extensible Architecture** - Easy to add custom widgets
+
+## 🚀 Quick Start
+
+### Installation
 
 ```bash
-ng serve
+# Install the core dashboard
+npm install @dragonworks/ngx-dashboard
+
+# Install widget collection (optional)
+npm install @dragonworks/ngx-dashboard-widgets
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Basic Usage
 
-## Code scaffolding
+```typescript
+import { DashboardComponent, createEmptyDashboard } from "@dragonworks/ngx-dashboard";
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+@Component({
+  template: `
+    <ngx-dashboard 
+      [dashboardData]="dashboardConfig" 
+      [editMode]="true">
+    </ngx-dashboard>
+  `,
+  imports: [DashboardComponent],
+})
+export class MyComponent {
+  // Create dashboard configuration
+  dashboardConfig = createEmptyDashboard('my-dashboard-id', 5, 8);
+  
+  // Uses native browser dialogs by default
+}
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🛠️ Development
+
+### Prerequisites
+
+- Node.js 18+
+- Angular 20+
+- npm
+
+### Setup
 
 ```bash
-ng generate --help
+# Clone and install dependencies
+git clone <repository-url>
+cd ngx-dashboard
+npm install
 ```
 
-## Building
-
-To build the project run:
+### Build Commands
 
 ```bash
-ng build
+# Build both libraries
+npm run build
+
+# Build individual libraries
+npm run build:ngx-dashboard
+npm run build:ngx-dashboard-widgets
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Testing
 
 ```bash
+# Run all tests
+npm test
+
+# Run tests with browser (for debugging)
 ng test
 ```
 
-## Running end-to-end tests
+## 🏗️ Architecture
 
-For end-to-end (e2e) testing, run:
+### Component Naming Convention
 
-```bash
-ng e2e
-```
+- **Public API**: `ngx-dashboard-*` (for library consumers)
+- **Internal**: `lib-*` (for internal library use)
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### State Management
 
-## Additional Resources
+- **NgRx Signals** - Reactive state management
+- **Feature-based Organization** - Modular store features (grid, widgets, drag-drop, resize)
+- **Computed Properties** - Efficient reactive updates
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Widget System
+
+- **Factory Pattern** - Pluggable widget architecture
+- **Metadata-driven** - Self-describing widgets with icons and descriptions
+- **State Management** - Widget-specific state with serialization support
+
+### Dialog System
+
+- **Framework Agnostic** - No built-in UI framework dependencies
+- **Works Out of Box** - Native browser dialogs provide immediate functionality
+- **Provider Pattern** - Simple dependency injection for custom dialog solutions
+- **Material Support** - Separate package available for Angular Material integration
+
+## 📖 Documentation
+
+- [Core Dashboard Documentation](./projects/ngx-dashboard/README.md)
+- [Widgets Documentation](./projects/ngx-dashboard-widgets/README.md)
+- [Material Dialog Implementation Guide](./MATERIAL_DIALOG_IMPLEMENTATION.md)
+- [Development Guide](./CLAUDE.md)
+
+## 🧪 Features
+
+### ✅ Completed
+
+- [x] Drag & drop grid system
+- [x] Cell resizing with collision detection
+- [x] Widget factory and registration
+- [x] Export/import dashboard configurations
+- [x] Comprehensive test suite (187 tests)
+- [x] Arrow and Label widgets
+- [x] Dual editing/viewing modes
+- [x] Framework-agnostic dialog system
+- [x] Zero external dependencies
+
+### 🚧 Planned
+
+- [ ] Demo application
+- [ ] Additional widget types
+- [ ] Theme system
+- [ ] Accessibility improvements
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass: `npm test`
+6. Submit a pull request
+
+## 📄 License
+
+[MIT License](LICENSE)
+
+## 🔗 Links
+
+- [Angular](https://angular.dev/)
+- [NgRx Signals](https://ngrx.io/guide/signals)
+- [Angular Material](https://material.angular.io/) (used in widgets)
