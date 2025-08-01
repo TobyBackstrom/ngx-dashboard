@@ -1,4 +1,12 @@
-import { Component, inject, signal, computed, DestroyRef, input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  DestroyRef,
+  input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 export interface DigitalClockConfig {
   timeFormat: '12h' | '24h';
@@ -16,8 +24,8 @@ export interface DigitalClockConfig {
     '[class.has-background]': 'hasBackground()',
     '[class.show-pm]': 'timeFormat() === "12h"',
     '[class.show-seconds]': 'showSeconds()',
-    'class': 'clock-widget digital'
-  }
+    class: 'clock-widget digital',
+  },
 })
 export class DigitalClockComponent {
   readonly #destroyRef = inject(DestroyRef);
@@ -29,7 +37,7 @@ export class DigitalClockComponent {
 
   // Time tracking
   currentTime = signal(new Date());
-  
+
   formattedTime = computed(() => {
     const time = this.currentTime();
     const format = this.timeFormat();
@@ -43,40 +51,30 @@ export class DigitalClockComponent {
     let hours = time.getHours();
     const minutes = time.getMinutes();
     const seconds = time.getSeconds();
-    
+
     // Pad with leading zeros
     const mm = minutes.toString().padStart(2, '0');
     const ss = seconds.toString().padStart(2, '0');
-    
+
     if (format === '12h') {
       // 12-hour format with AM/PM
       const ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12;
       if (hours === 0) hours = 12; // Convert 0 to 12 for 12 AM/PM
-      
+
       const hh = hours.toString().padStart(2, '0');
-      
-      if (showSecs) {
-        return `${hh}:${mm}:${ss} ${ampm}`;
-      } else {
-        return `${hh}:${mm} ${ampm}`;
-      }
+      return showSecs ? `${hh}:${mm}:${ss} ${ampm}` : `${hh}:${mm} ${ampm}`;
     } else {
       // 24-hour format
       const hh = hours.toString().padStart(2, '0');
-      
-      if (showSecs) {
-        return `${hh}:${mm}:${ss}`;
-      } else {
-        return `${hh}:${mm}`;
-      }
+      return showSecs ? `${hh}:${mm}:${ss}` : `${hh}:${mm}`;
     }
   }
 
   constructor() {
     // Set up time update timer
     this.#startTimer();
-    
+
     // Clean up timer on component destruction
     this.#destroyRef.onDestroy(() => {
       this.#stopTimer();
@@ -87,10 +85,10 @@ export class DigitalClockComponent {
     // Sync to the next second boundary for smooth start
     const now = new Date();
     const msUntilNextSecond = 1000 - now.getMilliseconds();
-    
+
     setTimeout(() => {
       this.currentTime.set(new Date());
-      
+
       // Start the regular 1-second interval
       this.#intervalId = window.setInterval(() => {
         this.currentTime.set(new Date());
