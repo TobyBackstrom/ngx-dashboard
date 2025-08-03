@@ -31,33 +31,36 @@ import { SparklineWidgetState } from './sparkline-widget.component';
         <div class="setting-item">
           <mat-slide-toggle
             [(ngModel)]="formState().realtime"
-            (ngModelChange)="updateRealtime($event)">
+            (ngModelChange)="updateRealtime($event)"
+          >
             Connect to realtime data feed
           </mat-slide-toggle>
         </div>
-        
+
         <div class="setting-item">
           <mat-slide-toggle
             [(ngModel)]="formState().hasBackground"
-            (ngModelChange)="updateBackground($event)">
+            (ngModelChange)="updateBackground($event)"
+          >
             Show background
           </mat-slide-toggle>
         </div>
-        
+
         <div class="setting-item">
           <mat-form-field appearance="outline">
             <mat-label>Frame Rate (FPS)</mat-label>
-            <mat-select 
+            <mat-select
               [(ngModel)]="formState().frameRate"
               (ngModelChange)="updateFrameRate($event)"
-              [disabled]="!formState().realtime">
+              [disabled]="!formState().realtime"
+            >
               <mat-option [value]="1">1 FPS (Very Slow)</mat-option>
               <mat-option [value]="5">5 FPS (Slow)</mat-option>
               <mat-option [value]="10">10 FPS (Moderate)</mat-option>
               <mat-option [value]="15">15 FPS (Smooth)</mat-option>
               <mat-option [value]="20">20 FPS (Default)</mat-option>
-              <mat-option [value]="24">24 FPS (Cinema)</mat-option>
-              <mat-option [value]="30">30 FPS (TV Standard)</mat-option>
+              <mat-option [value]="24">24 FPS (Fast)</mat-option>
+              <mat-option [value]="30">30 FPS (Faster)</mat-option>
               <mat-option [value]="60">60 FPS (High Refresh)</mat-option>
             </mat-select>
           </mat-form-field>
@@ -67,9 +70,7 @@ import { SparklineWidgetState } from './sparkline-widget.component';
 
     <mat-dialog-actions align="end">
       <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button (click)="save()">
-        Save
-      </button>
+      <button mat-flat-button (click)="save()">Save</button>
     </mat-dialog-actions>
   `,
   styles: [
@@ -103,7 +104,9 @@ import { SparklineWidgetState } from './sparkline-widget.component';
 })
 export class SparklineStateDialogComponent {
   private readonly data = inject<SparklineWidgetState>(MAT_DIALOG_DATA);
-  private readonly dialogRef = inject(MatDialogRef<SparklineStateDialogComponent>);
+  private readonly dialogRef = inject(
+    MatDialogRef<SparklineStateDialogComponent>
+  );
 
   readonly formState = signal<SparklineWidgetState>({
     hasBackground: this.data.hasBackground ?? true,
@@ -112,15 +115,15 @@ export class SparklineStateDialogComponent {
   });
 
   updateRealtime(value: boolean): void {
-    this.formState.update(state => ({ ...state, realtime: value }));
+    this.formState.update((state) => ({ ...state, realtime: value }));
   }
 
   updateBackground(value: boolean): void {
-    this.formState.update(state => ({ ...state, hasBackground: value }));
+    this.formState.update((state) => ({ ...state, hasBackground: value }));
   }
 
   updateFrameRate(value: number): void {
-    this.formState.update(state => ({ ...state, frameRate: value }));
+    this.formState.update((state) => ({ ...state, frameRate: value }));
   }
 
   onCancel(): void {
