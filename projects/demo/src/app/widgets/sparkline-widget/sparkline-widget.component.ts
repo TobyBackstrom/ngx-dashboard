@@ -73,11 +73,14 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
   });
 
   constructor() {
-    effect(() => {
-      this.#handleRealtimeStateChange();
-    }, { 
-      allowSignalWrites: true 
-    });
+    effect(
+      () => {
+        this.#handleRealtimeStateChange();
+      },
+      {
+        allowSignalWrites: true,
+      }
+    );
   }
 
   dashboardSetState(state?: unknown): void {
@@ -127,7 +130,7 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
     if (isRealtime && this.canvasContainer()) {
       // Stop existing timer to restart with new frame rate
       this.#stopRealtimeTimer();
-      
+
       // Force re-render when theme changes
       if (this.#chart) {
         const container = this.#getCanvasContainer();
@@ -187,7 +190,7 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
       if (this.#chartWidth > 0) {
         this.#generateData(this.#chartWidth);
       }
-      
+
       const intervalMs = Math.max(1000 / (this.state().frameRate || 20), 16); // Min 16ms for 60+ FPS cap
       this.#realtimeTimer = setInterval(() => {
         // More robust checks - ensure component is in valid state
@@ -265,7 +268,11 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
         const container = this.#getCanvasContainer();
         if (container) {
           try {
-            this.#chart = this.#createChart(this.#chartWidth, this.#chartHeight, this.#lastBackgroundColor);
+            this.#chart = this.#createChart(
+              this.#chartWidth,
+              this.#chartHeight,
+              this.#lastBackgroundColor
+            );
             container.appendChild(this.#chart);
           } catch (recreateError) {
             console.warn('Failed to recreate chart:', recreateError);
@@ -296,15 +303,23 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
       return;
     }
 
-    this.#lastGradientStop0 = this.#resolveThemeColor(
+    const isDarkMode = this.#themeService.isDarkMode();
+
+    this.#lastGradientStop1 = this.#resolveThemeColor(
       '--mat-sys-tertiary-container',
       '#90ee90'
     );
 
-    this.#lastGradientStop1 = this.#resolveThemeColor(
+    this.#lastGradientStop0 = this.#resolveThemeColor(
       '--mat-sys-on-tertiary-container',
       '#000000'
     );
+
+    if (isDarkMode) {
+      const tmp = this.#lastGradientStop0;
+      this.#lastGradientStop0 = this.#lastGradientStop1;
+      this.#lastGradientStop1 = tmp;
+    }
 
     this.#generateData(newWidth);
 
