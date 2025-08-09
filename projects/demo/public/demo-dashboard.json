@@ -480,6 +480,18 @@
         "timeFormat": "12h",
         "showSeconds": true
       }
+    },
+    {
+      "row": 1,
+      "col": 7,
+      "rowSpan": 2,
+      "colSpan": 2,
+      "widgetTypeid": "@demo/sparkline-widget",
+      "widgetState": {
+        "hasBackground": true,
+        "realtime": false,
+        "frameRate": 20
+      }
     }
   ]
 }

@@ -1,5 +1,5 @@
 <!-- widget-list.component.html -->
-<div class="widget-list">
+<div class="widget-list" role="list" aria-label="Available widgets">
   @for (widget of widgets(); track widget.widgetTypeid) {
   <div
     class="widget-list-item"
@@ -7,8 +7,12 @@
     draggable="true"
     (dragstart)="onDragStart($event, widget)"
     (dragend)="onDragEnd()"
+    role="listitem"
+    [attr.aria-grabbed]="activeWidget() === widget.widgetTypeid"
+    [attr.aria-label]="widget.name + ' widget: ' + widget.description"
+    tabindex="0"
   >
-    <div class="icon" [innerHTML]="widget.safeSvgIcon"></div>
+    <div class="icon" [innerHTML]="widget.safeSvgIcon" aria-hidden="true"></div>
     <div class="content">
       <strong>{{ widget.name }}</strong>
       <small>{{ widget.description }}</small>

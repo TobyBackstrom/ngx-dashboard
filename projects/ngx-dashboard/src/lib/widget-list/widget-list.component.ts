@@ -77,7 +77,11 @@ export class WidgetListComponent {
     const dimensions = this.gridCellDimensions();
 
     const el = this.#renderer.createElement('div');
-    el.classList.add('drag-ghost');
+    this.#renderer.addClass(el, 'drag-ghost');
+
+    // Set dimensions using CSS custom properties for dynamic sizing
+    this.#renderer.setStyle(el, 'width', `${dimensions.width}px`);
+    this.#renderer.setStyle(el, 'height', `${dimensions.height}px`);
 
     if (svgIcon) {
       const iconWrapper = this.#renderer.createElement('div');
@@ -87,33 +91,15 @@ export class WidgetListComponent {
       const svg = iconWrapper.querySelector('svg');
 
       if (svg) {
+        // Size the SVG to 80% of the cell dimensions
         svg.setAttribute('width', `${dimensions.width * 0.8}`);
         svg.setAttribute('height', `${dimensions.height * 0.8}`);
-        svg.setAttribute('fill', '#000000');
-        svg.setAttribute('opacity', '0.3');
+        // Remove hardcoded fill and opacity - let CSS handle styling
+        svg.removeAttribute('fill');
       }
 
       el.appendChild(iconWrapper);
     }
-
-    Object.assign(el.style, {
-      boxSizing: 'border-box',
-      position: 'absolute',
-      top: '0',
-      left: '0',
-      width: `${dimensions.width}px`,
-      height: `${dimensions.height}px`,
-      zIndex: '9999',
-      margin: '0',
-      background: 'white',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-      pointerEvents: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      opacity: 0.7,
-    });
 
     return el;
   }
