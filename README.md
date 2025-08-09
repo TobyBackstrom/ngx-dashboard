@@ -213,7 +213,6 @@ ng test
 
 ### Testing Strategy
 
-- **370+ Tests** - Comprehensive coverage across all libraries (290 dashboard + 80 widgets)
 - **User-Focused** - Tests verify public API behavior, not implementation details
 - **Integration Tests** - Component-store interaction validation
 - **Pattern-Based** - Deterministic testing for time-dependent features using regex patterns
@@ -240,13 +239,6 @@ The libraries follow Material Design 3 specifications where justified:
 - **Tree-Shakeable** - Optimized bundle sizes with proper sideEffects configuration
 - **Extensible Architecture** - Provider pattern for custom implementations
 - **Comprehensive Testing** - Behavior-driven tests with high coverage
-
-## 📖 Documentation
-
-- [Core Library Documentation](./projects/ngx-dashboard/README.md)
-- [Widget Library Documentation](./projects/ngx-dashboard-widgets/README.md)
-- [Development Guidelines](./CLAUDE.md)
-- [Live Demo](https://dragonworks.dev/ngx-dashboard/)
 
 ## 🤝 Contributing
 
