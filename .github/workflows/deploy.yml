@@ -35,7 +35,7 @@ jobs:
           npm run build:ngx-dashboard
           npm run build:ngx-dashboard-widgets
           echo "Building demo application with base-href: ${{ secrets.BASE_HREF }}"
-          ng build demo --configuration production --base-href "${{ secrets.BASE_HREF }}"
+          npx ng build demo --configuration production --base-href "${{ secrets.BASE_HREF }}"
 
       - name: Copy .htaccess to build output
         run: cp projects/demo/.htaccess dist/demo/browser/
