@@ -1,0 +1,82 @@
+name: Deploy to Web Server
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for deployment'
+        required: false
+        default: 'Manual deployment'
+      dry_run:
+        description: 'Perform a dry-run (no files will be uploaded)'
+        required: false
+        default: 'false'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build demo project
+        run: |
+          echo "Building libraries first..."
+          npm run build:ngx-dashboard
+          npm run build:ngx-dashboard-widgets
+          echo "Building demo application with base-href: ${{ secrets.BASE_HREF }}"
+          ng build demo --configuration production --base-href "${{ secrets.BASE_HREF }}"
+
+      - name: Copy .htaccess to build output
+        run: cp projects/demo/.htaccess dist/demo/browser/
+
+      - name: Write SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PRIVATE_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+
+      - name: Deploy with rsync
+        run: |
+          echo "Starting deployment of demo application..."
+          DRY_RUN_FLAG=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            echo "⚠️ Dry-run mode enabled — no files will be transferred"
+            DRY_RUN_FLAG="--dry-run"
+          fi
+
+          echo "Deploying from: dist/demo/browser/"
+          echo "Deploying to: ${{ secrets.DESTINATION_PATH }}"
+          echo "Base href: ${{ secrets.BASE_HREF }}"
+
+          # Create target directory if it doesn't exist (without affecting parent)
+          ssh -i ~/.ssh/id_deploy -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no \
+            ${{ secrets.REMOTE_USER }}@${{ secrets.TARGET_SERVER }} \
+            "mkdir -p ${{ secrets.DESTINATION_PATH }}"
+
+          # Deploy only to the specific subdirectory
+          # --delete removes files from destination that don't exist in source
+          # but ONLY within the target directory
+          rsync -e "ssh -i ~/.ssh/id_deploy -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" \
+            $DRY_RUN_FLAG \
+            --archive --verbose --compress --human-readable --progress --delete \
+            --exclude=.git* --exclude=.git/ --exclude=README.md --exclude=readme.md --exclude=.gitignore \
+            dist/demo/browser/ \
+            ${{ secrets.REMOTE_USER }}@${{ secrets.TARGET_SERVER }}:${{ secrets.DESTINATION_PATH }}/
+
+          if [ $? -eq 0 ]; then
+            echo "✅ Deployment succeeded"
+          else
+            echo "❌ Deployment failed"
+            exit 1
+          fi
