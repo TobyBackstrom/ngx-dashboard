@@ -20,7 +20,7 @@
 
 Angular libraries for building drag-and-drop grid dashboards with resizable cells and customizable widgets. Built with modern Angular patterns, NgRx Signals state management, and Material Design 3 compliance.
 
-🎯 **[Live Demo](https://dragonworks.dev/ngx-dashboard/)** - Try the interactive demo application to see how a dashboard can be used in any Angular application
+🎯 **[Live Demo](https://dragonworks.dev/ngx-dashboard/)** - Try the interactive demo application to see how the dashboard components are used in an Angular application
 
 ## 📦 Libraries
 
