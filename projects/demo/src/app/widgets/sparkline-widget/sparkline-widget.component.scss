@@ -27,9 +27,9 @@
 .svg-placeholder {
   width: min(80cqw, 80cqh);
   aspect-ratio: 1 / 1;
-  opacity: 0.8;
+  opacity: 0.3;
   transition: opacity 0.3s ease;
-  
+
   // SVG styling
   ::ng-deep svg {
     width: 100%;
@@ -52,7 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   // Canvas element styling
   ::ng-deep canvas {
     max-width: 100%;
