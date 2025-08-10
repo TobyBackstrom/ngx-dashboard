@@ -1,0 +1,67 @@
+// sparkbar-widget.component.scss
+:host {
+  display: block;
+  container-type: size;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sparkbar-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color var(--mat-sys-motion-duration-medium2)
+    var(--mat-sys-motion-easing-standard);
+
+  // Add background color when enabled
+  &.has-background {
+    background-color: var(--mat-sys-surface-container-high);
+    border-radius: 4px;
+  }
+}
+
+.svg-placeholder {
+  width: min(80cqw, 80cqh);
+  aspect-ratio: 1 / 1;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+
+  // SVG styling
+  ::ng-deep svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    fill: var(--mat-sys-on-surface-variant, #6c757d);
+    transition: fill 0.2s ease;
+  }
+
+  // Different color when parent has background
+  .has-background & ::ng-deep svg {
+    fill: var(--mat-sys-on-surface, #1f1f1f);
+  }
+}
+
+// Canvas container styling
+.canvas-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Canvas element styling
+  ::ng-deep canvas {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 4px;
+  }
+}
+
+// Hover effect
+.sparkbar-wrapper:hover .svg-placeholder ::ng-deep svg {
+  fill: var(--mat-sys-primary, #6750a4);
+}

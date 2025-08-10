@@ -1,0 +1,11 @@
+<!-- sparkbar-widget.component.html -->
+<div class="sparkbar-wrapper" [class.has-background]="state().hasBackground">
+  @if (state().realtime) {
+    <div #canvasContainer class="canvas-container"></div>
+  } @else {
+    <div
+      class="svg-placeholder"
+      [innerHTML]="safeSvgIcon"
+    ></div>
+  }
+</div>
