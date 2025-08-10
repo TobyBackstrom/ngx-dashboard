@@ -18,42 +18,41 @@
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
 </p>
 
-Angular libraries for building drag-and-drop grid dashboards with resizable cells and customizable widgets. Built with modern Angular patterns, NgRx Signals state management, and Material Design 3 compliance.
+Modern Angular workspace for building drag-and-drop grid dashboards with resizable cells and customizable widgets. Built with Angular 20+ standalone components, NgRx Signals state management, and Material Design 3 design system compliance.
 
-🎯 **[Live Demo](https://dragonworks.dev/ngx-dashboard/)** - Try the interactive demo application to see how the dashboard components are used in an Angular application
+🎯 **[Live Demo](https://dragonworks.dev/ngx-dashboard/)** - Try the interactive demo application
 
-## 📦 Libraries
+## 📦 Architecture
 
-### [@dragonworks/ngx-dashboard](./projects/ngx-dashboard) v20.0.4
+This workspace contains three main projects:
 
-Core dashboard library providing:
+### [@dragonworks/ngx-dashboard](./projects/ngx-dashboard)
 
-- **Drag & Drop Grid** - Responsive grid system with real-time collision detection
-- **Resizable Cells** - Dynamic resizing with boundary constraints and live preview
-- **Dual Modes** - Separate editor and viewer components for different use cases
-- **Context Menu** - Material-based widget context menu with precise positioning
-- **Provider Pattern** - Extensible dialog system with Material Dialog integration
-- **Error Resilience** - Fallback component for unknown widget types with state preservation
-- **100% OnPush** - Optimized change detection strategy throughout
+Core dashboard library providing the fundamental grid and widget management system:
 
-### [@dragonworks/ngx-dashboard-widgets](./projects/ngx-dashboard-widgets) v20.0.4
+- **Grid System** - Responsive drag-and-drop grid with collision detection and boundary constraints
+- **Cell Components** - Resizable cells with live preview, context menus, and dual flat/elevated appearance modes
+- **Provider System** - Extensible architecture for custom dialogs and persistence layers
+- **Error Handling** - Graceful fallback components for unknown widget types with state preservation
 
-Widget collection with Material Design 3 compliance:
+### [@dragonworks/ngx-dashboard-widgets](./projects/ngx-dashboard-widgets)
 
-- **Arrow Widget** - Directional indicators with rotation and customizable styling
-- **Label Widget** - Text display with responsive sizing and typography
-- **Clock Widget** - Dual-mode analog/digital clock with real-time updates and configurable formats
+Widget collection library implementing Material Design 3 patterns:
+
+- **Arrow Widget** - Directional indicators with rotation, opacity, and background customization
+- **Label Widget** - Text display with responsive sizing using canvas-based optimization
+- **Clock Widget** - Analog/digital dual-mode clock with real-time updates, configurable formats, and second hand options
+- **Responsive Text Directive** - Automatic font scaling with ellipsis-free design and developer-friendly API
 
 ### [Demo Application](./projects/demo)
 
-Interactive demonstration showcasing:
+Interactive demonstration showcasing real-world usage patterns:
 
-- Dashboard creation and management with FAB speed dial controls
-- Widget gallery with drag-and-drop installation
-- Material Design 3 theming with live theme switching
-- MD3 color tokens overview with real-time extraction
-- Persistence options (localStorage and file system)
-- Responsive design with mobile support
+- **Dashboard Management** - FAB speed dial controls with auto-loading from JSON configuration
+- **Theme System** - Material Design 3 theming with live theme switching and color token extraction
+- **Widget Gallery** - Drag-and-drop widget installation from palette
+- **Custom Widgets** - Examples using Sparkline and Sparkbar widgets with theme-responsive color configuration
+- **Persistence** - localStorage and file system persistence implementations
 
 ## 🚀 Quick Start
 
@@ -94,10 +93,7 @@ import { DashboardComponent, WidgetListComponent, createEmptyDashboard, provideN
   providers: [provideNgxDashboard()],
   template: `
     <div class="dashboard-container">
-      <!-- Widget palette for drag-and-drop -->
       <ngx-dashboard-widget-list [widgetTypes]="widgetTypes()" />
-
-      <!-- Main dashboard -->
       <ngx-dashboard [dashboardData]="dashboard()" [editMode]="editMode()" (dashboardChange)="onDashboardChange($event)" />
     </div>
   `,
@@ -111,7 +107,7 @@ export class DashboardPageComponent {
 
   onDashboardChange(data: DashboardData) {
     this.dashboard.set(data);
-    // Save to backend or localStorage
+    // Persist changes as needed
   }
 }
 ```
@@ -119,16 +115,22 @@ export class DashboardPageComponent {
 ### Creating Custom Widgets
 
 ```typescript
-import { Component, input } from "@angular/core";
-import { type WidgetComponent, type WidgetMetadata } from "@dragonworks/ngx-dashboard";
+import { Component, signal } from "@angular/core";
+import { Widget, WidgetMetadata } from "@dragonworks/ngx-dashboard";
+
+interface MyWidgetState {
+  message: string;
+  count: number;
+}
 
 @Component({
   selector: "app-my-widget",
   standalone: true,
   template: `
     <div class="widget-content">
-      <h3>My Widget</h3>
-      <p>{{ state().message }}</p>
+      <h3>{{ state().message }}</h3>
+      <p>Count: {{ state().count }}</p>
+      <button (click)="increment()">+</button>
     </div>
   `,
   styles: [
@@ -140,39 +142,41 @@ import { type WidgetComponent, type WidgetMetadata } from "@dragonworks/ngx-dash
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 8px;
       }
     `,
   ],
 })
-export class MyWidgetComponent implements WidgetComponent {
-  // Widget inputs
-  widgetId = input.required<string>();
-  state = input<any>({});
-
-  // Widget metadata
+export class MyWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
-    widgetTypeId: "my-widget",
-    displayName: "My Custom Widget",
-    iconName: "widgets",
-    description: "A custom widget example",
-    factory: () => import("./my-widget.component").then((m) => m.MyWidgetComponent),
+    widgetTypeid: "my-widget",
+    name: "Custom Widget",
+    description: "Example custom widget with state management",
+    svgIcon: "<svg>...</svg>", // Your widget icon
   };
 
-  // Optional: Return current state
-  dashboardGetState() {
+  readonly state = signal<MyWidgetState>({
+    message: "Hello Dashboard!",
+    count: 0,
+  });
+
+  increment() {
+    this.state.update((s) => ({ ...s, count: s.count + 1 }));
+  }
+
+  dashboardGetState(): MyWidgetState {
     return this.state();
   }
 
-  // Optional: Handle state updates
-  dashboardSetState(state: any) {
-    // Update internal state if needed
+  dashboardSetState(state?: unknown): void {
+    if (state) {
+      this.state.set(state as MyWidgetState);
+    }
   }
 }
 
-// Register the widget type
-export function registerMyWidget(dashboardService: DashboardService) {
-  dashboardService.registerWidgetType(MyWidgetComponent.metadata);
-}
+// Register with dashboard service
+dashboardService.registerWidgetType(MyWidgetComponent.metadata);
 ```
 
 ## 🛠️ Development
@@ -218,27 +222,23 @@ ng test
 - **Pattern-Based** - Deterministic testing for time-dependent features using regex patterns
 - **Modern Testing Patterns** - Signal-based component testing with `fixture.componentRef.setInput()`
 
-## 🎨 Material Design 3 Compliance
+## 🏗️ Technical Foundation
 
-The libraries follow Material Design 3 specifications where justified:
+### Modern Angular Architecture
 
-- **Design Tokens** - Systematic use of MD3 color tokens, typography, spacing, and motion
-- **Theme Integration** - Full support for light/dark modes with dynamic theme switching
-- **Surface Hierarchy** - Proper elevation and surface tinting following MD3 guidelines
-- **Responsive Patterns** - Container queries and adaptive layouts for all screen sizes
-- **Component Styling** - Layout-focused styles that respect Material theme
+- **Standalone Components** - Complete standalone API adoption throughout
+- **NgRx Signals** - Signal-based state management with feature stores and computed arrays
+- **Signal-First Design** - Modern reactive patterns with input(), output(), computed(), and effect()
+- **OnPush Strategy** - 100% OnPush change detection with optimized performance
+- **TypeScript Strict Mode** - Complete type safety with minimal `unknown` usage
+- **Tree-Shakeable** - Optimized bundles with proper sideEffects configuration
 
-## 🚀 Key Features
+### Material Design 3 Integration
 
-### Modern Angular Patterns
-
-- **Standalone Components** - All components use Angular's standalone API
-- **Signal Inputs/Outputs** - Modern signal-based component communication
-- **Computed & Effects** - Reactive programming with Angular signals
-- **TypeScript Strict Mode** - Full type safety with no `any` types
-- **Tree-Shakeable** - Optimized bundle sizes with proper sideEffects configuration
-- **Extensible Architecture** - Provider pattern for custom implementations
-- **Comprehensive Testing** - Behavior-driven tests with high coverage
+- **Design Token System** - Comprehensive use of MD3 color tokens, typography, spacing, and motion variables
+- **Theme Integration** - Dynamic light/dark mode switching with proper surface hierarchy
+- **Component Styling** - Layout-focused CSS that respects Material themes and design patterns
+- **Responsive Design** - Container queries and adaptive layouts
 
 ## 🤝 Contributing
 
