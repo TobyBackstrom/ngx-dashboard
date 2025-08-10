@@ -116,10 +116,6 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
   #handleRealtimeStateChange(): void {
     // Watch for realtime state changes, frame rate changes, numberOfBars changes, and theme changes
     const isRealtime = this.state().realtime;
-    const frameRate = this.state().frameRate;
-    const numberOfBars = this.state().numberOfBars;
-    const isDarkMode = this.#themeService.isDarkMode();
-    const theme = this.#themeService.theme();
 
     if (isRealtime && this.canvasContainer()) {
       // Stop existing timer to restart with new frame rate

@@ -118,9 +118,6 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
   #handleRealtimeStateChange(): void {
     // Watch for realtime state changes, frame rate changes, and theme changes
     const isRealtime = this.state().realtime;
-    const frameRate = this.state().frameRate;
-    const isDarkMode = this.#themeService.isDarkMode();
-    const theme = this.#themeService.theme();
 
     if (isRealtime && this.canvasContainer()) {
       // Stop existing timer to restart with new frame rate
@@ -249,31 +246,12 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
   #refreshChartData(): void {
     // update an existing chart with the latest data
     if (this.#chart) {
-      try {
-        this.#createChart(
-          this.#chartWidth,
-          this.#chartHeight,
-          this.#lastBackgroundColor,
-          this.#chart
-        );
-      } catch (error) {
-        console.warn('Failed to refresh chart data:', error);
-        // Try to recreate chart if refresh fails
-        this.#removeChart();
-        const container = this.#getCanvasContainer();
-        if (container) {
-          try {
-            this.#chart = this.#createChart(
-              this.#chartWidth,
-              this.#chartHeight,
-              this.#lastBackgroundColor
-            );
-            container.appendChild(this.#chart);
-          } catch (recreateError) {
-            console.warn('Failed to recreate chart:', recreateError);
-          }
-        }
-      }
+      this.#createChart(
+        this.#chartWidth,
+        this.#chartHeight,
+        this.#lastBackgroundColor,
+        this.#chart
+      );
     }
   }
 
@@ -324,13 +302,8 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
 
     this.#removeChart();
 
-    try {
-      this.#chart = this.#createChart(newWidth, newHeight, backgroundColor);
-      container.appendChild(this.#chart);
-    } catch (error) {
-      console.warn('Failed to create chart during resize:', error);
-      // Component continues to function, just without the chart
-    }
+    this.#chart = this.#createChart(newWidth, newHeight, backgroundColor);
+    container.appendChild(this.#chart);
   }
 
   #createChart(
