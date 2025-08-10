@@ -85,6 +85,17 @@
   }
 }
 
+// Hover effects
+:host:hover {
+  opacity: 0.8;
+  
+  svg {
+    .clock-hour-hand, .clock-minute-hand {
+      fill: var(--mat-sys-primary, #6750a4);
+    }
+  }
+}
+
 // Host class styling for consistency with digital clock
 :host.clock-widget.analog {
   container-type: size;
