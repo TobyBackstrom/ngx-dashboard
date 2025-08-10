@@ -38,15 +38,6 @@ import { SparklineWidgetState } from './sparkline-widget.component';
         </div>
 
         <div class="setting-item">
-          <mat-slide-toggle
-            [(ngModel)]="formState().hasBackground"
-            (ngModelChange)="updateBackground($event)"
-          >
-            Show background
-          </mat-slide-toggle>
-        </div>
-
-        <div class="setting-item">
           <mat-form-field appearance="outline">
             <mat-label>Frame Rate (FPS)</mat-label>
             <mat-select
@@ -64,6 +55,15 @@ import { SparklineWidgetState } from './sparkline-widget.component';
               <mat-option [value]="60">60 FPS (High Refresh)</mat-option>
             </mat-select>
           </mat-form-field>
+        </div>
+
+        <div class="setting-item">
+          <mat-slide-toggle
+            [(ngModel)]="formState().hasBackground"
+            (ngModelChange)="updateBackground($event)"
+          >
+            Show background
+          </mat-slide-toggle>
         </div>
       </div>
     </mat-dialog-content>
