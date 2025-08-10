@@ -9,6 +9,7 @@
   margin: 0;
   padding: 16px;
   gap: 16px;
+  position: relative;
 
   &:hover .is-edit-mode-toggle {
     opacity: 1;

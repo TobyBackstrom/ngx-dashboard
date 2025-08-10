@@ -28,6 +28,7 @@ export class DashboardFabComponent {
   saveToLocalStorage = output<void>();
   loadFromLocalStorage = output<void>();
   clearDashboard = output<void>();
+  resetToDefault = output<void>();
 
   // Edit mode input (will be passed from parent)
   editMode = signal(false);
@@ -70,6 +71,9 @@ export class DashboardFabComponent {
         break;
       case 'clear':
         this.clearDashboard.emit();
+        break;
+      case 'reset':
+        this.resetToDefault.emit();
         break;
     }
   }

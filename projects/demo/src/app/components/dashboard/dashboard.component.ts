@@ -5,7 +5,9 @@ import {
   computed,
   ChangeDetectionStrategy,
   signal,
+  effect,
 } from '@angular/core';
+import { httpResource } from '@angular/common/http';
 import {
   DashboardComponent as NgxDashboardComponent,
   WidgetListComponent,
@@ -33,8 +35,14 @@ export class DashboardComponent {
     LocalStoragePersistenceService
   );
 
+  // Dashboard resource for auto-loading
+  protected dashboardResource = httpResource<DashboardDataDto | null>(() => ({
+    url: '/demo-dashboard.json',
+  }));
+
   // Local state
   protected editMode = signal(false);
+  private hasLoadedFromResource = signal(false);
 
   // Dashboard configuration
   protected dashboardConfig = createEmptyDashboard(
@@ -47,6 +55,24 @@ export class DashboardComponent {
   // Component references
   dashboard = viewChild.required<NgxDashboardComponent>('dashboard');
   fab = viewChild.required<DashboardFabComponent>('fab');
+
+  constructor() {
+    // Auto-load dashboard from resource when available
+    effect(() => {
+      const dashboardData = this.dashboardResource.value();
+      const status = this.dashboardResource.status();
+
+      // Only load once when data becomes available
+      if (
+        dashboardData &&
+        status === 'resolved' &&
+        !this.hasLoadedFromResource()
+      ) {
+        this.dashboard().loadDashboard(dashboardData);
+        this.hasLoadedFromResource.set(true);
+      }
+    });
+  }
 
   // Reserved space configuration for viewport constraints
   protected readonly dashboardReservedSpace = computed(
@@ -139,5 +165,15 @@ export class DashboardComponent {
    */
   onClearDashboard(): void {
     this.dashboard().clearDashboard();
+  }
+
+  /**
+   * Reset dashboard to default configuration from demo-dashboard.json
+   */
+  onResetToDefault(): void {
+    // Reset the flag to allow re-loading
+    this.hasLoadedFromResource.set(false);
+    // Trigger reload of the resource
+    this.dashboardResource.reload();
   }
 }

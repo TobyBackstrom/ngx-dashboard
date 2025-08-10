@@ -492,6 +492,32 @@
         "realtime": false,
         "frameRate": 20
       }
+    },
+    {
+      "row": 3,
+      "col": 6,
+      "rowSpan": 2,
+      "colSpan": 3,
+      "widgetTypeid": "@demo/sparkbar-widget",
+      "widgetState": {
+        "hasBackground": true,
+        "realtime": true,
+        "frameRate": 20,
+        "numberOfBars": 10
+      }
+    },
+    {
+      "row": 5,
+      "col": 1,
+      "rowSpan": 1,
+      "colSpan": 5,
+      "widgetTypeid": "@demo/sparkbar-widget",
+      "widgetState": {
+        "hasBackground": true,
+        "realtime": true,
+        "frameRate": 15,
+        "numberOfBars": 20
+      }
     }
   ]
 }
