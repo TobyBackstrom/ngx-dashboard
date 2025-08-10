@@ -71,14 +71,9 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
   });
 
   constructor() {
-    effect(
-      () => {
-        this.#handleRealtimeStateChange();
-      },
-      {
-        allowSignalWrites: true,
-      }
-    );
+    effect(() => {
+      this.#handleRealtimeStateChange();
+    });
   }
 
   dashboardSetState(state?: unknown): void {

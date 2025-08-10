@@ -46,7 +46,6 @@ export class DashboardComponent {
 
   // Local state
   protected editMode = signal(false);
-  private hasLoadedFromResource = signal(false);
 
   // Dashboard configuration
   protected dashboardConfig = createEmptyDashboard(
@@ -61,19 +60,16 @@ export class DashboardComponent {
   fab = viewChild.required<DashboardFabComponent>('fab');
 
   constructor() {
-    // Auto-load dashboard from resource when available
+    // Auto-load dashboard when resource resolves - use queueMicrotask for ViewChild availability
     effect(() => {
       const dashboardData = this.dashboardResource.value();
       const status = this.dashboardResource.status();
 
-      // Only load once when data becomes available
-      if (
-        dashboardData &&
-        status === 'resolved' &&
-        !this.hasLoadedFromResource()
-      ) {
-        this.dashboard().loadDashboard(dashboardData);
-        this.hasLoadedFromResource.set(true);
+      // Load dashboard when data becomes available and ViewChild is ready
+      if (dashboardData && status === 'resolved') {
+        queueMicrotask(() => {
+          this.dashboard().loadDashboard(dashboardData);
+        });
       }
     });
   }
@@ -175,9 +171,7 @@ export class DashboardComponent {
    * Reset dashboard to default configuration from demo-dashboard.json
    */
   onResetToDefault(): void {
-    // Reset the flag to allow re-loading
-    this.hasLoadedFromResource.set(false);
-    // Trigger reload of the resource
+    // Trigger reload of the resource - effect will handle the loading automatically
     this.dashboardResource.reload();
   }
 }
