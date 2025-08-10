@@ -23,6 +23,7 @@ export interface SparklineWidgetState {
   hasBackground?: boolean;
   realtime?: boolean;
   frameRate?: number; // FPS value for realtime updates
+  responsiveLineColors?: boolean; // Enable/disable theme-based colors
 }
 
 @Component({
@@ -59,6 +60,7 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
   #lastBackgroundColor = '';
   #lastGradientStop0 = '';
   #lastGradientStop1 = '';
+  #lastResponsiveLineColors = true;
   #dataGenerator: VolatileTimeSeries = VolatileTimeSeries.createValueSeries(
     0,
     95,
@@ -70,6 +72,7 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
     hasBackground: true,
     realtime: false,
     frameRate: 20, // Default to 20 FPS
+    responsiveLineColors: true, // Default to current behavior
   });
 
   constructor() {
@@ -119,6 +122,7 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
     // Watch for realtime state changes, frame rate changes, and theme changes
     const isRealtime = this.state().realtime;
     const frameRate = this.state().frameRate; // Required for effect tracking - triggers chart update on frame rate changes
+    const responsiveLineColors = this.state().responsiveLineColors; // Required for effect tracking - triggers chart update on color mode changes
     const isDarkMode = this.#themeService.isDarkMode(); // Required for effect tracking - triggers chart update on theme mode changes
     const theme = this.#themeService.theme(); // Required for effect tracking - triggers chart update on theme changes
 
@@ -269,11 +273,14 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
       '#f3f3f3'
     );
 
+    const currentResponsiveLineColors = this.state().responsiveLineColors ?? true;
+
     // Check if we need to update (size or color changed)
     if (
       newWidth === this.#chartWidth &&
       newHeight === this.#chartHeight &&
       backgroundColor === this.#lastBackgroundColor &&
+      currentResponsiveLineColors === this.#lastResponsiveLineColors &&
       this.#chart !== null
     ) {
       return;
@@ -281,20 +288,25 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
 
     const isDarkMode = this.#themeService.isDarkMode();
 
-    this.#lastGradientStop1 = this.#resolveThemeColor(
-      '--mat-sys-tertiary-container',
-      '#90ee90'
-    );
+    if (this.state().responsiveLineColors) {
+      this.#lastGradientStop1 = this.#resolveThemeColor(
+        '--mat-sys-tertiary-container',
+        '#90ee90'
+      );
 
-    this.#lastGradientStop0 = this.#resolveThemeColor(
-      '--mat-sys-on-tertiary-container',
-      '#000000'
-    );
+      this.#lastGradientStop0 = this.#resolveThemeColor(
+        '--mat-sys-on-tertiary-container',
+        '#000000'
+      );
 
-    if (isDarkMode) {
-      const tmp = this.#lastGradientStop0;
-      this.#lastGradientStop0 = this.#lastGradientStop1;
-      this.#lastGradientStop1 = tmp;
+      if (isDarkMode) {
+        const tmp = this.#lastGradientStop0;
+        this.#lastGradientStop0 = this.#lastGradientStop1;
+        this.#lastGradientStop1 = tmp;
+      }
+    } else {
+      this.#lastGradientStop0 = '#000000';
+      this.#lastGradientStop1 = '#90ee90';
     }
 
     this.#generateData(newWidth);
@@ -302,6 +314,7 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
     this.#chartWidth = newWidth;
     this.#chartHeight = newHeight;
     this.#lastBackgroundColor = backgroundColor;
+    this.#lastResponsiveLineColors = currentResponsiveLineColors;
 
     this.#removeChart();
 

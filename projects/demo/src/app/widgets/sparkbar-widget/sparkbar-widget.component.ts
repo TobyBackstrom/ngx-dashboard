@@ -24,6 +24,7 @@ export interface SparkbarWidgetState {
   realtime?: boolean;
   frameRate?: number; // FPS value for realtime updates
   numberOfBars?: number; // Number of bars to display in the chart
+  responsiveBarColors?: boolean; // Enable/disable theme-based colors
 }
 
 @Component({
@@ -60,6 +61,7 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
   #lastBackgroundColor = '';
   #lastGradientStop0 = '';
   #lastGradientStop1 = '';
+  #lastResponsiveBarColors = true;
   #dataGenerators: VolatileTimeSeries[] = [];
   #data: number[] = [];
 
@@ -68,6 +70,7 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
     realtime: false,
     frameRate: 20, // Default to 20 FPS
     numberOfBars: 5, // Default to 5 bars
+    responsiveBarColors: true, // Default to current behavior
   });
 
   constructor() {
@@ -118,6 +121,7 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
     const isRealtime = this.state().realtime;
     const frameRate = this.state().frameRate; // Required for effect tracking - triggers chart update on frame rate changes
     const numberOfBars = this.state().numberOfBars; // Required for effect tracking - triggers chart update on bar count changes
+    const responsiveBarColors = this.state().responsiveBarColors; // Required for effect tracking - triggers chart update on color mode changes
     const isDarkMode = this.#themeService.isDarkMode(); // Required for effect tracking - triggers chart update on theme mode changes
     const theme = this.#themeService.theme(); // Required for effect tracking - triggers chart update on theme changes
 
@@ -278,11 +282,14 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
       '#f3f3f3'
     );
 
+    const currentResponsiveBarColors = this.state().responsiveBarColors ?? true;
+
     // Check if we need to update (size or color changed)
     if (
       newWidth === this.#chartWidth &&
       newHeight === this.#chartHeight &&
       backgroundColor === this.#lastBackgroundColor &&
+      currentResponsiveBarColors === this.#lastResponsiveBarColors &&
       this.#chart !== null
     ) {
       return;
@@ -290,20 +297,25 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
 
     const isDarkMode = this.#themeService.isDarkMode();
 
-    this.#lastGradientStop0 = this.#resolveThemeColor(
-      '--mat-sys-tertiary-container',
-      '#90ee90'
-    );
+    if (this.state().responsiveBarColors) {
+      this.#lastGradientStop0 = this.#resolveThemeColor(
+        '--mat-sys-tertiary-container',
+        '#90ee90'
+      );
 
-    this.#lastGradientStop1 = this.#resolveThemeColor(
-      '--mat-sys-on-tertiary-container',
-      '#000000'
-    );
+      this.#lastGradientStop1 = this.#resolveThemeColor(
+        '--mat-sys-on-tertiary-container',
+        '#000000'
+      );
 
-    if (isDarkMode) {
-      const tmp = this.#lastGradientStop0;
-      this.#lastGradientStop0 = this.#lastGradientStop1;
-      this.#lastGradientStop1 = tmp;
+      if (isDarkMode) {
+        const tmp = this.#lastGradientStop0;
+        this.#lastGradientStop0 = this.#lastGradientStop1;
+        this.#lastGradientStop1 = tmp;
+      }
+    } else {
+      this.#lastGradientStop0 = '#90ee90';
+      this.#lastGradientStop1 = '#000000';
     }
 
     // Generate data with configured number of bars
@@ -313,6 +325,7 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
     this.#chartWidth = newWidth;
     this.#chartHeight = newHeight;
     this.#lastBackgroundColor = backgroundColor;
+    this.#lastResponsiveBarColors = currentResponsiveBarColors;
 
     this.#removeChart();
 

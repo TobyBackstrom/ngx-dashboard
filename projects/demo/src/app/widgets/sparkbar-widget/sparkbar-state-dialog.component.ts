@@ -78,6 +78,15 @@ import { SparkbarWidgetState } from './sparkbar-widget.component';
 
         <div class="setting-item">
           <mat-slide-toggle
+            [(ngModel)]="formState().responsiveBarColors"
+            (ngModelChange)="updateResponsiveBarColors($event)"
+          >
+            Responsive bar colors
+          </mat-slide-toggle>
+        </div>
+
+        <div class="setting-item">
+          <mat-slide-toggle
             [(ngModel)]="formState().hasBackground"
             (ngModelChange)="updateBackground($event)"
           >
@@ -132,6 +141,7 @@ export class SparkbarStateDialogComponent {
     realtime: this.data.realtime ?? false,
     frameRate: this.data.frameRate ?? 20,
     numberOfBars: this.data.numberOfBars ?? 5,
+    responsiveBarColors: this.data.responsiveBarColors ?? true,
   });
 
   updateRealtime(value: boolean): void {
@@ -148,6 +158,13 @@ export class SparkbarStateDialogComponent {
 
   updateNumberOfBars(value: number): void {
     this.formState.update((state) => ({ ...state, numberOfBars: value }));
+  }
+
+  updateResponsiveBarColors(value: boolean): void {
+    this.formState.update((state) => ({
+      ...state,
+      responsiveBarColors: value,
+    }));
   }
 
   onCancel(): void {

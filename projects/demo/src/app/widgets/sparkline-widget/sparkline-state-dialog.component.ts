@@ -59,6 +59,15 @@ import { SparklineWidgetState } from './sparkline-widget.component';
 
         <div class="setting-item">
           <mat-slide-toggle
+            [(ngModel)]="formState().responsiveLineColors"
+            (ngModelChange)="updateResponsiveLineColors($event)"
+          >
+            Responsive line colors
+          </mat-slide-toggle>
+        </div>
+
+        <div class="setting-item">
+          <mat-slide-toggle
             [(ngModel)]="formState().hasBackground"
             (ngModelChange)="updateBackground($event)"
           >
@@ -112,6 +121,7 @@ export class SparklineStateDialogComponent {
     hasBackground: this.data.hasBackground ?? true,
     realtime: this.data.realtime ?? false,
     frameRate: this.data.frameRate ?? 20,
+    responsiveLineColors: this.data.responsiveLineColors ?? true,
   });
 
   updateRealtime(value: boolean): void {
@@ -124,6 +134,13 @@ export class SparklineStateDialogComponent {
 
   updateFrameRate(value: number): void {
     this.formState.update((state) => ({ ...state, frameRate: value }));
+  }
+
+  updateResponsiveLineColors(value: boolean): void {
+    this.formState.update((state) => ({
+      ...state,
+      responsiveLineColors: value,
+    }));
   }
 
   onCancel(): void {
