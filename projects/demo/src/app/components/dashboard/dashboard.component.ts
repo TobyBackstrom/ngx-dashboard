@@ -7,6 +7,7 @@ import {
   signal,
   effect,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import {
   DashboardComponent as NgxDashboardComponent,
@@ -34,11 +35,14 @@ export class DashboardComponent {
   private localStoragePersistenceService = inject(
     LocalStoragePersistenceService
   );
+  private document = inject(DOCUMENT);
 
-  // Dashboard resource for auto-loading
-  protected dashboardResource = httpResource<DashboardDataDto | null>(() => ({
-    url: '/demo-dashboard.json',
-  }));
+  // Dashboard resource for auto-loading with dynamic base href
+  protected dashboardResource = httpResource<DashboardDataDto | null>(() => {
+    const baseHref = this.document.querySelector('base')?.href || window.location.origin + '/';
+    const dashboardUrl = new URL('demo-dashboard.json', baseHref).href;
+    return { url: dashboardUrl };
+  });
 
   // Local state
   protected editMode = signal(false);
