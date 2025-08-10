@@ -116,6 +116,10 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
   #handleRealtimeStateChange(): void {
     // Watch for realtime state changes, frame rate changes, numberOfBars changes, and theme changes
     const isRealtime = this.state().realtime;
+    const frameRate = this.state().frameRate; // Required for effect tracking - triggers chart update on frame rate changes
+    const numberOfBars = this.state().numberOfBars; // Required for effect tracking - triggers chart update on bar count changes
+    const isDarkMode = this.#themeService.isDarkMode(); // Required for effect tracking - triggers chart update on theme mode changes
+    const theme = this.#themeService.theme(); // Required for effect tracking - triggers chart update on theme changes
 
     if (isRealtime && this.canvasContainer()) {
       // Stop existing timer to restart with new frame rate
@@ -286,12 +290,12 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
 
     const isDarkMode = this.#themeService.isDarkMode();
 
-    this.#lastGradientStop1 = this.#resolveThemeColor(
+    this.#lastGradientStop0 = this.#resolveThemeColor(
       '--mat-sys-tertiary-container',
       '#90ee90'
     );
 
-    this.#lastGradientStop0 = this.#resolveThemeColor(
+    this.#lastGradientStop1 = this.#resolveThemeColor(
       '--mat-sys-on-tertiary-container',
       '#000000'
     );

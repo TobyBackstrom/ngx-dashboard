@@ -118,6 +118,9 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
   #handleRealtimeStateChange(): void {
     // Watch for realtime state changes, frame rate changes, and theme changes
     const isRealtime = this.state().realtime;
+    const frameRate = this.state().frameRate; // Required for effect tracking - triggers chart update on frame rate changes
+    const isDarkMode = this.#themeService.isDarkMode(); // Required for effect tracking - triggers chart update on theme mode changes
+    const theme = this.#themeService.theme(); // Required for effect tracking - triggers chart update on theme changes
 
     if (isRealtime && this.canvasContainer()) {
       // Stop existing timer to restart with new frame rate
