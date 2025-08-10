@@ -172,7 +172,7 @@ export class ThemeService {
   readonly mode = this._mode.asReadonly();
   readonly isDarkMode = computed(() => this.mode() === 'dark');
 
-  private readonly _theme = signal<ThemePalette>('custom');
+  private readonly _theme = signal<ThemePalette>('azure');
   readonly theme = this._theme.asReadonly();
 
   constructor() {
