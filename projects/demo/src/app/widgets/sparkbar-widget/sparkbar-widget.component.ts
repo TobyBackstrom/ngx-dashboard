@@ -194,7 +194,15 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
         if (this.#chart && this.#chartWidth > 0 && this.state().realtime) {
           const numberOfBars = this.state().numberOfBars || 5;
           this.#generateData(numberOfBars);
-          this.#refreshChartData();
+          // update an existing chart with the latest data
+          if (this.#chart) {
+            this.#createChart(
+              this.#chartWidth,
+              this.#chartHeight,
+              this.#lastBackgroundColor,
+              this.#chart
+            );
+          }
         }
       }, intervalMs);
     }
@@ -256,18 +264,6 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
         );
         this.#data.push(this.#dataGenerators[currentLength + i].next());
       }
-    }
-  }
-
-  #refreshChartData(): void {
-    // update an existing chart with the latest data
-    if (this.#chart) {
-      this.#createChart(
-        this.#chartWidth,
-        this.#chartHeight,
-        this.#lastBackgroundColor,
-        this.#chart
-      );
     }
   }
 
