@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, signal } from '@angular/core';
 import { DashboardViewerComponent } from '../dashboard-viewer.component';
 import { DashboardStore } from '../../store/dashboard-store';
-import { CellIdUtils, CellData, WidgetFactory, Widget } from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, Widget } from '../../models';
 
 // Mock test widget component
 @Component({
@@ -64,6 +64,7 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       
       // Setup: Add widgets to store
       const widget1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -75,6 +76,7 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       };
 
       const widget2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(2, 3),
         row: 2,
         col: 3,
@@ -158,6 +160,7 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       
       // Action: Add widget to store
       const widget: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -175,7 +178,7 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       expect(fixture.nativeElement.querySelectorAll('lib-cell').length).toBe(1);
       
       // Action: Remove widget from store
-      store.removeWidget(widget.cellId);
+      store.removeWidget(widget.widgetId);
       fixture.detectChanges();
       
       // Verify: Widget disappears from UI
@@ -214,6 +217,7 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       
       // Setup: Add widget with initial state
       const widget: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -246,9 +250,9 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       expect(widgetStates instanceof Map).toBe(true);
       
       // The actual state collection depends on cell components being properly rendered
-      // This tests that the method exists and returns the right type
-      const cellIdKey = CellIdUtils.toString(widget.cellId);
-      expect(typeof cellIdKey).toBe('string');
+      // This tests that the method exists and returns the right type with WidgetId keys
+      const widgetIdKey = WidgetIdUtils.toString(widget.widgetId);
+      expect(typeof widgetIdKey).toBe('string');
     });
   });
 });

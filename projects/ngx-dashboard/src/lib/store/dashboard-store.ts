@@ -131,8 +131,8 @@ export const DashboardStore = signalStore(
         cells: store.cells()
           .filter((cell) => cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget')
           .map((cell) => {
-            const widgetIdString = WidgetIdUtils.toString(cell.widgetId);
-            const currentState = liveWidgetStates.get(widgetIdString);
+            const cellIdString = CellIdUtils.toString(cell.cellId);
+            const currentState = liveWidgetStates.get(cellIdString);
 
             return {
               row: cell.row,

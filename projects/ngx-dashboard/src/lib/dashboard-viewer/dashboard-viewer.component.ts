@@ -50,10 +50,10 @@ export class DashboardViewerComponent {
     
     const cells = this.cellComponents();
     for (const cell of cells) {
-      const widgetId = cell.widgetId();
+      const cellId = cell.cellId();
       const currentState = cell.getCurrentWidgetState();
       if (currentState !== undefined) {
-        stateMap.set(WidgetIdUtils.toString(widgetId), currentState);
+        stateMap.set(CellIdUtils.toString(cellId), currentState);
       }
     }
     

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, CellData, WidgetMetadata, WidgetFactory } from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetMetadata, WidgetFactory } from '../../models';
 
 describe('DashboardStore - Widget Management', () => {
   let store: InstanceType<typeof DashboardStore>;
@@ -41,6 +41,7 @@ describe('DashboardStore - Widget Management', () => {
   describe('addWidget', () => {
     it('should add a widget to empty grid', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 5),
         row: 5,
         col: 5,
@@ -58,6 +59,7 @@ describe('DashboardStore - Widget Management', () => {
 
     it('should add multiple widgets', () => {
       const cell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -68,6 +70,7 @@ describe('DashboardStore - Widget Management', () => {
       };
 
       const cell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(3, 3),
         row: 3,
         col: 3,
@@ -87,6 +90,7 @@ describe('DashboardStore - Widget Management', () => {
 
     it('should add widget with custom state', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 5),
         row: 5,
         col: 5,
@@ -106,6 +110,7 @@ describe('DashboardStore - Widget Management', () => {
     it('should remove existing widget', () => {
       const cellId = CellIdUtils.create(5, 5);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 5,
         col: 5,
@@ -118,7 +123,7 @@ describe('DashboardStore - Widget Management', () => {
       store.addWidget(cell);
       expect(store.cells().length).toBe(1);
 
-      store.removeWidget(cellId);
+      const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId))!; store.removeWidget(widget.widgetId);
       expect(store.cells().length).toBe(0);
     });
 
@@ -127,6 +132,7 @@ describe('DashboardStore - Widget Management', () => {
       const cellId2 = CellIdUtils.create(3, 3);
       
       const cell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: cellId1,
         row: 1,
         col: 1,
@@ -137,6 +143,7 @@ describe('DashboardStore - Widget Management', () => {
       };
 
       const cell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: cellId2,
         row: 3,
         col: 3,
@@ -150,7 +157,7 @@ describe('DashboardStore - Widget Management', () => {
       store.addWidget(cell2);
       expect(store.cells().length).toBe(2);
 
-      store.removeWidget(cellId1);
+      const widget1 = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId1))!; store.removeWidget(widget1.widgetId);
       expect(store.cells().length).toBe(1);
       expect(store.cells()[0].cellId).toEqual(cellId2);
     });
@@ -160,6 +167,7 @@ describe('DashboardStore - Widget Management', () => {
       const nonExistentCellId = CellIdUtils.create(10, 10);
       
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: existingCellId,
         row: 5,
         col: 5,
@@ -172,7 +180,7 @@ describe('DashboardStore - Widget Management', () => {
       store.addWidget(cell);
       expect(store.cells().length).toBe(1);
 
-      store.removeWidget(nonExistentCellId);
+      store.removeWidget("non-existent-widget-id" as any);
       expect(store.cells().length).toBe(1); // No change
     });
   });
@@ -181,6 +189,7 @@ describe('DashboardStore - Widget Management', () => {
     it('should update widget position', () => {
       const cellId = CellIdUtils.create(5, 5);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 5,
         col: 5,
@@ -191,7 +200,8 @@ describe('DashboardStore - Widget Management', () => {
       };
 
       store.addWidget(cell);
-      store.updateWidgetPosition(cellId, 8, 9);
+      const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId))!;
+      store.updateWidgetPosition(widget.widgetId, 8, 9);
 
       expect(store.cells()[0].row).toBe(8);
       expect(store.cells()[0].col).toBe(9);
@@ -204,6 +214,7 @@ describe('DashboardStore - Widget Management', () => {
       const nonExistentCellId = CellIdUtils.create(10, 10);
       
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: existingCellId,
         row: 5,
         col: 5,
@@ -214,7 +225,7 @@ describe('DashboardStore - Widget Management', () => {
       };
 
       store.addWidget(cell);
-      store.updateWidgetPosition(nonExistentCellId, 8, 9);
+      store.updateWidgetPosition("non-existent-widget-id" as any, 8, 9);
 
       // Original widget should be unchanged
       expect(store.cells()[0].row).toBe(5);
@@ -259,6 +270,7 @@ describe('DashboardStore - Widget Management', () => {
     it('should update flat property to true', () => {
       const cellId = CellIdUtils.create(5, 5);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 5,
         col: 5,
@@ -270,7 +282,8 @@ describe('DashboardStore - Widget Management', () => {
       };
 
       store.addWidget(cell);
-      store.updateCellSettings(cellId, true);
+      const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId))!;
+      store.updateCellSettings(widget.widgetId, true);
 
       expect(store.cells()[0].flat).toBe(true);
     });
@@ -278,6 +291,7 @@ describe('DashboardStore - Widget Management', () => {
     it('should update flat property to false', () => {
       const cellId = CellIdUtils.create(5, 5);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 5,
         col: 5,
@@ -289,7 +303,8 @@ describe('DashboardStore - Widget Management', () => {
       };
 
       store.addWidget(cell);
-      store.updateCellSettings(cellId, false);
+      const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId))!;
+      store.updateCellSettings(widget.widgetId, false);
 
       expect(store.cells()[0].flat).toBe(false);
     });
@@ -299,6 +314,7 @@ describe('DashboardStore - Widget Management', () => {
       const nonExistentCellId = CellIdUtils.create(10, 10);
       
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: existingCellId,
         row: 5,
         col: 5,
@@ -310,7 +326,7 @@ describe('DashboardStore - Widget Management', () => {
       };
 
       store.addWidget(cell);
-      store.updateCellSettings(nonExistentCellId, true);
+      store.updateCellSettings("non-existent-widget-id" as any, true);
 
       // Original cell should be unchanged
       expect(store.cells()[0].flat).toBe(false);
@@ -321,6 +337,7 @@ describe('DashboardStore - Widget Management', () => {
     it('should update widget span', () => {
       const cellId = CellIdUtils.create(5, 5);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 5,
         col: 5,
@@ -331,7 +348,8 @@ describe('DashboardStore - Widget Management', () => {
       };
 
       store.addWidget(cell);
-      store.updateWidgetSpan(cellId, 3, 4);
+      const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId))!;
+      store.updateWidgetSpan(widget.widgetId, 3, 4);
 
       expect(store.cells()[0].rowSpan).toBe(3);
       expect(store.cells()[0].colSpan).toBe(4);
@@ -342,6 +360,7 @@ describe('DashboardStore - Widget Management', () => {
     it('should handle minimum span values', () => {
       const cellId = CellIdUtils.create(5, 5);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 5,
         col: 5,
@@ -352,7 +371,8 @@ describe('DashboardStore - Widget Management', () => {
       };
 
       store.addWidget(cell);
-      store.updateWidgetSpan(cellId, 1, 1);
+      const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId))!;
+      store.updateWidgetSpan(widget.widgetId, 1, 1);
 
       expect(store.cells()[0].rowSpan).toBe(1);
       expect(store.cells()[0].colSpan).toBe(1);
@@ -363,6 +383,7 @@ describe('DashboardStore - Widget Management', () => {
       const nonExistentCellId = CellIdUtils.create(10, 10);
       
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: existingCellId,
         row: 5,
         col: 5,
@@ -373,7 +394,7 @@ describe('DashboardStore - Widget Management', () => {
       };
 
       store.addWidget(cell);
-      store.updateWidgetSpan(nonExistentCellId, 4, 4);
+      store.updateWidgetSpan("non-existent-widget-id" as any, 4, 4);
 
       // Original widget should be unchanged
       expect(store.cells()[0].rowSpan).toBe(2);
@@ -389,6 +410,7 @@ describe('DashboardStore - Widget Management', () => {
 
     it('should clear dashboard with single widget', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 5),
         row: 5,
         col: 5,
@@ -407,6 +429,7 @@ describe('DashboardStore - Widget Management', () => {
 
     it('should clear dashboard with multiple widgets', () => {
       const cell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -417,6 +440,7 @@ describe('DashboardStore - Widget Management', () => {
       };
 
       const cell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 5),
         row: 5,
         col: 5,

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, CellData, WidgetFactory } from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory } from '../../models';
 import { GridQueryInternalUtils } from '../features/utils/grid-query-internal.utils';
 
 describe('DashboardStore - Resize Operations', () => {
@@ -33,6 +33,7 @@ describe('DashboardStore - Resize Operations', () => {
     it('should start resize for existing widget', () => {
       const cellId = CellIdUtils.create(5, 5);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 5,
         col: 5,
@@ -57,6 +58,7 @@ describe('DashboardStore - Resize Operations', () => {
     it('should handle resize for single cell widget', () => {
       const cellId = CellIdUtils.create(8, 8);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 8,
         col: 8,
@@ -91,6 +93,7 @@ describe('DashboardStore - Resize Operations', () => {
       const cellId2 = CellIdUtils.create(8, 8);
       
       const cell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: cellId1,
         row: 3,
         col: 3,
@@ -101,6 +104,7 @@ describe('DashboardStore - Resize Operations', () => {
       };
       
       const cell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: cellId2,
         row: 8,
         col: 8,
@@ -124,6 +128,7 @@ describe('DashboardStore - Resize Operations', () => {
     it('should handle widget with maximum spans', () => {
       const cellId = CellIdUtils.create(1, 1);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 1,
         col: 1,
@@ -150,6 +155,7 @@ describe('DashboardStore - Resize Operations', () => {
     beforeEach(() => {
       const cellId = CellIdUtils.create(5, 5);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 5,
         col: 5,
@@ -226,6 +232,7 @@ describe('DashboardStore - Resize Operations', () => {
       beforeEach(() => {
         // Add blocking widget at (5, 8) to (6, 9)
         const blockingCell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(5, 8),
           row: 5,
           col: 8,
@@ -248,6 +255,7 @@ describe('DashboardStore - Resize Operations', () => {
       it('should be limited by vertical collision', () => {
         // Add blocking widget at (8, 5) to test vertical collision
         const verticalBlockingCell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(8, 5),
           row: 8,
           col: 5,
@@ -293,6 +301,7 @@ describe('DashboardStore - Resize Operations', () => {
     beforeEach(() => {
       cellId = CellIdUtils.create(5, 5);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 5,
         col: 5,
@@ -359,7 +368,7 @@ describe('DashboardStore - Resize Operations', () => {
     });
 
     it('should clear resize data even when widget no longer exists', () => {
-      store.removeWidget(cellId); // Remove the widget
+      const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId))!; store.removeWidget(widget.widgetId); // Remove the widget
 
       store.endResize(true);
 
@@ -386,6 +395,7 @@ describe('DashboardStore - Resize Operations', () => {
     beforeEach(() => {
       cellId = CellIdUtils.create(3, 4);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 3,
         col: 4,
@@ -446,7 +456,7 @@ describe('DashboardStore - Resize Operations', () => {
 
     it('should return empty array when widget is removed during resize', () => {
       store.startResize(cellId);
-      store.removeWidget(cellId);
+      const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId))!; store.removeWidget(widget.widgetId);
 
       expect(store.resizePreviewCells()).toEqual([]);
     });
@@ -458,6 +468,7 @@ describe('DashboardStore - Resize Operations', () => {
     beforeEach(() => {
       cellId = CellIdUtils.create(8, 8);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 8,
         col: 8,
@@ -521,6 +532,7 @@ describe('DashboardStore - Resize Operations', () => {
     it('should handle complete resize workflow', () => {
       const cellId = CellIdUtils.create(2, 2);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 2,
         col: 2,
@@ -556,6 +568,7 @@ describe('DashboardStore - Resize Operations', () => {
     it('should handle resize cancellation workflow', () => {
       const cellId = CellIdUtils.create(10, 10);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 10,
         col: 10,
@@ -591,6 +604,7 @@ describe('DashboardStore - Resize Operations', () => {
 
       widgets.forEach(w => {
         const cell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
           cellId: w.cellId,
           row: w.row,
           col: w.col,
@@ -615,6 +629,7 @@ describe('DashboardStore - Resize Operations', () => {
     it('should handle edge case: resize at grid boundaries', () => {
       const cellId = CellIdUtils.create(16, 16);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 16,
         col: 16,

@@ -8,6 +8,8 @@ import { CELL_SETTINGS_DIALOG_PROVIDER } from '../../providers/cell-settings-dia
 import {
   CellId,
   CellIdUtils,
+  WidgetId,
+  WidgetIdUtils,
   WidgetFactory,
   Widget,
 } from '../../models';
@@ -45,6 +47,7 @@ describe('CellComponent - User Scenarios', () => {
   let mockRenderer: jasmine.SpyObj<Renderer2>;
 
   const mockCellId: CellId = CellIdUtils.create(1, 1);
+  const mockWidgetId: WidgetId = WidgetIdUtils.generate();
 
   const mockWidgetFactory: WidgetFactory = {
     widgetTypeid: 'test-widget',
@@ -89,13 +92,14 @@ describe('CellComponent - User Scenarios', () => {
 
   describe('Component Creation', () => {
     it('should create and initialize with required inputs', () => {
-      fixture.componentRef.setInput('id', mockCellId);
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
       fixture.componentRef.setInput('row', 1);
       fixture.componentRef.setInput('column', 1);
       fixture.detectChanges();
 
       expect(component).toBeTruthy();
-      expect(component.id()).toEqual(mockCellId);
+      expect(component.cellId()).toEqual(mockCellId);
       expect(component.row()).toBe(1);
       expect(component.column()).toBe(1);
     });
@@ -103,7 +107,8 @@ describe('CellComponent - User Scenarios', () => {
 
   describe('Widget Creation Workflow', () => {
     beforeEach(() => {
-      fixture.componentRef.setInput('id', mockCellId);
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
       fixture.componentRef.setInput('row', 1);
       fixture.componentRef.setInput('column', 1);
       fixture.detectChanges();
@@ -145,7 +150,8 @@ describe('CellComponent - User Scenarios', () => {
 
   describe('Widget Deletion Workflow', () => {
     beforeEach(() => {
-      fixture.componentRef.setInput('id', mockCellId);
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
       fixture.componentRef.setInput('row', 1);
       fixture.componentRef.setInput('column', 1);
       fixture.detectChanges();
@@ -158,13 +164,14 @@ describe('CellComponent - User Scenarios', () => {
       component.onDelete();
 
       // Delete event should be emitted
-      expect(component.delete.emit).toHaveBeenCalledWith(mockCellId);
+      expect(component.delete.emit).toHaveBeenCalledWith(mockWidgetId);
     });
   });
 
   describe('Widget Edit Workflow', () => {
     beforeEach(() => {
-      fixture.componentRef.setInput('id', mockCellId);
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
       fixture.componentRef.setInput('row', 1);
       fixture.componentRef.setInput('column', 1);
       fixture.componentRef.setInput('widgetFactory', mockWidgetFactory);
@@ -179,7 +186,7 @@ describe('CellComponent - User Scenarios', () => {
       component.onEdit();
 
       // Edit event should be emitted
-      expect(component.edit.emit).toHaveBeenCalledWith(mockCellId);
+      expect(component.edit.emit).toHaveBeenCalledWith(mockWidgetId);
     });
 
     it('should report if widget can be edited', async () => {
@@ -205,7 +212,8 @@ describe('CellComponent - User Scenarios', () => {
 
   describe('Settings Dialog Workflow', () => {
     beforeEach(() => {
-      fixture.componentRef.setInput('id', mockCellId);
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
       fixture.componentRef.setInput('row', 1);
       fixture.componentRef.setInput('column', 1);
       fixture.componentRef.setInput('flat', true);
@@ -229,7 +237,7 @@ describe('CellComponent - User Scenarios', () => {
       
       // Settings event should be emitted with new values
       expect(component.settings.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        id: mockWidgetId,
         flat: false,
       });
     });
@@ -250,7 +258,8 @@ describe('CellComponent - User Scenarios', () => {
     let mockDragEvent: any;
 
     beforeEach(() => {
-      fixture.componentRef.setInput('id', mockCellId);
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
       fixture.componentRef.setInput('row', 2);
       fixture.componentRef.setInput('column', 3);
       fixture.componentRef.setInput('rowSpan', 2);
@@ -278,6 +287,7 @@ describe('CellComponent - User Scenarios', () => {
         kind: 'cell',
         content: {
           cellId: mockCellId,
+          widgetId: mockWidgetId,
           row: 2,
           col: 3,
           rowSpan: 2,
@@ -310,7 +320,8 @@ describe('CellComponent - User Scenarios', () => {
     let mockMouseEvent: any;
 
     beforeEach(() => {
-      fixture.componentRef.setInput('id', mockCellId);
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
       fixture.componentRef.setInput('row', 1);
       fixture.componentRef.setInput('column', 1);
       fixture.componentRef.setInput('isEditMode', true);
@@ -352,7 +363,8 @@ describe('CellComponent - User Scenarios', () => {
 
   describe('Position Management', () => {
     beforeEach(() => {
-      fixture.componentRef.setInput('id', mockCellId);
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
       fixture.componentRef.setInput('row', 1);
       fixture.componentRef.setInput('column', 1);
       fixture.detectChanges();
@@ -370,7 +382,8 @@ describe('CellComponent - User Scenarios', () => {
 
   describe('Resize Integration', () => {
     beforeEach(() => {
-      fixture.componentRef.setInput('id', mockCellId);
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
       fixture.componentRef.setInput('row', 1);
       fixture.componentRef.setInput('column', 1);
       fixture.detectChanges();
@@ -379,6 +392,7 @@ describe('CellComponent - User Scenarios', () => {
     it('should respond to resize state changes from store', async () => {
       // Add cell to store first
       store.addWidget({
+        widgetId: mockWidgetId,
         cellId: mockCellId,
         row: 1,
         col: 1,
@@ -404,7 +418,8 @@ describe('CellComponent - User Scenarios', () => {
 
   describe('Widget State Management', () => {
     beforeEach(() => {
-      fixture.componentRef.setInput('id', mockCellId);
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
       fixture.componentRef.setInput('row', 1);
       fixture.componentRef.setInput('column', 1);
       fixture.detectChanges();
@@ -429,7 +444,8 @@ describe('CellComponent - User Scenarios', () => {
 
   describe('Error Handling', () => {
     beforeEach(() => {
-      fixture.componentRef.setInput('id', mockCellId);
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
       fixture.componentRef.setInput('row', 1);
       fixture.componentRef.setInput('column', 1);
       fixture.detectChanges();
@@ -465,6 +481,7 @@ describe('CellComponent - Without Context Menu Service', () => {
   let mockRenderer: jasmine.SpyObj<Renderer2>;
 
   const mockCellId: CellId = CellIdUtils.create(1, 1);
+  const mockWidgetId: WidgetId = WidgetIdUtils.generate();
   const mockWidgetFactory: WidgetFactory = {
     widgetTypeid: 'test-widget',
     name: 'Test Widget',
@@ -500,7 +517,8 @@ describe('CellComponent - Without Context Menu Service', () => {
   });
 
   it('should handle missing context menu service gracefully', () => {
-    fixture.componentRef.setInput('id', mockCellId);
+    fixture.componentRef.setInput('widgetId', mockWidgetId);
+    fixture.componentRef.setInput('cellId', mockCellId);
     fixture.componentRef.setInput('row', 1);
     fixture.componentRef.setInput('column', 1);
     fixture.componentRef.setInput('isEditMode', true);

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ElementRef } from '@angular/core';
 import { DropZoneComponent } from '../drop-zone.component';
 import { DashboardStore } from '../../store/dashboard-store';
-import { DragData, CellIdUtils, WidgetMetadata } from '../../models';
+import { DragData, CellIdUtils, WidgetIdUtils, WidgetMetadata } from '../../models';
 import { DashboardService } from '../../services/dashboard.service';
 
 describe('DropZoneComponent - Focused Regression Tests', () => {
@@ -22,6 +22,7 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
     kind: 'cell',
     content: {
       cellId: CellIdUtils.create(2, 2),
+      widgetId: WidgetIdUtils.generate(),
       row: 2,
       col: 2,
       rowSpan: 1,

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, CellData, WidgetFactory } from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory } from '../../models';
 import { GridQueryInternalUtils } from '../features/utils/grid-query-internal.utils';
 
 describe('DashboardStore - Grid Query Methods', () => {
@@ -38,6 +38,7 @@ describe('DashboardStore - Grid Query Methods', () => {
 
     it('should return true for occupied single cell', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 5),
         row: 5,
         col: 5,
@@ -57,6 +58,7 @@ describe('DashboardStore - Grid Query Methods', () => {
 
     it('should return true for cells within multi-cell widget', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(3, 4),
         row: 3,
         col: 4,
@@ -85,6 +87,7 @@ describe('DashboardStore - Grid Query Methods', () => {
     it('should exclude specified widget from occupation check', () => {
       const cellId = CellIdUtils.create(5, 5);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 5,
         col: 5,
@@ -152,6 +155,7 @@ describe('DashboardStore - Grid Query Methods', () => {
 
     it('should return cell at exact position', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(3, 7),
         row: 3,
         col: 7,
@@ -169,6 +173,7 @@ describe('DashboardStore - Grid Query Methods', () => {
 
     it('should return null for cells within multi-cell widget but not at origin', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 5),
         row: 5,
         col: 5,
@@ -190,6 +195,7 @@ describe('DashboardStore - Grid Query Methods', () => {
 
     it('should handle multiple widgets correctly', () => {
       const cell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(2, 2),
         row: 2,
         col: 2,
@@ -200,6 +206,7 @@ describe('DashboardStore - Grid Query Methods', () => {
       };
 
       const cell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(8, 8),
         row: 8,
         col: 8,

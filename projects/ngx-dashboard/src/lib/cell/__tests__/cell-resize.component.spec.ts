@@ -5,7 +5,7 @@ import { DashboardStore } from '../../store/dashboard-store';
 import { DashboardService } from '../../services/dashboard.service';
 import { CellContextMenuService } from '../cell-context-menu.service';
 import { CELL_SETTINGS_DIALOG_PROVIDER } from '../../providers/cell-settings-dialog';
-import { CellId, CellIdUtils, WidgetFactory } from '../../models';
+import { CellId, CellIdUtils, WidgetId, WidgetIdUtils, WidgetFactory } from '../../models';
 import { Component } from '@angular/core';
 
 // Mock test widget component
@@ -32,6 +32,7 @@ describe('CellComponent - Resize Functionality', () => {
   let mockDialogProvider: jasmine.SpyObj<any>;
 
   const mockCellId: CellId = CellIdUtils.create(1, 1);
+  const mockWidgetId: WidgetId = WidgetIdUtils.generate();
   const otherCellId: CellId = CellIdUtils.create(2, 2);
 
   const mockWidgetFactory: WidgetFactory = {
@@ -81,7 +82,8 @@ describe('CellComponent - Resize Functionality', () => {
     mockDashboardService.getFactory.and.returnValue(mockWidgetFactory);
 
     // Setup component inputs
-    fixture.componentRef.setInput('id', mockCellId);
+    fixture.componentRef.setInput('widgetId', mockWidgetId);
+    fixture.componentRef.setInput('cellId', mockCellId);
     fixture.componentRef.setInput('row', 2);
     fixture.componentRef.setInput('column', 3);
     fixture.detectChanges();
@@ -113,7 +115,7 @@ describe('CellComponent - Resize Functionality', () => {
       component.onResizeStart(mockMouseEvent as MouseEvent, 'horizontal');
 
       expect(component.resizeStart.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         direction: 'horizontal',
       });
     });
@@ -124,7 +126,7 @@ describe('CellComponent - Resize Functionality', () => {
       component.onResizeStart(mockMouseEvent as MouseEvent, 'vertical');
 
       expect(component.resizeStart.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         direction: 'vertical',
       });
     });
@@ -193,7 +195,7 @@ describe('CellComponent - Resize Functionality', () => {
       (component as any).handleResizeMove(moveEvent);
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         direction: 'horizontal',
         delta: 1,
       });
@@ -216,7 +218,7 @@ describe('CellComponent - Resize Functionality', () => {
       (component as any).handleResizeMove(moveEvent);
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         direction: 'vertical',
         delta: 2,
       });
@@ -230,7 +232,7 @@ describe('CellComponent - Resize Functionality', () => {
       (component as any).handleResizeMove(moveEvent);
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         direction: 'horizontal',
         delta: -1,
       });
@@ -255,7 +257,7 @@ describe('CellComponent - Resize Functionality', () => {
       (component as any).handleResizeEnd();
 
       expect(component.resizeEnd.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         apply: true,
       });
     });
@@ -310,7 +312,7 @@ describe('CellComponent - Resize Functionality', () => {
       }).not.toThrow();
 
       expect(component.resizeStart.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         direction: jasmine.any(String),
       });
     });
@@ -323,7 +325,7 @@ describe('CellComponent - Resize Functionality', () => {
       (component as any).handleResizeMove({ clientX: 999999, clientY: 999999 });
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         direction: 'horizontal',
         delta: jasmine.any(Number),
       });
@@ -337,7 +339,7 @@ describe('CellComponent - Resize Functionality', () => {
       (component as any).handleResizeMove({ clientX: -100, clientY: -100 });
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         direction: 'horizontal',
         delta: jasmine.any(Number),
       });
@@ -351,7 +353,7 @@ describe('CellComponent - Resize Functionality', () => {
       (component as any).handleResizeMove({ clientX: 200, clientY: 200 });
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         direction: 'horizontal',
         delta: jasmine.any(Number),
       });
@@ -378,14 +380,14 @@ describe('CellComponent - Resize Functionality', () => {
       // Start resize
       component.onResizeStart(startEvent as MouseEvent, 'horizontal');
       expect(component.resizeStart.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         direction: 'horizontal',
       });
 
       // Move resize
       (component as any).handleResizeMove({ clientX: 250, clientY: 200 });
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         direction: 'horizontal',
         delta: 1,
       });
@@ -393,7 +395,7 @@ describe('CellComponent - Resize Functionality', () => {
       // End resize
       (component as any).handleResizeEnd();
       expect(component.resizeEnd.emit).toHaveBeenCalledWith({
-        id: mockCellId,
+        cellId: mockCellId,
         apply: true,
       });
     });

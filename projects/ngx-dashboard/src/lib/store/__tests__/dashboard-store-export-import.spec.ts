@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, CellData, WidgetFactory, DashboardDataDto, Widget } from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto, Widget } from '../../models';
 
 describe('DashboardStore - Export/Import Functionality', () => {
   let store: InstanceType<typeof DashboardStore>;
@@ -46,6 +46,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should export dashboard with single widget', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(3, 4),
         row: 3,
         col: 4,
@@ -73,6 +74,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should export dashboard with multiple widgets', () => {
       const cell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -83,6 +85,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       };
 
       const cell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 8),
         row: 5,
         col: 8,
@@ -323,6 +326,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
     it('should replace existing dashboard content', () => {
       // Add initial content
       const initialCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -380,6 +384,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should exclude UnknownWidgetComponent from export', () => {
       const validCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -390,6 +395,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       };
 
       const unknownCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(2, 2),
         row: 2,
         col: 2,
@@ -420,6 +426,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should export empty dashboard when only unknown widgets present', () => {
       const unknownCell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -430,6 +437,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       };
 
       const unknownCell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(3, 3),
         row: 3,
         col: 3,
@@ -452,6 +460,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should preserve valid widgets while filtering unknown widgets in mixed scenario', () => {
       const validCell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -462,6 +471,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       };
 
       const unknownCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(2, 2),
         row: 2,
         col: 2,
@@ -472,6 +482,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       };
 
       const validCell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(3, 3),
         row: 3,
         col: 3,
@@ -513,6 +524,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should filter unknown widgets with live widget states callback', () => {
       const validCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -523,6 +535,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       };
 
       const unknownCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(2, 2),
         row: 2,
         col: 2,
@@ -558,6 +571,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       store.setGridConfig({ rows: 15, columns: 20, gutterSize: '2em' });
 
       const unknownCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 5),
         row: 5,
         col: 5,
@@ -587,6 +601,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should export with live widget states when callback provided', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(2, 3),
         row: 2,
         col: 3,
@@ -619,6 +634,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should fall back to stored state when live state not available', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(4, 5),
         row: 4,
         col: 5,
@@ -651,6 +667,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should handle mixed live and stored states', () => {
       const cell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -661,6 +678,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       };
 
       const cell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(2, 2),
         row: 2,
         col: 2,
@@ -690,6 +708,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should work without callback (backward compatibility)', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(3, 4),
         row: 3,
         col: 4,
@@ -717,6 +736,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should handle empty live states map', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 2),
         row: 1,
         col: 2,
@@ -736,6 +756,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should handle undefined widget states', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 6),
         row: 5,
         col: 6,

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, CellData, DragData, WidgetMetadata, WidgetFactory } from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, DragData, WidgetMetadata, WidgetFactory } from '../../models';
 import { DashboardService } from '../../services/dashboard.service';
 
 describe('DashboardStore - Computed Properties', () => {
@@ -44,6 +44,7 @@ describe('DashboardStore - Computed Properties', () => {
     beforeEach(() => {
       cellId = CellIdUtils.create(4, 4);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 4,
         col: 4,
@@ -61,7 +62,7 @@ describe('DashboardStore - Computed Properties', () => {
 
     it('should return empty array when resize data exists but widget is removed', () => {
       store.startResize(cellId);
-      store.removeWidget(cellId);
+      const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId))!; store.removeWidget(widget.widgetId);
 
       expect(store.resizePreviewCells()).toEqual([]);
     });
@@ -157,6 +158,7 @@ describe('DashboardStore - Computed Properties', () => {
     beforeEach(() => {
       cellId = CellIdUtils.create(8, 8);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 8,
         col: 8,
@@ -229,7 +231,7 @@ describe('DashboardStore - Computed Properties', () => {
       store.startResize(cellId);
       store.updateResizePreview('horizontal', 2);
       
-      store.removeWidget(cellId);
+      const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId))!; store.removeWidget(widget.widgetId);
 
       expect(store.resizePreviewMap().size).toBe(0);
     });
@@ -272,6 +274,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(3, 3),
           row: 3,
           col: 3,
@@ -297,6 +300,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(1, 1),
           row: 1,
           col: 1,
@@ -335,6 +339,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData2: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(2, 2),
           row: 2,
           col: 2,
@@ -351,6 +356,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(1, 1),
           row: 1,
           col: 1,
@@ -409,6 +415,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(4, 4),
           row: 4,
           col: 4,
@@ -432,6 +439,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(1, 1),
           row: 1,
           col: 1,
@@ -474,6 +482,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(1, 1),
           row: 1,
           col: 1,
@@ -513,6 +522,7 @@ describe('DashboardStore - Computed Properties', () => {
     beforeEach(() => {
       // Add some existing widgets to create collision scenarios
       const widget1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(3, 3),
         row: 3,
         col: 3,
@@ -522,6 +532,7 @@ describe('DashboardStore - Computed Properties', () => {
         widgetState: {},
       };
       const widget2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(8, 8),
         row: 8,
         col: 8,
@@ -577,6 +588,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(1, 1),
           row: 1,
           col: 1,
@@ -614,6 +626,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(1, 1),
           row: 1,
           col: 1,
@@ -640,6 +653,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId,
           row: 3,
           col: 3,
@@ -660,6 +674,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId,
           row: 3,
           col: 3,
@@ -703,6 +718,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(1, 1),
           row: 1,
           col: 1,
@@ -740,6 +756,7 @@ describe('DashboardStore - Computed Properties', () => {
     beforeEach(() => {
       // Add existing widget for collision testing
       const widget: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 5),
         row: 5,
         col: 5,
@@ -803,6 +820,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId,
           row: 5,
           col: 5,
@@ -819,6 +837,7 @@ describe('DashboardStore - Computed Properties', () => {
     it('should return false for collision when moving cell to occupied space', () => {
       // Add another widget
       const widget2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(10, 10),
         row: 10,
         col: 10,
@@ -833,6 +852,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId,
           row: 5,
           col: 5,
@@ -869,6 +889,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(1, 1),
           row: 1,
           col: 1,
@@ -892,6 +913,7 @@ describe('DashboardStore - Computed Properties', () => {
     it('should maintain consistency between resize preview cells and map', () => {
       const cellId = CellIdUtils.create(4, 4);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 4,
         col: 4,
@@ -918,6 +940,7 @@ describe('DashboardStore - Computed Properties', () => {
       // Start resize
       const cellId = CellIdUtils.create(3, 3);
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId,
         row: 3,
         col: 3,

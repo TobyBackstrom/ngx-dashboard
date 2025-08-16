@@ -129,11 +129,18 @@ export const withWidgetManagement = () =>
         }
       },
 
-      updateAllWidgetStates(widgetStates: Map<string, unknown>) {
+      updateAllWidgetStates(cellStates: Map<string, unknown>) {
         const updatedWidgetsById = { ...store.widgetsById() };
 
-        for (const [widgetIdString, newState] of widgetStates) {
-          if (updatedWidgetsById[widgetIdString]) {
+        // Convert cell ID keys to widget IDs and update states
+        for (const [cellIdString, newState] of cellStates) {
+          // Find the widget with the matching cell ID
+          const widget = Object.values(updatedWidgetsById).find(w => 
+            CellIdUtils.toString(w.cellId) === cellIdString
+          );
+          
+          if (widget) {
+            const widgetIdString = WidgetIdUtils.toString(widget.widgetId);
             updatedWidgetsById[widgetIdString] = {
               ...updatedWidgetsById[widgetIdString],
               widgetState: newState,

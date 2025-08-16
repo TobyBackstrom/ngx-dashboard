@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Component, signal, ViewContainerRef } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, CellData, WidgetFactory, DashboardDataDto, Widget, WidgetMetadata } from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto, Widget, WidgetMetadata } from '../../models';
 
 // Mock widget with changeable state to test state preservation
 interface TestWidgetState {
@@ -86,6 +86,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
       const initialState: TestWidgetState = { value: 'initial', count: 0 };
       
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(2, 3),
         row: 2,
         col: 3,
@@ -109,6 +110,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
       const liveState: TestWidgetState = { value: 'updated', count: 5 };
       
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(2, 3),
         row: 2,
         col: 3,
@@ -138,6 +140,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
       const storedState: TestWidgetState = { value: 'stored', count: 2 };
       
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(4, 5),
         row: 4,
         col: 5,
@@ -161,6 +164,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
 
     it('should handle mixed scenario with some live and some stored states', () => {
       const cell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,
@@ -171,6 +175,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
       };
 
       const cell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(2, 2),
         row: 2,
         col: 2,
@@ -212,6 +217,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
       };
       
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(3, 3),
         row: 3,
         col: 3,
@@ -236,6 +242,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
       const storedState: TestWidgetState = { value: 'stored', count: 3 };
       
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 6),
         row: 5,
         col: 6,
@@ -258,6 +265,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
 
     it('should export state correctly after multiple widget updates', () => {
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 2),
         row: 1,
         col: 2,
@@ -293,6 +301,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
       const originalState: TestWidgetState = { value: 'original', count: 42 };
       
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(2, 3),
         row: 2,
         col: 3,
@@ -326,6 +335,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
       const liveState: TestWidgetState = { value: 'live-updated', count: 100 };
       
       const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(1, 1),
         row: 1,
         col: 1,

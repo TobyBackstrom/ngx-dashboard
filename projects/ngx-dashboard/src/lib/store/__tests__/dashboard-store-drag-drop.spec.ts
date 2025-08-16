@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, DragData, WidgetMetadata, WidgetFactory } from '../../models';
+import { CellIdUtils, WidgetIdUtils, DragData, WidgetMetadata, WidgetFactory } from '../../models';
 import { DashboardService } from '../../services/dashboard.service';
 
 describe('DashboardStore - Drag & Drop Operations', () => {
@@ -53,6 +53,7 @@ describe('DashboardStore - Drag & Drop Operations', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(5, 5),
           row: 5,
           col: 5,
@@ -88,6 +89,7 @@ describe('DashboardStore - Drag & Drop Operations', () => {
       const dragData2: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(3, 3),
           row: 3,
           col: 3,
@@ -119,6 +121,7 @@ describe('DashboardStore - Drag & Drop Operations', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(7, 8),
           row: 7,
           col: 8,
@@ -267,6 +270,7 @@ describe('DashboardStore - Drag & Drop Operations', () => {
       const dragData2: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(3, 3),
           row: 3,
           col: 3,
@@ -287,6 +291,7 @@ describe('DashboardStore - Drag & Drop Operations', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
+          widgetId: WidgetIdUtils.generate(),
           cellId: CellIdUtils.create(5, 5),
           row: 5,
           col: 5,
