@@ -24,6 +24,7 @@ import { CommonModule } from '@angular/common';
 import {
   CellId,
   CellIdUtils,
+  WidgetId,
   DragData,
   WidgetFactory,
   Widget,
@@ -49,7 +50,8 @@ import { CellContextMenuService, CellContextMenuItem } from './cell-context-menu
   },
 })
 export class CellComponent {
-  id = input.required<CellId>();
+  widgetId = input.required<WidgetId>();  // Unique widget instance identifier
+  cellId = input.required<CellId>();       // Current grid position
   widgetFactory = input<WidgetFactory | undefined>(undefined);
   widgetState = input<unknown | undefined>(undefined);
   isEditMode = input<boolean>(false);
@@ -64,16 +66,16 @@ export class CellComponent {
   dragStart = output<DragData>();
   dragEnd = output<void>();
 
-  edit = output<CellId>();
-  delete = output<CellId>();
-  settings = output<{ id: CellId; flat: boolean }>();
-  resizeStart = output<{ id: CellId; direction: 'horizontal' | 'vertical' }>();
+  edit = output<WidgetId>();
+  delete = output<WidgetId>();
+  settings = output<{ id: WidgetId; flat: boolean }>();
+  resizeStart = output<{ cellId: CellId; direction: 'horizontal' | 'vertical' }>();
   resizeMove = output<{
-    id: CellId;
+    cellId: CellId;
     direction: 'horizontal' | 'vertical';
     delta: number;
   }>();
-  resizeEnd = output<{ id: CellId; apply: boolean }>();
+  resizeEnd = output<{ cellId: CellId; apply: boolean }>();
 
   private container = viewChild.required<ElementRef, ViewContainerRef>(
     'container',
@@ -107,7 +109,7 @@ export class CellComponent {
   isResizing = computed(() => {
     const resizeData = this.#store.resizeData();
     return resizeData
-      ? CellIdUtils.equals(resizeData.cellId, this.id())
+      ? CellIdUtils.equals(resizeData.cellId, this.cellId())
       : false;
   });
 
@@ -198,7 +200,8 @@ export class CellComponent {
     event.dataTransfer.effectAllowed = 'move';
 
     const cell = {
-      cellId: this.id(),
+      cellId: this.cellId(),
+      widgetId: this.widgetId(),
       row: this.row(),
       col: this.column(),
       rowSpan: this.rowSpan(),
@@ -258,7 +261,7 @@ export class CellComponent {
   }
 
   onEdit(): void {
-    this.edit.emit(this.id());
+    this.edit.emit(this.widgetId());
 
     // Call the widget's edit dialog method if it exists
     if (this.#widgetRef?.instance?.dashboardEditState) {
@@ -267,12 +270,12 @@ export class CellComponent {
   }
 
   onDelete(): void {
-    this.delete.emit(this.id());
+    this.delete.emit(this.widgetId());
   }
 
   async onSettings(): Promise<void> {
     const currentSettings: CellDisplayData = {
-      id: CellIdUtils.toString(this.id()),
+      id: CellIdUtils.toString(this.cellId()),  // Use cellId for display position
       flat: this.flat(),
     };
 
@@ -283,7 +286,7 @@ export class CellComponent {
 
       if (result) {
         this.settings.emit({
-          id: this.id(),
+          id: this.widgetId(),
           flat: result.flat ?? false,
         });
       }
@@ -303,7 +306,7 @@ export class CellComponent {
 
     this.resizeDirection.set(direction);
     this.resizeStartPos.set({ x: event.clientX, y: event.clientY });
-    this.resizeStart.emit({ id: this.id(), direction });
+    this.resizeStart.emit({ cellId: this.cellId(), direction });
 
     // Setup document listeners only when actively resizing
     this.setupDocumentListeners();
@@ -328,11 +331,11 @@ export class CellComponent {
     if (direction === 'horizontal') {
       const deltaX = event.clientX - startPos.x;
       const deltaSpan = Math.round(deltaX / cellSize.width);
-      this.resizeMove.emit({ id: this.id(), direction, delta: deltaSpan });
+      this.resizeMove.emit({ cellId: this.cellId(), direction, delta: deltaSpan });
     } else {
       const deltaY = event.clientY - startPos.y;
       const deltaSpan = Math.round(deltaY / cellSize.height);
-      this.resizeMove.emit({ id: this.id(), direction, delta: deltaSpan });
+      this.resizeMove.emit({ cellId: this.cellId(), direction, delta: deltaSpan });
     }
   }
 
@@ -348,7 +351,7 @@ export class CellComponent {
     // Clean up document listeners immediately
     this.#cleanupDocumentListeners();
 
-    this.resizeEnd.emit({ id: this.id(), apply: true });
+    this.resizeEnd.emit({ cellId: this.cellId(), apply: true });
     this.resizeDirection.set(null);
   }
 

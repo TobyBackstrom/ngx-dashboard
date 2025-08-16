@@ -12,6 +12,7 @@ import {
   CellData,
   DragData,
   WidgetFactory,
+  WidgetId,
 } from '../../models';
 import {
   calculateCollisionInfo,
@@ -90,7 +91,7 @@ export const withDragDrop = () =>
             widgetState?: string,
           ) => void;
           updateWidgetPosition: (
-            cellId: CellId,
+            widgetId: WidgetId,
             row: number,
             col: number,
           ) => void;
@@ -130,7 +131,7 @@ export const withDragDrop = () =>
         // 5. Handle cell movement
         if (dragData.kind === 'cell') {
           dependencies.updateWidgetPosition(
-            dragData.content.cellId,
+            dragData.content.widgetId,  // Use widgetId instead of cellId
             targetPosition.row,
             targetPosition.col,
           );

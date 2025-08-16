@@ -1,4 +1,5 @@
 export * from './cell-id';
+export * from './widget-id';
 export * from './cell-data';
 export * from './cell-position';
 export * from './cell-dialog';

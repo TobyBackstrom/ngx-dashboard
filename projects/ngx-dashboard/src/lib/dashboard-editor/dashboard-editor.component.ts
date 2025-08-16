@@ -18,7 +18,7 @@ import { CellComponent } from '../cell/cell.component';
 import { CellContextMenuComponent } from '../cell/cell-context-menu.component';
 import { CellContextMenuService } from '../cell/cell-context-menu.service';
 import { DropZoneComponent } from '../drop-zone/drop-zone.component';
-import { CellId, CellIdUtils, DragData, CellData } from '../models';
+import { CellId, CellIdUtils, WidgetId, WidgetIdUtils, DragData, CellData } from '../models';
 import { DashboardStore } from '../store/dashboard-store';
 
 @Component({
@@ -138,13 +138,13 @@ export class DashboardEditorComponent {
   // Pure delegation methods - no business logic in component
   addWidget = (cellData: CellData) => this.#store.addWidget(cellData);
 
-  updateCellPosition = (id: CellId, row: number, column: number) =>
+  updateCellPosition = (id: WidgetId, row: number, column: number) =>
     this.#store.updateWidgetPosition(id, row, column);
 
-  updateCellSpan = (id: CellId, colSpan: number, rowSpan: number) =>
+  updateCellSpan = (id: WidgetId, colSpan: number, rowSpan: number) =>
     this.#store.updateWidgetSpan(id, rowSpan, colSpan);
 
-  updateCellSettings = (id: CellId, flat: boolean) =>
+  updateCellSettings = (id: WidgetId, flat: boolean) =>
     this.#store.updateCellSettings(id, flat);
 
   // Pure delegation - drag and drop event handlers
@@ -158,12 +158,12 @@ export class DashboardEditorComponent {
   dragEnd = () => this.#store.endDrag();
 
   // Pure delegation - cell event handlers
-  onCellDelete = (id: CellId) => this.#store.removeWidget(id);
+  onCellDelete = (id: WidgetId) => this.#store.removeWidget(id);
 
-  onCellSettings = (event: { id: CellId; flat: boolean }) =>
+  onCellSettings = (event: { id: WidgetId; flat: boolean }) =>
     this.updateCellSettings(event.id, event.flat);
 
-  onCellResize = (event: { id: CellId; rowSpan: number; colSpan: number }) =>
+  onCellResize = (event: { id: WidgetId; rowSpan: number; colSpan: number }) =>
     this.updateCellSpan(event.id, event.colSpan, event.rowSpan);
 
   // Handle drag events from cell component
@@ -171,17 +171,17 @@ export class DashboardEditorComponent {
 
   // Handle resize events from cell component
   onCellResizeStart = (event: {
-    id: CellId;
+    cellId: CellId;
     direction: 'horizontal' | 'vertical';
-  }) => this.#store.startResize(event.id);
+  }) => this.#store.startResize(event.cellId);
 
   onCellResizeMove = (event: {
-    id: CellId;
+    cellId: CellId;
     direction: 'horizontal' | 'vertical';
     delta: number;
   }) => this.#store.updateResizePreview(event.direction, event.delta);
 
-  onCellResizeEnd = (event: { id: CellId; apply: boolean }) =>
+  onCellResizeEnd = (event: { cellId: CellId; apply: boolean }) =>
     this.#store.endResize(event.apply);
 
   // Handle drop events by delegating to store's business logic
@@ -199,10 +199,10 @@ export class DashboardEditorComponent {
     
     const cells = this.cellComponents();
     for (const cell of cells) {
-      const cellId = cell.id();
+      const widgetId = cell.widgetId();
       const currentState = cell.getCurrentWidgetState();
       if (currentState !== undefined) {
-        stateMap.set(CellIdUtils.toString(cellId), currentState);
+        stateMap.set(WidgetIdUtils.toString(widgetId), currentState);
       }
     }
     

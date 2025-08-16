@@ -26,10 +26,11 @@
 
   <!-- Top grid with interactive cells -->
   <div class="grid" id="top-grid">
-    @for (cell of cells(); track cell.cellId) {
+    @for (cell of cells(); track cell.widgetId) {
     <lib-cell
       class="grid-cell"
-      [id]="cell.cellId"
+      [widgetId]="cell.widgetId"
+      [cellId]="cell.cellId"
       [isEditMode]="true"
       [draggable]="true"
       [row]="cell.row"

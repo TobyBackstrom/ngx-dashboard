@@ -15,6 +15,8 @@ import {
   CellData,
   DragData,
   DashboardDataDto,
+  WidgetId,
+  WidgetIdUtils,
 } from '../models';
 import { withGridConfig } from './features/grid-config.feature';
 import { withWidgetManagement } from './features/widget-management.feature';
@@ -102,7 +104,7 @@ export const DashboardStore = signalStore(
 
     endResize(apply: boolean) {
       store._endResize(apply, {
-        updateWidgetSpan: store.updateWidgetSpan,
+        updateWidgetSpan: store.updateWidgetSpanByCellId,  // Use backwards compatibility helper
       });
     },
 
@@ -123,8 +125,10 @@ export const DashboardStore = signalStore(
         cells: store.cells()
           .filter((cell) => cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget')
           .map((cell) => {
+            // Try to get live state by widgetId first, then fall back to cellId for backwards compatibility
+            const widgetIdString = WidgetIdUtils.toString(cell.widgetId);
             const cellIdString = CellIdUtils.toString(cell.cellId);
-            const currentState = liveWidgetStates.get(cellIdString);
+            const currentState = liveWidgetStates.get(widgetIdString) ?? liveWidgetStates.get(cellIdString);
 
             return {
               row: cell.row,
@@ -142,14 +146,16 @@ export const DashboardStore = signalStore(
 
     loadDashboard(data: DashboardDataDto): void {
       // Import full dashboard data with grid configuration
-      const cellsById: Record<string, CellData> = {};
+      const widgetsById: Record<string, CellData> = {};
       
       data.cells.forEach((cellData) => {
         const factory = store.dashboardService.getFactory(
           cellData.widgetTypeid
         );
 
+        const widgetId = WidgetIdUtils.generate();
         const cell: CellData = {
+          widgetId,
           cellId: CellIdUtils.create(cellData.row, cellData.col),
           row: cellData.row,
           col: cellData.col,
@@ -160,7 +166,7 @@ export const DashboardStore = signalStore(
           widgetState: cellData.widgetState,
         };
         
-        cellsById[CellIdUtils.toString(cell.cellId)] = cell;
+        widgetsById[WidgetIdUtils.toString(widgetId)] = cell;
       });
 
       patchState(store, {
@@ -168,21 +174,23 @@ export const DashboardStore = signalStore(
         rows: data.rows,
         columns: data.columns,
         gutterSize: data.gutterSize,
-        cellsById,
+        widgetsById,
       });
     },
 
     // INITIALIZATION METHODS
     initializeFromDto(dashboardData: DashboardDataDto): void {
       // Inline the loadDashboard logic since it's defined later in the same methods block
-      const cellsById: Record<string, CellData> = {};
+      const widgetsById: Record<string, CellData> = {};
       
       dashboardData.cells.forEach((cellData) => {
         const factory = store.dashboardService.getFactory(
           cellData.widgetTypeid
         );
 
+        const widgetId = WidgetIdUtils.generate();
         const cell: CellData = {
+          widgetId,
           cellId: CellIdUtils.create(cellData.row, cellData.col),
           row: cellData.row,
           col: cellData.col,
@@ -193,7 +201,7 @@ export const DashboardStore = signalStore(
           widgetState: cellData.widgetState,
         };
         
-        cellsById[CellIdUtils.toString(cell.cellId)] = cell;
+        widgetsById[WidgetIdUtils.toString(widgetId)] = cell;
       });
 
       patchState(store, {
@@ -201,7 +209,7 @@ export const DashboardStore = signalStore(
         rows: dashboardData.rows,
         columns: dashboardData.columns,
         gutterSize: dashboardData.gutterSize,
-        cellsById,
+        widgetsById,
       });
     },
   })),

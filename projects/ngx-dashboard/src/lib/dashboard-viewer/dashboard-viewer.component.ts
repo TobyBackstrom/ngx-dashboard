@@ -2,7 +2,7 @@ import { Component, computed, effect, inject, input, viewChildren, ChangeDetecti
 import { CommonModule } from '@angular/common';
 import { CellComponent } from '../cell/cell.component';
 import { DashboardStore } from '../store/dashboard-store';
-import { CellIdUtils } from '../models';
+import { CellIdUtils, WidgetIdUtils } from '../models';
 
 @Component({
   selector: 'ngx-dashboard-viewer',
@@ -50,10 +50,10 @@ export class DashboardViewerComponent {
     
     const cells = this.cellComponents();
     for (const cell of cells) {
-      const cellId = cell.id();
+      const widgetId = cell.widgetId();
       const currentState = cell.getCurrentWidgetState();
       if (currentState !== undefined) {
-        stateMap.set(CellIdUtils.toString(cellId), currentState);
+        stateMap.set(WidgetIdUtils.toString(widgetId), currentState);
       }
     }
     
