@@ -46,11 +46,11 @@ export function calculateCollisionInfo(
     }
   }
 
-  const excludeId = isCell ? dragData.content.cellId : undefined;
+  const excludeWidgetId = isCell ? dragData.content.widgetId : undefined;
 
   // Check for actual collisions with other widgets (not self)
   const hasCollisions = footprint.some((pos) =>
-    GridQueryInternalUtils.isCellOccupied(cells, pos.row, pos.col, excludeId)
+    GridQueryInternalUtils.isCellOccupied(cells, pos.row, pos.col, excludeWidgetId)
   );
 
   // Generate invalid cell IDs

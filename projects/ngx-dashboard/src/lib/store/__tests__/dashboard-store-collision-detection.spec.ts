@@ -121,7 +121,7 @@ describe('DashboardStore - Collision Detection', () => {
         kind: 'cell',
         content: {
           cellId: CellIdUtils.create(5, 5),
-          widgetId: WidgetIdUtils.generate(),
+          widgetId: existingCell.widgetId, // Use the SAME widgetId
           row: 5,
           col: 5,
           rowSpan: 3,
@@ -153,7 +153,7 @@ describe('DashboardStore - Collision Detection', () => {
         kind: 'cell',
         content: {
           cellId: CellIdUtils.create(5, 5),
-          widgetId: WidgetIdUtils.generate(),
+          widgetId: existingCell.widgetId, // Use the SAME widgetId
           row: 5,
           col: 5,
           rowSpan: 3,
@@ -261,7 +261,7 @@ describe('DashboardStore - Collision Detection', () => {
         kind: 'cell',
         content: {
           cellId: CellIdUtils.create(8, 6),
-          widgetId: WidgetIdUtils.generate(),
+          widgetId: existingCell.widgetId, // Use the SAME widgetId
           row: 8,
           col: 6,
           rowSpan: 2,
@@ -306,6 +306,257 @@ describe('DashboardStore - Collision Detection', () => {
       store.startDrag(dragData);
       store.setHoveredDropZone({ row: 5, col: 6 }); // Would overlap with widget-1
       expect(store.isValidPlacement()).toBe(false);
+    });
+
+    it('should allow 4x4 widget self-overlap when moved 1 right and 1 down', () => {
+      // Add a 4x4 widget at position (6,6) - occupies (6,6) to (9,9)
+      const existingCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(6, 6),
+        row: 6,
+        col: 6,
+        rowSpan: 4,
+        colSpan: 4,
+        widgetFactory: mockWidgetFactory,
+        widgetState: {},
+      };
+      store.addWidget(existingCell);
+
+      // Try to move the same widget 1 right and 1 down (diagonal movement)
+      // New position would be (7,7) to (10,10) - significant overlap with original (6,6) to (9,9)
+      const dragData: DragData = {
+        kind: 'cell',
+        content: {
+          cellId: CellIdUtils.create(6, 6),
+          widgetId: existingCell.widgetId,
+          row: 6,
+          col: 6,
+          rowSpan: 4,
+          colSpan: 4,
+        }
+      };
+      store.startDrag(dragData);
+      store.setHoveredDropZone({ row: 7, col: 7 }); // Move one row down and one column right
+      expect(store.isValidPlacement()).toBe(true);
+    });
+
+    it('should allow 4x4 widget self-overlap when moved 2 right and 2 down', () => {
+      // Add a 4x4 widget at position (4,4) - occupies (4,4) to (7,7)
+      const existingCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(4, 4),
+        row: 4,
+        col: 4,
+        rowSpan: 4,
+        colSpan: 4,
+        widgetFactory: mockWidgetFactory,
+        widgetState: {},
+      };
+      store.addWidget(existingCell);
+
+      // Try to move the same widget 2 right and 2 down
+      // New position would be (6,6) to (9,9) - partial overlap with original (4,4) to (7,7)
+      const dragData: DragData = {
+        kind: 'cell',
+        content: {
+          cellId: CellIdUtils.create(4, 4),
+          widgetId: existingCell.widgetId,
+          row: 4,
+          col: 4,
+          rowSpan: 4,
+          colSpan: 4,
+        }
+      };
+      store.startDrag(dragData);
+      store.setHoveredDropZone({ row: 6, col: 6 }); // Move 2 rows down and 2 columns right
+      expect(store.isValidPlacement()).toBe(true);
+    });
+
+    it('should allow 4x4 widget movement to non-overlapping position', () => {
+      // Add a 4x4 widget at position (2,2) - occupies (2,2) to (5,5)
+      const existingCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(2, 2),
+        row: 2,
+        col: 2,
+        rowSpan: 4,
+        colSpan: 4,
+        widgetFactory: mockWidgetFactory,
+        widgetState: {},
+      };
+      store.addWidget(existingCell);
+
+      // Try to move the same widget 4 positions right (no overlap)
+      // New position would be (2,6) to (5,9) - no overlap with original (2,2) to (5,5)
+      const dragData: DragData = {
+        kind: 'cell',
+        content: {
+          cellId: CellIdUtils.create(2, 2),
+          widgetId: existingCell.widgetId,
+          row: 2,
+          col: 2,
+          rowSpan: 4,
+          colSpan: 4,
+        }
+      };
+      store.startDrag(dragData);
+      store.setHoveredDropZone({ row: 2, col: 6 }); // Move 4 columns right, no vertical movement
+      expect(store.isValidPlacement()).toBe(true);
+    });
+
+    it('should allow 4x4 widget minimal self-overlap (corner-to-corner)', () => {
+      // Add a 4x4 widget at position (5,5) - occupies (5,5) to (8,8)
+      const existingCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(5, 5),
+        row: 5,
+        col: 5,
+        rowSpan: 4,
+        colSpan: 4,
+        widgetFactory: mockWidgetFactory,
+        widgetState: {},
+      };
+      store.addWidget(existingCell);
+
+      // Try to move the same widget 3 right and 3 down
+      // New position would be (8,8) to (11,11) - minimal overlap at corner (8,8)
+      const dragData: DragData = {
+        kind: 'cell',
+        content: {
+          cellId: CellIdUtils.create(5, 5),
+          widgetId: existingCell.widgetId,
+          row: 5,
+          col: 5,
+          rowSpan: 4,
+          colSpan: 4,
+        }
+      };
+      store.startDrag(dragData);
+      store.setHoveredDropZone({ row: 8, col: 8 }); // Move to create minimal corner overlap
+      expect(store.isValidPlacement()).toBe(true);
+    });
+
+    it('should prevent 4x4 widget collision with different widget when moved diagonally', () => {
+      // Add a 4x4 widget at position (2,2) - occupies (2,2) to (5,5)
+      const widget1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(2, 2),
+        row: 2,
+        col: 2,
+        rowSpan: 4,
+        colSpan: 4,
+        widgetFactory: mockWidgetFactory,
+        widgetState: {},
+      };
+      
+      // Add another 2x2 widget at position (8,8) - occupies (8,8) to (9,9)
+      const widget2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(8, 8),
+        row: 8,
+        col: 8,
+        rowSpan: 2,
+        colSpan: 2,
+        widgetFactory: mockWidgetFactory,
+        widgetState: {},
+      };
+      
+      store.addWidget(widget1);
+      store.addWidget(widget2);
+
+      // Try to move widget1 to overlap with widget2
+      // Moving to (7,7) would make widget1 occupy (7,7) to (10,10), overlapping widget2
+      const dragData: DragData = {
+        kind: 'cell',
+        content: {
+          cellId: CellIdUtils.create(2, 2),
+          widgetId: widget1.widgetId,
+          row: 2,
+          col: 2,
+          rowSpan: 4,
+          colSpan: 4,
+        }
+      };
+      store.startDrag(dragData);
+      store.setHoveredDropZone({ row: 7, col: 7 }); // Would overlap with widget2
+      expect(store.isValidPlacement()).toBe(false);
+    });
+
+    it('should expose the cellId-based exclusion bug when widget moves to completely different position', () => {
+      // Add a 4x4 widget at position (1,1) - occupies (1,1) to (4,4)
+      const existingCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(1, 1),
+        row: 1,
+        col: 1,
+        rowSpan: 4,
+        colSpan: 4,
+        widgetFactory: mockWidgetFactory,
+        widgetState: {},
+      };
+      store.addWidget(existingCell);
+
+      // Try to move the same widget to a completely different area (8,8) to (11,11)
+      // This should be valid since it's the same widget, but cellId-based exclusion might fail
+      const dragData: DragData = {
+        kind: 'cell',
+        content: {
+          cellId: CellIdUtils.create(1, 1), // Original position
+          widgetId: existingCell.widgetId,  // Same widget
+          row: 1,
+          col: 1,
+          rowSpan: 4,
+          colSpan: 4,
+        }
+      };
+      store.startDrag(dragData);
+      store.setHoveredDropZone({ row: 8, col: 8 }); // Move to completely different position
+      
+      // This should be TRUE since it's the same widget moving to an empty area
+      // But if cellId-based exclusion is buggy, it might incorrectly detect collision
+      expect(store.isValidPlacement()).toBe(true);
+    });
+
+    it('should fail when cellId exclusion does not match the widget being moved after position update', () => {
+      // Create a widget
+      const originalWidget: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(2, 2),
+        row: 2,
+        col: 2,
+        rowSpan: 3,
+        colSpan: 3,
+        widgetFactory: mockWidgetFactory,
+        widgetState: {},
+      };
+      store.addWidget(originalWidget);
+
+      // Simulate that the widget has been moved to a new position (3,3) in the store
+      // This updates the cellId to match the new position
+      store.updateWidgetPosition(originalWidget.widgetId, 3, 3);
+
+      // Now try to drag the widget again, but the drag data still has the OLD cellId
+      // This simulates the real-world scenario where drag starts before position update
+      const dragData: DragData = {
+        kind: 'cell',
+        content: {
+          cellId: CellIdUtils.create(2, 2), // OLD position (no longer matches stored widget)
+          widgetId: originalWidget.widgetId, // Same widget ID
+          row: 2, // OLD position
+          col: 2, // OLD position  
+          rowSpan: 3,
+          colSpan: 3,
+        }
+      };
+      
+      store.startDrag(dragData);
+      store.setHoveredDropZone({ row: 4, col: 4 }); // Try to move to (4,4)
+      
+      // This SHOULD be valid since it's the same widget
+      // But cellId-based exclusion will fail because the drag data cellId (2,2) 
+      // doesn't match the stored widget's cellId (3,3)
+      // So it will think this is a different widget colliding with the stored one
+      expect(store.isValidPlacement()).toBe(true);
     });
   });
 

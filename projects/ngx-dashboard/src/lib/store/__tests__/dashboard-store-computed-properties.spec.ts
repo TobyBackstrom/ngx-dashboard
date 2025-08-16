@@ -519,9 +519,12 @@ describe('DashboardStore - Computed Properties', () => {
   });
 
   describe('invalidHighlightMap', () => {
+    let widget1: CellData;
+    let widget2: CellData;
+    
     beforeEach(() => {
       // Add some existing widgets to create collision scenarios
-      const widget1: CellData = {
+      widget1 = {
         widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(3, 3),
         row: 3,
@@ -531,7 +534,7 @@ describe('DashboardStore - Computed Properties', () => {
         widgetFactory: mockWidgetFactory,
         widgetState: {},
       };
-      const widget2: CellData = {
+      widget2 = {
         widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(8, 8),
         row: 8,
@@ -653,7 +656,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
-          widgetId: WidgetIdUtils.generate(),
+          widgetId: widget1.widgetId, // Use the SAME widgetId from beforeEach
           cellId,
           row: 3,
           col: 3,
@@ -753,9 +756,11 @@ describe('DashboardStore - Computed Properties', () => {
   });
 
   describe('isValidPlacement', () => {
+    let existingWidget: CellData;
+    
     beforeEach(() => {
       // Add existing widget for collision testing
-      const widget: CellData = {
+      existingWidget = {
         widgetId: WidgetIdUtils.generate(),
         cellId: CellIdUtils.create(5, 5),
         row: 5,
@@ -765,7 +770,7 @@ describe('DashboardStore - Computed Properties', () => {
         widgetFactory: mockWidgetFactory,
         widgetState: {},
       };
-      store.addWidget(widget);
+      store.addWidget(existingWidget);
     });
 
     it('should return true when no drag data', () => {
@@ -820,7 +825,7 @@ describe('DashboardStore - Computed Properties', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
-          widgetId: WidgetIdUtils.generate(),
+          widgetId: existingWidget.widgetId, // Use the SAME widgetId from beforeEach
           cellId,
           row: 5,
           col: 5,

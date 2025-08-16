@@ -86,8 +86,9 @@ describe('DashboardStore - Grid Query Methods', () => {
 
     it('should exclude specified widget from occupation check', () => {
       const cellId = CellIdUtils.create(5, 5);
+      const widgetId = WidgetIdUtils.generate();
       const cell: CellData = {
-        widgetId: WidgetIdUtils.generate(),
+        widgetId,
         cellId,
         row: 5,
         col: 5,
@@ -102,9 +103,9 @@ describe('DashboardStore - Grid Query Methods', () => {
       expect(GridQueryInternalUtils.isCellOccupied(store.cells(), 5, 5)).toBe(true);
       expect(GridQueryInternalUtils.isCellOccupied(store.cells(), 6, 6)).toBe(true);
 
-      // With exclusion
-      expect(GridQueryInternalUtils.isCellOccupied(store.cells(), 5, 5, cellId)).toBe(false);
-      expect(GridQueryInternalUtils.isCellOccupied(store.cells(), 6, 6, cellId)).toBe(false);
+      // With exclusion (now using widgetId instead of cellId)
+      expect(GridQueryInternalUtils.isCellOccupied(store.cells(), 5, 5, widgetId)).toBe(false);
+      expect(GridQueryInternalUtils.isCellOccupied(store.cells(), 6, 6, widgetId)).toBe(false);
     });
   });
 

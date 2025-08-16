@@ -1,11 +1,11 @@
-import { CellId, CellIdUtils, CellData } from '../../../models';
+import { CellId, CellIdUtils, CellData, WidgetId } from '../../../models';
 
 // Internal utility functions used by collision detection, resize logic, and tests
 export const GridQueryInternalUtils = {
-  isCellOccupied(cells: CellData[], row: number, col: number, excludeId?: CellId): boolean {
+  isCellOccupied(cells: CellData[], row: number, col: number, excludeWidgetId?: WidgetId): boolean {
     return cells.some((cell) => {
-      // Skip checking against the cell being dragged
-      if (excludeId && CellIdUtils.equals(cell.cellId, excludeId))
+      // Skip checking against the widget being dragged (use widgetId for stable identity)
+      if (excludeWidgetId && cell.widgetId === excludeWidgetId)
         return false;
 
       const endRow = cell.row + cell.rowSpan - 1;
