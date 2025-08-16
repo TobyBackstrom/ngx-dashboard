@@ -104,7 +104,13 @@ export const DashboardStore = signalStore(
 
     endResize(apply: boolean) {
       store._endResize(apply, {
-        updateWidgetSpan: store.updateWidgetSpanByCellId,  // Use backwards compatibility helper
+        updateWidgetSpan: (cellId: CellId, rowSpan: number, colSpan: number) => {
+          // Adapter: find widget by cellId and update using widgetId
+          const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId));
+          if (widget) {
+            store.updateWidgetSpan(widget.widgetId, rowSpan, colSpan);
+          }
+        }
       });
     },
 
@@ -125,10 +131,8 @@ export const DashboardStore = signalStore(
         cells: store.cells()
           .filter((cell) => cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget')
           .map((cell) => {
-            // Try to get live state by widgetId first, then fall back to cellId for backwards compatibility
             const widgetIdString = WidgetIdUtils.toString(cell.widgetId);
-            const cellIdString = CellIdUtils.toString(cell.cellId);
-            const currentState = liveWidgetStates.get(widgetIdString) ?? liveWidgetStates.get(cellIdString);
+            const currentState = liveWidgetStates.get(widgetIdString);
 
             return {
               row: cell.row,
