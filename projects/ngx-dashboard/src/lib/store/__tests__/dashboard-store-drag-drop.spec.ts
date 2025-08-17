@@ -38,18 +38,18 @@ describe('DashboardStore - Drag & Drop Operations', () => {
     dashboardService.getFactory.and.returnValue(mockWidgetFactory);
   });
 
-  describe('syncDragState', () => {
-    it('should sync widget drag data', () => {
+  describe('dragData management', () => {
+    it('should start drag with widget data', () => {
       const dragData: DragData = {
         kind: 'widget',
         content: testWidgetMetadata
       };
 
-      store.syncDragState(dragData);
+      store.startDrag(dragData);
       expect(store.dragData()).toEqual(dragData);
     });
 
-    it('should sync cell drag data', () => {
+    it('should start drag with cell data', () => {
       const dragData: DragData = {
         kind: 'cell',
         content: {
@@ -62,21 +62,21 @@ describe('DashboardStore - Drag & Drop Operations', () => {
         }
       };
 
-      store.syncDragState(dragData);
+      store.startDrag(dragData);
       expect(store.dragData()).toEqual(dragData);
     });
 
-    it('should clear drag data when null', () => {
+    it('should clear drag data when ended', () => {
       // First set some drag data
       const dragData: DragData = {
         kind: 'widget',
         content: testWidgetMetadata
       };
-      store.syncDragState(dragData);
+      store.startDrag(dragData);
       expect(store.dragData()).toEqual(dragData);
 
       // Then clear it
-      store.syncDragState(null);
+      store.endDrag();
       expect(store.dragData()).toBeNull();
     });
 
@@ -98,58 +98,14 @@ describe('DashboardStore - Drag & Drop Operations', () => {
         }
       };
 
-      store.syncDragState(dragData1);
+      store.startDrag(dragData1);
       expect(store.dragData()).toEqual(dragData1);
 
-      store.syncDragState(dragData2);
-      expect(store.dragData()).toEqual(dragData2);
-    });
-  });
-
-  describe('startDrag', () => {
-    it('should start drag with widget data', () => {
-      const dragData: DragData = {
-        kind: 'widget',
-        content: testWidgetMetadata
-      };
-
-      store.startDrag(dragData);
-      expect(store.dragData()).toEqual(dragData);
-    });
-
-    it('should start drag with cell data', () => {
-      const dragData: DragData = {
-        kind: 'cell',
-        content: {
-          widgetId: WidgetIdUtils.generate(),
-          cellId: CellIdUtils.create(7, 8),
-          row: 7,
-          col: 8,
-          rowSpan: 3,
-          colSpan: 1,
-        }
-      };
-
-      store.startDrag(dragData);
-      expect(store.dragData()).toEqual(dragData);
-    });
-
-    it('should overwrite existing drag data', () => {
-      const dragData1: DragData = {
-        kind: 'widget',
-        content: testWidgetMetadata
-      };
-
-      const dragData2: DragData = {
-        kind: 'widget',
-        content: { ...testWidgetMetadata, widgetTypeid: 'different-widget' }
-      };
-
-      store.startDrag(dragData1);
       store.startDrag(dragData2);
       expect(store.dragData()).toEqual(dragData2);
     });
   });
+
 
   describe('endDrag', () => {
     it('should clear drag data and hovered drop zone', () => {

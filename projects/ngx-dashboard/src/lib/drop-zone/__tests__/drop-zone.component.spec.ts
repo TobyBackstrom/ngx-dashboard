@@ -111,21 +111,21 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
     });
 
     it('should return move drop effect for cell drag data', () => {
-      store.syncDragState(cellDragData);
+      store.startDrag(cellDragData);
       fixture.detectChanges();
       
       expect(component.dropEffect()).toBe('move');
     });
 
     it('should return copy drop effect for widget drag data', () => {
-      store.syncDragState(widgetDragData);
+      store.startDrag(widgetDragData);
       fixture.detectChanges();
       
       expect(component.dropEffect()).toBe('copy');
     });
 
     it('should return none drop effect for invalid drops', () => {
-      store.syncDragState(null);
+      store.endDrag();
       fixture.componentRef.setInput('highlightInvalid', true);
       fixture.detectChanges();
       
@@ -133,7 +133,7 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
     });
 
     it('should return none drop effect when no drag data', () => {
-      store.syncDragState(null);
+      store.endDrag();
       fixture.detectChanges();
       
       expect(component.dropEffect()).toBe('none');
@@ -188,7 +188,7 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
 
     it('should emit dragDrop with correct data structure when drag data exists', () => {
       spyOn(component.dragDrop, 'emit');
-      store.syncDragState(cellDragData);
+      store.startDrag(cellDragData);
       fixture.detectChanges();
       
       const event = new DragEvent('drop');
@@ -206,7 +206,7 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
 
     it('should not emit dragDrop when no drag data exists', () => {
       spyOn(component.dragDrop, 'emit');
-      store.syncDragState(null);
+      store.endDrag();
       fixture.detectChanges();
       
       const event = new DragEvent('drop');
@@ -221,7 +221,7 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
 
     it('should not emit dragDrop when dataTransfer is missing', () => {
       spyOn(component.dragDrop, 'emit');
-      store.syncDragState(cellDragData);
+      store.startDrag(cellDragData);
       fixture.detectChanges();
       
       const event = new DragEvent('drop');
@@ -321,14 +321,14 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
 
   describe('Integration & Edge Cases', () => {
     it('should correctly read dragData from store', () => {
-      store.syncDragState(cellDragData);
+      store.startDrag(cellDragData);
       fixture.detectChanges();
       
       expect(component.dragData()).toEqual(cellDragData);
     });
 
     it('should handle null dragData gracefully', () => {
-      store.syncDragState(null);
+      store.endDrag();
       fixture.detectChanges();
       
       expect(component.dragData()).toBeNull();
@@ -336,7 +336,7 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
     });
 
     it('should set dataTransfer dropEffect on dragover when drag data exists', () => {
-      store.syncDragState(cellDragData);
+      store.startDrag(cellDragData);
       fixture.detectChanges();
       
       const mockDataTransfer = { dropEffect: 'none' };
@@ -351,7 +351,7 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
     });
 
     it('should not set dataTransfer dropEffect when no drag data', () => {
-      store.syncDragState(null);
+      store.endDrag();
       fixture.detectChanges();
       
       const mockDataTransfer = { dropEffect: 'copy' };
@@ -412,7 +412,7 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
       };
       spyOn(component.nativeElement, 'getBoundingClientRect').and.returnValue(mockBoundingRect as DOMRect);
       
-      store.syncDragState(cellDragData);
+      store.startDrag(cellDragData);
       fixture.detectChanges();
       
       const enterEvent = new DragEvent('dragenter');

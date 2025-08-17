@@ -53,10 +53,6 @@ export const withDragDrop = () =>
       }),
     })),
     withMethods((store) => ({
-      syncDragState(dragData: DragData | null) {
-        patchState(store, { dragData });
-      },
-
       startDrag(dragData: DragData) {
         patchState(store, { dragData });
       },
