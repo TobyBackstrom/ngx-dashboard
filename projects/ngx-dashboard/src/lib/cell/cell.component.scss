@@ -19,6 +19,11 @@
   z-index: 100; // While dragging
   opacity: 0.5;
   pointer-events: none; // Allow drag events to pass through to drop zones
+  
+  // Ensure content area also doesn't block events during drag
+  .content-area {
+    pointer-events: none;
+  }
 }
 
 :host(:hover) .resize-handle {
