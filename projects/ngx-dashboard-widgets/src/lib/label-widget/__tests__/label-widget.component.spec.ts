@@ -359,7 +359,7 @@ describe('LabelWidgetComponent', () => {
     });
 
     it('should preserve all alignment options through serialization', () => {
-      const alignmentOptions: Array<'left' | 'center' | 'right'> = ['left', 'center', 'right'];
+      const alignmentOptions: ('left' | 'center' | 'right')[] = ['left', 'center', 'right'];
       
       alignmentOptions.forEach(alignment => {
         const testState: LabelWidgetState = {
@@ -384,7 +384,7 @@ describe('LabelWidgetComponent', () => {
     });
 
     it('should preserve all font weight options through serialization', () => {
-      const fontWeightOptions: Array<'normal' | 'bold'> = ['normal', 'bold'];
+      const fontWeightOptions: ('normal' | 'bold')[] = ['normal', 'bold'];
       
       fontWeightOptions.forEach(fontWeight => {
         const testState: LabelWidgetState = {

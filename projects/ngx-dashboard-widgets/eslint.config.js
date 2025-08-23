@@ -19,7 +19,7 @@ module.exports = tseslint.config(
         "error",
         {
           type: "element",
-          prefix: "lib",
+          prefix: ["lib", "ngx-dashboard"],
           style: "kebab-case",
         },
       ],
@@ -28,5 +28,11 @@ module.exports = tseslint.config(
   {
     files: ["**/*.html"],
     rules: {},
+  },
+  {
+    files: ["**/*.spec.ts", "**/__tests__/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off", // Allow 'any' in test files for mock objects
+    },
   }
 );

@@ -210,7 +210,7 @@ describe('DigitalClockComponent', () => {
       fixture.detectChanges();
       
       // Test all combinations of inputs
-      const timeFormats: Array<'12h' | '24h'> = ['12h', '24h'];
+      const timeFormats: ('12h' | '24h')[] = ['12h', '24h'];
       const showSecondsOptions = [true, false];
       const hasBackgroundOptions = [true, false];
       

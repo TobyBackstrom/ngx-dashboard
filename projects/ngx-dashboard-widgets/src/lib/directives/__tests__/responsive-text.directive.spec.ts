@@ -1,4 +1,4 @@
-import { Component, DebugElement, PLATFORM_ID } from '@angular/core';
+import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ResponsiveTextDirective } from '../responsive-text.directive';

@@ -12,7 +12,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ClockWidgetState } from './clock-widget.component';
 
 @Component({
-  selector: 'demo-clock-state-dialog',
+  selector: 'lib-clock-state-dialog',
   standalone: true,
   imports: [
     CommonModule,
@@ -26,8 +26,9 @@ import { ClockWidgetState } from './clock-widget.component';
     <h2 mat-dialog-title>Clock Settings</h2>
     <mat-dialog-content>
       <div class="mode-selection">
-        <label class="section-label">Display Mode</label>
+        <label class="section-label" for="mode-selection-group">Display Mode</label>
         <mat-radio-group
+          id="mode-selection-group"
           [value]="mode()"
           (change)="mode.set($any($event.value))"
         >
@@ -39,8 +40,9 @@ import { ClockWidgetState } from './clock-widget.component';
       <!-- Time Format (only for digital mode) -->
       @if (mode() === 'digital') {
       <div class="format-selection">
-        <label class="section-label">Time Format</label>
+        <label class="section-label" for="time-format-group">Time Format</label>
         <mat-radio-group
+          id="time-format-group"
           [value]="timeFormat()"
           (change)="timeFormat.set($any($event.value))"
         >

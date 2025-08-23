@@ -15,7 +15,7 @@ export interface DigitalClockConfig {
 }
 
 @Component({
-  selector: 'ngx-digital-clock',
+  selector: 'lib-digital-clock',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './digital-clock.component.html',

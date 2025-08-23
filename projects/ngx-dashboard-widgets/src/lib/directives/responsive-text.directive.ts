@@ -22,7 +22,7 @@ import { isPlatformBrowser } from '@angular/common';
  * </div>
  */
 @Directive({
-  selector: '[responsiveText]',
+  selector: '[libResponsiveText]',
   standalone: true,
   host: {
     '[style.display]': '"block"',

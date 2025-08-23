@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, input, inject, signal, computed, DestroyRef, viewChild, ElementRef, Renderer2, effect } from '@angular/core';
 
 @Component({
-  selector: 'ngx-analog-clock',
+  selector: 'lib-analog-clock',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './analog-clock.component.html',
