@@ -3,10 +3,10 @@
   "version": "20.0.6",
   "description": "Angular library for building drag-and-drop grid dashboards with resizable cells and customizable widgets",
   "peerDependencies": {
-    "@angular/common": "^20.0.0",
-    "@angular/core": "^20.0.0",
-    "@angular/material": "^20.0.0",
-    "@angular/cdk": "^20.0.0"
+    "@angular/common": "^20.2.0",
+    "@angular/core": "^20.2.0",
+    "@angular/material": "^20.2.0",
+    "@angular/cdk": "^20.2.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"

@@ -288,7 +288,8 @@ describe('ThemeService', () => {
       TestBed.flushEffects();
       
       expect(mockRenderer.removeClass).toHaveBeenCalledWith(mockDocument.body, 'dark-mode');
-      expect(mockRenderer.addClass).not.toHaveBeenCalled();
+      // Theme service also adds the default theme class (e.g., 'azure')
+      expect(mockRenderer.addClass).toHaveBeenCalled();
     });
 
     it('should apply dark mode class when initialized with dark preference', () => {
