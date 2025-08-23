@@ -41,7 +41,7 @@ describe('DashboardStore - Collision Detection', () => {
       mockWidgetFactory = {
         widgetTypeid: 'test-widget',
         createComponent: jasmine.createSpy('createComponent')
-      } as any;
+      } as unknown as WidgetFactory;
     });
 
     it('should return true when no drag data is present', () => {
@@ -580,7 +580,7 @@ describe('DashboardStore - Collision Detection', () => {
       mockWidgetFactory = {
         widgetTypeid: 'test-widget',
         createComponent: jasmine.createSpy('createComponent')
-      } as any;
+      } as unknown as WidgetFactory;
 
       // Mock the dashboard service getFactory method
       dashboardService.getFactory.and.returnValue(mockWidgetFactory);

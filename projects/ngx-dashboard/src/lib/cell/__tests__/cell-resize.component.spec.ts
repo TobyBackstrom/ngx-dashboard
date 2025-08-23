@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ViewContainerRef, ElementRef, Renderer2 } from '@angular/core';
+import { ViewContainerRef, Renderer2 } from '@angular/core';
 import { CellComponent } from '../cell.component';
 import { DashboardStore } from '../../store/dashboard-store';
 import { DashboardService } from '../../services/dashboard.service';
@@ -18,8 +18,8 @@ class TestWidgetComponent {
   dashboardGetState() {
     return {};
   }
-  dashboardSetState(state: any) {}
-  dashboardEditState() {}
+  dashboardSetState() { /* Mock implementation */ }
+  dashboardEditState() { /* Mock implementation */ }
 }
 
 describe('CellComponent - Resize Functionality', () => {
@@ -29,11 +29,11 @@ describe('CellComponent - Resize Functionality', () => {
   let realRenderer: Renderer2;
   let mockDashboardService: jasmine.SpyObj<DashboardService>;
   let mockContextMenuService: jasmine.SpyObj<CellContextMenuService>;
-  let mockDialogProvider: jasmine.SpyObj<any>;
+  let mockDialogProvider: jasmine.SpyObj<{ openCellSettings: (data: unknown) => void }>;
 
   const mockCellId: CellId = CellIdUtils.create(1, 1);
   const mockWidgetId: WidgetId = WidgetIdUtils.generate();
-  const otherCellId: CellId = CellIdUtils.create(2, 2);
+  // const otherCellId: CellId = CellIdUtils.create(2, 2); // Reserved for future tests
 
   const mockWidgetFactory: WidgetFactory = {
     widgetTypeid: 'test-widget',
@@ -42,7 +42,7 @@ describe('CellComponent - Resize Functionality', () => {
     svgIcon: '<svg><rect width="10" height="10"/></svg>',
     createInstance: jasmine
       .createSpy('createInstance')
-      .and.callFake((container: ViewContainerRef, state?: unknown) => {
+      .and.callFake((container: ViewContainerRef, _state?: unknown) => {
         const componentRef = container.createComponent(TestWidgetComponent);
         return componentRef;
       }),
@@ -90,13 +90,13 @@ describe('CellComponent - Resize Functionality', () => {
 
     // Get the real renderer from the component's injector
     realRenderer = fixture.debugElement.injector.get(Renderer2);
-    spyOn(realRenderer, 'listen').and.returnValue(() => {});
+    spyOn(realRenderer, 'listen').and.returnValue(() => { /* cleanup function */ });
     spyOn(realRenderer, 'addClass').and.callThrough();
     spyOn(realRenderer, 'removeClass').and.callThrough();
   });
 
   describe('Resize Start - Public API Behavior', () => {
-    let mockMouseEvent: any;
+    let mockMouseEvent: any; // Mock MouseEvent for testing - uses any to avoid strict type requirements
 
     beforeEach(() => {
       mockMouseEvent = {
@@ -104,7 +104,7 @@ describe('CellComponent - Resize Functionality', () => {
         clientY: 200,
         preventDefault: jasmine.createSpy('preventDefault'),
         stopPropagation: jasmine.createSpy('stopPropagation'),
-      } as Partial<MouseEvent>;
+      };
 
       store.setGridCellDimensions(100, 80);
     });
@@ -112,7 +112,7 @@ describe('CellComponent - Resize Functionality', () => {
     it('should emit resize start event with correct data', () => {
       spyOn(component.resizeStart, 'emit');
 
-      component.onResizeStart(mockMouseEvent as MouseEvent, 'horizontal');
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'horizontal');
 
       expect(component.resizeStart.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
@@ -123,7 +123,7 @@ describe('CellComponent - Resize Functionality', () => {
     it('should emit resize start event for vertical direction', () => {
       spyOn(component.resizeStart, 'emit');
 
-      component.onResizeStart(mockMouseEvent as MouseEvent, 'vertical');
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'vertical');
 
       expect(component.resizeStart.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
@@ -132,14 +132,14 @@ describe('CellComponent - Resize Functionality', () => {
     });
 
     it('should prevent default event behavior', () => {
-      component.onResizeStart(mockMouseEvent as MouseEvent, 'horizontal');
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'horizontal');
 
       expect(mockMouseEvent.preventDefault).toHaveBeenCalled();
       expect(mockMouseEvent.stopPropagation).toHaveBeenCalled();
     });
 
     it('should add horizontal cursor class', () => {
-      component.onResizeStart(mockMouseEvent as MouseEvent, 'horizontal');
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'horizontal');
 
       expect(realRenderer.addClass).toHaveBeenCalledWith(
         document.body,
@@ -148,7 +148,7 @@ describe('CellComponent - Resize Functionality', () => {
     });
 
     it('should add vertical cursor class', () => {
-      component.onResizeStart(mockMouseEvent as MouseEvent, 'vertical');
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'vertical');
 
       expect(realRenderer.addClass).toHaveBeenCalledWith(
         document.body,
@@ -157,7 +157,7 @@ describe('CellComponent - Resize Functionality', () => {
     });
 
     it('should setup document event listeners', () => {
-      component.onResizeStart(mockMouseEvent as MouseEvent, 'horizontal');
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'horizontal');
 
       expect(realRenderer.listen).toHaveBeenCalledWith(
         'document',
@@ -182,9 +182,9 @@ describe('CellComponent - Resize Functionality', () => {
         clientY: 200,
         preventDefault: jasmine.createSpy('preventDefault'),
         stopPropagation: jasmine.createSpy('stopPropagation'),
-      } as Partial<MouseEvent>;
+      };
 
-      component.onResizeStart(startEvent as MouseEvent, 'horizontal');
+      component.onResizeStart(startEvent as unknown as MouseEvent, 'horizontal');
     });
 
     it('should emit resize move event with correct horizontal delta', () => {
@@ -192,7 +192,7 @@ describe('CellComponent - Resize Functionality', () => {
 
       // Simulate mouse move 100px right (1 cell width)
       const moveEvent = { clientX: 250, clientY: 200 };
-      (component as any).handleResizeMove(moveEvent);
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeMove(moveEvent as any);
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
@@ -208,14 +208,14 @@ describe('CellComponent - Resize Functionality', () => {
         clientY: 200,
         preventDefault: jasmine.createSpy('preventDefault'),
         stopPropagation: jasmine.createSpy('stopPropagation'),
-      } as Partial<MouseEvent>;
+      };
 
-      component.onResizeStart(startEvent as MouseEvent, 'vertical');
+      component.onResizeStart(startEvent as unknown as MouseEvent, 'vertical');
       spyOn(component.resizeMove, 'emit');
 
       // Simulate mouse move 160px down (2 cell heights)
       const moveEvent = { clientX: 150, clientY: 360 };
-      (component as any).handleResizeMove(moveEvent);
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeMove(moveEvent as any);
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
@@ -229,7 +229,7 @@ describe('CellComponent - Resize Functionality', () => {
 
       // Simulate mouse move 100px left (-1 cell width)
       const moveEvent = { clientX: 50, clientY: 200 };
-      (component as any).handleResizeMove(moveEvent);
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeMove(moveEvent as any);
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
@@ -246,15 +246,15 @@ describe('CellComponent - Resize Functionality', () => {
         clientY: 200,
         preventDefault: jasmine.createSpy('preventDefault'),
         stopPropagation: jasmine.createSpy('stopPropagation'),
-      } as Partial<MouseEvent>;
+      };
 
-      component.onResizeStart(startEvent as MouseEvent, 'horizontal');
+      component.onResizeStart(startEvent as unknown as MouseEvent, 'horizontal');
     });
 
     it('should emit resize end event', () => {
       spyOn(component.resizeEnd, 'emit');
 
-      (component as any).handleResizeEnd();
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeEnd();
 
       expect(component.resizeEnd.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
@@ -263,7 +263,7 @@ describe('CellComponent - Resize Functionality', () => {
     });
 
     it('should remove cursor classes', () => {
-      (component as any).handleResizeEnd();
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeEnd();
 
       expect(realRenderer.removeClass).toHaveBeenCalledWith(
         document.body,
@@ -291,7 +291,7 @@ describe('CellComponent - Resize Functionality', () => {
   });
 
   describe('Edge Cases - Public Behavior', () => {
-    let mockMouseEvent: any;
+    let mockMouseEvent: any; // Mock MouseEvent for testing - uses any to avoid strict type requirements
 
     beforeEach(() => {
       store.setGridCellDimensions(100, 80);
@@ -301,14 +301,14 @@ describe('CellComponent - Resize Functionality', () => {
         clientY: 200,
         preventDefault: jasmine.createSpy('preventDefault'),
         stopPropagation: jasmine.createSpy('stopPropagation'),
-      } as Partial<MouseEvent>;
+      };
     });
 
     it('should handle invalid direction gracefully', () => {
       spyOn(component.resizeStart, 'emit');
 
       expect(() => {
-        component.onResizeStart(mockMouseEvent, 'invalid' as any);
+        component.onResizeStart(mockMouseEvent, 'invalid' as unknown as 'horizontal' | 'vertical');
       }).not.toThrow();
 
       expect(component.resizeStart.emit).toHaveBeenCalledWith({
@@ -318,11 +318,11 @@ describe('CellComponent - Resize Functionality', () => {
     });
 
     it('should handle extreme coordinates', () => {
-      component.onResizeStart(mockMouseEvent as MouseEvent, 'horizontal');
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'horizontal');
       spyOn(component.resizeMove, 'emit');
 
       // Test with very large coordinates
-      (component as any).handleResizeMove({ clientX: 999999, clientY: 999999 });
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeMove({ clientX: 999999, clientY: 999999 } as any);
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
@@ -332,11 +332,11 @@ describe('CellComponent - Resize Functionality', () => {
     });
 
     it('should handle negative coordinates', () => {
-      component.onResizeStart(mockMouseEvent as MouseEvent, 'horizontal');
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'horizontal');
       spyOn(component.resizeMove, 'emit');
 
       // Test with negative coordinates
-      (component as any).handleResizeMove({ clientX: -100, clientY: -100 });
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeMove({ clientX: -100, clientY: -100 } as any);
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
@@ -347,10 +347,10 @@ describe('CellComponent - Resize Functionality', () => {
 
     it('should handle zero cell dimensions', () => {
       store.setGridCellDimensions(0, 0);
-      component.onResizeStart(mockMouseEvent as MouseEvent, 'horizontal');
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'horizontal');
       spyOn(component.resizeMove, 'emit');
 
-      (component as any).handleResizeMove({ clientX: 200, clientY: 200 });
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeMove({ clientX: 200, clientY: 200 } as any);
 
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
@@ -375,17 +375,17 @@ describe('CellComponent - Resize Functionality', () => {
         clientY: 200,
         preventDefault: jasmine.createSpy('preventDefault'),
         stopPropagation: jasmine.createSpy('stopPropagation'),
-      } as Partial<MouseEvent>;
+      };
 
       // Start resize
-      component.onResizeStart(startEvent as MouseEvent, 'horizontal');
+      component.onResizeStart(startEvent as unknown as MouseEvent, 'horizontal');
       expect(component.resizeStart.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
         direction: 'horizontal',
       });
 
       // Move resize
-      (component as any).handleResizeMove({ clientX: 250, clientY: 200 });
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeMove({ clientX: 250, clientY: 200 } as any);
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
         direction: 'horizontal',
@@ -393,7 +393,7 @@ describe('CellComponent - Resize Functionality', () => {
       });
 
       // End resize
-      (component as any).handleResizeEnd();
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeEnd();
       expect(component.resizeEnd.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
         apply: true,
@@ -409,15 +409,15 @@ describe('CellComponent - Resize Functionality', () => {
         clientY: 200,
         preventDefault: jasmine.createSpy('preventDefault'),
         stopPropagation: jasmine.createSpy('stopPropagation'),
-      } as Partial<MouseEvent>;
+      };
 
       // First resize cycle
-      component.onResizeStart(startEvent as MouseEvent, 'horizontal');
-      (component as any).handleResizeEnd();
+      component.onResizeStart(startEvent as unknown as MouseEvent, 'horizontal');
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeEnd();
 
       // Second resize cycle
-      component.onResizeStart(startEvent as MouseEvent, 'vertical');
-      (component as any).handleResizeEnd();
+      component.onResizeStart(startEvent as unknown as MouseEvent, 'vertical');
+      (component as unknown as { handleResizeMove: (event: MouseEvent) => void; handleResizeEnd: () => void }).handleResizeEnd();
 
       expect(component.resizeStart.emit).toHaveBeenCalledTimes(2);
       expect(component.resizeEnd.emit).toHaveBeenCalledTimes(2);
@@ -429,9 +429,9 @@ describe('CellComponent - Resize Functionality', () => {
         clientY: 200,
         preventDefault: jasmine.createSpy('preventDefault'),
         stopPropagation: jasmine.createSpy('stopPropagation'),
-      } as Partial<MouseEvent>;
+      };
 
-      component.onResizeStart(startEvent as MouseEvent, 'horizontal');
+      component.onResizeStart(startEvent as unknown as MouseEvent, 'horizontal');
 
       // Component destruction should not throw
       expect(() => {

@@ -25,7 +25,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
     mockWidgetFactory = {
       widgetTypeid: 'test-widget',
       createComponent: jasmine.createSpy()
-    } as any;
+    } as unknown as WidgetFactory;
 
     mockDashboardService.getFactory.and.returnValue(mockWidgetFactory);
   });
@@ -223,7 +223,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       const fallbackFactory = {
         widgetTypeid: '__internal/unknown-widget',
         createInstance: jasmine.createSpy()
-      } as any;
+      } as unknown as WidgetFactory;
       
       // Call the real getFactory method which handles fallback logic
       mockDashboardService.getFactory.and.callFake((widgetTypeid: string) => {
@@ -272,7 +272,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       const fallbackFactory = {
         widgetTypeid: '__internal/unknown-widget',
         createInstance: jasmine.createSpy()
-      } as any;
+      } as unknown as WidgetFactory;
       
       // Mock factory to return fallback for unknown widgets with console warning
       mockDashboardService.getFactory.and.callFake((widgetTypeid: string) => {
@@ -379,7 +379,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
         description: 'Fallback widget',
         svgIcon: '<svg></svg>',
         createInstance: jasmine.createSpy()
-      } as any;
+      } as unknown as WidgetFactory;
     });
 
     it('should exclude UnknownWidgetComponent from export', () => {

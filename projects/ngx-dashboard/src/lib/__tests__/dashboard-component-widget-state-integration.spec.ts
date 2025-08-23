@@ -2,8 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, signal, ViewContainerRef } from '@angular/core';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { DashboardService } from '../services/dashboard.service';
-import { CellIdUtils, WidgetFactory, DashboardDataDto, Widget, WidgetMetadata } from '../models';
-import { createEmptyDashboard } from '../models/dashboard-data.utils';
+import { WidgetFactory, DashboardDataDto, Widget, WidgetMetadata } from '../models';
 
 // Mock widget with state that can be modified after initialization
 interface TestWidgetState {
@@ -13,7 +12,7 @@ interface TestWidgetState {
 }
 
 @Component({
-  selector: 'test-widget',
+  selector: 'lib-test-widget',
   template: `
     <div class="test-widget">
       <p>Value: {{ state().value }}</p>
@@ -219,7 +218,7 @@ describe('DashboardComponent - Widget State Integration', () => {
     it('should handle widgets that do not implement dashboardGetState', async () => {
       // Create a widget that doesn't implement dashboardGetState
       @Component({
-        selector: 'simple-widget',
+        selector: 'lib-simple-widget',
         template: '<div>Simple Widget</div>',
       })
       class SimpleWidgetComponent implements Widget {
@@ -231,7 +230,7 @@ describe('DashboardComponent - Widget State Integration', () => {
         name: 'Simple Widget',
         description: 'A simple widget',
         svgIcon: '<svg><circle r="5"/></svg>',
-        createInstance: jasmine.createSpy('createInstance').and.callFake((container: ViewContainerRef, state?: unknown) => {
+        createInstance: jasmine.createSpy('createInstance').and.callFake((container: ViewContainerRef) => {
           return container.createComponent(SimpleWidgetComponent);
         }),
       };
@@ -307,7 +306,7 @@ describe('DashboardComponent - Widget State Integration', () => {
 
       // Find all widget components (top-level only)
       const widgetElements = fixture.debugElement.queryAll(
-        (el) => el.componentInstance instanceof TestWidgetComponent && el.nativeElement.tagName === 'TEST-WIDGET'
+        (el) => el.componentInstance instanceof TestWidgetComponent && el.nativeElement.tagName === 'LIB-TEST-WIDGET'
       );
 
       expect(widgetElements).toHaveSize(3);

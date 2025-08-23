@@ -3,40 +3,41 @@ import { PLATFORM_ID } from '@angular/core';
 import { DashboardViewportService } from '../dashboard-viewport.service';
 import { DashboardStore } from '../../store/dashboard-store';
 import {
-  ReservedSpace,
-  DEFAULT_RESERVED_SPACE,
+  ReservedSpace
 } from '../../models/reserved-space';
 
 // Mock ResizeObserver for testing
 class MockResizeObserver {
-  private callbacks: Array<(entries: any[]) => void> = [];
+  private callbacks: ((entries: ResizeObserverEntry[]) => void)[] = [];
 
-  constructor(callback: (entries: any[]) => void) {
+  constructor(callback: (entries: ResizeObserverEntry[]) => void) {
     this.callbacks.push(callback);
     // Store reference for manual triggering in tests
-    (MockResizeObserver as any).instances =
-      (MockResizeObserver as any).instances || [];
-    (MockResizeObserver as any).instances.push(this);
+    const mockClass = MockResizeObserver as unknown as { instances?: MockResizeObserver[] };
+    mockClass.instances = mockClass.instances || [];
+    mockClass.instances.push(this);
   }
 
-  observe() {}
-  disconnect() {}
+  observe() { /* Mock implementation */ }
+  disconnect() { /* Mock implementation */ }
 
   static triggerResize(width: number, height: number) {
-    const instances = (MockResizeObserver as any).instances || [];
+    const mockClass = MockResizeObserver as unknown as { instances?: MockResizeObserver[] };
+    const instances = mockClass.instances || [];
     instances.forEach((instance: MockResizeObserver) => {
       instance.callbacks.forEach((callback) => {
         callback([
           {
             contentBoxSize: [{ inlineSize: width, blockSize: height }],
-          },
+          } as any,
         ]);
       });
     });
   }
 
   static reset() {
-    (MockResizeObserver as any).instances = [];
+    const mockClass = MockResizeObserver as unknown as { instances?: MockResizeObserver[] };
+    mockClass.instances = [];
   }
 }
 

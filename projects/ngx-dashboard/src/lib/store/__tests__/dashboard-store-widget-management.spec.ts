@@ -5,7 +5,6 @@ import { CellIdUtils, WidgetIdUtils, CellData, WidgetMetadata, WidgetFactory } f
 
 describe('DashboardStore - Widget Management', () => {
   let store: InstanceType<typeof DashboardStore>;
-  let testWidgetMetadata: WidgetMetadata;
   let mockWidgetFactory: WidgetFactory;
   let mockDashboardService: jasmine.SpyObj<DashboardService>;
 
@@ -22,18 +21,11 @@ describe('DashboardStore - Widget Management', () => {
     store = TestBed.inject(DashboardStore);
     mockDashboardService = TestBed.inject(DashboardService) as jasmine.SpyObj<DashboardService>;
     store.setGridConfig({ rows: 16, columns: 16 });
-    
-    testWidgetMetadata = {
-      widgetTypeid: 'test-widget',
-      name: 'Test Widget',
-      description: 'A test widget for unit tests',
-      svgIcon: '<svg></svg>'
-    };
 
     mockWidgetFactory = {
       widgetTypeid: 'test-widget',
       createComponent: jasmine.createSpy()
-    } as any;
+    } as unknown as WidgetFactory;
 
     mockDashboardService.getFactory.and.returnValue(mockWidgetFactory);
   });

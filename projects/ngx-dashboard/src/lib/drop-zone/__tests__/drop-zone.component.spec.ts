@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ElementRef } from '@angular/core';
 import { DropZoneComponent } from '../drop-zone.component';
 import { DashboardStore } from '../../store/dashboard-store';
 import { DragData, CellIdUtils, WidgetIdUtils, WidgetMetadata } from '../../models';
@@ -9,7 +8,6 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
   let component: DropZoneComponent;
   let fixture: ComponentFixture<DropZoneComponent>;
   let store: InstanceType<typeof DashboardStore>;
-  let dashboardService: jasmine.SpyObj<DashboardService>;
 
   const testWidgetMetadata: WidgetMetadata = {
     widgetTypeid: 'test-widget',
@@ -49,7 +47,6 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
     fixture = TestBed.createComponent(DropZoneComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(DashboardStore);
-    dashboardService = TestBed.inject(DashboardService) as jasmine.SpyObj<DashboardService>;
     
     // Set required inputs
     fixture.componentRef.setInput('row', 3);

@@ -1,6 +1,5 @@
 // widget-list-bridge-integration.spec.ts
-import { TestBed } from '@angular/core/testing';
-import { Component, signal } from '@angular/core';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { WidgetListComponent } from '../widget-list.component';
 import { DashboardBridgeService } from '../../services/dashboard-bridge.service';
 import { DashboardService } from '../../services/dashboard.service';
@@ -13,29 +12,14 @@ function createMockDashboardStore(dashboardId = 'test-dashboard', dimensions = {
     gridCellDimensions: jasmine.createSpy('gridCellDimensions').and.returnValue(dimensions),
     startDrag: jasmine.createSpy('startDrag'),
     endDrag: jasmine.createSpy('endDrag')
-  } as any;
+  };
 }
 
-// Test component that simulates dashboard registration
-@Component({
-  template: '',
-  providers: []
-})
-class MockDashboardComponent {
-  private mockStore = createMockDashboardStore('test-dashboard-1', { width: 200, height: 120 });
-  
-  constructor(private bridge: DashboardBridgeService) {
-    this.bridge.registerDashboard(this.mockStore);
-  }
-  
-  destroy() {
-    this.bridge.unregisterDashboard(this.mockStore);
-  }
-}
+// MockDashboardComponent removed - not used in tests
 
 describe('WidgetListComponent Integration with DashboardBridgeService', () => {
   let component: WidgetListComponent;
-  let fixture: any;
+  let fixture: ComponentFixture<WidgetListComponent>;
   let bridgeService: DashboardBridgeService;
   let dashboardService: DashboardService;
 
@@ -77,6 +61,7 @@ describe('WidgetListComponent Integration with DashboardBridgeService', () => {
     });
 
     it('should handle drag start/end gracefully without dashboards', () => {
+      // Mock DragEvent for testing - uses any to avoid strict type requirements
       const mockEvent = {
         dataTransfer: {
           effectAllowed: '',
@@ -99,6 +84,7 @@ describe('WidgetListComponent Integration with DashboardBridgeService', () => {
     it('should create drag ghost with fallback dimensions when no dashboards', () => {
       fixture.detectChanges();
       
+      // Mock DragEvent for testing - uses any to avoid strict type requirements
       const mockEvent = {
         dataTransfer: {
           effectAllowed: '',
@@ -118,6 +104,7 @@ describe('WidgetListComponent Integration with DashboardBridgeService', () => {
     it('should manage active widget state independently of dashboard registration', () => {
       expect(component.activeWidget()).toBeNull();
       
+      // Mock DragEvent for testing - uses any to avoid strict type requirements
       const mockEvent = {
         dataTransfer: {
           effectAllowed: '',

@@ -11,13 +11,13 @@ import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, Widget } from '../
   standalone: true,
 })
 class TestWidgetComponent implements Widget {
-  private state = signal<any>({ value: 'initial' });
+  private state = signal<unknown>({ value: 'initial' });
 
-  dashboardGetState(): any {
+  dashboardGetState(): unknown {
     return this.state();
   }
 
-  dashboardSetState(state: any): void {
+  dashboardSetState(state: unknown): void {
     this.state.set(state);
   }
 

@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { Component, signal, ViewContainerRef } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto, Widget, WidgetMetadata } from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, Widget, WidgetMetadata } from '../../models';
 
 // Mock widget with changeable state to test state preservation
 interface TestWidgetState {
@@ -11,7 +11,7 @@ interface TestWidgetState {
 }
 
 @Component({
-  selector: 'test-widget',
+  selector: 'lib-test-widget',
   template: '<div>{{ state().value }} - {{ state().count }}</div>',
 })
 class TestWidgetComponent implements Widget {
@@ -76,7 +76,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
         destroy: jasmine.createSpy('destroy')
       }),
       createComponent: jasmine.createSpy('createComponent')
-    } as any;
+    } as unknown as WidgetFactory;
 
     mockDashboardService.getFactory.and.returnValue(mockWidgetFactory);
   });

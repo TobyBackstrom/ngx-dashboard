@@ -1,6 +1,5 @@
 // dashboard-bridge.service.spec.ts
 import { TestBed } from '@angular/core/testing';
-import { Component } from '@angular/core';
 import { DashboardBridgeService } from '../dashboard-bridge.service';
 import { DashboardStore } from '../../store/dashboard-store';
 import { DragData, WidgetMetadata } from '../../models';
@@ -12,7 +11,9 @@ function createMockDashboardStore(dashboardId = 'test-dashboard-1') {
     gridCellDimensions: jasmine.createSpy('gridCellDimensions').and.returnValue({ width: 120, height: 80 }),
     startDrag: jasmine.createSpy('startDrag'),
     endDrag: jasmine.createSpy('endDrag')
-  } as any;
+  };
+  // Type assertion for mock object
+  return mockStore as any;
   return mockStore;
 }
 

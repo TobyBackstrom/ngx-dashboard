@@ -26,7 +26,7 @@ describe('DashboardStore - Computed Properties', () => {
     mockWidgetFactory = {
       widgetTypeid: 'test-widget',
       createComponent: jasmine.createSpy('createComponent')
-    } as any;
+    } as unknown as WidgetFactory;
 
     testWidgetMetadata = {
       widgetTypeid: 'test-widget',

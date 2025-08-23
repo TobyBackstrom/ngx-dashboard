@@ -33,7 +33,7 @@ describe('DashboardStore - Drag & Drop Operations', () => {
     mockWidgetFactory = {
       widgetTypeid: 'test-widget',
       createComponent: jasmine.createSpy('createComponent')
-    } as any;
+    } as unknown as WidgetFactory;
 
     dashboardService.getFactory.and.returnValue(mockWidgetFactory);
   });

@@ -7,7 +7,6 @@ import { GridQueryInternalUtils } from '../features/utils/grid-query-internal.ut
 describe('DashboardStore - Resize Operations', () => {
   let store: InstanceType<typeof DashboardStore>;
   let mockWidgetFactory: WidgetFactory;
-  let mockDashboardService: jasmine.SpyObj<DashboardService>;
 
   beforeEach(() => {
     const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory']);
@@ -20,13 +19,12 @@ describe('DashboardStore - Resize Operations', () => {
     });
     
     store = TestBed.inject(DashboardStore);
-    mockDashboardService = TestBed.inject(DashboardService) as jasmine.SpyObj<DashboardService>;
     store.setGridConfig({ rows: 16, columns: 16 });
     
     mockWidgetFactory = {
       widgetTypeid: 'test-widget',
       createComponent: jasmine.createSpy()
-    } as any;
+    } as unknown as WidgetFactory;
   });
 
   describe('startResize', () => {

@@ -4,7 +4,6 @@ import { DashboardStore } from '../dashboard-store';
 
 describe('DashboardStore - Grid Configuration', () => {
   let store: InstanceType<typeof DashboardStore>;
-  let mockDashboardService: jasmine.SpyObj<DashboardService>;
 
   beforeEach(() => {
     const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory']);
@@ -17,7 +16,6 @@ describe('DashboardStore - Grid Configuration', () => {
     });
     
     store = TestBed.inject(DashboardStore);
-    mockDashboardService = TestBed.inject(DashboardService) as jasmine.SpyObj<DashboardService>;
     store.setGridConfig({ rows: 8, columns: 16 });
   });
 

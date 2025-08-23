@@ -22,13 +22,13 @@ import { Component, signal } from '@angular/core';
   standalone: true,
 })
 class TestWidgetComponent implements Widget {
-  private state = signal<any>({ value: 'test' });
+  private state = signal<unknown>({ value: 'test' });
 
-  dashboardGetState(): any {
+  dashboardGetState(): unknown {
     return this.state();
   }
 
-  dashboardSetState(state: any): void {
+  dashboardSetState(state: unknown): void {
     this.state.set(state);
   }
 
@@ -43,7 +43,7 @@ describe('CellComponent - User Scenarios', () => {
   let store: InstanceType<typeof DashboardStore>;
   let mockDashboardService: jasmine.SpyObj<DashboardService>;
   let mockContextMenuService: jasmine.SpyObj<CellContextMenuService>;
-  let mockDialogProvider: jasmine.SpyObj<any>;
+  let mockDialogProvider: jasmine.SpyObj<{ openCellSettings: (data: unknown) => Promise<any> }>;
   let mockRenderer: jasmine.SpyObj<Renderer2>;
 
   const mockCellId: CellId = CellIdUtils.create(1, 1);
@@ -86,7 +86,7 @@ describe('CellComponent - User Scenarios', () => {
     fixture = TestBed.createComponent(CellComponent);
     component = fixture.componentInstance;
 
-    mockRenderer.listen.and.returnValue(() => {});
+    mockRenderer.listen.and.returnValue(() => { /* cleanup function */ });
     mockDashboardService.getFactory.and.returnValue(mockWidgetFactory);
   });
 
@@ -255,7 +255,7 @@ describe('CellComponent - User Scenarios', () => {
   });
 
   describe('Drag and Drop Workflow', () => {
-    let mockDragEvent: any;
+    let mockDragEvent: any; // Mock DragEvent for testing - uses any to avoid strict type requirements
 
     beforeEach(() => {
       fixture.componentRef.setInput('widgetId', mockWidgetId);
@@ -268,10 +268,10 @@ describe('CellComponent - User Scenarios', () => {
 
       mockDragEvent = {
         dataTransfer: {
-          effectAllowed: 'move' as const,
+          effectAllowed: 'move',
           setDragImage: jasmine.createSpy('setDragImage'),
-        } as Partial<DataTransfer>,
-      } as Partial<DragEvent>;
+        },
+      };
     });
 
     it('should complete drag and drop workflow', () => {
@@ -317,7 +317,7 @@ describe('CellComponent - User Scenarios', () => {
   });
 
   describe('Context Menu Workflow', () => {
-    let mockMouseEvent: any;
+    let mockMouseEvent: any; // Mock MouseEvent for testing - uses any to avoid strict type requirements
 
     beforeEach(() => {
       fixture.componentRef.setInput('widgetId', mockWidgetId);
@@ -332,7 +332,7 @@ describe('CellComponent - User Scenarios', () => {
         clientY: 200,
         preventDefault: jasmine.createSpy('preventDefault'),
         stopPropagation: jasmine.createSpy('stopPropagation'),
-      } as Partial<MouseEvent>;
+      };
     });
 
     it('should show context menu when user right-clicks in edit mode', () => {
@@ -453,9 +453,7 @@ describe('CellComponent - User Scenarios', () => {
 
     it('should handle settings dialog errors gracefully', async () => {
       spyOn(console, 'error');
-      mockDialogProvider.openCellSettings.and.returnValue(
-        Promise.reject(new Error('Dialog error'))
-      );
+      mockDialogProvider.openCellSettings.and.throwError(new Error('Dialog error'));
 
       // User attempts to open settings but error occurs
       await component.onSettings();
@@ -477,7 +475,7 @@ describe('CellComponent - Without Context Menu Service', () => {
   let component: CellComponent;
   let fixture: ComponentFixture<CellComponent>;
   let mockDashboardService: jasmine.SpyObj<DashboardService>;
-  let mockDialogProvider: jasmine.SpyObj<any>;
+  let mockDialogProvider: jasmine.SpyObj<{ openCellSettings: (data: unknown) => Promise<any> }>;
   let mockRenderer: jasmine.SpyObj<Renderer2>;
 
   const mockCellId: CellId = CellIdUtils.create(1, 1);
@@ -512,7 +510,7 @@ describe('CellComponent - Without Context Menu Service', () => {
     fixture = TestBed.createComponent(CellComponent);
     component = fixture.componentInstance;
 
-    mockRenderer.listen.and.returnValue(() => {});
+    mockRenderer.listen.and.returnValue(() => { /* cleanup function */ });
     mockDashboardService.getFactory.and.returnValue(mockWidgetFactory);
   });
 

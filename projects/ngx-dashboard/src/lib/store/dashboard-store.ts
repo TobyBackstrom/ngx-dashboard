@@ -23,9 +23,9 @@ import { withWidgetManagement } from './features/widget-management.feature';
 import { withDragDrop } from './features/drag-drop.feature';
 import { withResize, ResizePreviewUtils } from './features/resize.feature';
 
-type DashboardState = {
+interface DashboardState {
   dashboardId: string;
-};
+}
 
 const initialState: DashboardState = {
   dashboardId: '',
