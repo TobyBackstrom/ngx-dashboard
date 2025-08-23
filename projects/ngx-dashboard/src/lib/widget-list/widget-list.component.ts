@@ -6,7 +6,6 @@ import {
   Renderer2,
   signal,
   ChangeDetectionStrategy,
-  afterNextRender,
 } from '@angular/core';
 import { DragData, WidgetMetadata } from '../models';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -60,6 +59,7 @@ export class WidgetListComponent {
     document.body.appendChild(ghost);
 
     // Force reflow to ensure element is rendered
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const _reflow = ghost.offsetHeight;
 
     event.dataTransfer.setDragImage(ghost, 10, 10);

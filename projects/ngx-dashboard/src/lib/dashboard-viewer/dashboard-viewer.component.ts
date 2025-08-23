@@ -2,7 +2,7 @@ import { Component, computed, effect, inject, input, viewChildren, ChangeDetecti
 import { CommonModule } from '@angular/common';
 import { CellComponent } from '../cell/cell.component';
 import { DashboardStore } from '../store/dashboard-store';
-import { CellIdUtils, WidgetIdUtils } from '../models';
+import { CellIdUtils } from '../models';
 
 @Component({
   selector: 'ngx-dashboard-viewer',

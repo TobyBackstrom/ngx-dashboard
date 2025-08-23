@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, WidgetIdUtils, CellData, WidgetMetadata, WidgetFactory } from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory } from '../../models';
 
 describe('DashboardStore - Widget Management', () => {
   let store: InstanceType<typeof DashboardStore>;
@@ -156,7 +156,6 @@ describe('DashboardStore - Widget Management', () => {
 
     it('should handle removing non-existent widget gracefully', () => {
       const existingCellId = CellIdUtils.create(5, 5);
-      const nonExistentCellId = CellIdUtils.create(10, 10);
       
       const cell: CellData = {
         widgetId: WidgetIdUtils.generate(),
@@ -203,7 +202,6 @@ describe('DashboardStore - Widget Management', () => {
 
     it('should handle updating non-existent widget gracefully', () => {
       const existingCellId = CellIdUtils.create(5, 5);
-      const nonExistentCellId = CellIdUtils.create(10, 10);
       
       const cell: CellData = {
         widgetId: WidgetIdUtils.generate(),
@@ -303,7 +301,6 @@ describe('DashboardStore - Widget Management', () => {
 
     it('should handle updating non-existent cell gracefully', () => {
       const existingCellId = CellIdUtils.create(5, 5);
-      const nonExistentCellId = CellIdUtils.create(10, 10);
       
       const cell: CellData = {
         widgetId: WidgetIdUtils.generate(),
@@ -372,7 +369,6 @@ describe('DashboardStore - Widget Management', () => {
 
     it('should handle updating non-existent widget gracefully', () => {
       const existingCellId = CellIdUtils.create(5, 5);
-      const nonExistentCellId = CellIdUtils.create(10, 10);
       
       const cell: CellData = {
         widgetId: WidgetIdUtils.generate(),

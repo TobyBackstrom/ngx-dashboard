@@ -89,7 +89,6 @@ export class CellComponent {
   readonly #contextMenuService = inject(CellContextMenuService, {
     optional: true,
   });
-  readonly #elementRef = inject(ElementRef);
 
   #widgetRef?: ComponentRef<Widget>;
   

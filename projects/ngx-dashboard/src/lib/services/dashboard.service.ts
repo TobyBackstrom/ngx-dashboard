@@ -53,7 +53,7 @@ export class DashboardService {
       createInstance: (container, state) => {
         const ref = this.#unknownWidgetFactory.createInstance(container, {
           originalWidgetTypeid: widgetTypeid,
-          ...((state as any) || {}),
+          ...(state && typeof state === 'object' ? state as Record<string, unknown> : {}),
         });
         return ref;
       },

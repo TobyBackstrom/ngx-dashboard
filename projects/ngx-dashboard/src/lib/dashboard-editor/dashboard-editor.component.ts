@@ -9,7 +9,6 @@ import {
   ElementRef,
   inject,
   input,
-  output,
   viewChild,
   viewChildren,
   afterNextRender,
@@ -18,7 +17,7 @@ import { CellComponent } from '../cell/cell.component';
 import { CellContextMenuComponent } from '../cell/cell-context-menu.component';
 import { CellContextMenuService } from '../cell/cell-context-menu.service';
 import { DropZoneComponent } from '../drop-zone/drop-zone.component';
-import { CellId, CellIdUtils, WidgetId, WidgetIdUtils, DragData, CellData } from '../models';
+import { CellId, CellIdUtils, WidgetId, DragData, CellData } from '../models';
 import { DashboardStore } from '../store/dashboard-store';
 
 @Component({

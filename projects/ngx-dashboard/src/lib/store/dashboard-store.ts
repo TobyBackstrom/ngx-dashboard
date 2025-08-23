@@ -15,7 +15,6 @@ import {
   CellData,
   DragData,
   DashboardDataDto,
-  WidgetId,
   WidgetIdUtils,
 } from '../models';
 import { withGridConfig } from './features/grid-config.feature';

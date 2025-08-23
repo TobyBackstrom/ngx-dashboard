@@ -1,7 +1,6 @@
 // dashboard-bridge.service.spec.ts
 import { TestBed } from '@angular/core/testing';
 import { DashboardBridgeService } from '../dashboard-bridge.service';
-import { DashboardStore } from '../../store/dashboard-store';
 import { DragData, WidgetMetadata } from '../../models';
 
 // Mock dashboard store for testing

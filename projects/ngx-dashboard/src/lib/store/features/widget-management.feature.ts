@@ -7,7 +7,6 @@ import {
 } from '@ngrx/signals';
 import { computed } from '@angular/core';
 import {
-  CellId,
   CellIdUtils,
   CellData,
   WidgetFactory,
@@ -42,7 +41,8 @@ export const withWidgetManagement = () =>
 
       removeWidget(widgetId: WidgetId) {
         const widgetKey = WidgetIdUtils.toString(widgetId);
-        const { [widgetKey]: removed, ...remaining } = store.widgetsById();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [widgetKey]: _, ...remaining } = store.widgetsById();
         patchState(store, { widgetsById: remaining });
       },
 

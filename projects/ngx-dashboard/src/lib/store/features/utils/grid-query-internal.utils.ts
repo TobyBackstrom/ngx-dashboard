@@ -1,4 +1,4 @@
-import { CellId, CellIdUtils, CellData, WidgetId } from '../../../models';
+import { CellData, WidgetId } from '../../../models';
 
 // Internal utility functions used by collision detection, resize logic, and tests
 export const GridQueryInternalUtils = {

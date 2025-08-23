@@ -42,7 +42,7 @@ describe('CellComponent - Resize Functionality', () => {
     svgIcon: '<svg><rect width="10" height="10"/></svg>',
     createInstance: jasmine
       .createSpy('createInstance')
-      .and.callFake((container: ViewContainerRef, _state?: unknown) => {
+      .and.callFake((container: ViewContainerRef) => {
         const componentRef = container.createComponent(TestWidgetComponent);
         return componentRef;
       }),

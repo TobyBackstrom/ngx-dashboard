@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto, Widget } from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto } from '../../models';
 
 describe('DashboardStore - Export/Import Functionality', () => {
   let store: InstanceType<typeof DashboardStore>;
@@ -593,12 +593,6 @@ describe('DashboardStore - Export/Import Functionality', () => {
   });
 
   describe('exportDashboard with live widget states', () => {
-    let mockWidget: jasmine.SpyObj<Widget>;
-
-    beforeEach(() => {
-      mockWidget = jasmine.createSpyObj('Widget', ['dashboardGetState', 'dashboardSetState']);
-    });
-
     it('should export with live widget states when callback provided', () => {
       const cell: CellData = {
         widgetId: WidgetIdUtils.generate(),

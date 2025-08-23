@@ -1,4 +1,4 @@
-import { Component, viewChild, inject, ChangeDetectionStrategy, effect, computed, ViewContainerRef, TemplateRef, AfterViewInit } from '@angular/core';
+import { Component, viewChild, inject, ChangeDetectionStrategy, effect, computed } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
@@ -72,7 +72,7 @@ import {
     }
   `]
 })
-export class CellContextMenuComponent implements AfterViewInit {
+export class CellContextMenuComponent {
   menuTrigger = viewChild.required('menuTrigger', { read: MatMenuTrigger });
   
   menuService = inject(CellContextMenuService);
@@ -123,10 +123,6 @@ export class CellContextMenuComponent implements AfterViewInit {
         });
       }
     });
-  }
-  
-  ngAfterViewInit(): void {
-    // Effects moved to constructor to be within injection context
   }
   
   executeAction(item: CellContextMenuItem) {

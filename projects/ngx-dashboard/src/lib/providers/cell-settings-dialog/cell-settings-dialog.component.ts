@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -105,11 +105,11 @@ export class CellSettingsDialogComponent {
   selectedMode: 'normal' | 'flat';
   currentMode: 'normal' | 'flat';
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: CellDisplayData,
-    private dialogRef: MatDialogRef<CellSettingsDialogComponent>
-  ) {
-    this.currentMode = data.flat ? 'flat' : 'normal';
+  data = inject(MAT_DIALOG_DATA) as CellDisplayData;
+  private dialogRef = inject(MatDialogRef<CellSettingsDialogComponent>);
+
+  constructor() {
+    this.currentMode = this.data.flat ? 'flat' : 'normal';
     this.selectedMode = this.currentMode;
   }
 

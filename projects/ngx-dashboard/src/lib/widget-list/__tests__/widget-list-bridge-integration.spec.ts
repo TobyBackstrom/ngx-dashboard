@@ -5,15 +5,6 @@ import { DashboardBridgeService } from '../../services/dashboard-bridge.service'
 import { DashboardService } from '../../services/dashboard.service';
 import { ArrowWidgetComponent } from '@dragonworks/ngx-dashboard-widgets';
 
-// Mock dashboard store
-function createMockDashboardStore(dashboardId = 'test-dashboard', dimensions = { width: 150, height: 100 }) {
-  return {
-    dashboardId: jasmine.createSpy('dashboardId').and.returnValue(dashboardId),
-    gridCellDimensions: jasmine.createSpy('gridCellDimensions').and.returnValue(dimensions),
-    startDrag: jasmine.createSpy('startDrag'),
-    endDrag: jasmine.createSpy('endDrag')
-  };
-}
 
 // MockDashboardComponent removed - not used in tests
 
