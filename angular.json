@@ -27,6 +27,16 @@
             "tsConfig": "projects/ngx-dashboard/tsconfig.spec.json",
             "main": "projects/ngx-dashboard/src/test-setup.ts"
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ngx-dashboard/**/*.ts",
+              "projects/ngx-dashboard/**/*.html"
+            ],
+            "eslintConfig": "projects/ngx-dashboard/eslint.config.js"
+          }
         }
       }
     },
@@ -52,7 +62,20 @@
           "builder": "@angular/build:karma",
           "options": {
             "tsConfig": "projects/ngx-dashboard-widgets/tsconfig.spec.json",
-            "polyfills": ["zone.js", "zone.js/testing"]
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ngx-dashboard-widgets/**/*.ts",
+              "projects/ngx-dashboard-widgets/**/*.html"
+            ],
+            "eslintConfig": "projects/ngx-dashboard-widgets/eslint.config.js"
           }
         }
       }
@@ -72,7 +95,9 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "projects/demo/src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "projects/demo/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -81,7 +106,9 @@
                 "input": "projects/demo/public"
               }
             ],
-            "styles": ["projects/demo/src/styles.scss"]
+            "styles": [
+              "projects/demo/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -125,7 +152,10 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "projects/demo/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -134,7 +164,19 @@
                 "input": "projects/demo/public"
               }
             ],
-            "styles": ["projects/demo/src/styles.scss"]
+            "styles": [
+              "projects/demo/src/styles.scss"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/demo/**/*.ts",
+              "projects/demo/**/*.html"
+            ],
+            "eslintConfig": "projects/demo/eslint.config.js"
           }
         }
       }
