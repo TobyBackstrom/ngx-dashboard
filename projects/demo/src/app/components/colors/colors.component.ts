@@ -4,6 +4,7 @@ import {
   signal,
   ChangeDetectionStrategy,
   effect,
+  OnInit,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
@@ -32,7 +33,7 @@ interface ColorInfo {
   styleUrl: './colors.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorsComponent {
+export class ColorsComponent implements OnInit {
   private document = inject(DOCUMENT);
   private router = inject(Router);
   private themeService = inject(ThemeService);

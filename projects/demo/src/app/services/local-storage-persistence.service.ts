@@ -144,8 +144,8 @@ export class LocalStoragePersistenceService extends DashboardPersistenceService 
     // Create a formatted list with timestamps
     const dashboardList = availableDashboards
       .map((slot, index) => {
-        const meta = metadata[slot];
-        const timestamp = meta?.savedAt ? new Date(meta.savedAt).toLocaleString() : 'Unknown';
+        const meta = metadata[slot] as Record<string, unknown> | undefined;
+        const timestamp = meta?.['savedAt'] ? new Date(meta['savedAt'] as string).toLocaleString() : 'Unknown';
         return `${index + 1}. ${slot} (saved: ${timestamp})`;
       })
       .join('\n');
@@ -190,7 +190,7 @@ export class LocalStoragePersistenceService extends DashboardPersistenceService 
    * Get metadata for all saved dashboards.
    * @returns Metadata object
    */
-  private getMetadata(): Record<string, any> {
+  private getMetadata(): Record<string, unknown> {
     try {
       const metadata = localStorage.getItem(this.METADATA_KEY);
       return metadata ? JSON.parse(metadata) : {};
@@ -204,7 +204,7 @@ export class LocalStoragePersistenceService extends DashboardPersistenceService 
    * Save metadata to localStorage.
    * @param metadata - Metadata object to save
    */
-  private saveMetadata(metadata: Record<string, any>): void {
+  private saveMetadata(metadata: Record<string, unknown>): void {
     try {
       localStorage.setItem(this.METADATA_KEY, JSON.stringify(metadata));
     } catch (error) {
@@ -226,16 +226,16 @@ export class LocalStoragePersistenceService extends DashboardPersistenceService 
    * @param data - Data to validate
    * @returns True if data appears to be valid dashboard data
    */
-  private isValidDashboardData(data: any): data is DashboardDataDto {
+  private isValidDashboardData(data: unknown): data is DashboardDataDto {
     return (
-      data &&
+      data !== null &&
       typeof data === 'object' &&
-      typeof data.version === 'string' &&
-      typeof data.dashboardId === 'string' &&
-      typeof data.rows === 'number' &&
-      typeof data.columns === 'number' &&
-      typeof data.gutterSize === 'string' &&
-      Array.isArray(data.cells)
+      typeof (data as Record<string, unknown>)['version'] === 'string' &&
+      typeof (data as Record<string, unknown>)['dashboardId'] === 'string' &&
+      typeof (data as Record<string, unknown>)['rows'] === 'number' &&
+      typeof (data as Record<string, unknown>)['columns'] === 'number' &&
+      typeof (data as Record<string, unknown>)['gutterSize'] === 'string' &&
+      Array.isArray((data as Record<string, unknown>)['cells'])
     );
   }
 }

@@ -42,7 +42,7 @@
     >
       @for (themeConfig of themeService.availableThemes(); track
       themeConfig.key) {
-      <div class="theme-option-row" (click)="setTheme(themeConfig.key)">
+      <div class="theme-option-row">
         <mat-radio-button [value]="themeConfig.key" class="theme-option">
           {{ themeConfig.displayName }}
         </mat-radio-button>

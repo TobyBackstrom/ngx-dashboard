@@ -124,9 +124,10 @@ export class FilePersistenceService extends DashboardPersistenceService {
 
   /**
    * Delete dashboard - not supported for file-based persistence.
-   * @param identifier - Dashboard identifier (ignored)
+   * @param _identifier - Dashboard identifier (ignored)
    */
-  async deleteDashboard(identifier: string): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async deleteDashboard(_identifier: string): Promise<void> {
     // File-based persistence doesn't support deletion
     throw new Error('Delete operation not supported for file-based persistence');
   }
@@ -136,16 +137,16 @@ export class FilePersistenceService extends DashboardPersistenceService {
    * @param data - Data to validate
    * @returns True if data appears to be valid dashboard data
    */
-  private isValidDashboardData(data: any): data is DashboardDataDto {
+  private isValidDashboardData(data: unknown): data is DashboardDataDto {
     return (
-      data &&
+      data !== null &&
       typeof data === 'object' &&
-      typeof data.version === 'string' &&
-      typeof data.dashboardId === 'string' &&
-      typeof data.rows === 'number' &&
-      typeof data.columns === 'number' &&
-      typeof data.gutterSize === 'string' &&
-      Array.isArray(data.cells)
+      typeof (data as Record<string, unknown>)['version'] === 'string' &&
+      typeof (data as Record<string, unknown>)['dashboardId'] === 'string' &&
+      typeof (data as Record<string, unknown>)['rows'] === 'number' &&
+      typeof (data as Record<string, unknown>)['columns'] === 'number' &&
+      typeof (data as Record<string, unknown>)['gutterSize'] === 'string' &&
+      Array.isArray((data as Record<string, unknown>)['cells'])
     );
   }
 }

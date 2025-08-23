@@ -51,7 +51,7 @@ export const PREFERRED_COLOR_MODE = new InjectionToken<Signal<ColorMode>>(
       const preferredColorModeChangeListener = (
         event: MediaQueryListEvent
       ): void => {
-        event.matches ? colorMode.set('dark') : colorMode.set('light');
+        colorMode.set(event.matches ? 'dark' : 'light');
       };
 
       mediaQuery.addEventListener('change', preferredColorModeChangeListener);

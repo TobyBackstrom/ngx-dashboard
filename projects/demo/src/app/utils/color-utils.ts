@@ -32,7 +32,7 @@
 export function resolveCssColor(
   cssProperty: string,
   isDarkMode: boolean,
-  fallback: string = '#000000'
+  fallback = '#000000'
 ): string {
   // Get the computed CSS custom property value from document root
   const rootStyle = getComputedStyle(document.documentElement);

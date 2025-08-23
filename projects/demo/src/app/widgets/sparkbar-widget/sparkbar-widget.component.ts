@@ -15,7 +15,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { svgIcon } from './sparkbar-widget.metadata';
 import { SparkbarStateDialogComponent } from './sparkbar-state-dialog.component';
-import { barChart, linearGradient, lineChart } from 'sparklib';
+import { barChart, linearGradient } from 'sparklib';
 import { ThemeService } from '../../services/theme.service';
 import { resolveCssColor, VolatileTimeSeries } from '../../utils';
 
@@ -119,11 +119,14 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
   #handleRealtimeStateChange(): void {
     // Watch for realtime state changes, frame rate changes, numberOfBars changes, and theme changes
     const isRealtime = this.state().realtime;
-    const frameRate = this.state().frameRate; // Required for effect tracking - triggers chart update on frame rate changes
-    const numberOfBars = this.state().numberOfBars; // Required for effect tracking - triggers chart update on bar count changes
-    const responsiveBarColors = this.state().responsiveBarColors; // Required for effect tracking - triggers chart update on color mode changes
-    const isDarkMode = this.#themeService.isDarkMode(); // Required for effect tracking - triggers chart update on theme mode changes
-    const theme = this.#themeService.theme(); // Required for effect tracking - triggers chart update on theme changes
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    this.state().frameRate; // Required for effect tracking - triggers chart update on frame rate changes
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    this.state().numberOfBars; // Required for effect tracking - triggers chart update on bar count changes
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    this.state().responsiveBarColors; // Required for effect tracking - triggers chart update on color mode changes
+    this.#themeService.isDarkMode(); // Required for effect tracking - triggers chart update on theme mode changes
+    this.#themeService.theme(); // Required for effect tracking - triggers chart update on theme changes
 
     if (isRealtime && this.canvasContainer()) {
       // Stop existing timer to restart with new frame rate

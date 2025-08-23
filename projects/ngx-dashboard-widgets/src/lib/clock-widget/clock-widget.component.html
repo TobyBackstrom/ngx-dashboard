@@ -1,11 +1,11 @@
 @if (isDigital) {
-  <ngx-digital-clock
+  <lib-digital-clock
     [timeFormat]="state().timeFormat || '24h'"
     [showSeconds]="state().showSeconds ?? true"
     [hasBackground]="state().hasBackground ?? false"
   />
 } @else if (isAnalog) {
-  <ngx-analog-clock
+  <lib-analog-clock
     [hasBackground]="state().hasBackground ?? false"
     [showSeconds]="state().showSeconds ?? true"
   />

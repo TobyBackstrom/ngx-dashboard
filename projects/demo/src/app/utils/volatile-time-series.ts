@@ -17,7 +17,7 @@ export class VolatileTimeSeries {
    */
   static createPriceSeries(
     basePrice: number,
-    volatilityPercentage: number = 5
+    volatilityPercentage = 5
   ): VolatileTimeSeries {
     const range = basePrice * (volatilityPercentage / 100);
     return new VolatileTimeSeries(
@@ -35,8 +35,8 @@ export class VolatileTimeSeries {
    * @returns A new VolatileTimeSeries configured for percentage values.
    */
   static createPercentageSeries(
-    centerValue: number = 50,
-    volatility: number = 20
+    centerValue = 50,
+    volatility = 20
   ): VolatileTimeSeries {
     return new VolatileTimeSeries(
       Math.max(0, centerValue - volatility),
@@ -57,7 +57,7 @@ export class VolatileTimeSeries {
   static createValueSeries(
     minValue: number,
     maxValue: number,
-    volatilityFactor: number = 0.3
+    volatilityFactor = 0.3
   ): VolatileTimeSeries {
     // Adjust mean reversion based on volatility factor
     // Higher volatility = weaker mean reversion
@@ -81,7 +81,7 @@ export class VolatileTimeSeries {
   constructor(
     private minValue: number,
     private maxValue: number,
-    private meanReversionStrength: number = 0.02
+    private meanReversionStrength = 0.02
   ) {
     this.center = (minValue + maxValue) / 2;
     this.currentValue = this.center;

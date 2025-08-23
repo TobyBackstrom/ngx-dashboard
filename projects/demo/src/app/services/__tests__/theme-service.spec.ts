@@ -9,7 +9,7 @@ describe('ThemeService', () => {
   let mockMediaQueryList: jasmine.SpyObj<MediaQueryList>;
   let mockPreferredColorMode: ReturnType<typeof signal<ColorMode>>;
   let mediaQueryListeners: Map<string, EventListener>;
-  let destroyCallbacks: Array<() => void>;
+  let destroyCallbacks: (() => void)[];
 
   // Helper to create a mock media query list
   function createMockMediaQueryList(matches: boolean): jasmine.SpyObj<MediaQueryList> {
