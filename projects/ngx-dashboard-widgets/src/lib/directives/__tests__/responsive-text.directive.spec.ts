@@ -7,7 +7,7 @@ import { ResponsiveTextDirective } from '../responsive-text.directive';
   template: `
     <div class="container" [style.width.px]="containerWidth" [style.height.px]="containerHeight" [style.padding.px]="padding">
       <span 
-        responsiveText 
+        libResponsiveText 
         [minFontSize]="minFont" 
         [maxFontSize]="maxFont" 
         [lineHeight]="lineHeight"
