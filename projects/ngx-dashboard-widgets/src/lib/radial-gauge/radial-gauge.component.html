@@ -1,0 +1,81 @@
+<svg 
+  [attr.width]="svgWidth()" 
+  [attr.height]="svgHeight()" 
+  [attr.viewBox]="'0 0 ' + svgWidth() + ' ' + svgHeight()"
+  class="gauge-svg"
+  xmlns="http://www.w3.org/2000/svg">
+  
+  <!-- Accessibility elements -->
+  <title>{{ title() }}</title>
+  @if (description()) {
+    <desc>{{ description() }}</desc>
+  }
+  
+  <!-- Define gradients for better visual effects (optional) -->
+  <defs>
+    <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" class="gradient-start" />
+      <stop offset="100%" class="gradient-end" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background arc for outer gauge -->
+  <path 
+    [attr.d]="backgroundArcPath()" 
+    fill="none" 
+    class="gauge-background"
+    [attr.stroke-width]="outerThickness()" 
+    stroke-linecap="butt" />
+  
+  <!-- Value arc for outer gauge (animated) -->
+  <path 
+    [attr.d]="valueArcPath()" 
+    fill="none" 
+    [attr.stroke]="valueColor()"
+    [attr.stroke-width]="outerThickness()" 
+    stroke-linecap="butt"
+    class="gauge-value" />
+  
+  <!-- Segmented inner legend -->
+  @for (segment of segmentPaths(); track segment.path) {
+    <path 
+      [attr.d]="segment.path" 
+      fill="none" 
+      [attr.stroke]="segment.color"
+      [attr.stroke-width]="innerThickness()" 
+      stroke-linecap="butt"
+      class="gauge-segment" />
+  }
+  
+  <!-- Mask for bottom half to create semi-circle appearance -->
+  <rect 
+    x="0" 
+    [attr.y]="centerY()" 
+    [attr.width]="svgWidth()" 
+    [attr.height]="svgHeight() - centerY()"
+    class="gauge-mask" />
+  
+  <!-- Value label -->
+  @if (showValue()) {
+    <text 
+      [attr.x]="centerX()" 
+      [attr.y]="centerY() + fontSize() * 0.8" 
+      text-anchor="middle" 
+      class="gauge-label"
+      [attr.font-size]="fontSize()">
+      {{ formattedLabel() }}
+    </text>
+  }
+  
+  <!-- Optional subtitle or unit label -->
+  @if (description()) {
+    <text 
+      [attr.x]="centerX()" 
+      [attr.y]="centerY() + fontSize() * 1.5" 
+      text-anchor="middle" 
+      class="gauge-description"
+      [attr.font-size]="fontSize() * 0.5">
+      {{ description() }}
+    </text>
+  }
+</svg>

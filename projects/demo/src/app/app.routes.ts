@@ -10,6 +10,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/colors/colors.component').then(m => m.ColorsComponent)
   },
   {
+    path: 'radial-gauge-demo',
+    loadComponent: () => import('./components/radial-gauge-demo/radial-gauge-demo.component').then(m => m.RadialGaugeDemoComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

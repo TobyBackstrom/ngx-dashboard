@@ -1,0 +1,148 @@
+.gauge-demo-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  
+  h1 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: 500;
+  }
+}
+
+.demo-layout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.controls-panel {
+  .section {
+    margin-bottom: 2rem;
+    
+    h3 {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    
+    button {
+      flex: 1;
+      min-width: 100px;
+    }
+  }
+  
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    
+    label {
+      min-width: 150px;
+      font-size: 0.875rem;
+    }
+    
+    mat-slider {
+      flex: 1;
+    }
+  }
+  
+  .input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    
+    mat-form-field {
+      width: 100%;
+    }
+  }
+  
+  mat-slide-toggle {
+    display: block;
+    margin-bottom: 1rem;
+  }
+}
+
+.gauge-display {
+  .gauge-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    background: var(--mat-sys-surface-variant);
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    overflow: visible;
+    
+    // Dynamic sizing based on gauge size
+    --gauge-size: 300; // default fallback
+    --gauge-height: calc(var(--gauge-size) * 0.5px + 20px); // semi-circle height formula
+    --container-height: calc(var(--gauge-height) + 6rem); // height + padding
+    
+    min-height: var(--container-height);
+    width: 100%;
+    
+    // Ensure minimum dimensions for usability
+    min-height: max(250px, var(--container-height));
+  }
+  
+  .gauge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 1rem;
+    
+    .small-gauge {
+      text-align: center;
+      
+      h4 {
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        font-weight: 400;
+      }
+    }
+  }
+}
+
+.code-example {
+  pre {
+    background: var(--mat-sys-surface-variant);
+    padding: 1.5rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 0;
+    
+    code {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+}
+
+// Material icon adjustments
+mat-icon {
+  margin-right: 0.5rem;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}

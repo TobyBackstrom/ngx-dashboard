@@ -1,0 +1,220 @@
+<div class="gauge-demo-container">
+  <h1>Radial Gauge Component Demo</h1>
+  
+  <div class="demo-layout">
+    <!-- Controls Panel -->
+    <mat-card class="controls-panel">
+      <mat-card-header>
+        <mat-card-title>Gauge Controls</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        
+        <!-- Preset Configurations -->
+        <div class="section">
+          <h3>Preset Configurations</h3>
+          <div class="button-group">
+            <button mat-raised-button 
+                    [color]="activeConfig() === 'default' ? 'primary' : ''"
+                    (click)="setDefaultConfig()">
+              <mat-icon>speed</mat-icon>
+              Default
+            </button>
+            <button mat-raised-button 
+                    [color]="activeConfig() === 'temperature' ? 'primary' : ''"
+                    (click)="setTemperatureConfig()">
+              <mat-icon>thermostat</mat-icon>
+              Temperature
+            </button>
+            <button mat-raised-button 
+                    [color]="activeConfig() === 'performance' ? 'primary' : ''"
+                    (click)="setPerformanceConfig()">
+              <mat-icon>analytics</mat-icon>
+              Performance
+            </button>
+          </div>
+        </div>
+        
+        <!-- Value Controls -->
+        <div class="section">
+          <h3>Value Settings</h3>
+          
+          <div class="control-group">
+            <label>Value: {{ value() }}</label>
+            <mat-slider min="0" max="100" step="1" discrete>
+              <input matSliderThumb [(ngModel)]="value" [min]="min()" [max]="max()">
+            </mat-slider>
+            <button mat-icon-button (click)="randomValue()" matTooltip="Random Value">
+              <mat-icon>casino</mat-icon>
+            </button>
+          </div>
+          
+          <div class="input-row">
+            <mat-form-field>
+              <mat-label>Min</mat-label>
+              <input matInput type="number" [(ngModel)]="min">
+            </mat-form-field>
+            
+            <mat-form-field>
+              <mat-label>Max</mat-label>
+              <input matInput type="number" [(ngModel)]="max">
+            </mat-form-field>
+          </div>
+        </div>
+        
+        <!-- Size Controls -->
+        <div class="section">
+          <h3>Dimensions</h3>
+          
+          <div class="control-group">
+            <label>Size: {{ size() }}px</label>
+            <mat-slider min="150" max="500" step="10" discrete>
+              <input matSliderThumb [(ngModel)]="size">
+            </mat-slider>
+          </div>
+          
+          <div class="control-group">
+            <label>Outer Thickness: {{ outerThickness() }}px</label>
+            <mat-slider min="10" max="60" step="2" discrete>
+              <input matSliderThumb [(ngModel)]="outerThickness">
+            </mat-slider>
+          </div>
+          
+          <div class="control-group">
+            <label>Inner Thickness: {{ innerThickness() }}px</label>
+            <mat-slider min="4" max="30" step="2" discrete>
+              <input matSliderThumb [(ngModel)]="innerThickness">
+            </mat-slider>
+          </div>
+          
+          <div class="control-group">
+            <label>Gap: {{ gap() }}px</label>
+            <mat-slider min="0" max="20" step="1" discrete>
+              <input matSliderThumb [(ngModel)]="gap">
+            </mat-slider>
+          </div>
+        </div>
+        
+        <!-- Display Options -->
+        <div class="section">
+          <h3>Display Options</h3>
+          
+          <mat-slide-toggle [(ngModel)]="showValue">
+            Show Value Label
+          </mat-slide-toggle>
+        </div>
+        
+      </mat-card-content>
+    </mat-card>
+    
+    <!-- Gauge Display -->
+    <mat-card class="gauge-display">
+      <mat-card-header>
+        <mat-card-title>Gauge Preview</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        
+        <!-- Main Gauge -->
+        <div class="gauge-wrapper" [style.--gauge-size]="size()">
+          <lib-radial-gauge
+            [value]="value()"
+            [min]="min()"
+            [max]="max()"
+            [size]="size()"
+            [outerThickness]="outerThickness()"
+            [innerThickness]="innerThickness()"
+            [gap]="gap()"
+            [segments]="getActiveSegments()"
+            [showValue]="showValue()"
+            [labelFormatter]="activeConfig() === 'temperature' ? temperatureFormatter : 
+                             activeConfig() === 'performance' ? percentageFormatter : 
+                             defaultFormatter"
+            [title]="activeConfig() === 'temperature' ? 'Temperature' : 
+                     activeConfig() === 'performance' ? 'Performance' : 
+                     'Gauge'"
+            [description]="activeConfig() === 'temperature' ? 'Celsius' : 
+                          activeConfig() === 'performance' ? 'Score' : 
+                          ''"
+          />
+        </div>
+        
+        <!-- Multiple Gauges Example -->
+        <div class="section">
+          <h3>Multiple Gauges Example</h3>
+          <div class="gauge-grid">
+            <div class="small-gauge">
+              <h4>CPU Usage</h4>
+              <lib-radial-gauge
+                [value]="65"
+                [min]="0"
+                [max]="100"
+                [size]="180"
+                [outerThickness]="20"
+                [innerThickness]="8"
+                [gap]="4"
+                [segments]="performanceSegments()"
+                [labelFormatter]="percentageFormatter"
+                title="CPU Usage"
+              />
+            </div>
+            
+            <div class="small-gauge">
+              <h4>Memory</h4>
+              <lib-radial-gauge
+                [value]="42"
+                [min]="0"
+                [max]="100"
+                [size]="180"
+                [outerThickness]="20"
+                [innerThickness]="8"
+                [gap]="4"
+                [segments]="performanceSegments()"
+                [labelFormatter]="percentageFormatter"
+                title="Memory Usage"
+              />
+            </div>
+            
+            <div class="small-gauge">
+              <h4>Disk I/O</h4>
+              <lib-radial-gauge
+                [value]="88"
+                [min]="0"
+                [max]="100"
+                [size]="180"
+                [outerThickness]="20"
+                [innerThickness]="8"
+                [gap]="4"
+                [segments]="performanceSegments()"
+                [labelFormatter]="percentageFormatter"
+                title="Disk I/O"
+              />
+            </div>
+          </div>
+        </div>
+        
+      </mat-card-content>
+    </mat-card>
+  </div>
+  
+  <!-- Code Example -->
+  <mat-card class="code-example">
+    <mat-card-header>
+      <mat-card-title>Usage Example</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <pre><code>&lt;lib-radial-gauge
+  [value]="{{ value() }}"
+  [min]="{{ min() }}"
+  [max]="{{ max() }}"
+  [size]="{{ size() }}"
+  [outerThickness]="{{ outerThickness() }}"
+  [innerThickness]="{{ innerThickness() }}"
+  [gap]="{{ gap() }}"
+  [segments]="customSegments"
+  [showValue]="{{ showValue() }}"
+  [labelFormatter]="myFormatter"
+  title="My Gauge"
+  description="Units"
+/&gt;</code></pre>
+    </mat-card-content>
+  </mat-card>
+</div>
