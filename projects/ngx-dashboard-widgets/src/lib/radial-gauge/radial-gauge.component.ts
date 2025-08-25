@@ -54,19 +54,15 @@ export class RadialGaugeComponent {
     maximumFractionDigits: 1,
   });
 
-  private readonly svgPadding = computed(() =>
-    Math.max(20, this.outerThickness() + 10)
+  private readonly svgPadding = computed(() => this.outerThickness() / 2);
+  readonly svgWidth = computed(() => this.size() + this.outerThickness());
+  readonly svgHeight = computed(() => 
+    Math.ceil(this.size() / 2 + this.outerThickness() / 2)
   );
-  readonly svgWidth = computed(() => this.size() + this.svgPadding() * 2);
-  readonly svgHeight = computed(() =>
-    Math.ceil(this.size() / 2 + this.svgPadding() + 20)
-  );
-  readonly centerX = computed(() => this.size() / 2 + this.svgPadding());
-  readonly centerY = computed(() => this.size() / 2 + this.svgPadding());
+  readonly centerX = computed(() => this.size() / 2 + this.outerThickness() / 2);
+  readonly centerY = computed(() => this.size() / 2 + this.outerThickness() / 2);
 
-  readonly outerRadius = computed(
-    () => this.size() / 2 - Math.max(5, this.outerThickness() / 2)
-  );
+  readonly outerRadius = computed(() => this.size() / 2);
   readonly innerRadius = computed(
     () => this.outerRadius() - this.outerThickness()
   );
