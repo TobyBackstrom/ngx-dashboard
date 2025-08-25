@@ -1,81 +1,54 @@
-<svg 
-  [attr.width]="svgWidth()" 
-  [attr.height]="svgHeight()" 
-  [attr.viewBox]="'0 0 ' + svgWidth() + ' ' + svgHeight()"
+@let w = svgWidth(); @let h = svgHeight(); @let cy = centerY(); @let pct =
+percent();
+
+<svg
+  [attr.width]="w"
+  [attr.height]="h"
+  [attr.viewBox]="'0 0 ' + w + ' ' + h"
   class="gauge-svg"
-  xmlns="http://www.w3.org/2000/svg">
-  
-  <!-- Accessibility elements -->
-  <title>{{ title() }}</title>
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <title [attr.id]="titleId">{{ title() }}</title>
   @if (description()) {
-    <desc>{{ description() }}</desc>
+  <desc [attr.id]="descId">{{ description() }}</desc>
   }
-  
-  <!-- Define gradients for better visual effects (optional) -->
+
   <defs>
-    <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" class="gradient-start" />
-      <stop offset="100%" class="gradient-end" />
-    </linearGradient>
+    <clipPath id="semi-clip">
+      <rect x="0" y="0" [attr.width]="w" [attr.height]="cy" />
+    </clipPath>
   </defs>
-  
-  <!-- Background arc for outer gauge -->
-  <path 
-    [attr.d]="backgroundArcPath()" 
-    fill="none" 
-    class="gauge-background"
-    [attr.stroke-width]="outerThickness()" 
-    stroke-linecap="butt" />
-  
-  <!-- Value arc for outer gauge (animated) -->
-  <path 
-    [attr.d]="valueArcPath()" 
-    fill="none" 
-    [attr.stroke]="valueColor()"
-    [attr.stroke-width]="outerThickness()" 
-    stroke-linecap="butt"
-    class="gauge-value" />
-  
-  <!-- Segmented inner legend -->
-  @for (segment of segmentPaths(); track segment.path) {
-    <path 
-      [attr.d]="segment.path" 
-      fill="none" 
-      [attr.stroke]="segment.color"
-      [attr.stroke-width]="innerThickness()" 
+
+  <g clip-path="url(#semi-clip)">
+    <path
+      [attr.d]="backgroundArcPath()"
+      pathLength="100"
+      fill="none"
+      class="gauge-background"
+      [attr.stroke-width]="outerThickness()"
       stroke-linecap="butt"
-      class="gauge-segment" />
-  }
-  
-  <!-- Mask for bottom half to create semi-circle appearance -->
-  <rect 
-    x="0" 
-    [attr.y]="centerY()" 
-    [attr.width]="svgWidth()" 
-    [attr.height]="svgHeight() - centerY()"
-    class="gauge-mask" />
-  
-  <!-- Value label -->
-  @if (showValue()) {
-    <text 
-      [attr.x]="centerX()" 
-      [attr.y]="centerY() + fontSize() * 0.8" 
-      text-anchor="middle" 
-      class="gauge-label"
-      [attr.font-size]="fontSize()">
-      {{ formattedLabel() }}
-    </text>
-  }
-  
-  <!-- Optional subtitle or unit label -->
-  @if (description()) {
-    <text 
-      [attr.x]="centerX()" 
-      [attr.y]="centerY() + fontSize() * 1.5" 
-      text-anchor="middle" 
-      class="gauge-description"
-      [attr.font-size]="fontSize() * 0.5">
-      {{ description() }}
-    </text>
-  }
+    />
+
+    <path
+      [attr.d]="backgroundArcPath()"
+      pathLength="100"
+      fill="none"
+      class="gauge-value"
+      [attr.stroke]="valueColor()"
+      [attr.stroke-width]="outerThickness()"
+      stroke-linecap="butt"
+      [attr.stroke-dasharray]="pct + ' 100'"
+    />
+
+    @for (segment of segmentPaths(); track segment.path) {
+    <path
+      [attr.d]="segment.path"
+      fill="none"
+      [attr.stroke]="segment.color"
+      [attr.stroke-width]="innerThickness()"
+      stroke-linecap="butt"
+      class="gauge-segment"
+    />
+    }
+  </g>
 </svg>

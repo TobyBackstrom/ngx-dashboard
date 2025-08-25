@@ -12,7 +12,7 @@
         <!-- Preset Configurations -->
         <div class="section">
           <h3>Preset Configurations</h3>
-          <div class="button-group">
+          <div class="button-grid">
             <button mat-raised-button 
                     [color]="activeConfig() === 'default' ? 'primary' : ''"
                     (click)="setDefaultConfig()">
@@ -31,6 +31,24 @@
               <mat-icon>analytics</mat-icon>
               Performance
             </button>
+            <button mat-raised-button 
+                    [color]="activeConfig() === 'battery' ? 'primary' : ''"
+                    (click)="setBatteryConfig()">
+              <mat-icon>battery_std</mat-icon>
+              Battery
+            </button>
+            <button mat-raised-button 
+                    [color]="activeConfig() === 'network' ? 'primary' : ''"
+                    (click)="setNetworkConfig()">
+              <mat-icon>signal_cellular_alt</mat-icon>
+              Network
+            </button>
+            <button mat-raised-button 
+                    [color]="activeConfig() === 'storage' ? 'primary' : ''"
+                    (click)="setStorageConfig()">
+              <mat-icon>storage</mat-icon>
+              Storage
+            </button>
           </div>
         </div>
         
@@ -39,9 +57,9 @@
           <h3>Value Settings</h3>
           
           <div class="control-group">
-            <label>Value: {{ value() }}</label>
-            <mat-slider min="0" max="100" step="1" discrete>
-              <input matSliderThumb [(ngModel)]="value" [min]="min()" [max]="max()">
+            <span>Value: {{ value() }}</span>
+            <mat-slider [min]="min()" [max]="max()" step="0.1" discrete>
+              <input matSliderThumb [(ngModel)]="value">
             </mat-slider>
             <button mat-icon-button (click)="randomValue()" matTooltip="Random Value">
               <mat-icon>casino</mat-icon>
@@ -66,41 +84,60 @@
           <h3>Dimensions</h3>
           
           <div class="control-group">
-            <label>Size: {{ size() }}px</label>
+            <span>Size: {{ size() }}px</span>
             <mat-slider min="150" max="500" step="10" discrete>
               <input matSliderThumb [(ngModel)]="size">
             </mat-slider>
           </div>
           
           <div class="control-group">
-            <label>Outer Thickness: {{ outerThickness() }}px</label>
+            <span>Outer Thickness: {{ outerThickness() }}px</span>
             <mat-slider min="10" max="60" step="2" discrete>
               <input matSliderThumb [(ngModel)]="outerThickness">
             </mat-slider>
           </div>
           
           <div class="control-group">
-            <label>Inner Thickness: {{ innerThickness() }}px</label>
+            <span>Inner Thickness: {{ innerThickness() }}px</span>
             <mat-slider min="4" max="30" step="2" discrete>
               <input matSliderThumb [(ngModel)]="innerThickness">
             </mat-slider>
           </div>
           
           <div class="control-group">
-            <label>Gap: {{ gap() }}px</label>
+            <span>Gap: {{ gap() }}px</span>
             <mat-slider min="0" max="20" step="1" discrete>
               <input matSliderThumb [(ngModel)]="gap">
             </mat-slider>
           </div>
+          
+          <div class="control-group">
+            <span>Segment Gap: {{ segmentGapPx() }}px</span>
+            <mat-slider min="0" max="10" step="1" discrete>
+              <input matSliderThumb [(ngModel)]="segmentGapPx">
+            </mat-slider>
+          </div>
         </div>
         
-        <!-- Display Options -->
+        
+        <!-- Animation Controls -->
         <div class="section">
-          <h3>Display Options</h3>
+          <h3>Animation</h3>
           
-          <mat-slide-toggle [(ngModel)]="showValue">
-            Show Value Label
-          </mat-slide-toggle>
+          <div class="button-group">
+            <button mat-raised-button 
+                    [disabled]="isAnimating()"
+                    (click)="startAnimation()">
+              <mat-icon>play_arrow</mat-icon>
+              Start Animation
+            </button>
+            <button mat-raised-button 
+                    [disabled]="!isAnimating()"
+                    (click)="stopAnimation()">
+              <mat-icon>stop</mat-icon>
+              Stop Animation
+            </button>
+          </div>
         </div>
         
       </mat-card-content>
@@ -114,7 +151,7 @@
       <mat-card-content>
         
         <!-- Main Gauge -->
-        <div class="gauge-wrapper" [style.--gauge-size]="size()">
+        <div class="gauge-wrapper">
           <lib-radial-gauge
             [value]="value()"
             [min]="min()"
@@ -123,23 +160,37 @@
             [outerThickness]="outerThickness()"
             [innerThickness]="innerThickness()"
             [gap]="gap()"
+            [segmentGapPx]="segmentGapPx()"
             [segments]="getActiveSegments()"
-            [showValue]="showValue()"
-            [labelFormatter]="activeConfig() === 'temperature' ? temperatureFormatter : 
-                             activeConfig() === 'performance' ? percentageFormatter : 
-                             defaultFormatter"
-            [title]="activeConfig() === 'temperature' ? 'Temperature' : 
-                     activeConfig() === 'performance' ? 'Performance' : 
-                     'Gauge'"
-            [description]="activeConfig() === 'temperature' ? 'Celsius' : 
-                          activeConfig() === 'performance' ? 'Score' : 
-                          ''"
+            [title]="getTitle()"
+            [description]="getDescription()"
           />
         </div>
         
+        <!-- Animated Gauge Example -->
+        @if (isAnimating()) {
+          <div class="section">
+            <h3>Animated Gauge</h3>
+            <div class="gauge-wrapper">
+              <lib-radial-gauge
+                [value]="animatedValue()"
+                [min]="min()"
+                [max]="max()"
+                [size]="250"
+                [outerThickness]="30"
+                [innerThickness]="10"
+                [gap]="6"
+                [segments]="getActiveSegments()"
+                title="Live Data"
+                description="Real-time monitoring"
+              />
+            </div>
+          </div>
+        }
+        
         <!-- Multiple Gauges Example -->
         <div class="section">
-          <h3>Multiple Gauges Example</h3>
+          <h3>Dashboard Example</h3>
           <div class="gauge-grid">
             <div class="small-gauge">
               <h4>CPU Usage</h4>
@@ -151,9 +202,10 @@
                 [outerThickness]="20"
                 [innerThickness]="8"
                 [gap]="4"
+                [segmentGapPx]="2"
                 [segments]="performanceSegments()"
-                [labelFormatter]="percentageFormatter"
                 title="CPU Usage"
+                description="Percentage"
               />
             </div>
             
@@ -167,9 +219,10 @@
                 [outerThickness]="20"
                 [innerThickness]="8"
                 [gap]="4"
+                [segmentGapPx]="2"
                 [segments]="performanceSegments()"
-                [labelFormatter]="percentageFormatter"
                 title="Memory Usage"
+                description="Percentage"
               />
             </div>
             
@@ -183,9 +236,61 @@
                 [outerThickness]="20"
                 [innerThickness]="8"
                 [gap]="4"
+                [segmentGapPx]="2"
                 [segments]="performanceSegments()"
-                [labelFormatter]="percentageFormatter"
                 title="Disk I/O"
+                description="Percentage"
+              />
+            </div>
+            
+            <div class="small-gauge">
+              <h4>Network</h4>
+              <lib-radial-gauge
+                [value]="3.5"
+                [min]="0"
+                [max]="5"
+                [size]="180"
+                [outerThickness]="20"
+                [innerThickness]="8"
+                [gap]="4"
+                [segmentGapPx]="3"
+                [segments]="networkSegments()"
+                title="Network"
+                description="Signal Strength"
+              />
+            </div>
+            
+            <div class="small-gauge">
+              <h4>Battery</h4>
+              <lib-radial-gauge
+                [value]="72"
+                [min]="0"
+                [max]="100"
+                [size]="180"
+                [outerThickness]="20"
+                [innerThickness]="8"
+                [gap]="4"
+                [segmentGapPx]="2"
+                [segments]="batterySegments()"
+                title="Battery"
+                description="Charge Level"
+              />
+            </div>
+            
+            <div class="small-gauge">
+              <h4>Temperature</h4>
+              <lib-radial-gauge
+                [value]="22"
+                [min]="-20"
+                [max]="50"
+                [size]="180"
+                [outerThickness]="20"
+                [innerThickness]="8"
+                [gap]="4"
+                [segmentGapPx]="2"
+                [segments]="temperatureSegments()"
+                title="Temperature"
+                description="Celsius"
               />
             </div>
           </div>
@@ -209,12 +314,24 @@
   [outerThickness]="{{ outerThickness() }}"
   [innerThickness]="{{ innerThickness() }}"
   [gap]="{{ gap() }}"
+  [segmentGapPx]="{{ segmentGapPx() }}"
   [segments]="customSegments"
-  [showValue]="{{ showValue() }}"
-  [labelFormatter]="myFormatter"
   title="My Gauge"
   description="Units"
-/&gt;</code></pre>
+/&gt;
+
+// TypeScript
+interface RadialGaugeSegment {{ '{' }}
+  from: number;
+  to: number;
+  color: string;
+{{ '}' }}
+
+customSegments: RadialGaugeSegment[] = [
+  {{ '{' }} from: 0, to: 30, color: 'var(--mat-sys-error)' {{ '}' }},
+  {{ '{' }} from: 30, to: 70, color: 'var(--mat-sys-secondary)' {{ '}' }},
+  {{ '{' }} from: 70, to: 100, color: 'var(--mat-sys-primary)' {{ '}' }}
+];</code></pre>
     </mat-card-content>
   </mat-card>
 </div>

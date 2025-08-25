@@ -1,28 +1,16 @@
 :host {
   display: block;
-  
-  // Define default CSS variables that can be overridden
   --gauge-outer-bg: var(--mat-sys-surface-variant, #e0e0e0);
-  --gauge-mask-color: var(--mat-sys-surface, #ffffff);
-  --gauge-text-color: var(--mat-sys-on-surface, #1a1a1a);
-  --gauge-text-weight: 600;
-  --gauge-description-color: var(--mat-sys-on-surface-variant, #666666);
-  
-  // Value colors with Material Design 3 fallbacks
   --gauge-value-good: var(--mat-sys-tertiary, #10b981);
   --gauge-value-warning: var(--mat-sys-secondary, #f59e0b);
   --gauge-value-critical: var(--mat-sys-error, #dc2626);
-  
-  // Optional gradient colors
-  --gauge-gradient-start: var(--mat-sys-primary, #3b82f6);
-  --gauge-gradient-end: var(--mat-sys-tertiary, #10b981);
 }
 
 .gauge-svg {
   display: block;
   margin-inline: auto;
-  
-  // Ensure crisp rendering
+  max-width: 100%;
+  height: auto;
   shape-rendering: geometricPrecision;
 }
 
@@ -30,88 +18,37 @@
   stroke: var(--gauge-outer-bg);
   transition: stroke 200ms ease;
 }
-
 .gauge-value {
-  // Smooth transitions for value changes
-  transition: d 200ms ease, stroke 200ms ease;
+  transition: stroke-dasharray 200ms ease, stroke 200ms ease;
 }
-
 .gauge-segment {
-  // Smooth color transitions
   transition: stroke 200ms ease;
   opacity: 0.9;
-  
   &:hover {
     opacity: 1;
   }
 }
 
-.gauge-mask {
-  fill: var(--gauge-mask-color);
-  // Ensure mask covers properly
-  pointer-events: none;
-}
 
-.gauge-label {
-  fill: var(--gauge-text-color);
-  font-weight: var(--gauge-text-weight);
-  font-family: inherit;
-  
-  // Ensure text is crisp
-  text-rendering: optimizeLegibility;
-  
-  // Smooth transitions for size changes
-  transition: font-size 200ms ease, fill 200ms ease;
-}
-
-.gauge-description {
-  fill: var(--gauge-description-color);
-  font-weight: 400;
-  font-family: inherit;
-  opacity: 0.8;
-  
-  // Smooth transitions
-  transition: font-size 200ms ease, fill 200ms ease;
-}
-
-// Gradient definitions for optional use
-.gradient-start {
-  stop-color: var(--gauge-gradient-start);
-}
-
-.gradient-end {
-  stop-color: var(--gauge-gradient-end);
-}
-
-// Responsive adjustments
 @media (prefers-reduced-motion: reduce) {
   .gauge-value,
-  .gauge-segment,
-  .gauge-label,
-  .gauge-description {
+  .gauge-segment {
     transition: none;
   }
 }
 
-// High contrast mode support
 @media (prefers-contrast: high) {
   .gauge-background {
     stroke-width: 2;
     stroke: var(--mat-sys-outline, #000000);
   }
-  
   .gauge-segment {
     opacity: 1;
   }
 }
 
-// Dark mode specific adjustments (if needed)
 @media (prefers-color-scheme: dark) {
   :host {
-    // Dark mode overrides if not using Material theme
     --gauge-outer-bg: #374151;
-    --gauge-mask-color: #1f2937;
-    --gauge-text-color: #f3f4f6;
-    --gauge-description-color: #9ca3af;
   }
 }
