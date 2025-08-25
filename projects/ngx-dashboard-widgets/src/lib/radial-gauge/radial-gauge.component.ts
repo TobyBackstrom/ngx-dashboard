@@ -70,7 +70,9 @@ export class RadialGaugeComponent {
   readonly innerRadius = computed(
     () => this.outerRadius() - this.outerThickness()
   );
-  readonly legendOuterRadius = computed(() => this.innerRadius() - this.gap());
+  readonly legendOuterRadius = computed(() => 
+    this.innerRadius() - this.gap() + (this.outerThickness() - this.innerThickness()) / 2
+  );
   readonly legendInnerRadius = computed(
     () => this.legendOuterRadius() - this.innerThickness()
   );
