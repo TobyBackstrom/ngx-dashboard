@@ -1,10 +1,15 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   LOCALE_ID,
+  OnDestroy,
   computed,
+  effect,
   inject,
   input,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -13,6 +18,122 @@ export interface RadialGaugeSegment {
   to: number;
   color: string;
 }
+
+/**
+ * Responsive radial gauge component with hybrid sizing and thickness control.
+ *
+ * This component provides a highly flexible gauge system with three independent
+ * control dimensions that can be mixed and matched for different use cases:
+ *
+ * ## Size Control:
+ * - **Fixed Size**: Use manual `size` input (traditional behavior)
+ * - **Container Responsive**: Enable `fitToContainer` for automatic sizing
+ *
+ * ## Thickness Control:
+ * - **Manual Thickness**: Use individual thickness inputs (traditional behavior)
+ * - **Proportional Thickness**: Enable `responsiveMode` for size-based scaling
+ *
+ * ## Usage Scenarios:
+ *
+ * ### 1. Dashboard Widgets (Recommended)
+ * ```html
+ * <lib-radial-gauge
+ *   [value]="cpuUsage"
+ *   [fitToContainer]="true"
+ *   [responsiveMode]="true"
+ *   [sizeToThicknessRatio]="12" />
+ * ```
+ * **Best for**: Grid layouts, dashboard panels, adaptive containers
+ * **Behavior**: Automatically resizes to fit available space while maintaining
+ * consistent proportional appearance across all sizes.
+ *
+ * ### 2. Fixed Layouts (Traditional)
+ * ```html
+ * <lib-radial-gauge
+ *   [value]="temperature"
+ *   [size]="300"
+ *   [outerThickness]="36"
+ *   [innerThickness]="12" />
+ * ```
+ * **Best for**: Static designs, precise sizing requirements, print layouts
+ * **Behavior**: Exact pixel control over all dimensions, predictable appearance.
+ *
+ * ### 3. Scalable Designs
+ * ```html
+ * <lib-radial-gauge
+ *   [value]="batteryLevel"
+ *   [size]="gaugeSize"
+ *   [responsiveMode]="true"
+ *   [sizeToThicknessRatio]="20" />
+ * ```
+ * **Best for**: User-configurable sizing, responsive breakpoints, zoom interfaces
+ * **Behavior**: Manual size control with automatic thickness scaling. As size
+ * increases/decreases, ring thickness scales proportionally to maintain visual balance.
+ *
+ * ## Mathematical Relationships:
+ *
+ * When `responsiveMode=true`, thickness follows this formula:
+ * ```
+ * baseThickness = effectiveSize / sizeToThicknessRatio
+ * outerThickness = baseThickness × responsiveProportions.outer (default: 3)
+ * innerThickness = baseThickness × responsiveProportions.inner (default: 1)
+ * gap = baseThickness × responsiveProportions.gap (default: 0.5)
+ * totalThickness = baseThickness × 4.5 (outer + inner + gap)
+ * ```
+ *
+ * Example with 300px gauge and ratio=20 (ultra-thin):
+ * - baseThickness = 15px
+ * - outerThickness = 45px (15×3)
+ * - innerThickness = 15px (15×1)
+ * - gap = 7.5px (15×0.5)
+ * - totalThickness = 67.5px (22.5% of diameter)
+ *
+ * ## Container Responsiveness:
+ *
+ * When `fitToContainer=true`, the component uses ResizeObserver to:
+ * 1. Monitor parent container dimension changes
+ * 2. Calculate maximum diameter maintaining 2:1 aspect ratio (width:height)
+ * 3. Apply containerPadding for safe margins
+ * 4. Update gauge size in real-time
+ *
+ * This provides true responsive behavior for dashboard widgets, grid layouts,
+ * and adaptive interfaces.
+ *
+ * ## Accessibility:
+ *
+ * The component implements ARIA meter role with proper labeling:
+ * - `role="meter"` for semantic meaning
+ * - `aria-valuemin/max/now` for screen readers
+ * - `aria-label` with contextual information
+ * - Internationalized number formatting
+ *
+ * @example
+ * // Complete responsive dashboard gauge
+ * &#64;Component({
+ *   template: `
+ *     <div class="gauge-container">
+ *       <lib-radial-gauge
+ *         [value]="systemLoad"
+ *         [min]="0"
+ *         [max]="100"
+ *         [fitToContainer]="true"
+ *         [responsiveMode]="true"
+ *         [sizeToThicknessRatio]="20"
+ *         [segments]="loadSegments"
+ *         title="System Load"
+ *         description="Percentage" />
+ *     </div>
+ *   `
+ * })
+ * export class SystemDashboardComponent {
+ *   systemLoad = 67;
+ *   loadSegments: RadialGaugeSegment[] = [
+ *     { from: 0, to: 50, color: 'var(--mat-sys-tertiary)' },
+ *     { from: 50, to: 80, color: 'var(--mat-sys-secondary)' },
+ *     { from: 80, to: 100, color: 'var(--mat-sys-error)' }
+ *   ];
+ * }
+ */
 
 @Component({
   selector: 'lib-radial-gauge',
@@ -30,47 +151,267 @@ export interface RadialGaugeSegment {
     '[attr.aria-valuetext]': 'formattedLabel()',
     '[attr.aria-labelledby]': 'titleId',
     '[attr.aria-describedby]': 'descId',
+    '[class.fit-container]': 'fitToContainer()',
   },
 })
-export class RadialGaugeComponent {
-  // Inputs
+export class RadialGaugeComponent implements OnDestroy {
+  // Core Inputs - Value and Range
   readonly value = input(0);
   readonly min = input(0);
   readonly max = input(100);
-  readonly size = input(300);
-  readonly outerThickness = input(36);
-  readonly innerThickness = input(12);
-  readonly gap = input(8);
   readonly segments = input<RadialGaugeSegment[]>();
   readonly title = input('Gauge');
   readonly description = input('');
   readonly segmentGapPx = input(4);
 
+  // Size Control Inputs
+  /**
+   * Base gauge diameter in pixels. Used as fallback when fitToContainer is false.
+   * @default 300
+   */
+  readonly size = input(300);
+
+  /**
+   * Automatically resize gauge to fit its container dimensions.
+   * When true, the gauge will observe container size changes and adjust accordingly.
+   * Maintains semicircle aspect ratio (2:1 width:height).
+   * @default false
+   */
+  readonly fitToContainer = input(false);
+
+  /**
+   * Padding in pixels to maintain from container edges when fitToContainer is true.
+   * @default 10
+   */
+  readonly containerPadding = input(10);
+
+  // Thickness Control Inputs
+  /**
+   * Use proportional thickness scaling based on gauge size.
+   * When true, all thickness values are calculated as multiples of baseThickness.
+   * Overrides manual outerThickness, innerThickness, and gap inputs.
+   * @default false
+   */
+  readonly responsiveMode = input(false);
+
+  /**
+   * Ratio used to calculate base thickness from gauge size.
+   * baseThickness = effectiveSize / sizeToThicknessRatio
+   * Higher values create thinner gauge rings for ultra-thin appearance.
+   * @default 20
+   * @example
+   * - ratio=15: thicker rings (bt = size/15)
+   * - ratio=20: ultra-thin balanced appearance (bt = size/20)
+   * - ratio=30: extremely thin rings (bt = size/30)
+   */
+  readonly sizeToThicknessRatio = input(20);
+
+  /**
+   * Proportional multipliers for responsive thickness calculations.
+   * - outer: Multiplier for outer ring thickness (default: 3)
+   * - inner: Multiplier for inner ring thickness (default: 1)
+   * - gap: Multiplier for gap between rings (default: 0.5)
+   * Total thickness = baseThickness × (outer + inner + gap) = bt × 4.5
+   * @default { outer: 3, inner: 1, gap: 0.5 }
+   */
+  readonly responsiveProportions = input({ outer: 3, inner: 1, gap: 0.5 });
+
+  // Manual Thickness Inputs (used when responsiveMode is false)
+  /**
+   * Manual outer ring thickness in pixels. Ignored when responsiveMode is true.
+   * @default 36
+   */
+  readonly outerThickness = input(36);
+
+  /**
+   * Manual inner ring thickness in pixels. Ignored when responsiveMode is true.
+   * @default 12
+   */
+  readonly innerThickness = input(12);
+
+  /**
+   * Manual gap between rings in pixels. Ignored when responsiveMode is true.
+   * @default 8
+   */
+  readonly gap = input(8);
+
   readonly titleId = `rg-title-${Math.random().toString(36).slice(2)}`;
   readonly descId = `rg-desc-${Math.random().toString(36).slice(2)}`;
+  readonly clipId = `rg-clip-${Math.random().toString(36).slice(2)}`;
 
   private readonly locale = inject(LOCALE_ID);
+  private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly nf = new Intl.NumberFormat(this.locale, {
     maximumFractionDigits: 1,
   });
 
-  private readonly svgPadding = computed(() => this.outerThickness() / 2);
-  readonly svgWidth = computed(() => this.size() + this.outerThickness());
-  readonly svgHeight = computed(() => 
-    Math.ceil(this.size() / 2 + this.outerThickness() / 2)
-  );
-  readonly centerX = computed(() => this.size() / 2 + this.outerThickness() / 2);
-  readonly centerY = computed(() => this.size() / 2 + this.outerThickness() / 2);
+  // Container Size Detection
+  /**
+   * Tracks the container's available size for responsive sizing.
+   * Updated by ResizeObserver when fitToContainer is enabled.
+   * @private
+   */
+  private readonly containerSize = signal<number | null>(null);
 
-  readonly outerRadius = computed(() => this.size() / 2);
-  readonly innerRadius = computed(
-    () => this.outerRadius() - this.outerThickness()
+  /**
+   * ResizeObserver instance for monitoring container size changes.
+   * Created when fitToContainer is enabled, destroyed on component cleanup.
+   * @private
+   */
+  private resizeObserver: ResizeObserver | null = null;
+
+  /**
+   * Effect that manages ResizeObserver lifecycle based on fitToContainer input.
+   * Automatically connects/disconnects observer when the input changes.
+   * @private
+   */
+  private readonly containerObserverEffect = effect(() => {
+    const shouldObserve = this.fitToContainer();
+
+    if (shouldObserve && !this.resizeObserver) {
+      // Create and start observing
+      this.resizeObserver = new ResizeObserver((entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+
+        const { width, height } = entry.contentRect;
+        const padding = this.containerPadding();
+
+        const availW = Math.max(0, width - padding * 2);
+        const availH = Math.max(0, height - padding);
+
+        let sFromW: number;
+        let sFromH: number;
+
+        if (this.responsiveMode()) {
+          // In responsive mode: outerThickness = 3 * baseThickness = 3 * size / ratio
+          // Total space needed = size + outerThickness = size + 3*size/ratio = size * (1 + 3/ratio)
+          const ratio = this.sizeToThicknessRatio();
+          const spaceFactor = 1 + 3 / ratio; // Total space factor
+          sFromW = availW / spaceFactor;
+          sFromH = (2 * availH) / spaceFactor;
+        } else {
+          // Manual thickness: outer thickness is fixed
+          const outerT = this.outerThickness();
+          sFromW = Math.max(0, availW - outerT);
+          sFromH = Math.max(0, 2 * availH - outerT);
+        }
+
+        const maxDiameter = Math.min(sFromW, sFromH);
+        this.containerSize.set(Math.max(maxDiameter, 50));
+      });
+
+      this.resizeObserver.observe(this.elementRef.nativeElement);
+    } else if (!shouldObserve && this.resizeObserver) {
+      // Stop observing and cleanup
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+      this.containerSize.set(null);
+    }
+  });
+
+  // Responsive Size and Thickness Calculations
+  /**
+   * The effective gauge diameter, accounting for container sizing and manual size input.
+   * Priority: containerSize (when fitToContainer=true) > manual size input
+   * @returns Effective diameter in pixels
+   *
+   * @example
+   * // Fixed size mode
+   * fitToContainer=false, size=300 → effectiveSize=300
+   *
+   * // Container responsive mode
+   * fitToContainer=true, container=400px wide → effectiveSize=380 (minus padding)
+   */
+  private readonly effectiveSize = computed(() => {
+    const containerDiameter = this.containerSize();
+    if (this.fitToContainer() && containerDiameter !== null) {
+      return containerDiameter;
+    }
+    return this.size();
+  });
+
+  /**
+   * Base thickness calculated from effective size for proportional scaling.
+   * Only used when responsiveMode is enabled.
+   * Formula: baseThickness = effectiveSize / sizeToThicknessRatio
+   * @returns Base thickness in pixels, or 0 when responsiveMode is false
+   *
+   * @example
+   * // effectiveSize=300, sizeToThicknessRatio=12
+   * baseThickness = 300/12 = 25px
+   * // Total ring thickness = 25 × 4.5 = 112.5px (37.5% of diameter)
+   */
+  private readonly baseThickness = computed(() => {
+    if (!this.responsiveMode()) return 0;
+    return this.effectiveSize() / this.sizeToThicknessRatio();
+  });
+
+  /**
+   * Effective outer ring thickness, supporting both manual and responsive modes.
+   * - Responsive mode: baseThickness × responsiveProportions.outer
+   * - Manual mode: outerThickness input value
+   * @returns Outer ring thickness in pixels
+   */
+  readonly effectiveOuterThickness = computed(() => {
+    if (this.responsiveMode()) {
+      return this.baseThickness() * this.responsiveProportions().outer;
+    }
+    return this.outerThickness();
+  });
+
+  /**
+   * Effective inner ring thickness, supporting both manual and responsive modes.
+   * - Responsive mode: baseThickness × responsiveProportions.inner
+   * - Manual mode: innerThickness input value
+   * @returns Inner ring thickness in pixels
+   */
+  readonly effectiveInnerThickness = computed(() => {
+    if (this.responsiveMode()) {
+      return this.baseThickness() * this.responsiveProportions().inner;
+    }
+    return this.innerThickness();
+  });
+
+  /**
+   * Effective gap between rings, supporting both manual and responsive modes.
+   * - Responsive mode: baseThickness × responsiveProportions.gap
+   * - Manual mode: gap input value
+   * @returns Gap between rings in pixels
+   */
+  readonly effectiveGap = computed(() => {
+    if (this.responsiveMode()) {
+      return this.baseThickness() * this.responsiveProportions().gap;
+    }
+    return this.gap();
+  });
+
+  // SVG Layout Calculations (updated to use effective values)
+  private readonly svgPadding = computed(
+    () => this.effectiveOuterThickness() / 2
   );
-  readonly legendOuterRadius = computed(() => 
-    this.innerRadius() - this.gap() + (this.outerThickness() - this.innerThickness()) / 2
+  readonly svgWidth = computed(
+    () => this.effectiveSize() + this.effectiveOuterThickness()
+  );
+  readonly svgHeight = computed(() =>
+    Math.ceil(this.effectiveSize() / 2 + this.effectiveOuterThickness() / 2)
+  );
+  readonly centerX = computed(
+    () => this.effectiveSize() / 2 + this.effectiveOuterThickness() / 2
+  );
+  readonly centerY = computed(
+    () => this.effectiveSize() / 2 + this.effectiveOuterThickness() / 2
+  );
+
+  readonly outerRadius = computed(() => this.effectiveSize() / 2);
+  readonly innerRadius = computed(
+    () => this.outerRadius() - this.effectiveOuterThickness() / 2 - this.effectiveGap()
+  );
+  readonly legendOuterRadius = computed(
+    () => this.outerRadius() - this.effectiveOuterThickness() / 2 - this.effectiveGap() - this.effectiveInnerThickness() / 2
   );
   readonly legendInnerRadius = computed(
-    () => this.legendOuterRadius() - this.innerThickness()
+    () => this.legendOuterRadius() - this.effectiveInnerThickness()
   );
 
   private readonly startAngle = -180;
@@ -211,7 +552,7 @@ export class RadialGaugeComponent {
    * @example
    * createArcPath(50, -180, 0) => "M cx-50 cy A 50 50 0 1 1 cx+50 cy"
    * This creates a semicircle from left (-180°) to right (0°)
-   * 
+   *
    * SVG Arc Parameters:
    * - rx, ry: Radii (equal for circular arc)
    * - x-axis-rotation: 0 (no rotation for circles)
@@ -238,7 +579,7 @@ export class RadialGaugeComponent {
    * For a 4px gap on a radius of 100px:
    * Arc length = π * 100 = 314.16px (semicircle)
    * Degrees = 180 * (4 / 314.16) ≈ 2.3°
-   * 
+   *
    * Mathematical basis:
    * - Semicircle arc length = π * r
    * - Ratio of gap to semicircle = px / (π * r)
@@ -247,5 +588,16 @@ export class RadialGaugeComponent {
   private gapDegreesForRadius(px: number, r: number) {
     const semicircumference = Math.PI * r;
     return 180 * this.clamp(px / semicircumference, 0, 1);
+  }
+
+  /**
+   * Angular lifecycle hook called before component destruction.
+   * Ensures ResizeObserver cleanup to prevent memory leaks.
+   */
+  ngOnDestroy(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
   }
 }

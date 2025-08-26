@@ -204,6 +204,61 @@
         </div>
         }
 
+        <!-- Responsive Container Demo -->
+        <div class="section">
+          <h3>Responsive Container Demo</h3>
+          <p>
+            Drag the resize handles to see the gauge adapt to container size
+            changes. The gauge uses <code>fitToContainer=true</code> and
+            <code>responsiveMode=true</code> for automatic sizing and
+            proportional thickness scaling.
+          </p>
+
+          <div class="responsive-demo-container">
+            <div class="container-controls">
+              <label for="container-width-slider">Container Width: {{ containerWidth() }}px</label>
+              <mat-slider min="50" max="600" step="10" discrete>
+                <input id="container-width-slider" matSliderThumb [(ngModel)]="containerWidth" />
+              </mat-slider>
+
+              <label for="container-height-slider">Container Height: {{ containerHeight() }}px</label>
+              <mat-slider min="50" max="600" step="10" discrete>
+                <input id="container-height-slider" matSliderThumb [(ngModel)]="containerHeight" />
+              </mat-slider>
+
+              <label for="size-thickness-ratio-slider">Size To Thickness Ratio: {{ sizeToThicknessRatio() }}</label>
+              <mat-slider min="8" max="50" step="1" discrete>
+                <input id="size-thickness-ratio-slider" matSliderThumb [(ngModel)]="sizeToThicknessRatio" />
+              </mat-slider>
+            </div>
+
+            <div
+              class="resizable-container"
+              [style.width.px]="containerWidth()"
+              [style.height.px]="containerHeight()"
+            >
+              <div class="container-info">
+                <small
+                  >{{ containerWidth() }} × {{ containerHeight() }}px
+                  container</small
+                >
+              </div>
+              <lib-radial-gauge
+                [value]="value()"
+                [min]="min()"
+                [max]="max()"
+                [fitToContainer]="true"
+                [responsiveMode]="true"
+                [sizeToThicknessRatio]="sizeToThicknessRatio()"
+                [containerPadding]="15"
+                [segments]="getActiveSegments()"
+                [title]="getTitle() + ' (Responsive)'"
+                [description]="getDescription()"
+              />
+            </div>
+          </div>
+        </div>
+
         <!-- Multiple Gauges Example -->
         <div class="section">
           <h3>Dashboard Example</h3>
@@ -315,13 +370,31 @@
     </mat-card>
   </div>
 
-  <!-- Code Example -->
+  <!-- Code Examples -->
   <mat-card class="code-example">
     <mat-card-header>
-      <mat-card-title>Usage Example</mat-card-title>
+      <mat-card-title>Usage Examples</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <pre><code>&lt;lib-radial-gauge
+      <h4>1. Responsive Container Gauge (Recommended for Dashboards)</h4>
+      <pre><code>&lt;!-- Automatically resizes to container, proportional thickness --&gt;
+&lt;div class="gauge-container"&gt;
+  &lt;lib-radial-gauge
+    [value]="cpuUsage"
+    [min]="0"
+    [max]="100"
+    [fitToContainer]="true"
+    [responsiveMode]="true"
+    [sizeToThicknessRatio]="12"
+    [containerPadding]="15"
+    [segments]="performanceSegments"
+    title="CPU Usage"
+    description="Percentage" /&gt;
+&lt;/div&gt;</code></pre>
+
+      <h4>2. Fixed Size Gauge (Traditional)</h4>
+      <pre><code>&lt;!-- Exact pixel control over all dimensions --&gt;
+&lt;lib-radial-gauge
   [value]="{{ value() }}"
   [min]="{{ min() }}"
   [max]="{{ max() }}"
@@ -329,19 +402,29 @@
   [outerThickness]="{{ outerThickness() }}"
   [innerThickness]="{{ innerThickness() }}"
   [gap]="{{ gap() }}"
-  [segmentGapPx]="{{ segmentGapPx() }}"
   [segments]="customSegments"
-  title="My Gauge"
-  description="Units"
-/&gt;
+  title="Temperature"
+  description="Celsius" /&gt;</code></pre>
 
-// TypeScript
-interface RadialGaugeSegment {{ '{' }}
+      <h4>3. Scalable Design Gauge</h4>
+      <pre><code>&lt;!-- Manual size with automatic thickness scaling --&gt;
+&lt;lib-radial-gauge
+  [value]="batteryLevel"
+  [size]="userSelectedSize"
+  [responsiveMode]="true"
+  [sizeToThicknessRatio]="10"
+  [segments]="batterySegments"
+  title="Battery"
+  description="Charge" /&gt;</code></pre>
+
+      <h4>TypeScript Interface</h4>
+      <pre><code>interface RadialGaugeSegment {{ '{' }}
   from: number;
   to: number;
   color: string;
 {{ '}' }}
 
+// Example segments
 customSegments: RadialGaugeSegment[] = [
   {{ '{' }} from: 0, to: 30, color: 'var(--mat-sys-error)' {{ '}' }},
   {{ '{' }} from: 30, to: 70, color: 'var(--mat-sys-secondary)' {{ '}' }},

@@ -26,7 +26,7 @@ export class App {
   themeService = inject(ThemeService);
   private router = inject(Router);
 
-  protected title = 'Dashboard Demo';
+  protected title = 'Dashboard Demo and Component Tests';
 
   /**
    * Navigate to colors overview page

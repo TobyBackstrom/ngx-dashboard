@@ -2,9 +2,10 @@
 percent();
 
 <svg
-  [attr.width]="w"
-  [attr.height]="h"
+  [attr.width]="fitToContainer() ? null : w"
+  [attr.height]="fitToContainer() ? null : h"
   [attr.viewBox]="'0 0 ' + w + ' ' + h"
+  [class.responsive]="fitToContainer()"
   class="gauge-svg"
   xmlns="http://www.w3.org/2000/svg"
 >
@@ -14,18 +15,24 @@ percent();
   }
 
   <defs>
-    <clipPath id="semi-clip">
-      <rect x="0" y="0" [attr.width]="w" [attr.height]="cy" />
+    <clipPath [attr.id]="clipId">
+      <!-- Give a tiny extra room equal to half of the outer stroke to avoid anti-alias cutoff at the baseline -->
+      <rect
+        x="0"
+        y="0"
+        [attr.width]="w"
+        [attr.height]="cy + effectiveOuterThickness() / 2"
+      />
     </clipPath>
   </defs>
 
-  <g clip-path="url(#semi-clip)">
+  <g [attr.clip-path]="'url(#' + clipId + ')'">
     <path
       [attr.d]="backgroundArcPath()"
       pathLength="100"
       fill="none"
       class="gauge-background"
-      [attr.stroke-width]="outerThickness()"
+      [attr.stroke-width]="effectiveOuterThickness()"
       stroke-linecap="butt"
     />
 
@@ -35,7 +42,7 @@ percent();
       fill="none"
       class="gauge-value"
       [attr.stroke]="valueColor()"
-      [attr.stroke-width]="outerThickness()"
+      [attr.stroke-width]="effectiveOuterThickness()"
       stroke-linecap="butt"
       [attr.stroke-dasharray]="pct + ' 100'"
     />
@@ -45,7 +52,7 @@ percent();
       [attr.d]="segment.path"
       fill="none"
       [attr.stroke]="segment.color"
-      [attr.stroke-width]="innerThickness()"
+      [attr.stroke-width]="effectiveInnerThickness()"
       stroke-linecap="butt"
       class="gauge-segment"
     />
