@@ -19,7 +19,7 @@ module.exports = tseslint.config(
         "error",
         {
           type: "element",
-          prefix: ["lib", "ngx-dashboard"],
+          prefix: ["lib", "ngx-dashboard", "ngx"],
           style: "kebab-case",
         },
       ],

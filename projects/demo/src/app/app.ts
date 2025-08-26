@@ -43,6 +43,13 @@ export class App {
   }
 
   /**
+   * Navigate to radial gauge demo page
+   */
+  navigateToRadialGaugeDemo(): void {
+    this.router.navigate(['/radial-gauge-demo']);
+  }
+
+  /**
    * Toggle between light and dark theme
    */
   toggleDarkMode(): void {

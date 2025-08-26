@@ -168,7 +168,7 @@
       <mat-card-content>
         <!-- Main Gauge -->
         <div class="gauge-wrapper">
-          <lib-radial-gauge
+          <ngx-radial-gauge
             [value]="value()"
             [min]="min()"
             [max]="max()"
@@ -188,7 +188,7 @@
         <div class="section">
           <h3>Animated Gauge</h3>
           <div class="gauge-wrapper">
-            <lib-radial-gauge
+            <ngx-radial-gauge
               [value]="animatedValue()"
               [min]="min()"
               [max]="max()"
@@ -216,20 +216,26 @@
 
           <div class="responsive-demo-container">
             <div class="container-controls">
-              <label for="container-width-slider">Container Width: {{ containerWidth() }}px</label>
-              <mat-slider min="50" max="600" step="10" discrete>
-                <input id="container-width-slider" matSliderThumb [(ngModel)]="containerWidth" />
-              </mat-slider>
+              <div class="control-group">
+                <label for="container-width-slider">Container Width: {{ containerWidth() }}px</label>
+                <mat-slider min="50" max="600" step="10" discrete>
+                  <input id="container-width-slider" matSliderThumb [(ngModel)]="containerWidth" />
+                </mat-slider>
+              </div>
 
-              <label for="container-height-slider">Container Height: {{ containerHeight() }}px</label>
-              <mat-slider min="50" max="600" step="10" discrete>
-                <input id="container-height-slider" matSliderThumb [(ngModel)]="containerHeight" />
-              </mat-slider>
+              <div class="control-group">
+                <label for="container-height-slider">Container Height: {{ containerHeight() }}px</label>
+                <mat-slider min="50" max="600" step="10" discrete>
+                  <input id="container-height-slider" matSliderThumb [(ngModel)]="containerHeight" />
+                </mat-slider>
+              </div>
 
-              <label for="size-thickness-ratio-slider">Size To Thickness Ratio: {{ sizeToThicknessRatio() }}</label>
-              <mat-slider min="8" max="50" step="1" discrete>
-                <input id="size-thickness-ratio-slider" matSliderThumb [(ngModel)]="sizeToThicknessRatio" />
-              </mat-slider>
+              <div class="control-group">
+                <label for="size-thickness-ratio-slider">Size To Thickness Ratio: {{ sizeToThicknessRatio() }}</label>
+                <mat-slider min="8" max="50" step="1" discrete>
+                  <input id="size-thickness-ratio-slider" matSliderThumb [(ngModel)]="sizeToThicknessRatio" />
+                </mat-slider>
+              </div>
             </div>
 
             <div
@@ -243,7 +249,7 @@
                   container</small
                 >
               </div>
-              <lib-radial-gauge
+              <ngx-radial-gauge
                 [value]="value()"
                 [min]="min()"
                 [max]="max()"
@@ -265,7 +271,7 @@
           <div class="gauge-grid">
             <div class="small-gauge">
               <h4>CPU Usage</h4>
-              <lib-radial-gauge
+              <ngx-radial-gauge
                 [value]="65"
                 [min]="0"
                 [max]="100"
@@ -282,7 +288,7 @@
 
             <div class="small-gauge">
               <h4>Memory</h4>
-              <lib-radial-gauge
+              <ngx-radial-gauge
                 [value]="42"
                 [min]="0"
                 [max]="100"
@@ -299,7 +305,7 @@
 
             <div class="small-gauge">
               <h4>Disk I/O</h4>
-              <lib-radial-gauge
+              <ngx-radial-gauge
                 [value]="88"
                 [min]="0"
                 [max]="100"
@@ -316,7 +322,7 @@
 
             <div class="small-gauge">
               <h4>Network</h4>
-              <lib-radial-gauge
+              <ngx-radial-gauge
                 [value]="3.5"
                 [min]="0"
                 [max]="5"
@@ -333,7 +339,7 @@
 
             <div class="small-gauge">
               <h4>Battery</h4>
-              <lib-radial-gauge
+              <ngx-radial-gauge
                 [value]="72"
                 [min]="0"
                 [max]="100"
@@ -350,7 +356,7 @@
 
             <div class="small-gauge">
               <h4>Temperature</h4>
-              <lib-radial-gauge
+              <ngx-radial-gauge
                 [value]="22"
                 [min]="-20"
                 [max]="50"
@@ -379,7 +385,7 @@
       <h4>1. Responsive Container Gauge (Recommended for Dashboards)</h4>
       <pre><code>&lt;!-- Automatically resizes to container, proportional thickness --&gt;
 &lt;div class="gauge-container"&gt;
-  &lt;lib-radial-gauge
+  &lt;ngx-radial-gauge
     [value]="cpuUsage"
     [min]="0"
     [max]="100"
@@ -394,7 +400,7 @@
 
       <h4>2. Fixed Size Gauge (Traditional)</h4>
       <pre><code>&lt;!-- Exact pixel control over all dimensions --&gt;
-&lt;lib-radial-gauge
+&lt;ngx-radial-gauge
   [value]="{{ value() }}"
   [min]="{{ min() }}"
   [max]="{{ max() }}"
@@ -408,7 +414,7 @@
 
       <h4>3. Scalable Design Gauge</h4>
       <pre><code>&lt;!-- Manual size with automatic thickness scaling --&gt;
-&lt;lib-radial-gauge
+&lt;ngx-radial-gauge
   [value]="batteryLevel"
   [size]="userSelectedSize"
   [responsiveMode]="true"

@@ -36,7 +36,7 @@ export interface RadialGaugeSegment {
  *
  * ### 1. Dashboard Widgets (Recommended)
  * ```html
- * <lib-radial-gauge
+ * <ngx-radial-gauge
  *   [value]="cpuUsage"
  *   [fitToContainer]="true"
  *   [responsiveMode]="true"
@@ -48,7 +48,7 @@ export interface RadialGaugeSegment {
  *
  * ### 2. Fixed Layouts (Traditional)
  * ```html
- * <lib-radial-gauge
+ * <ngx-radial-gauge
  *   [value]="temperature"
  *   [size]="300"
  *   [outerThickness]="36"
@@ -59,7 +59,7 @@ export interface RadialGaugeSegment {
  *
  * ### 3. Scalable Designs
  * ```html
- * <lib-radial-gauge
+ * <ngx-radial-gauge
  *   [value]="batteryLevel"
  *   [size]="gaugeSize"
  *   [responsiveMode]="true"
@@ -111,7 +111,7 @@ export interface RadialGaugeSegment {
  * &#64;Component({
  *   template: `
  *     <div class="gauge-container">
- *       <lib-radial-gauge
+ *       <ngx-radial-gauge
  *         [value]="systemLoad"
  *         [min]="0"
  *         [max]="100"
@@ -135,7 +135,7 @@ export interface RadialGaugeSegment {
  */
 
 @Component({
-  selector: 'lib-radial-gauge',
+  selector: 'ngx-radial-gauge',
   standalone: true,
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
