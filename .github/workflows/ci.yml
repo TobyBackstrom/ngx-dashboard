@@ -28,9 +28,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Angular CLI
-        run: npm install -g @angular/cli
-
       - name: Lint all projects
         run: npm run lint
 
@@ -39,15 +36,15 @@ jobs:
 
       - name: Test ngx-dashboard (331 tests)
         run: |
-          timeout 300 ng test ngx-dashboard --no-watch --browsers=ChromeHeadless --code-coverage
+          timeout 300 npx ng test ngx-dashboard --no-watch --browsers=ChromeHeadless --code-coverage
 
       - name: Test ngx-dashboard-widgets (86 tests)
         run: |
-          timeout 300 ng test ngx-dashboard-widgets --no-watch --browsers=ChromeHeadless --code-coverage
+          timeout 300 npx ng test ngx-dashboard-widgets --no-watch --browsers=ChromeHeadless --code-coverage
 
       - name: Test demo (33 tests)
         run: |
-          timeout 300 ng test demo --no-watch --browsers=ChromeHeadless --code-coverage
+          timeout 300 npx ng test demo --no-watch --browsers=ChromeHeadless --code-coverage
 
       - name: Security audit (BLOCKING)
         run: npm audit --audit-level=moderate
