@@ -5,6 +5,11 @@
   
   h1 {
     margin-bottom: 1.5rem;
+    color: var(--mat-sys-on-surface);
+  }
+  
+  p {
+    color: var(--mat-sys-on-surface);
   }
 }
 
@@ -32,6 +37,7 @@
     
     h3 {
       margin-bottom: 1rem;
+      color: var(--mat-sys-on-surface);
     }
     
     &:last-child {
@@ -72,6 +78,7 @@
     
     span {
       min-width: 160px;
+      color: var(--mat-sys-on-surface);
     }
     
     mat-slider {
@@ -126,6 +133,7 @@
     
     h3 {
       margin-bottom: 1rem;
+      color: var(--mat-sys-on-surface);
     }
     
     &:last-child {
@@ -189,7 +197,7 @@
         z-index: 1;
       }
       
-      lib-radial-gauge {
+      ngx-radial-gauge {
         max-width: 100%;
         max-height: 100%;
       }
@@ -223,9 +231,10 @@
       
       h4 {
         margin: 0 0 1rem 0;
+        color: var(--mat-sys-on-surface);
       }
       
-      lib-radial-gauge {
+      ngx-radial-gauge {
         display: inline-block;
       }
     }
@@ -285,6 +294,7 @@ mat-card {
   
   mat-card-title {
     font-size: 1.25rem;
+    color: var(--mat-sys-on-surface);
   }
 }
 
