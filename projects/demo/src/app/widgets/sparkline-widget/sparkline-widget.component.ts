@@ -4,7 +4,6 @@ import {
   inject,
   signal,
   ChangeDetectionStrategy,
-  AfterViewInit,
   ElementRef,
   DestroyRef,
   viewChild,
@@ -34,7 +33,7 @@ export interface SparklineWidgetState {
   styleUrl: './sparkline-widget.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SparklineWidgetComponent implements Widget, AfterViewInit {
+export class SparklineWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
     widgetTypeid: '@demo/sparkline-widget',
     name: 'Sparkline',
@@ -79,6 +78,13 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
     effect(() => {
       this.#handleRealtimeStateChange();
     });
+
+    // Set up cleanup on component destruction
+    this.#destroyRef.onDestroy(() => {
+      this.#resizeObserver?.disconnect();
+      this.#stopRealtimeTimer();
+      this.#cleanupCanvas();
+    });
   }
 
   dashboardSetState(state?: unknown): void {
@@ -110,13 +116,6 @@ export class SparklineWidgetComponent implements Widget, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.#destroyRef.onDestroy(() => {
-      this.#resizeObserver?.disconnect();
-      this.#stopRealtimeTimer();
-      this.#cleanupCanvas();
-    });
-  }
 
   #handleRealtimeStateChange(): void {
     // Watch for realtime state changes, frame rate changes, and theme changes

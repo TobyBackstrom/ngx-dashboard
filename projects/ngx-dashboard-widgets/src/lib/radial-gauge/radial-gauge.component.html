@@ -1,0 +1,61 @@
+@let w = svgWidth(); @let h = svgHeight(); @let cy = centerY(); @let pct =
+percent();
+
+<svg
+  [attr.width]="fitToContainer() ? null : w"
+  [attr.height]="fitToContainer() ? null : h"
+  [attr.viewBox]="'0 0 ' + w + ' ' + h"
+  [class.responsive]="fitToContainer()"
+  class="gauge-svg"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <title [attr.id]="titleId">{{ title() }}</title>
+  @if (description()) {
+  <desc [attr.id]="descId">{{ description() }}</desc>
+  }
+
+  <defs>
+    <clipPath [attr.id]="clipId">
+      <!-- Give a tiny extra room equal to half of the outer stroke to avoid anti-alias cutoff at the baseline -->
+      <rect
+        x="0"
+        y="0"
+        [attr.width]="w"
+        [attr.height]="cy + effectiveOuterThickness() / 2"
+      />
+    </clipPath>
+  </defs>
+
+  <g [attr.clip-path]="'url(#' + clipId + ')'">
+    <path
+      [attr.d]="backgroundArcPath()"
+      pathLength="100"
+      fill="none"
+      class="gauge-background"
+      [attr.stroke-width]="effectiveOuterThickness()"
+      stroke-linecap="butt"
+    />
+
+    <path
+      [attr.d]="backgroundArcPath()"
+      pathLength="100"
+      fill="none"
+      class="gauge-value"
+      [attr.stroke]="valueColor()"
+      [attr.stroke-width]="effectiveOuterThickness()"
+      stroke-linecap="butt"
+      [attr.stroke-dasharray]="pct + ' 100'"
+    />
+
+    @for (segment of segmentPaths(); track segment.path) {
+    <path
+      [attr.d]="segment.path"
+      fill="none"
+      [attr.stroke]="segment.color"
+      [attr.stroke-width]="effectiveInnerThickness()"
+      stroke-linecap="butt"
+      class="gauge-segment"
+    />
+    }
+  </g>
+</svg>

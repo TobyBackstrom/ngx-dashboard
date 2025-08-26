@@ -4,7 +4,6 @@ import {
   inject,
   signal,
   ChangeDetectionStrategy,
-  AfterViewInit,
   ElementRef,
   DestroyRef,
   viewChild,
@@ -35,7 +34,7 @@ export interface SparkbarWidgetState {
   styleUrl: './sparkbar-widget.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SparkbarWidgetComponent implements Widget, AfterViewInit {
+export class SparkbarWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
     widgetTypeid: '@demo/sparkbar-widget',
     name: 'Sparkbar',
@@ -77,6 +76,13 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
     effect(() => {
       this.#handleRealtimeStateChange();
     });
+
+    // Set up cleanup on component destruction
+    this.#destroyRef.onDestroy(() => {
+      this.#resizeObserver?.disconnect();
+      this.#stopRealtimeTimer();
+      this.#cleanupCanvas();
+    });
   }
 
   dashboardSetState(state?: unknown): void {
@@ -108,13 +114,6 @@ export class SparkbarWidgetComponent implements Widget, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.#destroyRef.onDestroy(() => {
-      this.#resizeObserver?.disconnect();
-      this.#stopRealtimeTimer();
-      this.#cleanupCanvas();
-    });
-  }
 
   #handleRealtimeStateChange(): void {
     // Watch for realtime state changes, frame rate changes, numberOfBars changes, and theme changes

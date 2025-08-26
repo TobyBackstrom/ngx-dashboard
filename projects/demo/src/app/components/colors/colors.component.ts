@@ -4,7 +4,6 @@ import {
   signal,
   ChangeDetectionStrategy,
   effect,
-  OnInit,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
@@ -33,7 +32,7 @@ interface ColorInfo {
   styleUrl: './colors.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorsComponent implements OnInit {
+export class ColorsComponent {
   private document = inject(DOCUMENT);
   private router = inject(Router);
   private themeService = inject(ThemeService);
@@ -88,10 +87,13 @@ export class ColorsComponent implements OnInit {
       // Use queueMicrotask to ensure DOM has updated
       queueMicrotask(() => this.extractColors());
     });
-  }
 
-  ngOnInit(): void {
-    this.extractColors();
+    // Initial color extraction on component initialization
+    effect(() => {
+      // This effect runs once during component initialization
+      // to perform the initial color extraction
+      this.extractColors();
+    }, { allowSignalWrites: true });
   }
 
   private extractColors(): void {

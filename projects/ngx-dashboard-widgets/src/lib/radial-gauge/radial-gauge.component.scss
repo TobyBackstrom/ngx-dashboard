@@ -1,0 +1,69 @@
+:host {
+  display: block;
+  --gauge-outer-bg: var(--mat-sys-surface-variant, #e0e0e0);
+  --gauge-value-good: var(--mat-sys-tertiary, #10b981);
+  --gauge-value-warning: var(--mat-sys-secondary, #f59e0b);
+  --gauge-value-critical: var(--mat-sys-error, #dc2626);
+
+  &.fit-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.gauge-svg {
+  display: block;
+  margin-inline: auto;
+  max-width: 100%;
+  height: auto;
+  shape-rendering: geometricPrecision;
+
+  &.responsive {
+    // Let SVG maintain its aspect ratio while fitting in container
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+  }
+}
+
+.gauge-background {
+  stroke: var(--gauge-outer-bg);
+  transition: stroke 200ms ease;
+}
+.gauge-value {
+  transition: stroke-dasharray 200ms ease, stroke 200ms ease;
+}
+.gauge-segment {
+  transition: stroke 200ms ease;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gauge-value,
+  .gauge-segment {
+    transition: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .gauge-background {
+    stroke-width: 2;
+    stroke: var(--mat-sys-outline, #000000);
+  }
+  .gauge-segment {
+    opacity: 1;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --gauge-outer-bg: #374151;
+  }
+}
