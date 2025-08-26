@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal } from '@angular/core';
+import { Component, inject, DestroyRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -33,7 +33,8 @@ import {
   templateUrl: './radial-gauge-demo.component.html',
   styleUrl: './radial-gauge-demo.component.scss',
 })
-export class RadialGaugeDemoComponent implements OnDestroy {
+export class RadialGaugeDemoComponent {
+  private readonly destroyRef = inject(DestroyRef);
   // Gauge values
   value = signal(75);
   min = signal(0);
@@ -53,6 +54,13 @@ export class RadialGaugeDemoComponent implements OnDestroy {
   animatedValue = signal(0);
   isAnimating = signal(false);
   private animationInterval?: number;
+
+  constructor() {
+    // Set up cleanup on component destruction
+    this.destroyRef.onDestroy(() => {
+      this.stopAnimation();
+    });
+  }
 
   // Custom segments for different examples
   defaultSegments = signal<RadialGaugeSegment[]>([
@@ -255,7 +263,4 @@ export class RadialGaugeDemoComponent implements OnDestroy {
     this.isAnimating.set(false);
   }
 
-  ngOnDestroy() {
-    this.stopAnimation();
-  }
 }

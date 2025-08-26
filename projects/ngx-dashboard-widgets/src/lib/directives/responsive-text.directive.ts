@@ -1,13 +1,12 @@
 import {
   Directive,
   ElementRef,
-  AfterViewInit,
-  OnDestroy,
   inject,
   DestroyRef,
   numberAttribute,
   booleanAttribute,
   input,
+  AfterViewInit,
 } from '@angular/core';
 import { NgZone, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -31,7 +30,7 @@ import { isPlatformBrowser } from '@angular/common';
     '[style.overflow]': '"visible"',
   },
 })
-export class ResponsiveTextDirective implements AfterViewInit, OnDestroy {
+export class ResponsiveTextDirective implements AfterViewInit {
   /* ───────────────────────── Inputs with transforms ─────────────── */
   /** Minimum font-size in pixels (accessibility floor) */
   minFontSize = input(8, { transform: numberAttribute });
@@ -80,7 +79,13 @@ export class ResponsiveTextDirective implements AfterViewInit, OnDestroy {
   private lastMaxH = 0;
   private lastFontSize = 0;
 
-  /* ───────────────────────── Lifecycle ──────────────────────────── */
+  constructor() {
+    // Set up cleanup on component destruction using modern DestroyRef
+    this.destroyRef.onDestroy(() => {
+      this.cleanup();
+    });
+  }
+
   ngAfterViewInit() {
     if (!isPlatformBrowser(this.platformId)) return;
 
@@ -96,10 +101,6 @@ export class ResponsiveTextDirective implements AfterViewInit, OnDestroy {
         this.observeText();
       }
     });
-  }
-
-  ngOnDestroy() {
-    this.cleanup();
   }
 
   /* ───────────────────── Core fitting logic ───────────────────── */

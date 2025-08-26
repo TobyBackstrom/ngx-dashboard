@@ -3,7 +3,7 @@ import {
   Component,
   ElementRef,
   LOCALE_ID,
-  OnDestroy,
+  DestroyRef,
   computed,
   effect,
   inject,
@@ -153,7 +153,7 @@ export interface RadialGaugeSegment {
     '[class.fit-container]': 'fitToContainer()',
   },
 })
-export class RadialGaugeComponent implements OnDestroy {
+export class RadialGaugeComponent {
   // Core Inputs - Value and Range
   readonly value = input(0);
   readonly min = input(0);
@@ -240,6 +240,7 @@ export class RadialGaugeComponent implements OnDestroy {
 
   private readonly locale = inject(LOCALE_ID);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly nf = new Intl.NumberFormat(this.locale, {
     maximumFractionDigits: 1,
   });
@@ -258,6 +259,16 @@ export class RadialGaugeComponent implements OnDestroy {
    * @private
    */
   private resizeObserver: ResizeObserver | null = null;
+
+  constructor() {
+    // Set up cleanup on component destruction
+    this.destroyRef.onDestroy(() => {
+      if (this.resizeObserver) {
+        this.resizeObserver.disconnect();
+        this.resizeObserver = null;
+      }
+    });
+  }
 
   /**
    * Effect that manages ResizeObserver lifecycle based on fitToContainer input.
@@ -589,14 +600,4 @@ export class RadialGaugeComponent implements OnDestroy {
     return 180 * this.clamp(px / semicircumference, 0, 1);
   }
 
-  /**
-   * Angular lifecycle hook called before component destruction.
-   * Ensures ResizeObserver cleanup to prevent memory leaks.
-   */
-  ngOnDestroy(): void {
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
-    }
-  }
 }
