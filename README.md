@@ -9,7 +9,7 @@
   <!-- Typescript version -->
   <img src="https://img.shields.io/badge/TypeScript-5.8-blue.svg?logo=typescript" alt="TypeScript 5.8">
   <!-- Angular Version -->
-  <img src="https://img.shields.io/badge/Angular-v20-dd0031.svg?logo=angular" alt="Angular 20">
+  <img src="https://img.shields.io/badge/Angular-v20-3178c6.svg?logo=angular" alt="Angular 20">
   <!-- License -->
   <a href="https://github.com/TobyBackstrom/ngx-dashboard/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
