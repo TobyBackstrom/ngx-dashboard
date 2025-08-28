@@ -1,5 +1,5 @@
 <!-- radial-gauge-widget.component.html -->
-<div class="svg-wrapper">
+<div class="svg-wrapper" [class.has-background]="state().hasBackground">
   <div
     class="svg-placeholder"
     [innerHTML]="safeSvgIcon"

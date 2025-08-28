@@ -10,6 +10,7 @@ export interface RadialGaugeWidgetState {
   value?: number;
   min?: number;
   max?: number;
+  hasBackground?: boolean;
 }
 
 @Component({
@@ -35,6 +36,7 @@ export class RadialGaugeWidgetComponent implements Widget {
     value: 50,
     min: 0,
     max: 100,
+    hasBackground: true,
   });
 
   dashboardSetState(state?: unknown): void {

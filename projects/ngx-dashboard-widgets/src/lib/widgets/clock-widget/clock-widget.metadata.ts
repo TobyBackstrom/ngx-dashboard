@@ -29,12 +29,14 @@ export const svgIcon = `
   <path
     class="clock-hour-hand"
     id="anim-clock-hour-hand"
+    fill="currentColor"
     d="m 381.925,476 h 36.15 l 5e-4,-300.03008 L 400,156.25 381.9245,175.96992 Z"
     transform="rotate(110.2650694444, 400, 400)"
   />
   <path
     class="clock-minute-hand"
     id="anim-clock-minute-hand"
+    fill="currentColor"
     d="M 412.063,496.87456 H 387.937 L 385.249,65.68306 400,52.75 414.751,65.68306 Z"
     transform="rotate(243.1808333333, 400, 400)"
   />
