@@ -1,0 +1,3 @@
+// radial-gauge-widget.metadata.ts
+export const svgIcon =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480h80q0 66 25 124.5T248-248q49 49 107.5 74T480-149q66 0 124.5-25T701-248q49-49 74-107.5T800-480h80q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/><circle cx="480" cy="-480" r="20" fill="currentColor"/><path d="M320-600L280-640q20-20 43-35t47-25L400-660q-20 10-40 25t-40 35Z"/><path d="M640-600q-20-20-40-35t-40-25L590-700q24 10 47 25t43 35L640-600Z"/><path d="M200-440v-80h80v80h-80Z"/><path d="M680-440v-80h80v80h-80Z"/></svg>';
