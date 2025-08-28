@@ -133,7 +133,6 @@ export interface RadialGaugeSegment {
  *   ];
  * }
  */
-
 @Component({
   selector: 'ngx-radial-gauge',
   standalone: true,
@@ -396,7 +395,7 @@ export class RadialGaugeComponent {
     return this.gap();
   });
 
-  // SVG Layout Calculations (updated to use effective values)
+  // SVG Layout Calculations
   private readonly svgPadding = computed(
     () => this.effectiveOuterThickness() / 2
   );
@@ -415,10 +414,17 @@ export class RadialGaugeComponent {
 
   readonly outerRadius = computed(() => this.effectiveSize() / 2);
   readonly innerRadius = computed(
-    () => this.outerRadius() - this.effectiveOuterThickness() / 2 - this.effectiveGap()
+    () =>
+      this.outerRadius() -
+      this.effectiveOuterThickness() / 2 -
+      this.effectiveGap()
   );
   readonly legendOuterRadius = computed(
-    () => this.outerRadius() - this.effectiveOuterThickness() / 2 - this.effectiveGap() - this.effectiveInnerThickness() / 2
+    () =>
+      this.outerRadius() -
+      this.effectiveOuterThickness() / 2 -
+      this.effectiveGap() -
+      this.effectiveInnerThickness() / 2
   );
   readonly legendInnerRadius = computed(
     () => this.legendOuterRadius() - this.effectiveInnerThickness()
@@ -599,5 +605,4 @@ export class RadialGaugeComponent {
     const semicircumference = Math.PI * r;
     return 180 * this.clamp(px / semicircumference, 0, 1);
   }
-
 }

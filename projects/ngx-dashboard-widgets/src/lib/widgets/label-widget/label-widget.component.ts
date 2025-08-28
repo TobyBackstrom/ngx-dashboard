@@ -5,7 +5,7 @@ import { svgIcon } from './label-widget.metadata';
 import { DomSanitizer } from '@angular/platform-browser';
 import { LabelStateDialogComponent } from './label-state-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ResponsiveTextDirective } from '../directives/responsive-text.directive';
+import { ResponsiveTextDirective } from '../../directives/responsive-text.directive';
 
 export interface LabelWidgetState {
   label: string;
