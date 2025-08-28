@@ -1,3 +1,35 @@
 // radial-gauge-widget.metadata.ts
-export const svgIcon =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480h80q0 66 25 124.5T248-248q49 49 107.5 74T480-149q66 0 124.5-25T701-248q49-49 74-107.5T800-480h80q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/><circle cx="480" cy="-480" r="20" fill="currentColor"/><path d="M320-600L280-640q20-20 43-35t47-25L400-660q-20 10-40 25t-40 35Z"/><path d="M640-600q-20-20-40-35t-40-25L590-700q24 10 47 25t43 35L640-600Z"/><path d="M200-440v-80h80v80h-80Z"/><path d="M680-440v-80h80v80h-80Z"/></svg>';
+export const svgIcon = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 55" fill="currentColor">
+  <defs>
+    <clipPath id="gauge-clip"><rect x="0" y="0" width="100" height="52"/></clipPath>
+
+    <!-- Outer arc geometry (radius 40, stroke 8) -->
+    <path id="outerArc" d="M 10 50 A 40 40 0 0 1 90 50" pathLength="100"/>
+
+    <!-- Inner arc geometry (radius 31) -->
+    <path id="innerArc" d="M 19 50 A 31 31 0 0 1 81 50" pathLength="100"/>
+  </defs>
+
+  <g clip-path="url(#gauge-clip)" stroke="currentColor" fill="none" stroke-linecap="butt">
+    <!-- Outer background arc -->
+    <use href="#outerArc" stroke-width="8" opacity="0.2"/>
+
+    <!-- Value arc: 65% -->
+    <use href="#outerArc" stroke-width="8" stroke-dasharray="65 100"/>
+
+    <!-- Inner legend segments (single geometry with dash windows) -->
+    <!-- 0–60% -->
+    <use href="#innerArc" stroke-width="4" opacity="0.2"
+         stroke-dasharray="60 100" stroke-dashoffset="0"/>
+    <!-- 60–80% -->
+    <use href="#innerArc" stroke-width="4" opacity="0.4"
+         stroke-dasharray="20 100" stroke-dashoffset="60"/>
+    <!-- 0–100% (full half-circle), same color as value arc -->
+    <use href="#innerArc" stroke-width="4"
+         stroke-dasharray="100 100" stroke-dashoffset="0"/>
+    <!-- (Alternatively, you can omit dash attributes entirely on this one:
+         <use href="#innerArc" stroke-width="4"/> ) -->
+  </g>
+</svg>
+`;
