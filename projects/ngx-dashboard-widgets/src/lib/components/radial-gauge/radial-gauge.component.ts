@@ -253,7 +253,9 @@ export class RadialGaugeComponent {
 
   readonly fontsReady = toSignal(
     typeof document !== 'undefined' && 'fonts' in document
-      ? from((document as any).fonts.ready).pipe(map(() => true))
+      ? from((document as Document & { fonts: FontFaceSet }).fonts.ready).pipe(
+          map(() => true)
+        )
       : of(true), // SSR or older browsers: treat as ready
     { initialValue: false }
   );
