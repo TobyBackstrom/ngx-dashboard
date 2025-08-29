@@ -9,8 +9,7 @@ import {
   inject,
   input,
   signal,
-  ViewChild,
-  AfterViewInit,
+  viewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -108,32 +107,6 @@ export interface RadialGaugeSegment {
  * - `aria-label` with contextual information
  * - Internationalized number formatting
  *
- * @example
- * // Complete responsive dashboard gauge
- * &#64;Component({
- *   template: `
- *     <div class="gauge-container">
- *       <ngx-radial-gauge
- *         [value]="systemLoad"
- *         [min]="0"
- *         [max]="100"
- *         [fitToContainer]="true"
- *         [responsiveMode]="true"
- *         [sizeToThicknessRatio]="20"
- *         [segments]="loadSegments"
- *         title="System Load"
- *         description="Percentage" />
- *     </div>
- *   `
- * })
- * export class SystemDashboardComponent {
- *   systemLoad = 67;
- *   loadSegments: RadialGaugeSegment[] = [
- *     { from: 0, to: 50, color: 'var(--mat-sys-tertiary)' },
- *     { from: 50, to: 80, color: 'var(--mat-sys-secondary)' },
- *     { from: 80, to: 100, color: 'var(--mat-sys-error)' }
- *   ];
- * }
  */
 @Component({
   selector: 'ngx-radial-gauge',
@@ -154,13 +127,13 @@ export interface RadialGaugeSegment {
     '[class.fit-container]': 'fitToContainer()',
   },
 })
-export class RadialGaugeComponent implements AfterViewInit {
-  @ViewChild('valueText', { static: true })
-  private valueTextEl!: ElementRef<SVGTextElement>;
-  @ViewChild('valueGroup', { static: true })
-  private valueGroupEl!: ElementRef<SVGGElement>;
-  @ViewChild('refText', { static: true })
-  private refTextEl!: ElementRef<SVGTextElement>;
+export class RadialGaugeComponent {
+  private readonly valueTextEl =
+    viewChild.required<ElementRef<SVGTextElement>>('valueText');
+  private readonly valueGroupEl =
+    viewChild.required<ElementRef<SVGGElement>>('valueGroup');
+  private readonly refTextEl =
+    viewChild.required<ElementRef<SVGTextElement>>('refText');
 
   // Core Inputs - Value and Range
   readonly value = input(0);
@@ -269,19 +242,18 @@ export class RadialGaugeComponent implements AfterViewInit {
   private resizeObserver: ResizeObserver | null = null;
 
   constructor() {
-    // Set up cleanup on component destruction
     this.destroyRef.onDestroy(() => {
       if (this.resizeObserver) {
         this.resizeObserver.disconnect();
         this.resizeObserver = null;
       }
     });
-  }
 
-  ngAfterViewInit() {
     effect(() => {
-      // Trigger recomputation by reading the signal
-      this.valueTransform();
+      queueMicrotask(() => {
+        // Trigger recomputation by reading the signal
+        this.valueTransform();
+      });
     });
   }
 
@@ -343,8 +315,7 @@ export class RadialGaugeComponent implements AfterViewInit {
       const g = this.referenceGlyph() ?? '0';
       return g.repeat(ref);
     }
-    // Fallback: use a “wide” surrogate if you want consistent spacing even without input
-    // return '000000'; // optional default
+
     return this.formattedLabel(); // measure actual label
   });
 
@@ -362,14 +333,11 @@ export class RadialGaugeComponent implements AfterViewInit {
     if (!boxWidth || !boxHeight) return `translate(${cx},${cy})`;
 
     // Measure the actual label (for height) and the reference (for width)
-    const labelEl = this.valueTextEl?.nativeElement;
-    const refEl = this.refTextEl?.nativeElement;
-
-    if (!labelEl || !refEl) return `translate(${cx},${cy})`;
+    const labelEl = this.valueTextEl().nativeElement;
+    const refEl = this.refTextEl().nativeElement;
 
     // Important: ensure text nodes are up to date before reading BBox
     // (Angular's computed/effect guarantees sync within the same microtask)
-
     const labelBox = this.safeBBox(labelEl);
     const refBox = this.safeBBox(refEl);
 
@@ -396,6 +364,7 @@ export class RadialGaugeComponent implements AfterViewInit {
     // Fallback guess to avoid divide-by-zero (tuned small; will get corrected next tick)
     return new DOMRect(0, 0, 1, 1);
   }
+
   // Responsive Size and Thickness Calculations
   /**
    * The effective gauge diameter, accounting for container sizing and manual size input.
@@ -609,13 +578,6 @@ export class RadialGaugeComponent implements AfterViewInit {
       `${this.title()}: ${this.formattedLabel()} (range ${this.min()}–${this.max()})`
   );
 
-  /**
-   * Clamps a numeric value between minimum and maximum bounds.
-   * @param v - The value to be clamped
-   * @param min - The minimum allowed value
-   * @param max - The maximum allowed value
-   * @returns The clamped value that is guaranteed to be within [min, max]
-   */
   private clamp(v: number, min: number, max: number) {
     return Math.min(Math.max(v, min), max);
   }
