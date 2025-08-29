@@ -9,6 +9,8 @@ import {
   inject,
   input,
   signal,
+  ViewChild,
+  AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -152,7 +154,14 @@ export interface RadialGaugeSegment {
     '[class.fit-container]': 'fitToContainer()',
   },
 })
-export class RadialGaugeComponent {
+export class RadialGaugeComponent implements AfterViewInit {
+  @ViewChild('valueText', { static: true })
+  private valueTextEl!: ElementRef<SVGTextElement>;
+  @ViewChild('valueGroup', { static: true })
+  private valueGroupEl!: ElementRef<SVGGElement>;
+  @ViewChild('refText', { static: true })
+  private refTextEl!: ElementRef<SVGTextElement>;
+
   // Core Inputs - Value and Range
   readonly value = input(0);
   readonly min = input(0);
@@ -269,6 +278,13 @@ export class RadialGaugeComponent {
     });
   }
 
+  ngAfterViewInit() {
+    effect(() => {
+      // Trigger recomputation by reading the signal
+      this.valueTransform();
+    });
+  }
+
   /**
    * Effect that manages ResizeObserver lifecycle based on fitToContainer input.
    * Automatically connects/disconnects observer when the input changes.
@@ -319,6 +335,67 @@ export class RadialGaugeComponent {
     }
   });
 
+  // ── Build the reference string reactively ───────────────────────────────────
+  referenceString = computed(() => {
+    const ref = this.labelReference();
+    if (typeof ref === 'string') return ref;
+    if (typeof ref === 'number' && ref > 0) {
+      const g = this.referenceGlyph() ?? '0';
+      return g.repeat(ref);
+    }
+    // Fallback: use a “wide” surrogate if you want consistent spacing even without input
+    // return '000000'; // optional default
+    return this.formattedLabel(); // measure actual label
+  });
+
+  // ── Core transform: center + uniform scale to fit the reserved box ──────────
+  valueTransform = computed(() => {
+    const cx = this.centerX();
+    const cy = this.centerY();
+    const r = this.legendInnerRadius();
+    const pad = this.labelPadding();
+
+    const boxWidth = Math.max(0, 2 * r - 2 * pad);
+    const boxHeight = Math.max(0, r - pad);
+
+    // If geometry is degenerate, just center.
+    if (!boxWidth || !boxHeight) return `translate(${cx},${cy})`;
+
+    // Measure the actual label (for height) and the reference (for width)
+    const labelEl = this.valueTextEl?.nativeElement;
+    const refEl = this.refTextEl?.nativeElement;
+
+    if (!labelEl || !refEl) return `translate(${cx},${cy})`;
+
+    // Important: ensure text nodes are up to date before reading BBox
+    // (Angular's computed/effect guarantees sync within the same microtask)
+
+    const labelBox = this.safeBBox(labelEl);
+    const refBox = this.safeBBox(refEl);
+
+    // Use reference width and actual label height
+    const widthForFit = refBox.width || labelBox.width || 1;
+    const heightForFit = labelBox.height || refBox.height || 1;
+
+    const s =
+      Math.min(boxWidth / widthForFit, boxHeight / heightForFit) *
+      this.baselineSafety();
+
+    return `translate(${cx},${cy}) scale(${s})`;
+  });
+
+  /** Guarded getBBox that avoids 0/NaN on detached or invisible nodes. */
+  safeBBox(node: SVGGraphicsElement): DOMRect {
+    try {
+      const box = node.getBBox();
+      // Firefox/Safari can occasionally return 0 when text hasn’t painted yet; fall back to a rough estimate.
+      if (box && (box.width > 0 || box.height > 0)) return box;
+    } catch {
+      /* ignore */
+    }
+    // Fallback guess to avoid divide-by-zero (tuned small; will get corrected next tick)
+    return new DOMRect(0, 0, 1, 1);
+  }
   // Responsive Size and Thickness Calculations
   /**
    * The effective gauge diameter, accounting for container sizing and manual size input.
@@ -411,6 +488,22 @@ export class RadialGaugeComponent {
   readonly centerY = computed(
     () => this.effectiveSize() / 2 + this.effectiveOuterThickness() / 2
   );
+
+  /**
+   * If a string is provided, we measure it and allocate space for that width.
+   * If a number is provided, we build a string of that many `referenceGlyph`s.
+   * If omitted, we fall back to measuring the actual label.
+   */
+  labelReference = input<string | number | undefined>(undefined);
+
+  /** Glyph to repeat when labelReference is a number (defaults to '0'). */
+  referenceGlyph = input<string>('0');
+
+  /** Extra breathing room inside the inner semicircle box (in px). */
+  labelPadding = input<number>(4);
+
+  /** Safety multiplier to avoid clipping ascenders/descenders. */
+  baselineSafety = input<number>(0.95);
 
   readonly outerRadius = computed(() => this.effectiveSize() / 2);
   readonly innerRadius = computed(

@@ -58,4 +58,29 @@ percent();
     />
     }
   </g>
+
+  <g #valueGroup [attr.transform]="valueTransform()">
+    <text
+      #valueText
+      x="0"
+      y="0"
+      text-anchor="middle"
+      dominant-baseline="text-after-edge"
+    >
+      {{ formattedLabel() }}
+    </text>
+  </g>
+
+  <!-- Hidden reference text used ONLY for width measurement -->
+  <g style="opacity: 0; pointer-events: none" aria-hidden="true">
+    <text
+      #refText
+      x="-99999"
+      y="-99999"
+      text-anchor="start"
+      dominant-baseline="alphabetic"
+    >
+      {{ referenceString() }}
+    </text>
+  </g>
 </svg>

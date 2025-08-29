@@ -1,28 +1,27 @@
 <!-- radial-gauge-widget.component.html -->
 <div class="widget-container" [class.has-background]="state().hasBackground">
   @if (state().active) {
-    <!-- Active mode: Show live gauge -->
-    <div class="gauge-container">
-      <ngx-radial-gauge
-        [value]="state().value || 0"
-        [min]="0"
-        [max]="100"
-        [fitToContainer]="true"
-        [responsiveMode]="true"
-        [segments]="segments()"
-        [outerThickness]="24"
-        [innerThickness]="8"
-        [gap]="4"
-        [segmentGapPx]="2"
-      />
-    </div>
+  <!-- Active mode: Show live gauge -->
+  <div class="gauge-container">
+    <ngx-radial-gauge
+      [value]="state().value || 0"
+      [min]="0"
+      [max]="100"
+      [fitToContainer]="true"
+      [responsiveMode]="true"
+      [segments]="segments()"
+      [outerThickness]="24"
+      [innerThickness]="8"
+      [gap]="4"
+      [segmentGapPx]="2"
+      [labelReference]="'00000'"
+      [referenceGlyph]="'0'"
+    />
+  </div>
   } @else {
-    <!-- Passive mode: Show static icon -->
-    <div class="icon-container">
-      <div
-        class="svg-placeholder"
-        [innerHTML]="safeSvgIcon"
-      ></div>
-    </div>
+  <!-- Passive mode: Show static icon -->
+  <div class="icon-container">
+    <div class="svg-placeholder" [innerHTML]="safeSvgIcon"></div>
+  </div>
   }
 </div>
