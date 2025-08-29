@@ -128,6 +128,7 @@ export interface RadialGaugeSegment {
     '[attr.aria-labelledby]': 'titleId',
     '[attr.aria-describedby]': 'descId',
     '[class.fit-container]': 'fitToContainer()',
+    '[class.has-background]': 'hasBackground()',
   },
 })
 export class RadialGaugeComponent {
@@ -146,6 +147,14 @@ export class RadialGaugeComponent {
   readonly title = input('Gauge');
   readonly description = input('');
   readonly segmentGapPx = input(4);
+  
+  // Widget styling inputs
+  /**
+   * Whether the gauge should display with a background. 
+   * Affects text color contrast and other visual elements.
+   * @default false
+   */
+  readonly hasBackground = input(false);
 
   // Size Control Inputs
   /**

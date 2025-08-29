@@ -67,3 +67,21 @@
     --gauge-outer-bg: #374151;
   }
 }
+
+// Value text theming
+.gauge-value-text {
+  fill: var(--mat-sys-on-surface-variant, #6c757d);
+  font-family: var(--mat-sys-typescale-body-large-font, 'Roboto', sans-serif);
+  font-weight: var(--mat-sys-typescale-body-large-weight, 400);
+  transition: fill var(--mat-sys-motion-duration-short2, 200ms) var(--mat-sys-motion-easing-standard, ease);
+}
+
+// Host styling for background support
+:host.has-background .gauge-value-text {
+  fill: var(--mat-sys-on-surface, #1f1f1f);
+}
+
+// Hover effects for gauge
+:host:hover .gauge-value-text {
+  fill: var(--mat-sys-primary, #6750a4);
+}
