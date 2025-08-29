@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   MAT_DIALOG_DATA,
@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { RadialGaugeWidgetState } from './radial-gauge-widget.component';
 
@@ -22,41 +23,37 @@ import { RadialGaugeWidgetState } from './radial-gauge-widget.component';
     MatFormFieldModule,
     MatInputModule,
     MatSlideToggleModule,
+    MatRadioModule,
     FormsModule,
   ],
   template: `
     <h2 mat-dialog-title>Radial Gauge Settings</h2>
     <mat-dialog-content>
-      <div class="row-layout">
-        <mat-form-field>
-          <mat-label>Value</mat-label>
-          <input
-            matInput
-            type="number"
-            [(ngModel)]="localState.value"
-            [min]="localState.min ?? 0"
-            [max]="localState.max ?? 100"
-          />
-        </mat-form-field>
-
-        <mat-form-field>
-          <mat-label>Min</mat-label>
-          <input
-            matInput
-            type="number"
-            [(ngModel)]="localState.min"
-          />
-        </mat-form-field>
-      </div>
-
       <mat-form-field>
-        <mat-label>Max</mat-label>
+        <mat-label>Value (0-100)</mat-label>
         <input
           matInput
           type="number"
-          [(ngModel)]="localState.max"
+          [(ngModel)]="localState.value"
+          min="0"
+          max="100"
         />
       </mat-form-field>
+
+      <div class="section">
+        <h4>Color Profile</h4>
+        <mat-radio-group [(ngModel)]="localState.colorProfile">
+          <mat-radio-button value="dynamic">Dynamic (Theme Colors)</mat-radio-button>
+          <mat-radio-button value="static">Static (Performance Colors)</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <div class="toggle-section">
+        <mat-slide-toggle [(ngModel)]="localState.active">
+          Active Display
+        </mat-slide-toggle>
+        <p class="toggle-description">Display live gauge instead of passive icon</p>
+      </div>
 
       <div class="toggle-section">
         <mat-slide-toggle [(ngModel)]="localState.hasBackground">
@@ -85,15 +82,21 @@ import { RadialGaugeWidgetState } from './radial-gauge-widget.component';
         margin-bottom: 1rem;
       }
 
-      .row-layout {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-bottom: 1rem;
+      .section {
+        margin-bottom: 1.5rem;
       }
 
-      .row-layout mat-form-field {
-        margin-bottom: 0;
+      .section h4 {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--mat-sys-on-surface, #1f1f1f);
+      }
+
+      mat-radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
       }
 
       .toggle-section {
@@ -116,8 +119,8 @@ export class RadialGaugeStateDialogComponent {
 
   localState: RadialGaugeWidgetState = {
     value: this.data.value ?? 50,
-    min: this.data.min ?? 0,
-    max: this.data.max ?? 100,
+    colorProfile: this.data.colorProfile ?? 'dynamic',
+    active: this.data.active ?? false,
     hasBackground: this.data.hasBackground ?? true,
   };
 

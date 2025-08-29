@@ -1,21 +1,22 @@
 // radial-gauge-widget.component.ts
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { Widget, WidgetMetadata } from '@dragonworks/ngx-dashboard';
-import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
+import { DomSanitizer } from '@angular/platform-browser';
+import { RadialGaugeComponent } from '../../components/radial-gauge/radial-gauge.component';
 import { svgIcon } from './radial-gauge-widget.metadata';
 import { RadialGaugeStateDialogComponent } from './radial-gauge-state-dialog.component';
 
 export interface RadialGaugeWidgetState {
   value?: number;
-  min?: number;
-  max?: number;
+  colorProfile?: 'dynamic' | 'static';
+  active?: boolean;
   hasBackground?: boolean;
 }
 
 @Component({
   selector: 'ngx-dashboard-radial-gauge-widget',
-  imports: [],
+  imports: [RadialGaugeComponent],
   templateUrl: './radial-gauge-widget.component.html',
   styleUrl: './radial-gauge-widget.component.scss',
 })
@@ -27,16 +28,37 @@ export class RadialGaugeWidgetComponent implements Widget {
     svgIcon,
   };
 
-  readonly #sanitizer = inject(DomSanitizer);
   readonly #dialog = inject(MatDialog);
+  readonly #sanitizer = inject(DomSanitizer);
 
   readonly safeSvgIcon = this.#sanitizer.bypassSecurityTrustHtml(svgIcon);
 
   readonly state = signal<RadialGaugeWidgetState>({
     value: 50,
-    min: 0,
-    max: 100,
+    colorProfile: 'dynamic',
+    active: false,
     hasBackground: true,
+  });
+
+  readonly segments = computed(() => {
+    const profile = this.state().colorProfile || 'dynamic';
+    
+    if (profile === 'static') {
+      // Static performance segments (like CPU usage example)
+      return [
+        { from: 0, to: 25, color: '#dc2626' }, // Poor - red
+        { from: 25, to: 50, color: '#f59e0b' }, // Fair - orange
+        { from: 50, to: 75, color: '#3b82f6' }, // Good - blue
+        { from: 75, to: 100, color: '#10b981' }, // Excellent - green
+      ];
+    } else {
+      // Dynamic theme-aware segments (like demo gauge preview)
+      return [
+        { from: 0, to: 60, color: 'var(--mat-sys-error)' },
+        { from: 60, to: 80, color: 'var(--mat-sys-secondary)' },
+        { from: 80, to: 100, color: 'var(--mat-sys-tertiary)' },
+      ];
+    }
   });
 
   dashboardSetState(state?: unknown): void {
