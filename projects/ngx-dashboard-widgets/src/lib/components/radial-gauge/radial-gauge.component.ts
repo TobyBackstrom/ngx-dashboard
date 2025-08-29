@@ -1,4 +1,5 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -12,6 +13,8 @@ import {
   viewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { from, map, of } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 export interface RadialGaugeSegment {
   from: number;
@@ -241,19 +244,26 @@ export class RadialGaugeComponent {
    */
   private resizeObserver: ResizeObserver | null = null;
 
+  readonly viewReady = toSignal(
+    from(new Promise<void>((resolve) => afterNextRender(resolve))).pipe(
+      map(() => true)
+    ),
+    { initialValue: false }
+  );
+
+  readonly fontsReady = toSignal(
+    typeof document !== 'undefined' && 'fonts' in document
+      ? from((document as any).fonts.ready).pipe(map(() => true))
+      : of(true), // SSR or older browsers: treat as ready
+    { initialValue: false }
+  );
+
   constructor() {
     this.destroyRef.onDestroy(() => {
       if (this.resizeObserver) {
         this.resizeObserver.disconnect();
         this.resizeObserver = null;
       }
-    });
-
-    effect(() => {
-      queueMicrotask(() => {
-        // Trigger recomputation by reading the signal
-        this.valueTransform();
-      });
     });
   }
 
@@ -321,6 +331,10 @@ export class RadialGaugeComponent {
 
   // ── Core transform: center + uniform scale to fit the reserved box ──────────
   valueTransform = computed(() => {
+    // ensure we wait for first paint + font shaping
+    this.viewReady();
+    this.fontsReady();
+
     const cx = this.centerX();
     const cy = this.centerY();
     const r = this.legendInnerRadius();

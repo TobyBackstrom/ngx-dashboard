@@ -217,23 +217,41 @@
           <div class="responsive-demo-container">
             <div class="container-controls">
               <div class="control-group">
-                <label for="container-width-slider">Container Width: {{ containerWidth() }}px</label>
+                <label for="container-width-slider"
+                  >Container Width: {{ containerWidth() }}px</label
+                >
                 <mat-slider min="50" max="600" step="10" discrete>
-                  <input id="container-width-slider" matSliderThumb [(ngModel)]="containerWidth" />
+                  <input
+                    id="container-width-slider"
+                    matSliderThumb
+                    [(ngModel)]="containerWidth"
+                  />
                 </mat-slider>
               </div>
 
               <div class="control-group">
-                <label for="container-height-slider">Container Height: {{ containerHeight() }}px</label>
+                <label for="container-height-slider"
+                  >Container Height: {{ containerHeight() }}px</label
+                >
                 <mat-slider min="50" max="600" step="10" discrete>
-                  <input id="container-height-slider" matSliderThumb [(ngModel)]="containerHeight" />
+                  <input
+                    id="container-height-slider"
+                    matSliderThumb
+                    [(ngModel)]="containerHeight"
+                  />
                 </mat-slider>
               </div>
 
               <div class="control-group">
-                <label for="size-thickness-ratio-slider">Size To Thickness Ratio: {{ sizeToThicknessRatio() }}</label>
+                <label for="size-thickness-ratio-slider"
+                  >Size To Thickness Ratio: {{ sizeToThicknessRatio() }}</label
+                >
                 <mat-slider min="8" max="50" step="1" discrete>
-                  <input id="size-thickness-ratio-slider" matSliderThumb [(ngModel)]="sizeToThicknessRatio" />
+                  <input
+                    id="size-thickness-ratio-slider"
+                    matSliderThumb
+                    [(ngModel)]="sizeToThicknessRatio"
+                  />
                 </mat-slider>
               </div>
             </div>
@@ -283,6 +301,7 @@
                 [segments]="performanceSegments()"
                 title="CPU Usage"
                 description="Percentage"
+                [labelReference]="'00000'"
               />
             </div>
 
