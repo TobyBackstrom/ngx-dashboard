@@ -534,7 +534,8 @@
         "value": 75,
         "colorProfile": "static",
         "active": true,
-        "hasBackground": true
+        "hasBackground": true,
+        "showValueLabel": false
       }
     },
     {
@@ -548,7 +549,8 @@
         "value": 50,
         "colorProfile": "dynamic",
         "active": true,
-        "hasBackground": false
+        "hasBackground": false,
+        "showValueLabel": true
       }
     },
     {
@@ -561,7 +563,8 @@
         "value": 50,
         "colorProfile": "dynamic",
         "active": false,
-        "hasBackground": true
+        "hasBackground": true,
+        "showValueLabel": true
       }
     }
   ]

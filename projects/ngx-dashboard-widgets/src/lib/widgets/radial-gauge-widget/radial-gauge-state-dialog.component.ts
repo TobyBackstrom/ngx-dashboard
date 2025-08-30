@@ -61,6 +61,13 @@ import { RadialGaugeWidgetState } from './radial-gauge-widget.component';
         </mat-slide-toggle>
         <p class="toggle-description">Add a background color to the widget</p>
       </div>
+
+      <div class="toggle-section">
+        <mat-slide-toggle [(ngModel)]="localState.showValueLabel">
+          Show Value Label
+        </mat-slide-toggle>
+        <p class="toggle-description">Display numeric value in gauge center</p>
+      </div>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
@@ -122,6 +129,7 @@ export class RadialGaugeStateDialogComponent {
     colorProfile: this.data.colorProfile ?? 'dynamic',
     active: this.data.active ?? false,
     hasBackground: this.data.hasBackground ?? true,
+    showValueLabel: this.data.showValueLabel ?? true,
   };
 
   onCancel(): void {

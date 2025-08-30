@@ -59,6 +59,7 @@ percent();
     }
   </g>
 
+  @if (showValueLabel()) {
   <g #valueGroup [attr.transform]="valueTransform()">
     <text
       #valueText
@@ -72,6 +73,7 @@ percent();
       {{ formattedLabel() }}
     </text>
   </g>
+  }
 
   <!-- Hidden reference text used ONLY for width measurement -->
   <g style="visibility: hidden; pointer-events: none" aria-hidden="true">

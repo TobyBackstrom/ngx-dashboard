@@ -12,6 +12,7 @@ export interface RadialGaugeWidgetState {
   colorProfile?: 'dynamic' | 'static';
   active?: boolean;
   hasBackground?: boolean;
+  showValueLabel?: boolean;
 }
 
 @Component({
@@ -38,6 +39,7 @@ export class RadialGaugeWidgetComponent implements Widget {
     colorProfile: 'dynamic',
     active: false,
     hasBackground: true,
+    showValueLabel: true,
   });
 
   readonly segments = computed(() => {

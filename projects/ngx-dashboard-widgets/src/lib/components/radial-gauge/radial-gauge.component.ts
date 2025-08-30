@@ -132,10 +132,8 @@ export interface RadialGaugeSegment {
   },
 })
 export class RadialGaugeComponent {
-  private readonly valueTextEl =
-    viewChild.required<ElementRef<SVGTextElement>>('valueText');
-  private readonly valueGroupEl =
-    viewChild.required<ElementRef<SVGGElement>>('valueGroup');
+  private readonly valueTextEl = viewChild<ElementRef<SVGTextElement>>('valueText');
+  private readonly valueGroupEl = viewChild<ElementRef<SVGGElement>>('valueGroup');
   private readonly refTextEl =
     viewChild.required<ElementRef<SVGTextElement>>('refText');
 
@@ -155,6 +153,12 @@ export class RadialGaugeComponent {
    * @default false
    */
   readonly hasBackground = input(false);
+
+  /**
+   * Whether to display the numeric value label in the center of the gauge.
+   * @default true
+   */
+  readonly showValueLabel = input(true);
 
   // Size Control Inputs
   /**
@@ -342,6 +346,8 @@ export class RadialGaugeComponent {
 
   // ── Core transform: center + uniform scale to fit the reserved box ──────────
   valueTransform = computed(() => {
+    if (!this.showValueLabel()) return '';
+    
     // ensure we wait for first paint + font shaping
     this.viewReady();
     this.fontsReady();
@@ -358,8 +364,10 @@ export class RadialGaugeComponent {
     if (!boxWidth || !boxHeight) return `translate(${cx},${cy})`;
 
     // Measure the actual label (for height) and the reference (for width)
-    const labelEl = this.valueTextEl().nativeElement;
+    const labelEl = this.valueTextEl()?.nativeElement;
     const refEl = this.refTextEl().nativeElement;
+
+    if (!labelEl) return `translate(${cx},${cy})`;
 
     // Important: ensure text nodes are up to date before reading BBox
     // (Angular's computed/effect guarantees sync within the same microtask)
