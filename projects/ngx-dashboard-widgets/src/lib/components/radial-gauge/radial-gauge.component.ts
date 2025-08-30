@@ -1,4 +1,5 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -9,8 +10,11 @@ import {
   inject,
   input,
   signal,
+  viewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { from, map, of } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 export interface RadialGaugeSegment {
   from: number;
@@ -106,32 +110,6 @@ export interface RadialGaugeSegment {
  * - `aria-label` with contextual information
  * - Internationalized number formatting
  *
- * @example
- * // Complete responsive dashboard gauge
- * &#64;Component({
- *   template: `
- *     <div class="gauge-container">
- *       <ngx-radial-gauge
- *         [value]="systemLoad"
- *         [min]="0"
- *         [max]="100"
- *         [fitToContainer]="true"
- *         [responsiveMode]="true"
- *         [sizeToThicknessRatio]="20"
- *         [segments]="loadSegments"
- *         title="System Load"
- *         description="Percentage" />
- *     </div>
- *   `
- * })
- * export class SystemDashboardComponent {
- *   systemLoad = 67;
- *   loadSegments: RadialGaugeSegment[] = [
- *     { from: 0, to: 50, color: 'var(--mat-sys-tertiary)' },
- *     { from: 50, to: 80, color: 'var(--mat-sys-secondary)' },
- *     { from: 80, to: 100, color: 'var(--mat-sys-error)' }
- *   ];
- * }
  */
 @Component({
   selector: 'ngx-radial-gauge',
@@ -150,9 +128,15 @@ export interface RadialGaugeSegment {
     '[attr.aria-labelledby]': 'titleId',
     '[attr.aria-describedby]': 'descId',
     '[class.fit-container]': 'fitToContainer()',
+    '[class.has-background]': 'hasBackground()',
   },
 })
 export class RadialGaugeComponent {
+  private readonly valueTextEl = viewChild<ElementRef<SVGTextElement>>('valueText');
+  private readonly valueGroupEl = viewChild<ElementRef<SVGGElement>>('valueGroup');
+  private readonly refTextEl =
+    viewChild.required<ElementRef<SVGTextElement>>('refText');
+
   // Core Inputs - Value and Range
   readonly value = input(0);
   readonly min = input(0);
@@ -161,6 +145,20 @@ export class RadialGaugeComponent {
   readonly title = input('Gauge');
   readonly description = input('');
   readonly segmentGapPx = input(4);
+  
+  // Widget styling inputs
+  /**
+   * Whether the gauge should display with a background. 
+   * Affects text color contrast and other visual elements.
+   * @default false
+   */
+  readonly hasBackground = input(false);
+
+  /**
+   * Whether to display the numeric value label in the center of the gauge.
+   * @default true
+   */
+  readonly showValueLabel = input(true);
 
   // Size Control Inputs
   /**
@@ -259,8 +257,23 @@ export class RadialGaugeComponent {
    */
   private resizeObserver: ResizeObserver | null = null;
 
+  readonly viewReady = toSignal(
+    from(new Promise<void>((resolve) => afterNextRender(resolve))).pipe(
+      map(() => true)
+    ),
+    { initialValue: false }
+  );
+
+  readonly fontsReady = toSignal(
+    typeof document !== 'undefined' && 'fonts' in document
+      ? from((document as Document & { fonts: FontFaceSet }).fonts.ready).pipe(
+          map(() => true)
+        )
+      : of(true), // SSR or older browsers: treat as ready
+    { initialValue: false }
+  );
+
   constructor() {
-    // Set up cleanup on component destruction
     this.destroyRef.onDestroy(() => {
       if (this.resizeObserver) {
         this.resizeObserver.disconnect();
@@ -318,6 +331,72 @@ export class RadialGaugeComponent {
       this.containerSize.set(null);
     }
   });
+
+  // ── Build the reference string reactively ───────────────────────────────────
+  referenceString = computed(() => {
+    const ref = this.labelReference();
+    if (typeof ref === 'string') return ref;
+    if (typeof ref === 'number' && ref > 0) {
+      const g = this.referenceGlyph() ?? '0';
+      return g.repeat(ref);
+    }
+
+    return this.formattedLabel(); // measure actual label
+  });
+
+  // ── Core transform: center + uniform scale to fit the reserved box ──────────
+  valueTransform = computed(() => {
+    if (!this.showValueLabel()) return '';
+    
+    // ensure we wait for first paint + font shaping
+    this.viewReady();
+    this.fontsReady();
+
+    const cx = this.centerX();
+    const cy = this.centerY();
+    const r = this.legendInnerRadius();
+    const pad = this.labelPadding();
+
+    const boxWidth = Math.max(0, 2 * r - 2 * pad);
+    const boxHeight = Math.max(0, r - pad);
+
+    // If geometry is degenerate, just center.
+    if (!boxWidth || !boxHeight) return `translate(${cx},${cy})`;
+
+    // Measure the actual label (for height) and the reference (for width)
+    const labelEl = this.valueTextEl()?.nativeElement;
+    const refEl = this.refTextEl().nativeElement;
+
+    if (!labelEl) return `translate(${cx},${cy})`;
+
+    // Important: ensure text nodes are up to date before reading BBox
+    // (Angular's computed/effect guarantees sync within the same microtask)
+    const labelBox = this.safeBBox(labelEl);
+    const refBox = this.safeBBox(refEl);
+
+    // Use reference width and actual label height
+    const widthForFit = refBox.width || labelBox.width || 1;
+    const heightForFit = labelBox.height || refBox.height || 1;
+
+    const s =
+      Math.min(boxWidth / widthForFit, boxHeight / heightForFit) *
+      this.baselineSafety();
+
+    return `translate(${cx},${cy}) scale(${s})`;
+  });
+
+  /** Guarded getBBox that avoids 0/NaN on detached or invisible nodes. */
+  safeBBox(node: SVGGraphicsElement): DOMRect {
+    try {
+      const box = node.getBBox();
+      // Firefox/Safari can occasionally return 0 when text hasn’t painted yet; fall back to a rough estimate.
+      if (box && (box.width > 0 || box.height > 0)) return box;
+    } catch {
+      /* ignore */
+    }
+    // Fallback guess to avoid divide-by-zero (tuned small; will get corrected next tick)
+    return new DOMRect(0, 0, 1, 1);
+  }
 
   // Responsive Size and Thickness Calculations
   /**
@@ -411,6 +490,22 @@ export class RadialGaugeComponent {
   readonly centerY = computed(
     () => this.effectiveSize() / 2 + this.effectiveOuterThickness() / 2
   );
+
+  /**
+   * If a string is provided, we measure it and allocate space for that width.
+   * If a number is provided, we build a string of that many `referenceGlyph`s.
+   * If omitted, we fall back to measuring the actual label.
+   */
+  labelReference = input<string | number | undefined>(undefined);
+
+  /** Glyph to repeat when labelReference is a number (defaults to '0'). */
+  referenceGlyph = input<string>('0');
+
+  /** Extra breathing room inside the inner semicircle box (in px). */
+  labelPadding = input<number>(4);
+
+  /** Safety multiplier to avoid clipping ascenders/descenders. */
+  baselineSafety = input<number>(0.95);
 
   readonly outerRadius = computed(() => this.effectiveSize() / 2);
   readonly innerRadius = computed(
@@ -516,13 +611,6 @@ export class RadialGaugeComponent {
       `${this.title()}: ${this.formattedLabel()} (range ${this.min()}–${this.max()})`
   );
 
-  /**
-   * Clamps a numeric value between minimum and maximum bounds.
-   * @param v - The value to be clamped
-   * @param min - The minimum allowed value
-   * @param max - The maximum allowed value
-   * @returns The clamped value that is guaranteed to be within [min, max]
-   */
   private clamp(v: number, min: number, max: number) {
     return Math.min(Math.max(v, min), max);
   }

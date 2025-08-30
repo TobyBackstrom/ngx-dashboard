@@ -376,7 +376,7 @@
       "row": 6,
       "col": 1,
       "rowSpan": 1,
-      "colSpan": 10,
+      "colSpan": 8,
       "widgetTypeid": "@default/label-widget",
       "widgetState": {
         "label": "Fixed Size",
@@ -522,6 +522,49 @@
         "frameRate": 15,
         "numberOfBars": 20,
         "responsiveBarColors": true
+      }
+    },
+    {
+      "row": 5,
+      "col": 11,
+      "rowSpan": 2,
+      "colSpan": 2,
+      "widgetTypeid": "@default/radial-gauge-widget",
+      "widgetState": {
+        "value": 75,
+        "colorProfile": "static",
+        "active": true,
+        "hasBackground": true,
+        "showValueLabel": false
+      }
+    },
+    {
+      "row": 5,
+      "col": 9,
+      "rowSpan": 2,
+      "colSpan": 2,
+      "flat": true,
+      "widgetTypeid": "@default/radial-gauge-widget",
+      "widgetState": {
+        "value": 50,
+        "colorProfile": "dynamic",
+        "active": true,
+        "hasBackground": false,
+        "showValueLabel": true
+      }
+    },
+    {
+      "row": 5,
+      "col": 8,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@default/radial-gauge-widget",
+      "widgetState": {
+        "value": 50,
+        "colorProfile": "dynamic",
+        "active": false,
+        "hasBackground": true,
+        "showValueLabel": true
       }
     }
   ]

@@ -48,13 +48,13 @@
     width: clamp(20px, 4vw, 28px);
     height: clamp(20px, 4vw, 28px);
     flex-shrink: 0;
+    color: var(--mat-sys-on-surface-variant, #5f5f5f);
+    transition: color var(--mat-sys-motion-duration-short2, 150ms) var(--mat-sys-motion-easing-standard, ease-in-out);
 
     ::ng-deep svg {
       width: 100%;
       height: 100%;
       display: block;
-      fill: var(--mat-sys-on-surface-variant, #5f5f5f);
-      transition: fill var(--mat-sys-motion-duration-short2, 150ms) var(--mat-sys-motion-easing-standard, ease-in-out);
     }
   }
 
@@ -89,8 +89,8 @@
     background-color: var(--mat-sys-surface-container-low, #f0f0f0);
     box-shadow: var(--mat-sys-elevation-level2, 0 2px 4px rgba(0, 0, 0, 0.1));
     
-    .icon ::ng-deep svg {
-      fill: var(--mat-sys-on-surface, #1c1c1c);
+    .icon {
+      color: var(--mat-sys-on-surface, #1c1c1c);
     }
   }
 
@@ -116,8 +116,8 @@
     }
   }
   
-  .icon ::ng-deep svg {
-    fill: var(--mat-sys-on-primary-container, #004a99);
+  .icon {
+    color: var(--mat-sys-on-primary-container, #004a99);
   }
 }
 
@@ -144,11 +144,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--mat-sys-on-surface-variant, #5f5f5f);
+    opacity: 0.6;
     
     ::ng-deep svg {
       display: block;
-      fill: var(--mat-sys-on-surface-variant, #5f5f5f);
-      opacity: 0.6;
     }
   }
 }

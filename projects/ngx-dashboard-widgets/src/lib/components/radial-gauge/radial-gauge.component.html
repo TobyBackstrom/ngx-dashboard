@@ -58,4 +58,33 @@ percent();
     />
     }
   </g>
+
+  @if (showValueLabel()) {
+  <g #valueGroup [attr.transform]="valueTransform()">
+    <text
+      #valueText
+      class="gauge-value-text"
+      x="0"
+      y="0"
+      text-anchor="middle"
+      alignment-baseline="baseline"
+      dy="-0.75"
+    >
+      {{ formattedLabel() }}
+    </text>
+  </g>
+  }
+
+  <!-- Hidden reference text used ONLY for width measurement -->
+  <g style="visibility: hidden; pointer-events: none" aria-hidden="true">
+    <text
+      #refText
+      x="0"
+      y="0"
+      text-anchor="start"
+      dominant-baseline="alphabetic"
+    >
+      {{ referenceString() }}
+    </text>
+  </g>
 </svg>
