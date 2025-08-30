@@ -2,6 +2,18 @@
 <div class="widget-container" [class.has-background]="state().hasBackground">
   @if (state().active) {
   <!-- Active mode: Show live gauge -->
+  @if (state().showLabel && state().label) {
+  <div class="widget-label">
+    <span
+      libResponsiveText
+      [minFontSize]="8"
+      [maxFontSize]="42"
+      [lineHeight]="1"
+    >
+      {{ state().label }}
+    </span>
+  </div>
+  }
   <div class="gauge-container">
     <ngx-radial-gauge
       [value]="gaugeValue()"

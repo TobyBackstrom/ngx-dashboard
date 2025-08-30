@@ -57,6 +57,20 @@ import { RealtimeGaugeWidgetState } from './realtime-gauge-widget.component';
             <p class="toggle-description">Display numeric value in gauge center</p>
           </div>
 
+          <div class="toggle-section">
+            <mat-slide-toggle [(ngModel)]="localState.showLabel">
+              Show Label
+            </mat-slide-toggle>
+            <p class="toggle-description">Display a label in the top-right corner</p>
+          </div>
+
+          @if (localState.showLabel) {
+          <mat-form-field>
+            <mat-label>Label Text</mat-label>
+            <input matInput [(ngModel)]="localState.label" placeholder="e.g., kW, %, RPM">
+          </mat-form-field>
+          }
+
           <div class="section">
             <h4>Color Profile</h4>
             <mat-radio-group [(ngModel)]="localState.colorProfile">
@@ -172,6 +186,8 @@ export class RealtimeGaugeStateDialogComponent {
     active: this.data.active ?? false,
     hasBackground: this.data.hasBackground ?? true,
     showValueLabel: this.data.showValueLabel ?? true,
+    label: this.data.label ?? '',
+    showLabel: this.data.showLabel ?? false,
     datasource: this.data.datasource ?? 'none',
     updateInterval: this.data.updateInterval ?? 1,
   };

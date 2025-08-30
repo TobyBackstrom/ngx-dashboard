@@ -540,13 +540,15 @@
       "col": 6,
       "rowSpan": 2,
       "colSpan": 3,
-      "flat": true,
+      "flat": false,
       "widgetTypeid": "@demo/realtime-gauge-widget",
       "widgetState": {
         "colorProfile": "static",
         "active": true,
-        "hasBackground": false,
+        "hasBackground": true,
         "showValueLabel": true,
+        "label": "MW",
+        "showLabel": true,
         "datasource": "random",
         "updateInterval": 1
       }

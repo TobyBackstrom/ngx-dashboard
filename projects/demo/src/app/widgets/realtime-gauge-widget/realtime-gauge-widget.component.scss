@@ -82,3 +82,27 @@ ngx-radial-gauge {
 .widget-container:hover .svg-placeholder {
   color: var(--mat-sys-primary, #6750a4);
 }
+
+/* Top-right, invisible box whose size tracks the widget */
+.widget-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  /* No visuals */
+  margin: 0;
+  padding: 0;
+  background: transparent;
+
+  /* MD3 Typography and colors */
+  color: var(--mat-sys-on-surface-variant);
+  font-family: var(--mat-sys-label-medium-font);
+  font-weight: var(--mat-sys-label-medium-weight);
+  letter-spacing: var(--mat-sys-label-medium-tracking);
+
+  /* Give the directive a real box to fit into */
+  width: 30%; /* a sensible slice of the widget */
+  height: 20%; /* small strip in the top-right */
+  overflow: hidden; /* avoid spill during binary search */
+  text-align: right; /* keep the text to the right edge */
+}

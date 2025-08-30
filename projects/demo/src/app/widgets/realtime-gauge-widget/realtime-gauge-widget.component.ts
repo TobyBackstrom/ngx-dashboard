@@ -11,7 +11,10 @@ import {
 import { Widget, WidgetMetadata } from '@dragonworks/ngx-dashboard';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import { RadialGaugeComponent } from '@dragonworks/ngx-dashboard-widgets';
+import {
+  RadialGaugeComponent,
+  ResponsiveTextDirective,
+} from '@dragonworks/ngx-dashboard-widgets';
 import { svgIcon } from './realtime-gauge-widget.metadata';
 import { RealtimeGaugeStateDialogComponent } from './realtime-gauge-state-dialog.component';
 import { VolatileTimeSeries } from '../../utils';
@@ -22,6 +25,8 @@ export interface RealtimeGaugeWidgetState {
   active?: boolean;
   hasBackground?: boolean;
   showValueLabel?: boolean;
+  label?: string;
+  showLabel?: boolean;
 
   // Real-time data settings
   datasource?: 'random' | 'none';
@@ -31,7 +36,7 @@ export interface RealtimeGaugeWidgetState {
 @Component({
   selector: 'demo-realtime-gauge-widget',
   standalone: true,
-  imports: [RadialGaugeComponent],
+  imports: [RadialGaugeComponent, ResponsiveTextDirective],
   templateUrl: './realtime-gauge-widget.component.html',
   styleUrl: './realtime-gauge-widget.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,6 +60,8 @@ export class RealtimeGaugeWidgetComponent implements Widget {
     active: false,
     hasBackground: true,
     showValueLabel: true,
+    label: '',
+    showLabel: false,
     datasource: 'none',
     updateInterval: 1,
   });
@@ -96,7 +103,7 @@ export class RealtimeGaugeWidgetComponent implements Widget {
       this.state().datasource; // Required for effect tracking - triggers setup on datasource changes
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       this.state().updateInterval; // Required for effect tracking - triggers setup on interval changes
-      
+
       this.#setupRealtimeUpdates();
     });
 
