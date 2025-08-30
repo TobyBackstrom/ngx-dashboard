@@ -373,24 +373,6 @@
       }
     },
     {
-      "row": 6,
-      "col": 1,
-      "rowSpan": 1,
-      "colSpan": 8,
-      "widgetTypeid": "@default/label-widget",
-      "widgetState": {
-        "label": "Fixed Size",
-        "fontSize": 32,
-        "alignment": "center",
-        "fontWeight": "bold",
-        "opacity": 1,
-        "hasBackground": true,
-        "responsive": false,
-        "minFontSize": 8,
-        "maxFontSize": 64
-      }
-    },
-    {
       "row": 3,
       "col": 9,
       "rowSpan": 1,
@@ -555,16 +537,18 @@
     },
     {
       "row": 5,
-      "col": 8,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "widgetTypeid": "@default/radial-gauge-widget",
+      "col": 6,
+      "rowSpan": 2,
+      "colSpan": 3,
+      "flat": true,
+      "widgetTypeid": "@demo/realtime-gauge-widget",
       "widgetState": {
-        "value": 50,
-        "colorProfile": "dynamic",
-        "active": false,
-        "hasBackground": true,
-        "showValueLabel": true
+        "colorProfile": "static",
+        "active": true,
+        "hasBackground": false,
+        "showValueLabel": true,
+        "datasource": "random",
+        "updateInterval": 1
       }
     }
   ]

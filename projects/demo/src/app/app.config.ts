@@ -1,10 +1,22 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, provideEnvironmentInitializer, inject } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZoneChangeDetection,
+  provideEnvironmentInitializer,
+  inject,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { DashboardService } from '@dragonworks/ngx-dashboard';
-import { ArrowWidgetComponent, LabelWidgetComponent, ClockWidgetComponent, RadialGaugeWidgetComponent } from '@dragonworks/ngx-dashboard-widgets';
+import {
+  ArrowWidgetComponent,
+  LabelWidgetComponent,
+  ClockWidgetComponent,
+  RadialGaugeWidgetComponent,
+} from '@dragonworks/ngx-dashboard-widgets';
 import { SparklineWidgetComponent } from './widgets/sparkline-widget/sparkline-widget.component';
 import { SparkbarWidgetComponent } from './widgets/sparkbar-widget/sparkbar-widget.component';
+import { RealtimeGaugeWidgetComponent } from './widgets/realtime-gauge-widget/realtime-gauge-widget.component';
 
 import { routes } from './app.routes';
 
@@ -20,8 +32,9 @@ export const appConfig: ApplicationConfig = {
       dashboardService.registerWidgetType(LabelWidgetComponent);
       dashboardService.registerWidgetType(ClockWidgetComponent);
       dashboardService.registerWidgetType(RadialGaugeWidgetComponent);
+      dashboardService.registerWidgetType(RealtimeGaugeWidgetComponent);
       dashboardService.registerWidgetType(SparklineWidgetComponent);
       dashboardService.registerWidgetType(SparkbarWidgetComponent);
-    })
-  ]
+    }),
+  ],
 };
