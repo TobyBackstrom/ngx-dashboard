@@ -109,6 +109,14 @@
     display: block;
     margin-bottom: 0.5rem;
   }
+  
+  // Toggle group for advanced features
+  .toggle-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
 }
 
 // Gauge display area

@@ -7,14 +7,15 @@
   "cells": [
     {
       "row": 7,
-      "col": 10,
+      "col": 4,
       "rowSpan": 1,
       "colSpan": 1,
+      "flat": true,
       "widgetTypeid": "@default/arrow-widget",
       "widgetState": {
         "direction": "right",
         "opacity": 0.3,
-        "hasBackground": true
+        "hasBackground": false
       }
     },
     {
@@ -22,137 +23,48 @@
       "col": 1,
       "rowSpan": 1,
       "colSpan": 1,
+      "flat": true,
       "widgetTypeid": "@default/arrow-widget",
       "widgetState": {
         "direction": "left",
         "opacity": 0.3,
-        "hasBackground": true
+        "hasBackground": false
       }
     },
     {
       "row": 4,
-      "col": 12,
+      "col": 5,
       "rowSpan": 1,
-      "colSpan": 1,
-      "widgetTypeid": "@default/arrow-widget",
-      "widgetState": {
-        "direction": "up",
-        "opacity": 0.3,
-        "hasBackground": true
-      }
-    },
-    {
-      "row": 4,
-      "col": 15,
-      "rowSpan": 1,
-      "colSpan": 1,
+      "colSpan": 4,
       "widgetTypeid": "@default/label-widget",
       "widgetState": {
-        "label": "",
-        "fontSize": 16,
-        "alignment": "center",
-        "fontWeight": "normal",
-        "opacity": 1,
-        "hasBackground": true,
-        "responsive": false,
-        "minFontSize": 8,
-        "maxFontSize": 64
-      }
-    },
-    {
-      "row": 4,
-      "col": 11,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "widgetTypeid": "@default/label-widget",
-      "widgetState": {
-        "label": "",
-        "fontSize": 16,
-        "alignment": "center",
-        "fontWeight": "normal",
-        "opacity": 1,
-        "hasBackground": true,
-        "responsive": false,
-        "minFontSize": 8,
-        "maxFontSize": 64
-      }
-    },
-    {
-      "row": 4,
-      "col": 16,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "widgetTypeid": "@default/arrow-widget",
-      "widgetState": {
-        "direction": "up",
-        "opacity": 0.3,
-        "hasBackground": true
-      }
-    },
-    {
-      "row": 4,
-      "col": 14,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "widgetTypeid": "@default/arrow-widget",
-      "widgetState": {
-        "direction": "up",
-        "opacity": 0.3,
-        "hasBackground": true
-      }
-    },
-    {
-      "row": 4,
-      "col": 13,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "widgetTypeid": "@default/label-widget",
-      "widgetState": {
-        "label": "",
-        "fontSize": 16,
-        "alignment": "center",
-        "fontWeight": "normal",
-        "opacity": 1,
-        "hasBackground": true,
-        "responsive": false,
-        "minFontSize": 8,
-        "maxFontSize": 64
-      }
-    },
-    {
-      "row": 4,
-      "col": 10,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "widgetTypeid": "@default/arrow-widget",
-      "widgetState": {
-        "direction": "up",
-        "opacity": 0.3,
-        "hasBackground": true
-      }
-    },
-    {
-      "row": 7,
-      "col": 16,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "flat": true,
-      "widgetTypeid": "@default/label-widget",
-      "widgetState": {
-        "label": "",
+        "label": "Snacks/hr",
         "fontSize": 16,
         "alignment": "center",
         "fontWeight": "normal",
         "opacity": 1,
         "hasBackground": false,
-        "responsive": false,
+        "responsive": true,
         "minFontSize": 8,
         "maxFontSize": 64
       }
     },
     {
       "row": 7,
-      "col": 15,
+      "col": 3,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "flat": true,
+      "widgetTypeid": "@default/arrow-widget",
+      "widgetState": {
+        "direction": "down",
+        "opacity": 0.3,
+        "hasBackground": false
+      }
+    },
+    {
+      "row": 7,
+      "col": 2,
       "rowSpan": 1,
       "colSpan": 1,
       "flat": true,
@@ -164,56 +76,18 @@
       }
     },
     {
-      "row": 7,
-      "col": 14,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "flat": true,
-      "widgetTypeid": "@default/label-widget",
-      "widgetState": {
-        "label": "",
-        "fontSize": 16,
-        "alignment": "center",
-        "fontWeight": "normal",
-        "opacity": 1,
-        "hasBackground": false,
-        "responsive": false,
-        "minFontSize": 8,
-        "maxFontSize": 64
-      }
-    },
-    {
       "row": 4,
-      "col": 9,
+      "col": 1,
       "rowSpan": 1,
-      "colSpan": 1,
-      "flat": true,
+      "colSpan": 4,
       "widgetTypeid": "@default/label-widget",
       "widgetState": {
-        "label": "",
+        "label": "Motivation",
         "fontSize": 16,
         "alignment": "center",
         "fontWeight": "normal",
         "opacity": 1,
         "hasBackground": false,
-        "responsive": false,
-        "minFontSize": 8,
-        "maxFontSize": 64
-      }
-    },
-    {
-      "row": 1,
-      "col": 9,
-      "rowSpan": 2,
-      "colSpan": 8,
-      "widgetTypeid": "@default/label-widget",
-      "widgetState": {
-        "label": "Responsive",
-        "fontSize": 42,
-        "alignment": "center",
-        "fontWeight": "normal",
-        "opacity": 1,
-        "hasBackground": true,
         "responsive": true,
         "minFontSize": 8,
         "maxFontSize": 64
@@ -221,191 +95,65 @@
     },
     {
       "row": 7,
-      "col": 2,
+      "col": 15,
       "rowSpan": 1,
-      "colSpan": 2,
-      "flat": true,
-      "widgetTypeid": "@default/label-widget",
+      "colSpan": 1,
+      "widgetTypeid": "@default/arrow-widget",
       "widgetState": {
-        "label": "LEFT",
-        "fontSize": 28,
-        "alignment": "left",
-        "fontWeight": "normal",
-        "opacity": 1,
-        "hasBackground": false,
-        "responsive": false,
-        "minFontSize": 8,
-        "maxFontSize": 64
-      }
-    },
-    {
-      "row": 7,
-      "col": 4,
-      "rowSpan": 1,
-      "colSpan": 4,
-      "flat": true,
-      "widgetTypeid": "@default/label-widget",
-      "widgetState": {
-        "label": "CENTER",
-        "fontSize": 32,
-        "alignment": "center",
-        "fontWeight": "normal",
-        "opacity": 1,
-        "hasBackground": false,
-        "responsive": false,
-        "minFontSize": 8,
-        "maxFontSize": 64
-      }
-    },
-    {
-      "row": 7,
-      "col": 8,
-      "rowSpan": 1,
-      "colSpan": 2,
-      "flat": true,
-      "widgetTypeid": "@default/label-widget",
-      "widgetState": {
-        "label": "RIGHT",
-        "fontSize": 28,
-        "alignment": "right",
-        "fontWeight": "normal",
-        "opacity": 1,
-        "hasBackground": false,
-        "responsive": false,
-        "minFontSize": 8,
-        "maxFontSize": 64
+        "direction": "down",
+        "opacity": 0.3,
+        "hasBackground": true
       }
     },
     {
       "row": 1,
-      "col": 1,
-      "rowSpan": 2,
-      "colSpan": 2,
-      "widgetTypeid": "@default/clock-widget",
-      "widgetState": {
-        "mode": "analog",
-        "hasBackground": true,
-        "timeFormat": "24h",
-        "showSeconds": true
-      }
-    },
-    {
-      "row": 1,
-      "col": 4,
-      "rowSpan": 1,
-      "colSpan": 2,
-      "flat": true,
-      "widgetTypeid": "@default/clock-widget",
-      "widgetState": {
-        "mode": "digital",
-        "hasBackground": true,
-        "timeFormat": "24h",
-        "showSeconds": true
-      }
-    },
-    {
-      "row": 3,
-      "col": 4,
-      "rowSpan": 1,
-      "colSpan": 2,
-      "flat": true,
-      "widgetTypeid": "@default/clock-widget",
-      "widgetState": {
-        "mode": "digital",
-        "hasBackground": true,
-        "timeFormat": "24h",
-        "showSeconds": false
-      }
-    },
-    {
-      "row": 4,
-      "col": 3,
+      "col": 6,
       "rowSpan": 1,
       "colSpan": 3,
-      "flat": false,
-      "widgetTypeid": "@default/clock-widget",
-      "widgetState": {
-        "mode": "digital",
-        "hasBackground": true,
-        "timeFormat": "12h",
-        "showSeconds": false
-      }
-    },
-    {
-      "row": 3,
-      "col": 1,
-      "rowSpan": 2,
-      "colSpan": 2,
       "flat": true,
-      "widgetTypeid": "@default/clock-widget",
+      "widgetTypeid": "@default/label-widget",
       "widgetState": {
-        "mode": "analog",
+        "label": "¯\\_(ツ)_/¯",
+        "fontSize": 16,
+        "alignment": "center",
+        "fontWeight": "normal",
+        "opacity": 1,
         "hasBackground": false,
-        "timeFormat": "24h",
-        "showSeconds": false
+        "responsive": true,
+        "minFontSize": 8,
+        "maxFontSize": 64
       }
     },
     {
       "row": 1,
       "col": 3,
       "rowSpan": 1,
-      "colSpan": 1,
+      "colSpan": 2,
+      "flat": false,
+      "widgetTypeid": "@default/label-widget",
+      "widgetState": {
+        "label": "Patience",
+        "fontSize": 16,
+        "alignment": "center",
+        "fontWeight": "normal",
+        "opacity": 1,
+        "hasBackground": false,
+        "responsive": true,
+        "minFontSize": 8,
+        "maxFontSize": 64
+      }
+    },
+    {
+      "row": 1,
+      "col": 15,
+      "rowSpan": 2,
+      "colSpan": 2,
       "widgetTypeid": "@default/clock-widget",
       "widgetState": {
         "mode": "analog",
         "hasBackground": true,
         "timeFormat": "24h",
         "showSeconds": true
-      }
-    },
-    {
-      "row": 3,
-      "col": 3,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "flat": true,
-      "widgetTypeid": "@default/clock-widget",
-      "widgetState": {
-        "mode": "analog",
-        "hasBackground": false,
-        "timeFormat": "24h",
-        "showSeconds": false
-      }
-    },
-    {
-      "row": 3,
-      "col": 9,
-      "rowSpan": 1,
-      "colSpan": 2,
-      "widgetTypeid": "@default/label-widget",
-      "widgetState": {
-        "label": "LEFT",
-        "fontSize": 16,
-        "alignment": "left",
-        "fontWeight": "normal",
-        "opacity": 1,
-        "hasBackground": true,
-        "responsive": true,
-        "minFontSize": 8,
-        "maxFontSize": 64
-      }
-    },
-    {
-      "row": 3,
-      "col": 11,
-      "rowSpan": 1,
-      "colSpan": 4,
-      "widgetTypeid": "@default/label-widget",
-      "widgetState": {
-        "label": "CENTER",
-        "fontSize": 16,
-        "alignment": "center",
-        "fontWeight": "normal",
-        "opacity": 1,
-        "hasBackground": true,
-        "responsive": true,
-        "minFontSize": 8,
-        "maxFontSize": 64
       }
     },
     {
@@ -413,14 +161,29 @@
       "col": 15,
       "rowSpan": 1,
       "colSpan": 2,
+      "flat": true,
+      "widgetTypeid": "@default/clock-widget",
+      "widgetState": {
+        "mode": "digital",
+        "hasBackground": true,
+        "timeFormat": "24h",
+        "showSeconds": true
+      }
+    },
+    {
+      "row": 1,
+      "col": 10,
+      "rowSpan": 1,
+      "colSpan": 4,
+      "flat": true,
       "widgetTypeid": "@default/label-widget",
       "widgetState": {
-        "label": "RIGHT",
+        "label": "POWER STACK",
         "fontSize": 16,
-        "alignment": "right",
+        "alignment": "center",
         "fontWeight": "normal",
         "opacity": 1,
-        "hasBackground": true,
+        "hasBackground": false,
         "responsive": true,
         "minFontSize": 8,
         "maxFontSize": 64
@@ -428,7 +191,7 @@
     },
     {
       "row": 5,
-      "col": 13,
+      "col": 5,
       "rowSpan": 2,
       "colSpan": 4,
       "widgetTypeid": "@demo/sparkline-widget",
@@ -444,59 +207,36 @@
       "col": 1,
       "rowSpan": 1,
       "colSpan": 16,
+      "flat": true,
       "widgetTypeid": "@demo/sparkline-widget",
       "widgetState": {
         "hasBackground": true,
         "realtime": true,
         "frameRate": 20,
         "responsiveLineColors": true
-      }
-    },
-    {
-      "row": 2,
-      "col": 3,
-      "rowSpan": 1,
-      "colSpan": 3,
-      "widgetTypeid": "@default/clock-widget",
-      "widgetState": {
-        "mode": "digital",
-        "hasBackground": true,
-        "timeFormat": "12h",
-        "showSeconds": true
-      }
-    },
-    {
-      "row": 1,
-      "col": 7,
-      "rowSpan": 2,
-      "colSpan": 2,
-      "widgetTypeid": "@demo/sparkline-widget",
-      "widgetState": {
-        "hasBackground": true,
-        "realtime": false,
-        "frameRate": 20,
-        "responsiveLineColors": true
-      }
-    },
-    {
-      "row": 3,
-      "col": 6,
-      "rowSpan": 2,
-      "colSpan": 3,
-      "widgetTypeid": "@demo/sparkbar-widget",
-      "widgetState": {
-        "hasBackground": true,
-        "realtime": true,
-        "frameRate": 20,
-        "numberOfBars": 10,
-        "responsiveBarColors": false
       }
     },
     {
       "row": 5,
       "col": 1,
+      "rowSpan": 2,
+      "colSpan": 4,
+      "flat": false,
+      "widgetTypeid": "@demo/sparkbar-widget",
+      "widgetState": {
+        "hasBackground": false,
+        "realtime": true,
+        "frameRate": 20,
+        "numberOfBars": 20,
+        "responsiveBarColors": false
+      }
+    },
+    {
+      "row": 2,
+      "col": 6,
       "rowSpan": 1,
-      "colSpan": 5,
+      "colSpan": 3,
+      "flat": true,
       "widgetTypeid": "@demo/sparkbar-widget",
       "widgetState": {
         "hasBackground": true,
@@ -507,23 +247,24 @@
       }
     },
     {
-      "row": 5,
-      "col": 11,
-      "rowSpan": 2,
+      "row": 2,
+      "col": 1,
+      "rowSpan": 1,
       "colSpan": 2,
+      "flat": true,
       "widgetTypeid": "@default/radial-gauge-widget",
       "widgetState": {
         "value": 75,
         "colorProfile": "static",
         "active": true,
-        "hasBackground": true,
-        "showValueLabel": false
+        "hasBackground": false,
+        "showValueLabel": true
       }
     },
     {
-      "row": 5,
-      "col": 9,
-      "rowSpan": 2,
+      "row": 2,
+      "col": 3,
+      "rowSpan": 1,
       "colSpan": 2,
       "flat": true,
       "widgetTypeid": "@default/radial-gauge-widget",
@@ -537,20 +278,157 @@
     },
     {
       "row": 5,
-      "col": 6,
+      "col": 10,
       "rowSpan": 2,
-      "colSpan": 3,
-      "flat": false,
+      "colSpan": 4,
+      "flat": true,
       "widgetTypeid": "@demo/realtime-gauge-widget",
       "widgetState": {
         "colorProfile": "static",
         "active": true,
-        "hasBackground": true,
+        "hasBackground": false,
         "showValueLabel": true,
         "label": "MW",
         "showLabel": true,
         "datasource": "random",
         "updateInterval": 1
+      }
+    },
+    {
+      "row": 2,
+      "col": 10,
+      "rowSpan": 2,
+      "colSpan": 4,
+      "flat": true,
+      "widgetTypeid": "@demo/realtime-gauge-widget",
+      "widgetState": {
+        "colorProfile": "dynamic",
+        "active": true,
+        "hasBackground": false,
+        "showValueLabel": true,
+        "label": "kW",
+        "showLabel": true,
+        "datasource": "random",
+        "updateInterval": 1
+      }
+    },
+    {
+      "row": 4,
+      "col": 15,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@default/arrow-widget",
+      "widgetState": {
+        "direction": "up",
+        "opacity": 0.3,
+        "hasBackground": true
+      }
+    },
+    {
+      "row": 4,
+      "col": 16,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@default/label-widget",
+      "widgetState": {
+        "label": "",
+        "fontSize": 16,
+        "alignment": "center",
+        "fontWeight": "normal",
+        "opacity": 1,
+        "hasBackground": true,
+        "responsive": false,
+        "minFontSize": 8,
+        "maxFontSize": 64
+      }
+    },
+    {
+      "row": 5,
+      "col": 15,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@default/radial-gauge-widget",
+      "widgetState": {
+        "value": 50,
+        "colorProfile": "dynamic",
+        "active": false,
+        "hasBackground": true,
+        "showValueLabel": true
+      }
+    },
+    {
+      "row": 6,
+      "col": 15,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@demo/sparkline-widget",
+      "widgetState": {
+        "hasBackground": true,
+        "realtime": false,
+        "frameRate": 20,
+        "responsiveLineColors": true
+      }
+    },
+    {
+      "row": 6,
+      "col": 16,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@demo/sparkbar-widget",
+      "widgetState": {
+        "hasBackground": true,
+        "realtime": false,
+        "frameRate": 20,
+        "numberOfBars": 5,
+        "responsiveBarColors": true
+      }
+    },
+    {
+      "row": 1,
+      "col": 1,
+      "rowSpan": 1,
+      "colSpan": 2,
+      "flat": false,
+      "widgetTypeid": "@default/label-widget",
+      "widgetState": {
+        "label": "Caffeine",
+        "fontSize": 24,
+        "alignment": "center",
+        "fontWeight": "normal",
+        "opacity": 1,
+        "hasBackground": false,
+        "responsive": true,
+        "minFontSize": 8,
+        "maxFontSize": 64
+      }
+    },
+    {
+      "row": 5,
+      "col": 16,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@demo/realtime-gauge-widget",
+      "widgetState": {
+        "colorProfile": "dynamic",
+        "active": false,
+        "hasBackground": true,
+        "showValueLabel": true,
+        "label": "",
+        "showLabel": false,
+        "datasource": "none",
+        "updateInterval": 1
+      }
+    },
+    {
+      "row": 7,
+      "col": 16,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@default/arrow-widget",
+      "widgetState": {
+        "direction": "up",
+        "opacity": 0.3,
+        "hasBackground": true
       }
     }
   ]

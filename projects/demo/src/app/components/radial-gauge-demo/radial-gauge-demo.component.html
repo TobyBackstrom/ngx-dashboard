@@ -157,6 +157,54 @@
             </button>
           </div>
         </div>
+
+        <!-- Advanced Features Controls -->
+        <div class="section">
+          <h3>Advanced Features</h3>
+
+          <div class="toggle-group">
+            <mat-slide-toggle [(ngModel)]="showValueLabel">
+              Show Value Label
+            </mat-slide-toggle>
+            <mat-slide-toggle [(ngModel)]="hasBackground">
+              Has Background
+            </mat-slide-toggle>
+          </div>
+
+          <div class="input-row">
+            <mat-form-field>
+              <mat-label>Label Reference</mat-label>
+              <input 
+                matInput 
+                placeholder="e.g., '00000' or leave empty"
+                [(ngModel)]="labelReference" />
+              <mat-hint>Text/number for width calculation</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Reference Glyph</mat-label>
+              <input 
+                matInput 
+                maxlength="1"
+                [(ngModel)]="referenceGlyph" />
+              <mat-hint>Single character</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="control-group">
+            <span>Label Padding: {{ labelPadding() }}px</span>
+            <mat-slider min="0" max="20" step="1" discrete>
+              <input matSliderThumb [(ngModel)]="labelPadding" />
+            </mat-slider>
+          </div>
+
+          <div class="control-group">
+            <span>Baseline Safety: {{ baselineSafety() }}</span>
+            <mat-slider min="0.5" max="1" step="0.01" discrete>
+              <input matSliderThumb [(ngModel)]="baselineSafety" />
+            </mat-slider>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
 
@@ -180,6 +228,12 @@
             [segments]="getActiveSegments()"
             [title]="getTitle()"
             [description]="getDescription()"
+            [showValueLabel]="showValueLabel()"
+            [hasBackground]="hasBackground()"
+            [labelReference]="labelReference()"
+            [referenceGlyph]="referenceGlyph()"
+            [labelPadding]="labelPadding()"
+            [baselineSafety]="baselineSafety()"
           />
         </div>
 
@@ -317,6 +371,7 @@
                 [gap]="4"
                 [segmentGapPx]="2"
                 [segments]="performanceSegments()"
+                [showValueLabel]="false"
                 title="Memory Usage"
                 description="Percentage"
               />
@@ -368,6 +423,7 @@
                 [gap]="4"
                 [segmentGapPx]="2"
                 [segments]="batterySegments()"
+                [hasBackground]="true"
                 title="Battery"
                 description="Charge Level"
               />
@@ -441,6 +497,23 @@
   [segments]="batterySegments"
   title="Battery"
   description="Charge" /&gt;</code></pre>
+
+      <h4>4. Advanced Features (Text Display & Styling)</h4>
+      <pre><code>&lt;!-- Fine-tuned text display and visual options --&gt;
+&lt;ngx-radial-gauge
+  [value]="75"
+  [min]="0"
+  [max]="100"
+  [size]="300"
+  [showValueLabel]="false"      &lt;!-- Hide value text --&gt;
+  [hasBackground]="true"         &lt;!-- Add background styling --&gt;
+  [labelReference]="'00000'"     &lt;!-- Reserve space for 5 digits --&gt;
+  [referenceGlyph]="'8'"         &lt;!-- Use '8' for width calculations --&gt;
+  [labelPadding]="8"             &lt;!-- Extra inner padding (px) --&gt;
+  [baselineSafety]="0.9"         &lt;!-- Text baseline adjustment --&gt;
+  [segments]="customSegments"
+  title="Advanced Gauge"
+  description="All options" /&gt;</code></pre>
 
       <h4>TypeScript Interface</h4>
       <pre><code>interface RadialGaugeSegment {{ '{' }}

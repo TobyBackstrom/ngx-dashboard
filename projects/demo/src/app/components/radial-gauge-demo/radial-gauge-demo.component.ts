@@ -49,6 +49,14 @@ export class RadialGaugeDemoComponent {
   containerWidth = signal(400);
   containerHeight = signal(250);
   sizeToThicknessRatio = signal(18);
+  
+  // Advanced feature controls
+  showValueLabel = signal(true);
+  hasBackground = signal(false);
+  labelReference = signal<string | number | undefined>(undefined);
+  referenceGlyph = signal('0');
+  labelPadding = signal(4);
+  baselineSafety = signal(0.95);
 
   // Animation state
   animatedValue = signal(0);
