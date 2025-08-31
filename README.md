@@ -82,103 +82,29 @@ For example:
 
 This ensures compatibility with your Angular version while allowing independent feature releases and bug fixes.
 
-### Basic Usage
+### Usage Guide
+
+For complete setup instructions, implementation examples, and best practices, see our comprehensive **[Usage Guide](USAGE.md)**.
+
+The usage guide includes:
+- **Complete Setup** - App configuration, Material theming, and widget registration  
+- **Dashboard Implementation** - Component usage patterns from the demo app
+- **Custom Widget Creation** - Step-by-step widget development guide
+- **Advanced Features** - Persistence, context menus, and custom dialogs
+- **Troubleshooting** - Common setup issues and solutions
+
+Quick example for getting started:
 
 ```typescript
-import { Component, signal, inject } from "@angular/core";
-import { DashboardComponent, WidgetListComponent, createEmptyDashboard, provideNgxDashboard, DashboardService, type DashboardData } from "@dragonworks/ngx-dashboard";
-
-@Component({
-  selector: "app-dashboard-page",
-  standalone: true,
-  imports: [DashboardComponent, WidgetListComponent],
-  providers: [provideNgxDashboard()],
-  template: `
-    <div class="dashboard-container">
-      <ngx-dashboard-widget-list [widgetTypes]="widgetTypes()" />
-      <ngx-dashboard [dashboardData]="dashboard()" [editMode]="editMode()" (dashboardChange)="onDashboardChange($event)" />
-    </div>
-  `,
-})
-export class DashboardPageComponent {
-  private dashboardService = inject(DashboardService);
-
-  dashboard = signal(createEmptyDashboard("my-dashboard", 12, 8));
-  editMode = signal(true);
-  widgetTypes = this.dashboardService.widgetTypes;
-
-  onDashboardChange(data: DashboardData) {
-    this.dashboard.set(data);
-    // Persist changes as needed
-  }
-}
-```
-
-### Creating Custom Widgets
-
-```typescript
-import { Component, signal } from "@angular/core";
-import { Widget, WidgetMetadata } from "@dragonworks/ngx-dashboard";
-
-interface MyWidgetState {
-  message: string;
-  count: number;
-}
-
-@Component({
-  selector: "app-my-widget",
-  standalone: true,
-  template: `
-    <div class="widget-content">
-      <h3>{{ state().message }}</h3>
-      <p>Count: {{ state().count }}</p>
-      <button (click)="increment()">+</button>
-    </div>
-  `,
-  styles: [
-    `
-      .widget-content {
-        padding: 16px;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-      }
-    `,
+// app.config.ts - Register widgets on startup
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideEnvironmentInitializer(() => {
+      const dashboardService = inject(DashboardService);
+      dashboardService.registerWidgetType(LabelWidgetComponent);
+    }),
   ],
-})
-export class MyWidgetComponent implements Widget {
-  static metadata: WidgetMetadata = {
-    widgetTypeid: "my-widget",
-    name: "Custom Widget",
-    description: "Example custom widget with state management",
-    svgIcon: "<svg>...</svg>", // Your widget icon
-  };
-
-  readonly state = signal<MyWidgetState>({
-    message: "Hello Dashboard!",
-    count: 0,
-  });
-
-  increment() {
-    this.state.update((s) => ({ ...s, count: s.count + 1 }));
-  }
-
-  dashboardGetState(): MyWidgetState {
-    return this.state();
-  }
-
-  dashboardSetState(state?: unknown): void {
-    if (state) {
-      this.state.set(state as MyWidgetState);
-    }
-  }
-}
-
-// Register with dashboard service
-dashboardService.registerWidgetType(MyWidgetComponent.metadata);
+};
 ```
 
 ## 🛠️ Development
