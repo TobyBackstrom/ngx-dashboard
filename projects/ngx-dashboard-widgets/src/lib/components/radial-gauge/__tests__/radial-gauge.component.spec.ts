@@ -17,7 +17,10 @@ describe('RadialGaugeComponent', () => {
       observe = jasmine.createSpy('observe');
       disconnect = jasmine.createSpy('disconnect');
       unobserve = jasmine.createSpy('unobserve');
-      constructor(callback: ResizeObserverCallback) {}
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      constructor(_callback: ResizeObserverCallback) {
+        // Mock constructor - no implementation needed
+      }
     };
 
     await TestBed.configureTestingModule({
