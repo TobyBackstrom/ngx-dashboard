@@ -19,12 +19,17 @@
   z-index: 100; // While dragging
   opacity: 0.5;
   pointer-events: none; // Allow drag events to pass through to drop zones
-  
+
   // Ensure content area also doesn't block events during drag
   .content-area {
     pointer-events: none;
   }
 }
+
+/* Ensure flat-mode cells also become transparent when dragged */
+// :host(.is-dragging) .cell.flat .content-area {
+//   pointer-events: none;
+// }
 
 :host(:hover) .resize-handle {
   opacity: 1;
@@ -73,7 +78,7 @@
   pointer-events: auto;
   position: relative;
   z-index: 1;
-  
+
   // Isolate widget content from parent hover effects
   &:hover {
     // Reset any inherited hover effects that might interfere with widget hover
@@ -82,10 +87,11 @@
 }
 
 // Ensure flat mode doesn't interfere with widget hover events
-.cell.flat .content-area {
+// but only allow pointer events in flat mode if NOT dragging
+:host(:not(.is-dragging)) .cell.flat .content-area {
   // Explicitly ensure widget hover works in flat mode
   pointer-events: auto;
-  
+
   &:hover {
     // Prevent flat mode hover reset from affecting widget content
     transform: initial;
