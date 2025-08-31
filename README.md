@@ -22,6 +22,8 @@ Modern Angular workspace for building drag-and-drop grid dashboards with resizab
 
 🎯 **[Live Demo](https://dragonworks.dev/ngx-dashboard/)** - Try the interactive demo application
 
+![Dashboard Screenshot](docs/dashboard.png)
+
 ## 📦 Architecture
 
 This workspace contains three main projects:
