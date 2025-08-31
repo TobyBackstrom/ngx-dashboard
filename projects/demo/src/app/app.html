@@ -2,7 +2,6 @@
   <!-- Left side navigation -->
   <button mat-button [matMenuTriggerFor]="navigationMenu">
     <mat-icon>menu</mat-icon>
-    <span>Navigation</span>
   </button>
   <mat-menu #navigationMenu="matMenu">
     <button mat-menu-item (click)="navigateToDashboard()">
@@ -46,13 +45,15 @@
     >
       @for (themeConfig of themeService.availableThemes(); track
       themeConfig.key) {
-      <div class="theme-option-row" 
-           (click)="setTheme(themeConfig.key)"
-           (keyup.enter)="setTheme(themeConfig.key)"
-           (keyup.space)="setTheme(themeConfig.key)"
-           tabindex="0"
-           role="button"
-           [attr.aria-label]="'Select ' + themeConfig.displayName + ' theme'">
+      <div
+        class="theme-option-row"
+        (click)="setTheme(themeConfig.key)"
+        (keyup.enter)="setTheme(themeConfig.key)"
+        (keyup.space)="setTheme(themeConfig.key)"
+        tabindex="0"
+        role="button"
+        [attr.aria-label]="'Select ' + themeConfig.displayName + ' theme'"
+      >
         <mat-radio-button [value]="themeConfig.key" class="theme-option">
           {{ themeConfig.displayName }}
         </mat-radio-button>
