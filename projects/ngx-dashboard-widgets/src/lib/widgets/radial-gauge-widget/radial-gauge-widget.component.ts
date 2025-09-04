@@ -23,7 +23,7 @@ export interface RadialGaugeWidgetState {
 })
 export class RadialGaugeWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
-    widgetTypeid: '@default/radial-gauge-widget',
+    widgetTypeid: '@ngx-dashboard/radial-gauge-widget',
     name: 'Radial Gauge',
     description: 'A semi-circular gauge indicator',
     svgIcon,
@@ -44,7 +44,7 @@ export class RadialGaugeWidgetComponent implements Widget {
 
   readonly segments = computed(() => {
     const profile = this.state().colorProfile || 'dynamic';
-    
+
     if (profile === 'static') {
       // Static performance segments (like CPU usage example)
       return [

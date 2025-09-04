@@ -11,7 +11,7 @@
       "rowSpan": 1,
       "colSpan": 1,
       "flat": true,
-      "widgetTypeid": "@default/arrow-widget",
+      "widgetTypeid": "@ngx-dashboard/arrow-widget",
       "widgetState": {
         "direction": "right",
         "opacity": 0.3,
@@ -24,7 +24,7 @@
       "rowSpan": 1,
       "colSpan": 1,
       "flat": true,
-      "widgetTypeid": "@default/arrow-widget",
+      "widgetTypeid": "@ngx-dashboard/arrow-widget",
       "widgetState": {
         "direction": "left",
         "opacity": 0.3,
@@ -36,7 +36,7 @@
       "col": 5,
       "rowSpan": 1,
       "colSpan": 4,
-      "widgetTypeid": "@default/label-widget",
+      "widgetTypeid": "@ngx-dashboard/label-widget",
       "widgetState": {
         "label": "Snacks/hr",
         "fontSize": 16,
@@ -55,7 +55,7 @@
       "rowSpan": 1,
       "colSpan": 1,
       "flat": true,
-      "widgetTypeid": "@default/arrow-widget",
+      "widgetTypeid": "@ngx-dashboard/arrow-widget",
       "widgetState": {
         "direction": "down",
         "opacity": 0.3,
@@ -68,7 +68,7 @@
       "rowSpan": 1,
       "colSpan": 1,
       "flat": true,
-      "widgetTypeid": "@default/arrow-widget",
+      "widgetTypeid": "@ngx-dashboard/arrow-widget",
       "widgetState": {
         "direction": "up",
         "opacity": 0.3,
@@ -80,7 +80,7 @@
       "col": 1,
       "rowSpan": 1,
       "colSpan": 4,
-      "widgetTypeid": "@default/label-widget",
+      "widgetTypeid": "@ngx-dashboard/label-widget",
       "widgetState": {
         "label": "Motivation",
         "fontSize": 16,
@@ -98,7 +98,7 @@
       "col": 15,
       "rowSpan": 1,
       "colSpan": 1,
-      "widgetTypeid": "@default/arrow-widget",
+      "widgetTypeid": "@ngx-dashboard/arrow-widget",
       "widgetState": {
         "direction": "down",
         "opacity": 0.3,
@@ -111,7 +111,7 @@
       "rowSpan": 1,
       "colSpan": 3,
       "flat": true,
-      "widgetTypeid": "@default/label-widget",
+      "widgetTypeid": "@ngx-dashboard/label-widget",
       "widgetState": {
         "label": "¯\\_(ツ)_/¯",
         "fontSize": 16,
@@ -130,7 +130,7 @@
       "rowSpan": 1,
       "colSpan": 2,
       "flat": false,
-      "widgetTypeid": "@default/label-widget",
+      "widgetTypeid": "@ngx-dashboard/label-widget",
       "widgetState": {
         "label": "Patience",
         "fontSize": 16,
@@ -148,7 +148,7 @@
       "col": 15,
       "rowSpan": 2,
       "colSpan": 2,
-      "widgetTypeid": "@default/clock-widget",
+      "widgetTypeid": "@ngx-dashboard/clock-widget",
       "widgetState": {
         "mode": "analog",
         "hasBackground": true,
@@ -162,7 +162,7 @@
       "rowSpan": 1,
       "colSpan": 2,
       "flat": true,
-      "widgetTypeid": "@default/clock-widget",
+      "widgetTypeid": "@ngx-dashboard/clock-widget",
       "widgetState": {
         "mode": "digital",
         "hasBackground": true,
@@ -176,7 +176,7 @@
       "rowSpan": 1,
       "colSpan": 4,
       "flat": true,
-      "widgetTypeid": "@default/label-widget",
+      "widgetTypeid": "@ngx-dashboard/label-widget",
       "widgetState": {
         "label": "POWER STACK",
         "fontSize": 16,
@@ -252,7 +252,7 @@
       "rowSpan": 1,
       "colSpan": 2,
       "flat": true,
-      "widgetTypeid": "@default/radial-gauge-widget",
+      "widgetTypeid": "@ngx-dashboard/radial-gauge-widget",
       "widgetState": {
         "value": 75,
         "colorProfile": "static",
@@ -267,7 +267,7 @@
       "rowSpan": 1,
       "colSpan": 2,
       "flat": true,
-      "widgetTypeid": "@default/radial-gauge-widget",
+      "widgetTypeid": "@ngx-dashboard/radial-gauge-widget",
       "widgetState": {
         "value": 50,
         "colorProfile": "dynamic",
@@ -317,7 +317,7 @@
       "col": 15,
       "rowSpan": 1,
       "colSpan": 1,
-      "widgetTypeid": "@default/arrow-widget",
+      "widgetTypeid": "@ngx-dashboard/arrow-widget",
       "widgetState": {
         "direction": "up",
         "opacity": 0.3,
@@ -329,7 +329,7 @@
       "col": 16,
       "rowSpan": 1,
       "colSpan": 1,
-      "widgetTypeid": "@default/label-widget",
+      "widgetTypeid": "@ngx-dashboard/label-widget",
       "widgetState": {
         "label": "",
         "fontSize": 16,
@@ -347,7 +347,7 @@
       "col": 15,
       "rowSpan": 1,
       "colSpan": 1,
-      "widgetTypeid": "@default/radial-gauge-widget",
+      "widgetTypeid": "@ngx-dashboard/radial-gauge-widget",
       "widgetState": {
         "value": 50,
         "colorProfile": "dynamic",
@@ -389,7 +389,7 @@
       "rowSpan": 1,
       "colSpan": 2,
       "flat": false,
-      "widgetTypeid": "@default/label-widget",
+      "widgetTypeid": "@ngx-dashboard/label-widget",
       "widgetState": {
         "label": "Caffeine",
         "fontSize": 24,
@@ -424,7 +424,7 @@
       "col": 16,
       "rowSpan": 1,
       "colSpan": 1,
-      "widgetTypeid": "@default/arrow-widget",
+      "widgetTypeid": "@ngx-dashboard/arrow-widget",
       "widgetState": {
         "direction": "up",
         "opacity": 0.3,

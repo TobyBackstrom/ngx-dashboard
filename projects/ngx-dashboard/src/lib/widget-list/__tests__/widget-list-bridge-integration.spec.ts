@@ -5,7 +5,6 @@ import { DashboardBridgeService } from '../../services/dashboard-bridge.service'
 import { DashboardService } from '../../services/dashboard.service';
 import { ArrowWidgetComponent } from '@dragonworks/ngx-dashboard-widgets';
 
-
 // MockDashboardComponent removed - not used in tests
 
 describe('WidgetListComponent Integration with DashboardBridgeService', () => {
@@ -17,16 +16,13 @@ describe('WidgetListComponent Integration with DashboardBridgeService', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [WidgetListComponent],
-      providers: [
-        DashboardBridgeService,
-        DashboardService
-      ]
+      providers: [DashboardBridgeService, DashboardService],
     }).compileComponents();
 
     // Register a test widget
     dashboardService = TestBed.inject(DashboardService);
     dashboardService.registerWidgetType(ArrowWidgetComponent);
-    
+
     bridgeService = TestBed.inject(DashboardBridgeService);
     fixture = TestBed.createComponent(WidgetListComponent);
     component = fixture.componentInstance;
@@ -40,15 +36,20 @@ describe('WidgetListComponent Integration with DashboardBridgeService', () => {
 
     it('should use fallback dimensions when no dashboards registered', () => {
       fixture.detectChanges();
-      
-      expect(component.gridCellDimensions()).toEqual({ width: 100, height: 100 });
+
+      expect(component.gridCellDimensions()).toEqual({
+        width: 100,
+        height: 100,
+      });
     });
 
     it('should display available widgets even without dashboards', () => {
       fixture.detectChanges();
-      
+
       expect(component.widgets().length).toBeGreaterThan(0);
-      expect(component.widgets()[0].widgetTypeid).toBe('@default/arrow-widget');
+      expect(component.widgets()[0].widgetTypeid).toBe(
+        '@ngx-dashboard/arrow-widget'
+      );
     });
 
     it('should handle drag start/end gracefully without dashboards', () => {
@@ -56,12 +57,12 @@ describe('WidgetListComponent Integration with DashboardBridgeService', () => {
       const mockEvent = {
         dataTransfer: {
           effectAllowed: '',
-          setDragImage: jasmine.createSpy('setDragImage')
-        }
+          setDragImage: jasmine.createSpy('setDragImage'),
+        },
       } as any;
-      
+
       const widget = component.widgets()[0];
-      
+
       expect(() => {
         component.onDragStart(mockEvent, widget);
         component.onDragEnd();
@@ -69,23 +70,21 @@ describe('WidgetListComponent Integration with DashboardBridgeService', () => {
     });
   });
 
-
-
   describe('Drag Ghost Creation', () => {
     it('should create drag ghost with fallback dimensions when no dashboards', () => {
       fixture.detectChanges();
-      
+
       // Mock DragEvent for testing - uses any to avoid strict type requirements
       const mockEvent = {
         dataTransfer: {
           effectAllowed: '',
-          setDragImage: jasmine.createSpy('setDragImage')
-        }
+          setDragImage: jasmine.createSpy('setDragImage'),
+        },
       } as any;
-      
+
       const widget = component.widgets()[0];
       component.onDragStart(mockEvent, widget);
-      
+
       // Should still work with fallback dimensions
       expect(mockEvent.dataTransfer.setDragImage).toHaveBeenCalled();
     });
@@ -94,20 +93,20 @@ describe('WidgetListComponent Integration with DashboardBridgeService', () => {
   describe('Widget State Management', () => {
     it('should manage active widget state independently of dashboard registration', () => {
       expect(component.activeWidget()).toBeNull();
-      
+
       // Mock DragEvent for testing - uses any to avoid strict type requirements
       const mockEvent = {
         dataTransfer: {
           effectAllowed: '',
-          setDragImage: jasmine.createSpy('setDragImage')
-        }
+          setDragImage: jasmine.createSpy('setDragImage'),
+        },
       } as any;
-      
+
       const widget = component.widgets()[0];
-      
+
       component.onDragStart(mockEvent, widget);
       expect(component.activeWidget()).toBe(widget.widgetTypeid);
-      
+
       component.onDragEnd();
       expect(component.activeWidget()).toBeNull();
     });
