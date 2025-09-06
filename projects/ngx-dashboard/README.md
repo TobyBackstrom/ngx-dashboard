@@ -10,33 +10,133 @@ npm install @dragonworks/ngx-dashboard
 
 ## Features
 
-- Grid-based drag and drop with collision detection
-- Resizable cells with boundary constraints
-- Editor and viewer modes
-- NgRx Signals state management
-- Context menu with Material Design
-- Extensible widget system
-- 100% OnPush change detection
+- **Grid-based Drag & Drop**: Advanced collision detection and boundary constraints
+- **Resizable Cells**: Dynamic resizing with minimum size constraints
+- **Dual-Mode Display**: Editor mode for configuration, viewer mode for presentation
+- **NgRx Signals State Management**: Modern reactive state with normalized widget storage
+- **Material Design 3 Integration**: Full MD3 compliance with theme tokens
+- **Context Menu System**: Right-click operations with Material menu
+- **Extensible Widget System**: Factory pattern for custom widget types
+- **Performance Optimized**: 100% OnPush change detection strategy
+- **Dual-ID Architecture**: Separation of widget identity (WidgetId) from position (CellId)
+- **Provider Pattern**: Extensible dialog and settings providers
 
-## Usage
+## Requirements
+
+- Angular 20.2.0+
+- Angular Material 20.2.0+
+- Angular CDK 20.2.0+
+
+## Basic Usage
 
 ```typescript
-import { DashboardComponent, createEmptyDashboard } from "@dragonworks/ngx-dashboard";
-import { provideNgxDashboard } from "@dragonworks/ngx-dashboard";
+import { Component } from '@angular/core';
+import { DashboardComponent, createEmptyDashboard } from '@dragonworks/ngx-dashboard';
+import type { DashboardData } from '@dragonworks/ngx-dashboard';
 
 @Component({
-  template: ` <ngx-dashboard [dashboardData]="dashboard" [editMode]="true" (dashboardChange)="onDashboardChange($event)"> </ngx-dashboard> `,
+  selector: 'app-dashboard-page',
+  standalone: true,
   imports: [DashboardComponent],
-  providers: [provideNgxDashboard()],
+  template: `
+    <ngx-dashboard 
+      [dashboardData]="dashboard" 
+      [editMode]="true"
+      (dashboardChange)="onDashboardChange($event)">
+    </ngx-dashboard>
+  `
 })
-export class MyComponent {
-  dashboard = createEmptyDashboard("my-dashboard", 12, 8);
+export class DashboardPageComponent {
+  dashboard = createEmptyDashboard('my-dashboard', 12, 8);
+
+  onDashboardChange(data: DashboardData) {
+    // Handle dashboard updates
+    console.log('Dashboard changed:', data);
+  }
 }
 ```
 
+## Widget Registration
+
+Register custom widgets with the `DashboardService`:
+
+```typescript
+import { Injectable } from '@angular/core';
+import { DashboardService } from '@dragonworks/ngx-dashboard';
+import { MyCustomWidget } from './widgets/my-custom-widget.component';
+
+@Injectable({ providedIn: 'root' })
+export class WidgetSetupService {
+  constructor(private dashboardService: DashboardService) {
+    this.registerWidgets();
+  }
+
+  private registerWidgets() {
+    this.dashboardService.registerWidgetType(MyCustomWidget.metadata);
+  }
+}
+```
+
+## Components
+
+### Main Components
+
+- `DashboardComponent` - Main dashboard component with automatic mode switching
+- `DashboardEditorComponent` - Editor mode with drag & drop
+- `DashboardViewerComponent` - Viewer mode for presentation
+- `WidgetListComponent` - Widget palette for drag & drop
+
+### Services
+
+- `DashboardService` - Widget registration and management
+
+### Models & Utilities
+
+- `createEmptyDashboard()` - Create new dashboard configuration
+- `DashboardData` - Dashboard configuration interface
+- `CellData` - Individual cell/widget data
+- `WidgetMetadata` - Widget type definition
+
+## Advanced Features
+
+### Custom Settings Dialog Provider
+
+```typescript
+import { CELL_SETTINGS_DIALOG_PROVIDER, DefaultCellSettingsDialogProvider } from '@dragonworks/ngx-dashboard';
+
+@Component({
+  providers: [
+    { 
+      provide: CELL_SETTINGS_DIALOG_PROVIDER, 
+      useClass: DefaultCellSettingsDialogProvider 
+    }
+  ]
+})
+```
+
+### Widget State Management
+
+Widgets can implement optional lifecycle methods:
+
+```typescript
+export interface DashboardWidgetComponent {
+  dashboardGetState?(): unknown;
+  dashboardSetState?(state: unknown): void;
+  dashboardEditState?(): void;
+}
+```
+
+## Architecture Highlights
+
+- **NgRx Signals Store**: Feature-based state management with normalized widget storage
+- **Signal-based Architecture**: Modern Angular signals throughout
+- **Material Design 3**: Complete MD3 compliance with design tokens
+- **Performance First**: OnPush change detection, computed signals, memoization
+- **TypeScript Strict Mode**: Full type safety (no `any` types in public API)
+
 ## Documentation
 
-See the [main repository](https://github.com/TobyBackstrom/ngx-dashboard) for full documentation and examples.
+See the [main repository](https://github.com/TobyBackstrom/ngx-dashboard) for full documentation, examples, and demo application.
 
 ## License
 
