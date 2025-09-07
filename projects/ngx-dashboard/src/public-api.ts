@@ -3,19 +3,29 @@
  */
 
 // Main dashboard components
-export * from './lib/dashboard/dashboard.component';
-export * from './lib/dashboard-editor/dashboard-editor.component';
-export * from './lib/dashboard-viewer/dashboard-viewer.component';
-export * from './lib/widget-list/widget-list.component';
+export { DashboardComponent } from './lib/dashboard/dashboard.component';
+export { WidgetListComponent } from './lib/widget-list/widget-list.component';
 
 // Public Services
-export * from './lib/services/dashboard.service';
+export { DashboardService } from './lib/services/dashboard.service';
 
-// Store is now internal - removed from public API
+// Core Widget Types
+export type { Widget, WidgetMetadata } from './lib/models/widget';
 
-// Public Models and interfaces
-// TODO: not everything should be exported
-export * from './lib/models';
+// Data Transfer Types
+export type {
+  DashboardDataDto,
+  CellDataDto,
+} from './lib/models/dashboard-data.dto';
+export type { ReservedSpace } from './lib/models/reserved-space';
 
-// Providers
-export * from './lib/providers';
+// Utility Functions
+export {
+  createEmptyDashboard,
+  createDefaultDashboard,
+} from './lib/models/dashboard-data.utils';
+
+// Provider exports for advanced customization
+export { CELL_SETTINGS_DIALOG_PROVIDER } from './lib/providers/cell-settings-dialog/cell-settings-dialog.tokens';
+export { DefaultCellSettingsDialogProvider } from './lib/providers/cell-settings-dialog/default-cell-settings-dialog.provider';
+export { CellSettingsDialogProvider } from './lib/providers/cell-settings-dialog/cell-settings-dialog.provider';
