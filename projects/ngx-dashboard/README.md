@@ -10,15 +10,14 @@ npm install @dragonworks/ngx-dashboard
 
 ## Features
 
-- **Grid-based Drag & Drop**: Advanced collision detection and boundary constraints
+- **Grid-based Drag & Drop**: Collision detection and boundary constraints
 - **Resizable Cells**: Dynamic resizing with minimum size constraints
 - **Dual-Mode Display**: Editor mode for configuration, viewer mode for presentation
-- **NgRx Signals State Management**: Modern reactive state with normalized widget storage
+- **NgRx Signals State Management**: Reactive state with normalized widget storage
 - **Material Design 3 Integration**: Full MD3 compliance with theme tokens
 - **Context Menu System**: Right-click operations with Material menu
 - **Extensible Widget System**: Factory pattern for custom widget types
 - **Performance Optimized**: 100% OnPush change detection strategy
-- **Dual-ID Architecture**: Separation of widget identity (WidgetId) from position (CellId)
 - **Provider Pattern**: Extensible dialog and settings providers
 
 ## Requirements
@@ -30,28 +29,22 @@ npm install @dragonworks/ngx-dashboard
 ## Basic Usage
 
 ```typescript
-import { Component } from '@angular/core';
-import { DashboardComponent, createEmptyDashboard } from '@dragonworks/ngx-dashboard';
-import type { DashboardData } from '@dragonworks/ngx-dashboard';
+import { Component } from "@angular/core";
+import { DashboardComponent, createEmptyDashboard } from "@dragonworks/ngx-dashboard";
+import type { DashboardData } from "@dragonworks/ngx-dashboard";
 
 @Component({
-  selector: 'app-dashboard-page',
+  selector: "app-dashboard-page",
   standalone: true,
   imports: [DashboardComponent],
-  template: `
-    <ngx-dashboard 
-      [dashboardData]="dashboard" 
-      [editMode]="true"
-      (dashboardChange)="onDashboardChange($event)">
-    </ngx-dashboard>
-  `
+  template: ` <ngx-dashboard [dashboardData]="dashboard" [editMode]="true" (dashboardChange)="onDashboardChange($event)"> </ngx-dashboard> `,
 })
 export class DashboardPageComponent {
-  dashboard = createEmptyDashboard('my-dashboard', 12, 8);
+  dashboard = createEmptyDashboard("my-dashboard", 12, 8);
 
   onDashboardChange(data: DashboardData) {
     // Handle dashboard updates
-    console.log('Dashboard changed:', data);
+    console.log("Dashboard changed:", data);
   }
 }
 ```
@@ -61,11 +54,11 @@ export class DashboardPageComponent {
 Register custom widgets with the `DashboardService`:
 
 ```typescript
-import { Injectable } from '@angular/core';
-import { DashboardService } from '@dragonworks/ngx-dashboard';
-import { MyCustomWidget } from './widgets/my-custom-widget.component';
+import { Injectable } from "@angular/core";
+import { DashboardService } from "@dragonworks/ngx-dashboard";
+import { MyCustomWidget } from "./widgets/my-custom-widget.component";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class WidgetSetupService {
   constructor(private dashboardService: DashboardService) {
     this.registerWidgets();
@@ -97,23 +90,6 @@ export class WidgetSetupService {
 - `CellData` - Individual cell/widget data
 - `WidgetMetadata` - Widget type definition
 
-## Advanced Features
-
-### Custom Settings Dialog Provider
-
-```typescript
-import { CELL_SETTINGS_DIALOG_PROVIDER, DefaultCellSettingsDialogProvider } from '@dragonworks/ngx-dashboard';
-
-@Component({
-  providers: [
-    { 
-      provide: CELL_SETTINGS_DIALOG_PROVIDER, 
-      useClass: DefaultCellSettingsDialogProvider 
-    }
-  ]
-})
-```
-
 ### Widget State Management
 
 Widgets can implement optional lifecycle methods:
@@ -125,14 +101,6 @@ export interface DashboardWidgetComponent {
   dashboardEditState?(): void;
 }
 ```
-
-## Architecture Highlights
-
-- **NgRx Signals Store**: Feature-based state management with normalized widget storage
-- **Signal-based Architecture**: Modern Angular signals throughout
-- **Material Design 3**: Complete MD3 compliance with design tokens
-- **Performance First**: OnPush change detection, computed signals, memoization
-- **TypeScript Strict Mode**: Full type safety (no `any` types in public API)
 
 ## Documentation
 
