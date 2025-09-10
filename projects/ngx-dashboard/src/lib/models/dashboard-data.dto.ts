@@ -9,7 +9,7 @@ export interface DashboardDataDto {
   version: string;
 
   /** Unique dashboard identifier managed by the client */
-  dashboardId: string;
+  // dashboardId: string;
 
   /** Grid dimensions */
   rows: number;

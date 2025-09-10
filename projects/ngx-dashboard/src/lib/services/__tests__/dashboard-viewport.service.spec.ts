@@ -2,9 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { DashboardViewportService } from '../dashboard-viewport.service';
 import { DashboardStore } from '../../store/dashboard-store';
-import {
-  ReservedSpace
-} from '../../models/reserved-space';
+import { ReservedSpace } from '../../models/reserved-space';
 
 // Mock ResizeObserver for testing
 class MockResizeObserver {
@@ -13,16 +11,24 @@ class MockResizeObserver {
   constructor(callback: (entries: ResizeObserverEntry[]) => void) {
     this.callbacks.push(callback);
     // Store reference for manual triggering in tests
-    const mockClass = MockResizeObserver as unknown as { instances?: MockResizeObserver[] };
+    const mockClass = MockResizeObserver as unknown as {
+      instances?: MockResizeObserver[];
+    };
     mockClass.instances = mockClass.instances || [];
     mockClass.instances.push(this);
   }
 
-  observe() { /* Mock implementation */ }
-  disconnect() { /* Mock implementation */ }
+  observe() {
+    /* Mock implementation */
+  }
+  disconnect() {
+    /* Mock implementation */
+  }
 
   static triggerResize(width: number, height: number) {
-    const mockClass = MockResizeObserver as unknown as { instances?: MockResizeObserver[] };
+    const mockClass = MockResizeObserver as unknown as {
+      instances?: MockResizeObserver[];
+    };
     const instances = mockClass.instances || [];
     instances.forEach((instance: MockResizeObserver) => {
       instance.callbacks.forEach((callback) => {
@@ -36,7 +42,9 @@ class MockResizeObserver {
   }
 
   static reset() {
-    const mockClass = MockResizeObserver as unknown as { instances?: MockResizeObserver[] };
+    const mockClass = MockResizeObserver as unknown as {
+      instances?: MockResizeObserver[];
+    };
     mockClass.instances = [];
   }
 }
@@ -77,7 +85,6 @@ describe('DashboardViewportService', () => {
     // Initialize store with dashboard data
     store.initializeFromDto({
       version: '1.0.0',
-      dashboardId: 'test-dashboard',
       rows: 8,
       columns: 16,
       gutterSize: '1em',
