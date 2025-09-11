@@ -1,13 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import {
-  CellIdUtils,
-  WidgetIdUtils,
-  CellData,
-  WidgetFactory,
-  DashboardDataDto,
-} from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto } from '../../models';
 
 describe('DashboardStore - Export/Import Functionality', () => {
   let store: InstanceType<typeof DashboardStore>;
@@ -15,26 +9,22 @@ describe('DashboardStore - Export/Import Functionality', () => {
   let mockDashboardService: jasmine.SpyObj<DashboardService>;
 
   beforeEach(() => {
-    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', [
-      'getFactory',
-    ]);
-
+    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory']);
+    
     TestBed.configureTestingModule({
       providers: [
         DashboardStore,
-        { provide: DashboardService, useValue: dashboardServiceSpy },
-      ],
+        { provide: DashboardService, useValue: dashboardServiceSpy }
+      ]
     });
-
+    
     store = TestBed.inject(DashboardStore);
-    mockDashboardService = TestBed.inject(
-      DashboardService
-    ) as jasmine.SpyObj<DashboardService>;
+    mockDashboardService = TestBed.inject(DashboardService) as jasmine.SpyObj<DashboardService>;
     store.setGridConfig({ rows: 8, columns: 12 });
-
+    
     mockWidgetFactory = {
       widgetTypeid: 'test-widget',
-      createComponent: jasmine.createSpy(),
+      createComponent: jasmine.createSpy()
     } as unknown as WidgetFactory;
 
     mockDashboardService.getFactory.and.returnValue(mockWidgetFactory);
@@ -46,10 +36,11 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       expect(exported).toEqual({
         version: '1.0.0',
+        dashboardId: '',
         rows: 8,
         columns: 12,
         gutterSize: '0.5em',
-        cells: [],
+        cells: []
       });
     });
 
@@ -110,28 +101,24 @@ describe('DashboardStore - Export/Import Functionality', () => {
       const exported = store.exportDashboard();
 
       expect(exported.cells.length).toBe(2);
-      expect(exported.cells).toContain(
-        jasmine.objectContaining({
-          row: 1,
-          col: 1,
-          rowSpan: 1,
-          colSpan: 1,
-          flat: undefined,
-          widgetTypeid: 'test-widget',
-          widgetState: {},
-        })
-      );
-      expect(exported.cells).toContain(
-        jasmine.objectContaining({
-          row: 5,
-          col: 8,
-          rowSpan: 2,
-          colSpan: 4,
-          flat: false,
-          widgetTypeid: 'test-widget',
-          widgetState: { size: 'large' },
-        })
-      );
+      expect(exported.cells).toContain(jasmine.objectContaining({
+        row: 1,
+        col: 1,
+        rowSpan: 1,
+        colSpan: 1,
+        flat: undefined,
+        widgetTypeid: 'test-widget',
+        widgetState: {},
+      }));
+      expect(exported.cells).toContain(jasmine.objectContaining({
+        row: 5,
+        col: 8,
+        rowSpan: 2,
+        colSpan: 4,
+        flat: false,
+        widgetTypeid: 'test-widget',
+        widgetState: { size: 'large' },
+      }));
     });
 
     it('should export custom grid configuration', () => {
@@ -148,10 +135,11 @@ describe('DashboardStore - Export/Import Functionality', () => {
     it('should load empty dashboard', () => {
       const data: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard-1',
         rows: 10,
         columns: 15,
         gutterSize: '1em',
-        cells: [],
+        cells: []
       };
 
       store.loadDashboard(data);
@@ -165,20 +153,19 @@ describe('DashboardStore - Export/Import Functionality', () => {
     it('should load dashboard with single widget', () => {
       const data: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard-2',
         rows: 8,
         columns: 12,
         gutterSize: '0.5em',
-        cells: [
-          {
-            row: 5,
-            col: 7,
-            rowSpan: 3,
-            colSpan: 2,
-            flat: true,
-            widgetTypeid: 'test-widget',
-            widgetState: { text: 'Hello World' },
-          },
-        ],
+        cells: [{
+          row: 5,
+          col: 7,
+          rowSpan: 3,
+          colSpan: 2,
+          flat: true,
+          widgetTypeid: 'test-widget',
+          widgetState: { text: 'Hello World' },
+        }]
       };
 
       store.loadDashboard(data);
@@ -198,6 +185,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
     it('should load dashboard with multiple widgets', () => {
       const data: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard-3',
         rows: 16,
         columns: 16,
         gutterSize: '0.25em',
@@ -218,8 +206,8 @@ describe('DashboardStore - Export/Import Functionality', () => {
             flat: false,
             widgetTypeid: 'test-widget',
             widgetState: { config: 'advanced' },
-          },
-        ],
+          }
+        ]
       };
 
       store.loadDashboard(data);
@@ -234,18 +222,13 @@ describe('DashboardStore - Export/Import Functionality', () => {
       const consoleSpy = spyOn(console, 'warn');
       const fallbackFactory = {
         widgetTypeid: '__internal/unknown-widget',
-        createInstance: jasmine.createSpy(),
+        createInstance: jasmine.createSpy()
       } as unknown as WidgetFactory;
-
+      
       // Call the real getFactory method which handles fallback logic
       mockDashboardService.getFactory.and.callFake((widgetTypeid: string) => {
-        if (
-          widgetTypeid === 'unknown-widget' ||
-          widgetTypeid === 'another-unknown-widget'
-        ) {
-          console.warn(
-            `Unknown widget type: ${widgetTypeid}, using fallback error widget`
-          );
+        if (widgetTypeid === 'unknown-widget' || widgetTypeid === 'another-unknown-widget') {
+          console.warn(`Unknown widget type: ${widgetTypeid}, using fallback error widget`);
           return fallbackFactory;
         }
         return mockWidgetFactory;
@@ -253,6 +236,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const data: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard-4',
         rows: 8,
         columns: 12,
         gutterSize: '0.5em',
@@ -272,34 +256,28 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 2,
             widgetTypeid: 'another-unknown-widget',
             widgetState: {},
-          },
-        ],
+          }
+        ]
       };
 
       store.loadDashboard(data);
 
       expect(store.cells().length).toBe(2); // Fallback widgets created instead of skipped
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Unknown widget type: unknown-widget, using fallback error widget'
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Unknown widget type: another-unknown-widget, using fallback error widget'
-      );
+      expect(consoleSpy).toHaveBeenCalledWith('Unknown widget type: unknown-widget, using fallback error widget');
+      expect(consoleSpy).toHaveBeenCalledWith('Unknown widget type: another-unknown-widget, using fallback error widget');
     });
 
     it('should load mixed valid and invalid widgets', () => {
       const consoleSpy = spyOn(console, 'warn');
       const fallbackFactory = {
         widgetTypeid: '__internal/unknown-widget',
-        createInstance: jasmine.createSpy(),
+        createInstance: jasmine.createSpy()
       } as unknown as WidgetFactory;
-
+      
       // Mock factory to return fallback for unknown widgets with console warning
       mockDashboardService.getFactory.and.callFake((widgetTypeid: string) => {
         if (widgetTypeid === 'unknown-widget') {
-          console.warn(
-            `Unknown widget type: ${widgetTypeid}, using fallback error widget`
-          );
+          console.warn(`Unknown widget type: ${widgetTypeid}, using fallback error widget`);
           return fallbackFactory;
         }
         return mockWidgetFactory;
@@ -307,6 +285,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const data: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard-5',
         rows: 8,
         columns: 12,
         gutterSize: '0.5em',
@@ -334,16 +313,14 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 2,
             widgetTypeid: 'test-widget',
             widgetState: {},
-          },
-        ],
+          }
+        ]
       };
 
       store.loadDashboard(data);
 
       expect(store.cells().length).toBe(3); // All widgets loaded (2 valid + 1 fallback)
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Unknown widget type: unknown-widget, using fallback error widget'
-      );
+      expect(consoleSpy).toHaveBeenCalledWith('Unknown widget type: unknown-widget, using fallback error widget');
     });
 
     it('should replace existing dashboard content', () => {
@@ -364,6 +341,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       // Load new data
       const data: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard-6',
         rows: 20,
         columns: 25,
         gutterSize: '3rem',
@@ -375,8 +353,8 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 4,
             widgetTypeid: 'test-widget',
             widgetState: { replaced: true },
-          },
-        ],
+          }
+        ]
       };
 
       store.loadDashboard(data);
@@ -400,7 +378,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
         name: 'Unknown Widget',
         description: 'Fallback widget',
         svgIcon: '<svg></svg>',
-        createInstance: jasmine.createSpy(),
+        createInstance: jasmine.createSpy()
       } as unknown as WidgetFactory;
     });
 
@@ -429,7 +407,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(validCell);
       store.addWidget(unknownCell);
-
+      
       expect(store.cells().length).toBe(2); // Both widgets added to store
 
       const exported = store.exportDashboard();
@@ -471,7 +449,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(unknownCell1);
       store.addWidget(unknownCell2);
-
+      
       expect(store.cells().length).toBe(2); // Both unknown widgets added to store
 
       const exported = store.exportDashboard();
@@ -518,34 +496,30 @@ describe('DashboardStore - Export/Import Functionality', () => {
       store.addWidget(validCell1);
       store.addWidget(unknownCell);
       store.addWidget(validCell2);
-
+      
       expect(store.cells().length).toBe(3); // All widgets added to store
 
       const exported = store.exportDashboard();
 
       expect(exported.cells.length).toBe(2); // Only valid widgets exported
-      expect(exported.cells).toContain(
-        jasmine.objectContaining({
-          row: 1,
-          col: 1,
-          rowSpan: 1,
-          colSpan: 1,
-          flat: undefined,
-          widgetTypeid: 'test-widget',
-          widgetState: { type: 'first' },
-        })
-      );
-      expect(exported.cells).toContain(
-        jasmine.objectContaining({
-          row: 3,
-          col: 3,
-          rowSpan: 2,
-          colSpan: 3,
-          flat: true,
-          widgetTypeid: 'test-widget',
-          widgetState: { type: 'second' },
-        })
-      );
+      expect(exported.cells).toContain(jasmine.objectContaining({
+        row: 1,
+        col: 1,
+        rowSpan: 1,
+        colSpan: 1,
+        flat: undefined,
+        widgetTypeid: 'test-widget',
+        widgetState: { type: 'first' },
+      }));
+      expect(exported.cells).toContain(jasmine.objectContaining({
+        row: 3,
+        col: 3,
+        rowSpan: 2,
+        colSpan: 3,
+        flat: true,
+        widgetTypeid: 'test-widget',
+        widgetState: { type: 'second' },
+      }));
     });
 
     it('should filter unknown widgets with live widget states callback', () => {
@@ -718,18 +692,11 @@ describe('DashboardStore - Export/Import Functionality', () => {
       const exported = store.exportDashboard(() => liveStates);
 
       expect(exported.cells.length).toBe(2);
-
-      const cell1Export = exported.cells.find(
-        (c) => c.row === 1 && c.col === 1
-      );
-      const cell2Export = exported.cells.find(
-        (c) => c.row === 2 && c.col === 2
-      );
-
-      expect(cell1Export?.widgetState).toEqual({
-        live: 'state1',
-        modified: true,
-      });
+      
+      const cell1Export = exported.cells.find(c => c.row === 1 && c.col === 1);
+      const cell2Export = exported.cells.find(c => c.row === 2 && c.col === 2);
+      
+      expect(cell1Export?.widgetState).toEqual({ live: 'state1', modified: true });
       expect(cell2Export?.widgetState).toEqual({ stored: 'state2' });
     });
 

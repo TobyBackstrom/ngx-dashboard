@@ -2,12 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, signal, ViewContainerRef } from '@angular/core';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { DashboardService } from '../services/dashboard.service';
-import {
-  WidgetFactory,
-  DashboardDataDto,
-  Widget,
-  WidgetMetadata,
-} from '../models';
+import { WidgetFactory, DashboardDataDto, Widget, WidgetMetadata } from '../models';
 
 // Mock widget with state that can be modified after initialization
 interface TestWidgetState {
@@ -57,7 +52,7 @@ class TestWidgetComponent implements Widget {
 
   // Methods to simulate user interactions that modify widget state
   updateValue() {
-    this.state.update((current) => ({
+    this.state.update(current => ({
       ...current,
       value: `updated-${Date.now()}`,
       modified: true,
@@ -65,7 +60,7 @@ class TestWidgetComponent implements Widget {
   }
 
   incrementCounter() {
-    this.state.update((current) => ({
+    this.state.update(current => ({
       ...current,
       counter: current.counter + 1,
       modified: true,
@@ -88,14 +83,14 @@ describe('DashboardComponent - Widget State Integration', () => {
 
     await TestBed.configureTestingModule({
       imports: [DashboardComponent, TestWidgetComponent],
-      providers: [{ provide: DashboardService, useValue: dashboardServiceSpy }],
+      providers: [
+        { provide: DashboardService, useValue: dashboardServiceSpy },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
-    dashboardService = TestBed.inject(
-      DashboardService
-    ) as jasmine.SpyObj<DashboardService>;
+    dashboardService = TestBed.inject(DashboardService) as jasmine.SpyObj<DashboardService>;
 
     // Setup mock widget factory
     testWidgetFactory = {
@@ -103,15 +98,13 @@ describe('DashboardComponent - Widget State Integration', () => {
       name: 'Test Widget',
       description: 'A test widget',
       svgIcon: '<svg><rect width="10" height="10"/></svg>',
-      createInstance: jasmine
-        .createSpy('createInstance')
-        .and.callFake((container: ViewContainerRef, state?: unknown) => {
-          const componentRef = container.createComponent(TestWidgetComponent);
-          if (state) {
-            componentRef.instance.dashboardSetState(state);
-          }
-          return componentRef;
-        }),
+      createInstance: jasmine.createSpy('createInstance').and.callFake((container: ViewContainerRef, state?: unknown) => {
+        const componentRef = container.createComponent(TestWidgetComponent);
+        if (state) {
+          componentRef.instance.dashboardSetState(state);
+        }
+        return componentRef;
+      }),
     };
 
     dashboardService.getFactory.and.returnValue(testWidgetFactory);
@@ -128,6 +121,7 @@ describe('DashboardComponent - Widget State Integration', () => {
       // Create dashboard with a widget
       const dashboardData: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard',
         rows: 5,
         columns: 8,
         gutterSize: '1em',
@@ -167,6 +161,7 @@ describe('DashboardComponent - Widget State Integration', () => {
       // Create dashboard with a widget
       const dashboardData: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard',
         rows: 5,
         columns: 8,
         gutterSize: '1em',
@@ -193,15 +188,14 @@ describe('DashboardComponent - Widget State Integration', () => {
       const widgetElement = fixture.debugElement.query(
         (el) => el.componentInstance instanceof TestWidgetComponent
       );
-
+      
       if (widgetElement) {
-        const widgetComponent =
-          widgetElement.componentInstance as TestWidgetComponent;
-
+        const widgetComponent = widgetElement.componentInstance as TestWidgetComponent;
+        
         // Modify the widget state
         widgetComponent.updateValue();
         widgetComponent.incrementCounter();
-
+        
         // Detect changes
         fixture.detectChanges();
         await fixture.whenStable();
@@ -210,7 +204,7 @@ describe('DashboardComponent - Widget State Integration', () => {
         const exported = component.exportDashboard();
 
         expect(exported.cells).toHaveSize(1);
-
+        
         const exportedState = exported.cells[0].widgetState as TestWidgetState;
         expect(exportedState.modified).toBe(true);
         expect(exportedState.counter).toBe(1);
@@ -236,17 +230,16 @@ describe('DashboardComponent - Widget State Integration', () => {
         name: 'Simple Widget',
         description: 'A simple widget',
         svgIcon: '<svg><circle r="5"/></svg>',
-        createInstance: jasmine
-          .createSpy('createInstance')
-          .and.callFake((container: ViewContainerRef) => {
-            return container.createComponent(SimpleWidgetComponent);
-          }),
+        createInstance: jasmine.createSpy('createInstance').and.callFake((container: ViewContainerRef) => {
+          return container.createComponent(SimpleWidgetComponent);
+        }),
       };
 
       dashboardService.getFactory.and.returnValue(simpleWidgetFactory);
 
       const dashboardData: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard-simple',
         rows: 3,
         columns: 4,
         gutterSize: '1em',
@@ -275,6 +268,7 @@ describe('DashboardComponent - Widget State Integration', () => {
     it('should handle multiple widgets with different state scenarios', async () => {
       const dashboardData: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard-multiple',
         rows: 8,
         columns: 8,
         gutterSize: '1em',
@@ -312,30 +306,20 @@ describe('DashboardComponent - Widget State Integration', () => {
 
       // Find all widget components (top-level only)
       const widgetElements = fixture.debugElement.queryAll(
-        (el) =>
-          el.componentInstance instanceof TestWidgetComponent &&
-          el.nativeElement.tagName === 'LIB-TEST-WIDGET'
+        (el) => el.componentInstance instanceof TestWidgetComponent && el.nativeElement.tagName === 'LIB-TEST-WIDGET'
       );
 
       expect(widgetElements).toHaveSize(3);
 
       // Modify only the first and third widgets
       if (widgetElements[0]) {
-        (
-          widgetElements[0].componentInstance as TestWidgetComponent
-        ).updateValue();
-        (
-          widgetElements[0].componentInstance as TestWidgetComponent
-        ).incrementCounter();
+        (widgetElements[0].componentInstance as TestWidgetComponent).updateValue();
+        (widgetElements[0].componentInstance as TestWidgetComponent).incrementCounter();
       }
 
       if (widgetElements[2]) {
-        (
-          widgetElements[2].componentInstance as TestWidgetComponent
-        ).incrementCounter();
-        (
-          widgetElements[2].componentInstance as TestWidgetComponent
-        ).incrementCounter();
+        (widgetElements[2].componentInstance as TestWidgetComponent).incrementCounter();
+        (widgetElements[2].componentInstance as TestWidgetComponent).incrementCounter();
       }
 
       fixture.detectChanges();
@@ -346,9 +330,9 @@ describe('DashboardComponent - Widget State Integration', () => {
       expect(exported.cells).toHaveSize(3);
 
       // Check that the modified widgets have live state
-      const cell1 = exported.cells.find((c) => c.row === 1 && c.col === 1);
-      const cell2 = exported.cells.find((c) => c.row === 2 && c.col === 2);
-      const cell3 = exported.cells.find((c) => c.row === 3 && c.col === 3);
+      const cell1 = exported.cells.find(c => c.row === 1 && c.col === 1);
+      const cell2 = exported.cells.find(c => c.row === 2 && c.col === 2);
+      const cell3 = exported.cells.find(c => c.row === 3 && c.col === 3);
 
       expect(cell1?.widgetState).toEqual(
         jasmine.objectContaining({
@@ -386,6 +370,7 @@ describe('DashboardComponent - Widget State Integration', () => {
       // Create dashboard with a widget
       const dashboardData: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard-mode-switch',
         rows: 5,
         columns: 8,
         gutterSize: '1em',
@@ -411,17 +396,16 @@ describe('DashboardComponent - Widget State Integration', () => {
       const widgetElementInEdit = fixture.debugElement.query(
         (el) => el.componentInstance instanceof TestWidgetComponent
       );
-
+      
       expect(widgetElementInEdit).toBeTruthy();
-
+      
       if (widgetElementInEdit) {
-        const widgetComponent =
-          widgetElementInEdit.componentInstance as TestWidgetComponent;
-
+        const widgetComponent = widgetElementInEdit.componentInstance as TestWidgetComponent;
+        
         // Modify the widget state
         widgetComponent.updateValue();
         widgetComponent.incrementCounter();
-
+        
         // Detect changes
         fixture.detectChanges();
         await fixture.whenStable();
@@ -441,16 +425,15 @@ describe('DashboardComponent - Widget State Integration', () => {
         const widgetElementInView = fixture.debugElement.query(
           (el) => el.componentInstance instanceof TestWidgetComponent
         );
-
+        
         expect(widgetElementInView).toBeTruthy();
-
+        
         if (widgetElementInView) {
-          const widgetComponentInView =
-            widgetElementInView.componentInstance as TestWidgetComponent;
-
+          const widgetComponentInView = widgetElementInView.componentInstance as TestWidgetComponent;
+          
           // Check if the widget state was preserved
           const viewModeState = widgetComponentInView.dashboardGetState();
-
+          
           // This is the current bug - the state is lost when switching modes
           // The widget gets recreated with the original state from the store
           expect(viewModeState.modified).toBe(true); // This will currently fail
@@ -474,6 +457,7 @@ describe('DashboardComponent - Widget State Integration', () => {
       // Create dashboard with a widget
       const dashboardData: DashboardDataDto = {
         version: '1.0.0',
+        dashboardId: 'test-dashboard-view-to-edit',
         rows: 5,
         columns: 8,
         gutterSize: '1em',
@@ -499,17 +483,16 @@ describe('DashboardComponent - Widget State Integration', () => {
       const widgetElementInView = fixture.debugElement.query(
         (el) => el.componentInstance instanceof TestWidgetComponent
       );
-
+      
       expect(widgetElementInView).toBeTruthy();
-
+      
       if (widgetElementInView) {
-        const widgetComponent =
-          widgetElementInView.componentInstance as TestWidgetComponent;
-
+        const widgetComponent = widgetElementInView.componentInstance as TestWidgetComponent;
+        
         // Modify the widget state
         widgetComponent.updateValue();
         widgetComponent.incrementCounter();
-
+        
         // Detect changes
         fixture.detectChanges();
         await fixture.whenStable();
@@ -529,16 +512,15 @@ describe('DashboardComponent - Widget State Integration', () => {
         const widgetElementInEdit = fixture.debugElement.query(
           (el) => el.componentInstance instanceof TestWidgetComponent
         );
-
+        
         expect(widgetElementInEdit).toBeTruthy();
-
+        
         if (widgetElementInEdit) {
-          const widgetComponentInEdit =
-            widgetElementInEdit.componentInstance as TestWidgetComponent;
-
+          const widgetComponentInEdit = widgetElementInEdit.componentInstance as TestWidgetComponent;
+          
           // Check if the widget state was preserved
           const editModeState = widgetComponentInEdit.dashboardGetState();
-
+          
           // This is the current bug - the state is lost when switching modes
           expect(editModeState.modified).toBe(true); // This will currently fail
           expect(editModeState.counter).toBe(6); // This will currently fail

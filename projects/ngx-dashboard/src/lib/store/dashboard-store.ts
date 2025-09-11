@@ -103,19 +103,13 @@ export const DashboardStore = signalStore(
 
     endResize(apply: boolean) {
       store._endResize(apply, {
-        updateWidgetSpan: (
-          cellId: CellId,
-          rowSpan: number,
-          colSpan: number
-        ) => {
+        updateWidgetSpan: (cellId: CellId, rowSpan: number, colSpan: number) => {
           // Adapter: find widget by cellId and update using widgetId
-          const widget = store
-            .cells()
-            .find((c) => CellIdUtils.equals(c.cellId, cellId));
+          const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId));
           if (widget) {
             store.updateWidgetSpan(widget.widgetId, rowSpan, colSpan);
           }
-        },
+        }
       });
     },
 
@@ -129,15 +123,12 @@ export const DashboardStore = signalStore(
 
       return {
         version: '1.0.0',
+        dashboardId: store.dashboardId(),
         rows: store.rows(),
         columns: store.columns(),
         gutterSize: store.gutterSize(),
-        cells: store
-          .cells()
-          .filter(
-            (cell) =>
-              cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget'
-          )
+        cells: store.cells()
+          .filter((cell) => cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget')
           .map((cell) => {
             const cellIdString = CellIdUtils.toString(cell.cellId);
             const currentState = liveWidgetStates.get(cellIdString);
@@ -159,7 +150,7 @@ export const DashboardStore = signalStore(
     loadDashboard(data: DashboardDataDto): void {
       // Import full dashboard data with grid configuration
       const widgetsById: Record<string, CellData> = {};
-
+      
       data.cells.forEach((cellData) => {
         const factory = store.dashboardService.getFactory(
           cellData.widgetTypeid
@@ -177,11 +168,12 @@ export const DashboardStore = signalStore(
           widgetFactory: factory,
           widgetState: cellData.widgetState,
         };
-
+        
         widgetsById[WidgetIdUtils.toString(widgetId)] = cell;
       });
 
       patchState(store, {
+        dashboardId: data.dashboardId,
         rows: data.rows,
         columns: data.columns,
         gutterSize: data.gutterSize,
@@ -193,7 +185,7 @@ export const DashboardStore = signalStore(
     initializeFromDto(dashboardData: DashboardDataDto): void {
       // Inline the loadDashboard logic since it's defined later in the same methods block
       const widgetsById: Record<string, CellData> = {};
-
+      
       dashboardData.cells.forEach((cellData) => {
         const factory = store.dashboardService.getFactory(
           cellData.widgetTypeid
@@ -211,11 +203,12 @@ export const DashboardStore = signalStore(
           widgetFactory: factory,
           widgetState: cellData.widgetState,
         };
-
+        
         widgetsById[WidgetIdUtils.toString(widgetId)] = cell;
       });
 
       patchState(store, {
+        dashboardId: dashboardData.dashboardId,
         rows: dashboardData.rows,
         columns: dashboardData.columns,
         gutterSize: dashboardData.gutterSize,

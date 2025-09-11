@@ -26,6 +26,7 @@ export function createEmptyDashboard(
 ): DashboardDataDto {
   return {
     version: '1.0.0',
+    dashboardId,
     rows,
     columns,
     gutterSize,
