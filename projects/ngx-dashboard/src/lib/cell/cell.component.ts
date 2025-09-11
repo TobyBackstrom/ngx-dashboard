@@ -32,7 +32,10 @@ import {
 import { DashboardStore } from '../store/dashboard-store';
 import { CellDisplayData } from '../models';
 import { CELL_SETTINGS_DIALOG_PROVIDER } from '../providers/cell-settings-dialog';
-import { CellContextMenuService, CellContextMenuItem } from './cell-context-menu.service';
+import {
+  CellContextMenuService,
+  CellContextMenuItem,
+} from './cell-context-menu.service';
 
 @Component({
   selector: 'lib-cell',
@@ -50,8 +53,8 @@ import { CellContextMenuService, CellContextMenuItem } from './cell-context-menu
   },
 })
 export class CellComponent {
-  widgetId = input.required<WidgetId>();  // Unique widget instance identifier
-  cellId = input.required<CellId>();       // Current grid position
+  widgetId = input.required<WidgetId>(); // Unique widget instance identifier
+  cellId = input.required<CellId>(); // Current grid position
   widgetFactory = input<WidgetFactory | undefined>(undefined);
   widgetState = input<unknown | undefined>(undefined);
   isEditMode = input<boolean>(false);
@@ -69,7 +72,10 @@ export class CellComponent {
   edit = output<WidgetId>();
   delete = output<WidgetId>();
   settings = output<{ id: WidgetId; flat: boolean }>();
-  resizeStart = output<{ cellId: CellId; direction: 'horizontal' | 'vertical' }>();
+  resizeStart = output<{
+    cellId: CellId;
+    direction: 'horizontal' | 'vertical';
+  }>();
   resizeMove = output<{
     cellId: CellId;
     direction: 'horizontal' | 'vertical';
@@ -91,7 +97,7 @@ export class CellComponent {
   });
 
   #widgetRef?: ComponentRef<Widget>;
-  
+
   // Document event listeners cleanup function
   // Performance: Only created when actively resizing, not for every cell
   #documentListeners?: () => void;
@@ -209,7 +215,9 @@ export class CellComponent {
 
     const content: DragData = { kind: 'cell', content: cell };
     this.dragStart.emit(content);
-    this.isDragging.set(true);
+
+    event.dataTransfer.setData('text/plain', 'cell'); // helps firefox
+    requestAnimationFrame(() => this.isDragging.set(true)); // defer to next frame to avoid immediate dragend event in some instances
   }
 
   onDragEnd(/*_: DragEvent*/): void {
@@ -274,7 +282,7 @@ export class CellComponent {
 
   async onSettings(): Promise<void> {
     const currentSettings: CellDisplayData = {
-      id: CellIdUtils.toString(this.cellId()),  // Use cellId for display position
+      id: CellIdUtils.toString(this.cellId()), // Use cellId for display position
       flat: this.flat(),
     };
 
@@ -330,11 +338,19 @@ export class CellComponent {
     if (direction === 'horizontal') {
       const deltaX = event.clientX - startPos.x;
       const deltaSpan = Math.round(deltaX / cellSize.width);
-      this.resizeMove.emit({ cellId: this.cellId(), direction, delta: deltaSpan });
+      this.resizeMove.emit({
+        cellId: this.cellId(),
+        direction,
+        delta: deltaSpan,
+      });
     } else {
       const deltaY = event.clientY - startPos.y;
       const deltaSpan = Math.round(deltaY / cellSize.height);
-      this.resizeMove.emit({ cellId: this.cellId(), direction, delta: deltaSpan });
+      this.resizeMove.emit({
+        cellId: this.cellId(),
+        direction,
+        delta: deltaSpan,
+      });
     }
   }
 
