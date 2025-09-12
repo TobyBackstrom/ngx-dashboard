@@ -270,6 +270,7 @@ describe('CellComponent - User Scenarios', () => {
         dataTransfer: {
           effectAllowed: 'move',
           setDragImage: jasmine.createSpy('setDragImage'),
+          setData: jasmine.createSpy('setData'),
         },
       };
     });
@@ -277,6 +278,12 @@ describe('CellComponent - User Scenarios', () => {
     it('should complete drag and drop workflow', () => {
       spyOn(component.dragStart, 'emit');
       spyOn(component.dragEnd, 'emit');
+
+      // Mock requestAnimationFrame to execute immediately
+      spyOn(window, 'requestAnimationFrame').and.callFake((callback: FrameRequestCallback) => {
+        callback(0);
+        return 0;
+      });
 
       // User starts drag
       component.onDragStart(mockDragEvent as DragEvent);
