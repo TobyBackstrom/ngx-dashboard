@@ -1,3 +1,4 @@
+import '@angular/localize/init';
 import 'zone.js';
 import 'zone.js/testing';
 import { getTestBed } from '@angular/core/testing';

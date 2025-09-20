@@ -238,19 +238,19 @@ export class CellComponent {
 
     const items: CellContextMenuItem[] = [
       {
-        label: 'Edit Widget',
+        label: $localize`:@@ngx.dashboard.cell.menu.edit:Edit Widget`,
         icon: 'edit',
         action: () => this.onEdit(),
         disabled: !this.canEdit(),
       },
       {
-        label: 'Settings',
+        label: $localize`:@@ngx.dashboard.cell.menu.settings:Settings`,
         icon: 'settings',
         action: () => this.onSettings(),
       },
       { divider: true },
       {
-        label: 'Delete',
+        label: $localize`:@@ngx.dashboard.cell.menu.delete:Delete`,
         icon: 'delete',
         action: () => this.onDelete(),
       },

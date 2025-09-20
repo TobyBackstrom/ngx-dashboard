@@ -1,5 +1,10 @@
 <!-- widget-list.component.html -->
-<div class="widget-list" role="list" aria-label="Available widgets">
+<div
+  class="widget-list"
+  role="list"
+  i18n-aria-label="@@ngx.dashboard.widget.list.available"
+  aria-label="Available widgets"
+>
   @for (widget of widgets(); track widget.widgetTypeid) {
   <div
     class="widget-list-item"
@@ -9,7 +14,7 @@
     (dragend)="onDragEnd()"
     role="listitem"
     [attr.aria-grabbed]="activeWidget() === widget.widgetTypeid"
-    [attr.aria-label]="widget.name + ' widget: ' + widget.description"
+    [attr.aria-label]="getWidgetAriaLabel(widget)"
     tabindex="0"
   >
     <div class="icon" [innerHTML]="widget.safeSvgIcon" aria-hidden="true"></div>

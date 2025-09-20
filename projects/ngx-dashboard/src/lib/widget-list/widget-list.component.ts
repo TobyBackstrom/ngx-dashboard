@@ -103,4 +103,9 @@ export class WidgetListComponent {
 
     return el;
   }
+
+  getWidgetAriaLabel(widget: WidgetDisplayItem): string {
+    // Using $localize for the template pattern
+    return $localize`:@@ngx.dashboard.widget.list.item.ariaLabel:${widget.name} widget: ${widget.description}`;
+  }
 }

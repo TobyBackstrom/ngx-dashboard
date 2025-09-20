@@ -37,6 +37,13 @@
             ],
             "eslintConfig": "projects/ngx-dashboard/eslint.config.js"
           }
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n",
+          "options": {
+            "buildTarget": "ngx-dashboard:build",
+            "outputPath": "projects/ngx-dashboard/src/locale"
+          }
         }
       }
     },
@@ -96,6 +103,7 @@
           "options": {
             "browser": "projects/demo/src/main.ts",
             "polyfills": [
+              "@angular/localize/init",
               "zone.js"
             ],
             "tsConfig": "projects/demo/tsconfig.app.json",
@@ -153,6 +161,7 @@
           "builder": "@angular/build:karma",
           "options": {
             "polyfills": [
+              "@angular/localize/init",
               "zone.js",
               "zone.js/testing"
             ],

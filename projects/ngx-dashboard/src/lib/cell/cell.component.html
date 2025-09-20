@@ -30,7 +30,7 @@
 </div>
 
 @if (isResizing()) {
-<div class="resize-preview">
+<div class="resize-preview" i18n="@@ngx.dashboard.cell.resize.dimensions">
   {{ resizeData()?.previewColSpan ?? colSpan() }} ×
   {{ resizeData()?.previewRowSpan ?? rowSpan() }}
 </div>

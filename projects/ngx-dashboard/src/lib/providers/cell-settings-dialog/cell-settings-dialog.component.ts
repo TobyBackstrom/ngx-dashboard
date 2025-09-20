@@ -21,34 +21,66 @@ import { CellDisplayData } from '../../models/cell-dialog';
     MatRadioModule,
   ],
   template: `
-    <h2 mat-dialog-title>Cell Display Settings</h2>
+    <h2 mat-dialog-title i18n="@@ngx.dashboard.cell.settings.title">
+      Cell Display Settings
+    </h2>
     <mat-dialog-content>
-      <p class="cell-info">Cell ID: <strong>{{ data.id }}</strong></p>
-      
+      <p class="cell-info" i18n="@@ngx.dashboard.cell.settings.cellId">
+        Cell ID: <strong>{{ data.id }}</strong>
+      </p>
+
       <div class="radio-group">
         <mat-radio-group [(ngModel)]="selectedMode" name="displayMode">
           <mat-radio-button value="normal">
             <div class="radio-option">
-              <div class="option-title">Normal</div>
-              <div class="option-description">Standard cell display with full content visibility</div>
+              <div
+                class="option-title"
+                i18n="@@ngx.dashboard.cell.settings.mode.normal"
+              >
+                Normal
+              </div>
+              <div
+                class="option-description"
+                i18n="@@ngx.dashboard.cell.settings.mode.normal.description"
+              >
+                Standard cell display with full content visibility
+              </div>
             </div>
           </mat-radio-button>
-          
+
           <mat-radio-button value="flat">
             <div class="radio-option">
-              <div class="option-title">Flat</div>
-              <div class="option-description">Simplified display with reduced visual emphasis</div>
+              <div
+                class="option-title"
+                i18n="@@ngx.dashboard.cell.settings.mode.flat"
+              >
+                Flat
+              </div>
+              <div
+                class="option-description"
+                i18n="@@ngx.dashboard.cell.settings.mode.flat.description"
+              >
+                Simplified display with reduced visual emphasis
+              </div>
             </div>
           </mat-radio-button>
         </mat-radio-group>
       </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancel</button>
-      <button 
-        mat-flat-button 
+      <button
+        mat-button
+        (click)="onCancel()"
+        i18n="@@ngx.dashboard.common.cancel"
+      >
+        Cancel
+      </button>
+      <button
+        mat-flat-button
         (click)="save()"
-        [disabled]="selectedMode === currentMode">
+        [disabled]="selectedMode === currentMode"
+        i18n="@@ngx.dashboard.common.apply"
+      >
         Apply
       </button>
     </mat-dialog-actions>
@@ -120,7 +152,7 @@ export class CellSettingsDialogComponent {
   save(): void {
     const newData: CellDisplayData = {
       ...this.data,
-      flat: this.selectedMode === 'flat'
+      flat: this.selectedMode === 'flat',
     };
     this.dialogRef.close(newData);
   }
