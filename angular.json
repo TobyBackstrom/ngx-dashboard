@@ -70,6 +70,7 @@
           "options": {
             "tsConfig": "projects/ngx-dashboard-widgets/tsconfig.spec.json",
             "polyfills": [
+              "@angular/localize/init",
               "zone.js",
               "zone.js/testing"
             ]

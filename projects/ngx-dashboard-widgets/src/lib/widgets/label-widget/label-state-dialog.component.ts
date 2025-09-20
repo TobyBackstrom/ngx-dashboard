@@ -29,92 +29,130 @@ import { LabelWidgetState } from './label-widget.component';
     MatSlideToggleModule, // Add this import
   ],
   template: `
-    <h2 mat-dialog-title>Label Settings</h2>
+    <h2 mat-dialog-title i18n="@@ngx.dashboard.widgets.label.dialog.title">
+      Label Settings
+    </h2>
     <mat-dialog-content>
       <mat-form-field appearance="outline" class="label-text-field">
-        <mat-label>Label Text</mat-label>
+        <mat-label i18n="@@ngx.dashboard.widgets.label.dialog.labelText"
+          >Label Text</mat-label
+        >
         <input
           matInput
           type="text"
           [value]="label()"
           (input)="label.set($any($event.target).value)"
+          i18n-placeholder="@@ngx.dashboard.widgets.label.dialog.placeholder"
           placeholder="Enter your label text..."
         />
       </mat-form-field>
 
       <!-- Responsive Text Toggle -->
       <div class="toggle-section">
-        <mat-slide-toggle 
+        <mat-slide-toggle
           [checked]="responsive()"
-          (change)="responsive.set($event.checked)">
+          (change)="responsive.set($event.checked)"
+          i18n="@@ngx.dashboard.widgets.label.dialog.responsive"
+        >
           Responsive Text
         </mat-slide-toggle>
-        <span class="toggle-description"
+        <span
+          class="toggle-description"
+          i18n="@@ngx.dashboard.widgets.label.dialog.responsiveDescription"
           >Automatically adjust text size to fit the widget</span
         >
       </div>
 
       <!-- Responsive Font Size Constraints (only shown when responsive is enabled) -->
       @if (responsive()) {
-        <div class="responsive-section">
-          <div class="section-label">Font Size Limits</div>
-          <div class="row-layout">
-            <mat-form-field appearance="outline">
-              <mat-label>Min Size (px)</mat-label>
-              <input
-                matInput
-                type="number"
-                [value]="minFontSize()"
-                (input)="validateAndCorrectMinFontSize(+$any($event.target).value)"
-                (blur)="validateAndCorrectMinFontSize(minFontSize())"
-                min="8"
-                max="24"
-                placeholder="8"
-              />
-              @if (!isMinFontSizeValid() || !isFontSizeRangeValid()) {
-                <mat-error>
-                  @if (!isMinFontSizeValid()) {
-                    Must be between 8-24px
-                  } @else {
-                    Must be less than max size
-                  }
-                </mat-error>
-              } @else {
-                <mat-hint>8-24px range</mat-hint>
-              }
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Max Size (px)</mat-label>
-              <input
-                matInput
-                type="number"
-                [value]="maxFontSize()"
-                (input)="validateAndCorrectMaxFontSize(+$any($event.target).value)"
-                (blur)="validateAndCorrectMaxFontSize(maxFontSize())"
-                min="16"
-                max="128"
-                placeholder="64"
-              />
-              @if (!isMaxFontSizeValid() || !isFontSizeRangeValid()) {
-                <mat-error>
-                  @if (!isMaxFontSizeValid()) {
-                    Must be between 16-128px
-                  } @else {
-                    Must be greater than min size
-                  }
-                </mat-error>
-              } @else {
-                <mat-hint>16-128px range</mat-hint>
-              }
-            </mat-form-field>
-          </div>
+      <div class="responsive-section">
+        <div
+          class="section-label"
+          i18n="@@ngx.dashboard.widgets.label.dialog.fontSizeLimits"
+        >
+          Font Size Limits
         </div>
+        <div class="row-layout">
+          <mat-form-field appearance="outline">
+            <mat-label i18n="@@ngx.dashboard.widgets.label.dialog.minSize"
+              >Min Size (px)</mat-label
+            >
+            <input
+              matInput
+              type="number"
+              [value]="minFontSize()"
+              (input)="
+                validateAndCorrectMinFontSize(+$any($event.target).value)
+              "
+              (blur)="validateAndCorrectMinFontSize(minFontSize())"
+              min="8"
+              max="24"
+              placeholder="8"
+            />
+            @if (!isMinFontSizeValid() || !isFontSizeRangeValid()) {
+            <mat-error>
+              @if (!isMinFontSizeValid()) {
+              <span i18n="@@ngx.dashboard.widgets.label.dialog.minSizeError"
+                >Must be between 8-24px</span
+              >
+              } @else {
+              <span
+                i18n="@@ngx.dashboard.widgets.label.dialog.minSizeRangeError"
+                >Must be less than max size</span
+              >
+              }
+            </mat-error>
+            } @else {
+            <mat-hint i18n="@@ngx.dashboard.widgets.label.dialog.minSizeHint"
+              >8-24px range</mat-hint
+            >
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label i18n="@@ngx.dashboard.widgets.label.dialog.maxSize"
+              >Max Size (px)</mat-label
+            >
+            <input
+              matInput
+              type="number"
+              [value]="maxFontSize()"
+              (input)="
+                validateAndCorrectMaxFontSize(+$any($event.target).value)
+              "
+              (blur)="validateAndCorrectMaxFontSize(maxFontSize())"
+              min="16"
+              max="128"
+              placeholder="64"
+            />
+            @if (!isMaxFontSizeValid() || !isFontSizeRangeValid()) {
+            <mat-error>
+              @if (!isMaxFontSizeValid()) {
+              <span i18n="@@ngx.dashboard.widgets.label.dialog.maxSizeError"
+                >Must be between 16-128px</span
+              >
+              } @else {
+              <span
+                i18n="@@ngx.dashboard.widgets.label.dialog.maxSizeRangeError"
+                >Must be greater than min size</span
+              >
+              }
+            </mat-error>
+            } @else {
+            <mat-hint i18n="@@ngx.dashboard.widgets.label.dialog.maxSizeHint"
+              >16-128px range</mat-hint
+            >
+            }
+          </mat-form-field>
+        </div>
+      </div>
       }
 
       <div class="row-layout">
         <mat-form-field appearance="outline">
-          <mat-label>Font Size (px)</mat-label>
+          <mat-label i18n="@@ngx.dashboard.widgets.label.dialog.fontSize"
+            >Font Size (px)</mat-label
+          >
           <input
             matInput
             type="number"
@@ -128,32 +166,61 @@ import { LabelWidgetState } from './label-widget.component';
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Alignment</mat-label>
+          <mat-label i18n="@@ngx.dashboard.widgets.label.dialog.alignment"
+            >Alignment</mat-label
+          >
           <mat-select
             [value]="alignment()"
             (selectionChange)="alignment.set($any($event.value))"
           >
-            <mat-option value="left">Left</mat-option>
-            <mat-option value="center">Center</mat-option>
-            <mat-option value="right">Right</mat-option>
+            <mat-option
+              value="left"
+              i18n="@@ngx.dashboard.widgets.label.dialog.alignment.left"
+              >Left</mat-option
+            >
+            <mat-option
+              value="center"
+              i18n="@@ngx.dashboard.widgets.label.dialog.alignment.center"
+              >Center</mat-option
+            >
+            <mat-option
+              value="right"
+              i18n="@@ngx.dashboard.widgets.label.dialog.alignment.right"
+              >Right</mat-option
+            >
           </mat-select>
         </mat-form-field>
       </div>
 
       <mat-form-field appearance="outline">
-        <mat-label>Font Weight</mat-label>
+        <mat-label i18n="@@ngx.dashboard.widgets.label.dialog.fontWeight"
+          >Font Weight</mat-label
+        >
         <mat-select
           [value]="fontWeight()"
           (selectionChange)="fontWeight.set($any($event.value))"
         >
-          <mat-option value="normal">Normal</mat-option>
-          <mat-option value="bold">Bold</mat-option>
+          <mat-option
+            value="normal"
+            i18n="@@ngx.dashboard.widgets.label.dialog.fontWeight.normal"
+            >Normal</mat-option
+          >
+          <mat-option
+            value="bold"
+            i18n="@@ngx.dashboard.widgets.label.dialog.fontWeight.bold"
+            >Bold</mat-option
+          >
         </mat-select>
       </mat-form-field>
 
       <!-- Opacity Slider -->
       <div class="slider-section">
-        <div class="slider-label">Opacity: {{ formatOpacity(opacity()) }}%</div>
+        <div
+          class="slider-label"
+          i18n="@@ngx.dashboard.widgets.label.dialog.opacity"
+        >
+          Opacity: {{ formatOpacity(opacity()) }}%
+        </div>
         <mat-slider [min]="0.1" [max]="1" [step]="0.1">
           <input matSliderThumb [(ngModel)]="opacity" />
         </mat-slider>
@@ -161,20 +228,35 @@ import { LabelWidgetState } from './label-widget.component';
 
       <!-- Background Toggle -->
       <div class="toggle-section">
-        <mat-slide-toggle 
+        <mat-slide-toggle
           [checked]="!transparentBackground()"
-          (change)="onBackgroundToggle($event.checked)">
+          (change)="onBackgroundToggle($event.checked)"
+          i18n="@@ngx.dashboard.widgets.label.dialog.background"
+        >
           Background
         </mat-slide-toggle>
-        <span class="toggle-description"
+        <span
+          class="toggle-description"
+          i18n="@@ngx.dashboard.widgets.label.dialog.backgroundDescription"
           >Adds a background behind the text</span
         >
       </div>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button (click)="save()" [disabled]="!hasChanged() || !isFormValid()">
+      <button
+        mat-button
+        (click)="onCancel()"
+        i18n="@@ngx.dashboard.common.cancel"
+      >
+        Cancel
+      </button>
+      <button
+        mat-flat-button
+        (click)="save()"
+        [disabled]="!hasChanged() || !isFormValid()"
+        i18n="@@ngx.dashboard.common.save"
+      >
         Save
       </button>
     </mat-dialog-actions>
@@ -242,15 +324,25 @@ import { LabelWidgetState } from './label-widget.component';
         margin-bottom: 1.5rem;
         padding: 1rem;
         border-radius: 12px;
-        background-color: var(--mat-app-surface-variant, rgba(var(--mat-app-on-surface-rgb, 0, 0, 0), 0.05));
-        border: 1px solid var(--mat-app-outline-variant, rgba(var(--mat-app-on-surface-rgb, 0, 0, 0), 0.12));
+        background-color: var(
+          --mat-app-surface-variant,
+          rgba(var(--mat-app-on-surface-rgb, 0, 0, 0), 0.05)
+        );
+        border: 1px solid
+          var(
+            --mat-app-outline-variant,
+            rgba(var(--mat-app-on-surface-rgb, 0, 0, 0), 0.12)
+          );
       }
 
       .section-label {
         display: block;
         margin-bottom: 0.75rem;
         font-weight: 500;
-        color: var(--mat-app-on-surface-variant, rgba(var(--mat-app-on-surface-rgb, 0, 0, 0), 0.6));
+        color: var(
+          --mat-app-on-surface-variant,
+          rgba(var(--mat-app-on-surface-rgb, 0, 0, 0), 0.6)
+        );
       }
 
       /* Ensure responsive section row layout has no bottom margin */
@@ -275,7 +367,9 @@ export class LabelStateDialogComponent {
   );
   readonly opacity = signal<number>(this.data.opacity ?? 1);
   readonly hasBackground = signal<boolean>(this.data.hasBackground ?? true);
-  readonly transparentBackground = signal<boolean>(!(this.data.hasBackground ?? true));
+  readonly transparentBackground = signal<boolean>(
+    !(this.data.hasBackground ?? true)
+  );
   readonly responsive = signal<boolean>(this.data.responsive ?? false);
   // Responsive font size constraints
   readonly minFontSize = signal<number>(this.data.minFontSize ?? 8);
@@ -303,14 +397,15 @@ export class LabelStateDialogComponent {
     return max >= 16 && max <= 128;
   });
 
-  readonly isFontSizeRangeValid = computed(() =>
-    this.minFontSize() < this.maxFontSize()
+  readonly isFontSizeRangeValid = computed(
+    () => this.minFontSize() < this.maxFontSize()
   );
 
-  readonly isFormValid = computed(() =>
-    this.isMinFontSizeValid() &&
-    this.isMaxFontSizeValid() &&
-    this.isFontSizeRangeValid()
+  readonly isFormValid = computed(
+    () =>
+      this.isMinFontSizeValid() &&
+      this.isMaxFontSizeValid() &&
+      this.isFontSizeRangeValid()
   );
 
   // Computed values
@@ -340,7 +435,7 @@ export class LabelStateDialogComponent {
     // Clamp to valid range
     const corrected = Math.max(8, Math.min(24, value));
     this.minFontSize.set(corrected);
-    
+
     // Ensure min < max with adequate gap
     if (corrected >= this.maxFontSize()) {
       const newMax = Math.min(128, corrected + 8); // Ensure at least 8px gap
@@ -352,7 +447,7 @@ export class LabelStateDialogComponent {
     // Clamp to valid range
     const corrected = Math.max(16, Math.min(128, value));
     this.maxFontSize.set(corrected);
-    
+
     // Ensure min < max with adequate gap
     if (corrected <= this.minFontSize()) {
       const newMin = Math.max(8, corrected - 8); // Ensure at least 8px gap

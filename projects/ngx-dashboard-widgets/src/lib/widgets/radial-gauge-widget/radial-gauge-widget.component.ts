@@ -24,8 +24,8 @@ export interface RadialGaugeWidgetState {
 export class RadialGaugeWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
     widgetTypeid: '@ngx-dashboard/radial-gauge-widget',
-    name: 'Radial Gauge',
-    description: 'A semi-circular gauge indicator',
+    name: $localize`:@@ngx.dashboard.widgets.radialGauge.name:Radial Gauge`,
+    description: $localize`:@@ngx.dashboard.widgets.radialGauge.description:A semi-circular gauge indicator`,
     svgIcon,
   };
 

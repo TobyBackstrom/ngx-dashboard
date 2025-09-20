@@ -27,10 +27,17 @@ import { RadialGaugeWidgetState } from './radial-gauge-widget.component';
     FormsModule,
   ],
   template: `
-    <h2 mat-dialog-title>Radial Gauge Settings</h2>
+    <h2
+      mat-dialog-title
+      i18n="@@ngx.dashboard.widgets.radialGauge.dialog.title"
+    >
+      Radial Gauge Settings
+    </h2>
     <mat-dialog-content>
       <mat-form-field>
-        <mat-label>Value (0-100)</mat-label>
+        <mat-label i18n="@@ngx.dashboard.widgets.radialGauge.dialog.value"
+          >Value (0-100)</mat-label
+        >
         <input
           matInput
           type="number"
@@ -41,38 +48,89 @@ import { RadialGaugeWidgetState } from './radial-gauge-widget.component';
       </mat-form-field>
 
       <div class="section">
-        <h4>Color Profile</h4>
+        <h4 i18n="@@ngx.dashboard.widgets.radialGauge.dialog.colorProfile">
+          Color Profile
+        </h4>
         <mat-radio-group [(ngModel)]="localState.colorProfile">
-          <mat-radio-button value="dynamic">Dynamic (Theme Colors)</mat-radio-button>
-          <mat-radio-button value="static">Static (Performance Colors)</mat-radio-button>
+          <mat-radio-button
+            value="dynamic"
+            i18n="
+              @@ngx.dashboard.widgets.radialGauge.dialog.colorProfile.dynamic"
+            >Dynamic (Theme Colors)</mat-radio-button
+          >
+          <mat-radio-button
+            value="static"
+            i18n="
+              @@ngx.dashboard.widgets.radialGauge.dialog.colorProfile.static"
+            >Static (Performance Colors)</mat-radio-button
+          >
         </mat-radio-group>
       </div>
 
       <div class="toggle-section">
-        <mat-slide-toggle [(ngModel)]="localState.active">
+        <mat-slide-toggle
+          [(ngModel)]="localState.active"
+          i18n="@@ngx.dashboard.widgets.radialGauge.dialog.activeDisplay"
+        >
           Active Display
         </mat-slide-toggle>
-        <p class="toggle-description">Display live gauge instead of passive icon</p>
+        <p
+          class="toggle-description"
+          i18n="
+            @@ngx.dashboard.widgets.radialGauge.dialog.activeDisplayDescription"
+        >
+          Display live gauge instead of passive icon
+        </p>
       </div>
 
       <div class="toggle-section">
-        <mat-slide-toggle [(ngModel)]="localState.hasBackground">
+        <mat-slide-toggle
+          [(ngModel)]="localState.hasBackground"
+          i18n="@@ngx.dashboard.widgets.radialGauge.dialog.background"
+        >
           Background
         </mat-slide-toggle>
-        <p class="toggle-description">Add a background color to the widget</p>
+        <p
+          class="toggle-description"
+          i18n="
+            @@ngx.dashboard.widgets.radialGauge.dialog.backgroundDescription"
+        >
+          Add a background color to the widget
+        </p>
       </div>
 
       <div class="toggle-section">
-        <mat-slide-toggle [(ngModel)]="localState.showValueLabel">
+        <mat-slide-toggle
+          [(ngModel)]="localState.showValueLabel"
+          i18n="@@ngx.dashboard.widgets.radialGauge.dialog.showValueLabel"
+        >
           Show Value Label
         </mat-slide-toggle>
-        <p class="toggle-description">Display numeric value in gauge center</p>
+        <p
+          class="toggle-description"
+          i18n="
+            @@ngx.dashboard.widgets.radialGauge.dialog.showValueLabelDescription"
+        >
+          Display numeric value in gauge center
+        </p>
       </div>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button (click)="onSave()">Save</button>
+      <button
+        mat-button
+        (click)="onCancel()"
+        i18n="@@ngx.dashboard.common.cancel"
+      >
+        Cancel
+      </button>
+      <button
+        mat-flat-button
+        (click)="onSave()"
+        i18n="@@ngx.dashboard.common.save"
+      >
+        Save
+      </button>
     </mat-dialog-actions>
   `,
   styles: [
@@ -122,7 +180,9 @@ import { RadialGaugeWidgetState } from './radial-gauge-widget.component';
 })
 export class RadialGaugeStateDialogComponent {
   private readonly data = inject<RadialGaugeWidgetState>(MAT_DIALOG_DATA);
-  private readonly dialogRef = inject(MatDialogRef<RadialGaugeStateDialogComponent>);
+  private readonly dialogRef = inject(
+    MatDialogRef<RadialGaugeStateDialogComponent>
+  );
 
   localState: RadialGaugeWidgetState = {
     value: this.data.value ?? 50,

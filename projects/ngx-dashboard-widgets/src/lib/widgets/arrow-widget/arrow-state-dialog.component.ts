@@ -27,25 +27,50 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatSlideToggleModule,
   ],
   template: `
-    <h2 mat-dialog-title>Arrow Settings</h2>
+    <h2 mat-dialog-title i18n="@@ngx.dashboard.widgets.arrow.dialog.title">
+      Arrow Settings
+    </h2>
     <mat-dialog-content>
       <!-- Direction Selection -->
       <mat-form-field appearance="outline" class="direction-field">
-        <mat-label>Arrow Direction</mat-label>
+        <mat-label i18n="@@ngx.dashboard.widgets.arrow.dialog.direction"
+          >Arrow Direction</mat-label
+        >
         <mat-select
           [value]="direction()"
           (selectionChange)="direction.set($any($event.value))"
         >
-          <mat-option value="up">Up</mat-option>
-          <mat-option value="right">Right</mat-option>
-          <mat-option value="down">Down</mat-option>
-          <mat-option value="left">Left</mat-option>
+          <mat-option
+            value="up"
+            i18n="@@ngx.dashboard.widgets.arrow.dialog.direction.up"
+            >Up</mat-option
+          >
+          <mat-option
+            value="right"
+            i18n="@@ngx.dashboard.widgets.arrow.dialog.direction.right"
+            >Right</mat-option
+          >
+          <mat-option
+            value="down"
+            i18n="@@ngx.dashboard.widgets.arrow.dialog.direction.down"
+            >Down</mat-option
+          >
+          <mat-option
+            value="left"
+            i18n="@@ngx.dashboard.widgets.arrow.dialog.direction.left"
+            >Left</mat-option
+          >
         </mat-select>
       </mat-form-field>
 
       <!-- Opacity Slider -->
       <div class="slider-field">
-        <div class="field-label">Opacity: {{ formatOpacity(opacity()) }}%</div>
+        <div
+          class="field-label"
+          i18n="@@ngx.dashboard.widgets.arrow.dialog.opacity"
+        >
+          Opacity: {{ formatOpacity(opacity()) }}%
+        </div>
         <mat-slider [min]="0.1" [max]="1" [step]="0.1">
           <input matSliderThumb [(ngModel)]="opacity" />
         </mat-slider>
@@ -53,18 +78,35 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
       <!-- Background Toggle -->
       <div class="toggle-field">
-        <mat-slide-toggle 
+        <mat-slide-toggle
           [checked]="hasBackground()"
-          (change)="onBackgroundToggle($event.checked)">
+          (change)="onBackgroundToggle($event.checked)"
+          i18n="@@ngx.dashboard.widgets.arrow.dialog.background"
+        >
           Background
         </mat-slide-toggle>
-        <span class="toggle-hint">Adds a background behind the arrow</span>
+        <span
+          class="toggle-hint"
+          i18n="@@ngx.dashboard.widgets.arrow.dialog.backgroundHint"
+          >Adds a background behind the arrow</span
+        >
       </div>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button (click)="save()" [disabled]="!hasChanged()">
+      <button
+        mat-button
+        (click)="onCancel()"
+        i18n="@@ngx.dashboard.common.cancel"
+      >
+        Cancel
+      </button>
+      <button
+        mat-flat-button
+        (click)="save()"
+        [disabled]="!hasChanged()"
+        i18n="@@ngx.dashboard.common.save"
+      >
         Save
       </button>
     </mat-dialog-actions>
@@ -127,7 +169,9 @@ export class ArrowStateDialogComponent {
   );
   readonly opacity = signal<number>(this.data.opacity ?? 1);
   readonly hasBackground = signal<boolean>(this.data.hasBackground ?? true);
-  readonly transparentBackground = signal<boolean>(!(this.data.hasBackground ?? true));
+  readonly transparentBackground = signal<boolean>(
+    !(this.data.hasBackground ?? true)
+  );
 
   // Store original values for comparison
   private readonly originalDirection = this.data.direction;

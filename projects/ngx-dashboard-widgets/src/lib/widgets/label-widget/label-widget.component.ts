@@ -29,8 +29,8 @@ export interface LabelWidgetState {
 export class LabelWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
     widgetTypeid: '@ngx-dashboard/label-widget',
-    name: 'Label',
-    description: 'A generic text label',
+    name: $localize`:@@ngx.dashboard.widgets.label.name:Label`,
+    description: $localize`:@@ngx.dashboard.widgets.label.description:A generic text label`,
     svgIcon,
   };
 

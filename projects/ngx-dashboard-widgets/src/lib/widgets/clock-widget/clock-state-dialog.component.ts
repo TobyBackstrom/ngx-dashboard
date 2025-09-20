@@ -23,67 +23,120 @@ import { ClockWidgetState } from './clock-widget.component';
     MatSlideToggleModule,
   ],
   template: `
-    <h2 mat-dialog-title>Clock Settings</h2>
+    <h2 mat-dialog-title i18n="@@ngx.dashboard.widgets.clock.dialog.title">
+      Clock Settings
+    </h2>
     <mat-dialog-content>
       <div class="mode-selection">
-        <label class="section-label" for="mode-selection-group">Display Mode</label>
+        <label
+          class="section-label"
+          for="mode-selection-group"
+          i18n="@@ngx.dashboard.widgets.clock.dialog.displayMode"
+          >Display Mode</label
+        >
         <mat-radio-group
           id="mode-selection-group"
           [value]="mode()"
           (change)="mode.set($any($event.value))"
         >
-          <mat-radio-button value="digital">Digital</mat-radio-button>
-          <mat-radio-button value="analog">Analog</mat-radio-button>
+          <mat-radio-button
+            value="digital"
+            i18n="@@ngx.dashboard.widgets.clock.dialog.mode.digital"
+            >Digital</mat-radio-button
+          >
+          <mat-radio-button
+            value="analog"
+            i18n="@@ngx.dashboard.widgets.clock.dialog.mode.analog"
+            >Analog</mat-radio-button
+          >
         </mat-radio-group>
       </div>
 
       <!-- Time Format (only for digital mode) -->
       @if (mode() === 'digital') {
       <div class="format-selection">
-        <label class="section-label" for="time-format-group">Time Format</label>
+        <label
+          class="section-label"
+          for="time-format-group"
+          i18n="@@ngx.dashboard.widgets.clock.dialog.timeFormat"
+          >Time Format</label
+        >
         <mat-radio-group
           id="time-format-group"
           [value]="timeFormat()"
           (change)="timeFormat.set($any($event.value))"
         >
-          <mat-radio-button value="24h">24 Hour (14:30:45)</mat-radio-button>
-          <mat-radio-button value="12h">12 Hour (2:30:45 PM)</mat-radio-button>
+          <mat-radio-button
+            value="24h"
+            i18n="@@ngx.dashboard.widgets.clock.dialog.format.24h"
+            >24 Hour (14:30:45)</mat-radio-button
+          >
+          <mat-radio-button
+            value="12h"
+            i18n="@@ngx.dashboard.widgets.clock.dialog.format.12h"
+            >12 Hour (2:30:45 PM)</mat-radio-button
+          >
         </mat-radio-group>
       </div>
       }
 
       <!-- Show Seconds Toggle (for both digital and analog modes) -->
       <div class="toggle-section">
-        <mat-slide-toggle 
+        <mat-slide-toggle
           [checked]="showSeconds()"
-          (change)="showSeconds.set($event.checked)">
+          (change)="showSeconds.set($event.checked)"
+          i18n="@@ngx.dashboard.widgets.clock.dialog.showSeconds"
+        >
           Show Seconds
         </mat-slide-toggle>
         <span class="toggle-description">
           @if (mode() === 'digital') {
-            Display seconds in the time
+          <span
+            i18n="
+              @@ngx.dashboard.widgets.clock.dialog.showSecondsDescription.digital"
+            >Display seconds in the time</span
+          >
           } @else {
-            Show the second hand on the clock
+          <span
+            i18n="
+              @@ngx.dashboard.widgets.clock.dialog.showSecondsDescription.analog"
+            >Show the second hand on the clock</span
+          >
           }
         </span>
       </div>
 
       <!-- Background Toggle -->
       <div class="toggle-section">
-        <mat-slide-toggle 
+        <mat-slide-toggle
           [checked]="hasBackground()"
-          (change)="hasBackground.set($event.checked)">
+          (change)="hasBackground.set($event.checked)"
+          i18n="@@ngx.dashboard.widgets.clock.dialog.background"
+        >
           Background
         </mat-slide-toggle>
-        <span class="toggle-description"
+        <span
+          class="toggle-description"
+          i18n="@@ngx.dashboard.widgets.clock.dialog.backgroundDescription"
           >Adds a background behind the clock</span
         >
       </div>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button (click)="save()" [disabled]="!hasChanged()">
+      <button
+        mat-button
+        (click)="onCancel()"
+        i18n="@@ngx.dashboard.common.cancel"
+      >
+        Cancel
+      </button>
+      <button
+        mat-flat-button
+        (click)="save()"
+        [disabled]="!hasChanged()"
+        i18n="@@ngx.dashboard.common.save"
+      >
         Save
       </button>
     </mat-dialog-actions>

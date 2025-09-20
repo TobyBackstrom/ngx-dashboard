@@ -21,8 +21,8 @@ export interface ArrowWidgetState {
 export class ArrowWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
     widgetTypeid: '@ngx-dashboard/arrow-widget',
-    name: 'Arrow',
-    description: 'A generic arrow',
+    name: $localize`:@@ngx.dashboard.widgets.arrow.name:Arrow`,
+    description: $localize`:@@ngx.dashboard.widgets.arrow.description:A generic arrow`,
     svgIcon,
   };
 

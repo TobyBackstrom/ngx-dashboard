@@ -5,6 +5,7 @@
   "peerDependencies": {
     "@angular/common": "^20.2.0",
     "@angular/core": "^20.2.0",
+    "@angular/localize": "^20.2.0",
     "@dragonworks/ngx-dashboard": "^20.0.0"
   },
   "dependencies": {

@@ -25,8 +25,8 @@ export interface ClockWidgetState {
 export class ClockWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
     widgetTypeid: '@ngx-dashboard/clock-widget',
-    name: 'Clock',
-    description: 'Display time in analog or digital format',
+    name: $localize`:@@ngx.dashboard.widgets.clock.name:Clock`,
+    description: $localize`:@@ngx.dashboard.widgets.clock.description:Display time in analog or digital format`,
     svgIcon,
   };
 
