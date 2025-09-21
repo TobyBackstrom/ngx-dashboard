@@ -430,6 +430,63 @@
         "opacity": 0.3,
         "hasBackground": true
       }
+    },
+    {
+      "row": 3,
+      "col": 1,
+      "rowSpan": 1,
+      "colSpan": 3,
+      "widgetTypeid": "@ngx-dashboard/label-widget",
+      "widgetState": {
+        "label": "A",
+        "fontSize": 16,
+        "alignment": "center",
+        "fontWeight": "normal",
+        "opacity": 1,
+        "hasBackground": true,
+        "responsive": true,
+        "minFontSize": 8,
+        "maxFontSize": 64,
+        "templateString": "template string"
+      }
+    },
+    {
+      "row": 3,
+      "col": 4,
+      "rowSpan": 1,
+      "colSpan": 3,
+      "widgetTypeid": "@ngx-dashboard/label-widget",
+      "widgetState": {
+        "label": "AB",
+        "fontSize": 16,
+        "alignment": "center",
+        "fontWeight": "normal",
+        "opacity": 1,
+        "hasBackground": true,
+        "responsive": true,
+        "minFontSize": 8,
+        "maxFontSize": 64,
+        "templateString": "template string"
+      }
+    },
+    {
+      "row": 3,
+      "col": 7,
+      "rowSpan": 1,
+      "colSpan": 3,
+      "widgetTypeid": "@ngx-dashboard/label-widget",
+      "widgetState": {
+        "label": "ABC",
+        "fontSize": 16,
+        "alignment": "center",
+        "fontWeight": "normal",
+        "opacity": 1,
+        "hasBackground": true,
+        "responsive": true,
+        "minFontSize": 8,
+        "maxFontSize": 64,
+        "templateString": "template string"
+      }
     }
   ]
 }

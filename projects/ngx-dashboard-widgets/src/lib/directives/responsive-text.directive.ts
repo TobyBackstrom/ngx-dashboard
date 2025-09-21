@@ -7,6 +7,7 @@ import {
   booleanAttribute,
   input,
   AfterViewInit,
+  effect,
 } from '@angular/core';
 import { NgZone, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -83,11 +84,27 @@ export class ResponsiveTextDirective implements AfterViewInit {
   private lastMaxW = 0;
   private lastMaxH = 0;
   private lastFontSize = 0;
+  private isViewInitialized = false;
 
   constructor() {
     // Set up cleanup on component destruction using modern DestroyRef
     this.destroyRef.onDestroy(() => {
       this.cleanup();
+    });
+
+    // Watch for input changes and trigger refit
+    effect(() => {
+      // Access the signals to track them (triggers when they change)
+      this.templateString();
+      this.minFontSize();
+      this.maxFontSize();
+
+      // Only trigger refit if directive is initialized and view is ready
+      if (this.isViewInitialized && isPlatformBrowser(this.platformId)) {
+        this.zone.runOutsideAngular(() => {
+          this.requestFit();
+        });
+      }
     });
   }
 
@@ -97,6 +114,9 @@ export class ResponsiveTextDirective implements AfterViewInit {
     // Set initial styles
     const span = this.el.nativeElement;
     span.style.transition = 'font-size 0.1s ease-out';
+
+    // Mark as initialized for the effect to start watching
+    this.isViewInitialized = true;
 
     // All observer callbacks run outside Angular's zone
     this.zone.runOutsideAngular(() => {

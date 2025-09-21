@@ -88,6 +88,13 @@ describe('ResponsiveTextDirective', () => {
     spyOn(window, 'ResizeObserver').and.returnValue(mockResizeObserver);
     spyOn(window, 'MutationObserver').and.returnValue(mockMutationObserver);
 
+    // Mock requestAnimationFrame to run synchronously in tests
+    spyOn(window, 'requestAnimationFrame').and.callFake((callback: FrameRequestCallback) => {
+      callback(0);
+      return 1;
+    });
+    spyOn(window, 'cancelAnimationFrame');
+
     await TestBed.configureTestingModule({
       imports: [TestComponent, ResponsiveTextDirective]
     }).compileComponents();

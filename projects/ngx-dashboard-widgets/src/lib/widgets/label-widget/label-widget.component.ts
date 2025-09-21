@@ -18,6 +18,8 @@ export interface LabelWidgetState {
   // Font size constraints for responsive text (px values)
   minFontSize?: number; // Default: 8px (accessible minimum)
   maxFontSize?: number; // Default: 64px (practical widget maximum)
+  // Template string for size calculations (when different from displayed text)
+  templateString?: string;
 }
 
 @Component({
@@ -61,7 +63,12 @@ export class LabelWidgetComponent implements Widget {
   }
 
   dashboardGetState(): LabelWidgetState {
-    return { ...this.state() };
+    const state = { ...this.state() };
+    // Remove templateString if undefined to maintain backward compatibility
+    if (state.templateString === undefined) {
+      delete state.templateString;
+    }
+    return state;
   }
 
   dashboardEditState(): void {
@@ -93,4 +100,5 @@ export class LabelWidgetComponent implements Widget {
   // Computed properties for responsive font size limits with fallbacks
   readonly minFontSize = computed(() => this.state().minFontSize ?? 8);
   readonly maxFontSize = computed(() => this.state().maxFontSize ?? 64);
+  readonly templateString = computed(() => this.state().templateString);
 }

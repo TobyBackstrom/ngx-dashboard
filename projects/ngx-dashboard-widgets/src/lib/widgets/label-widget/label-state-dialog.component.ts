@@ -145,6 +145,24 @@ import { LabelWidgetState } from './label-widget.component';
             }
           </mat-form-field>
         </div>
+
+        <!-- Template String field -->
+        <mat-form-field appearance="outline">
+          <mat-label i18n="@@ngx.dashboard.widgets.label.dialog.templateString"
+            >Template String</mat-label
+          >
+          <input
+            matInput
+            type="text"
+            [value]="templateString() || ''"
+            (input)="templateString.set($any($event.target).value || undefined)"
+            i18n-placeholder="@@ngx.dashboard.widgets.label.dialog.templateStringPlaceholder"
+            placeholder="Optional: Text to use for size calculation"
+          />
+          <mat-hint i18n="@@ngx.dashboard.widgets.label.dialog.templateStringHint"
+            >Use when displayed text varies but size should remain consistent</mat-hint
+          >
+        </mat-form-field>
       </div>
       }
 
@@ -374,6 +392,7 @@ export class LabelStateDialogComponent {
   // Responsive font size constraints
   readonly minFontSize = signal<number>(this.data.minFontSize ?? 8);
   readonly maxFontSize = signal<number>(this.data.maxFontSize ?? 64);
+  readonly templateString = signal<string | undefined>(this.data.templateString);
 
   // Store original values for comparison
   private readonly originalLabel = this.data.label ?? '';
@@ -385,6 +404,7 @@ export class LabelStateDialogComponent {
   private readonly originalResponsive = this.data.responsive ?? false;
   private readonly originalMinFontSize = this.data.minFontSize ?? 8;
   private readonly originalMaxFontSize = this.data.maxFontSize ?? 64;
+  private readonly originalTemplateString = this.data.templateString;
 
   // Validation computed properties
   readonly isMinFontSizeValid = computed(() => {
@@ -419,7 +439,8 @@ export class LabelStateDialogComponent {
       this.hasBackground() !== this.originalHasBackground ||
       this.responsive() !== this.originalResponsive ||
       this.minFontSize() !== this.originalMinFontSize ||
-      this.maxFontSize() !== this.originalMaxFontSize
+      this.maxFontSize() !== this.originalMaxFontSize ||
+      this.templateString() !== this.originalTemplateString
   );
 
   formatOpacity(value: number): number {
@@ -465,7 +486,7 @@ export class LabelStateDialogComponent {
   }
 
   save(): void {
-    this.dialogRef.close({
+    const state: LabelWidgetState = {
       label: this.label(),
       fontSize: this.fontSize(),
       alignment: this.alignment(),
@@ -475,6 +496,14 @@ export class LabelStateDialogComponent {
       responsive: this.responsive(),
       minFontSize: this.minFontSize(),
       maxFontSize: this.maxFontSize(),
-    } as LabelWidgetState);
+    };
+
+    // Only include templateString if it has a value
+    const templateString = this.templateString();
+    if (templateString) {
+      state.templateString = templateString;
+    }
+
+    this.dialogRef.close(state);
   }
 }
