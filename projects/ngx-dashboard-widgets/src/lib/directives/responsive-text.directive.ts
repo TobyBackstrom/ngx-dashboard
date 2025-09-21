@@ -17,7 +17,8 @@ import { isPlatformBrowser } from '@angular/common';
  *
  * @example
  * <div class="container">
- *   <span responsiveText [minFontSize]="12" [maxFontSize]="72">Dynamic text here</span>
+ *   <span libResponsiveText [minFontSize]="12" [maxFontSize]="72">Dynamic text here</span>
+ *   <span libResponsiveText [templateString]="'Template for sizing'">Shorter text</span>
  * </div>
  */
 @Directive({
@@ -50,6 +51,9 @@ export class ResponsiveTextDirective implements AfterViewInit {
   /** Debounce delay in ms for resize/mutation callbacks */
   debounceMs = input(16, { transform: numberAttribute });
 
+  /** Template string to use for size calculations instead of actual content */
+  templateString = input<string | undefined>(undefined);
+
   /* ───────────────────────── Private state ───────────────────────── */
   private readonly el = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly zone = inject(NgZone);
@@ -75,6 +79,7 @@ export class ResponsiveTextDirective implements AfterViewInit {
 
   // Cache for performance
   private lastText = '';
+  private lastTemplateString = '';
   private lastMaxW = 0;
   private lastMaxH = 0;
   private lastFontSize = 0;
@@ -126,8 +131,11 @@ export class ResponsiveTextDirective implements AfterViewInit {
 
     if (!parent) return;
 
-    const text = span.textContent?.trim() || '';
-    if (!text) {
+    const actualText = span.textContent?.trim() || '';
+    const templateString = this.templateString()?.trim();
+    const measureText = templateString || actualText;
+
+    if (!measureText) {
       span.style.fontSize = `${this.minFontSize()}px`;
       return;
     }
@@ -136,7 +144,8 @@ export class ResponsiveTextDirective implements AfterViewInit {
 
     // Check cache to avoid redundant calculations
     if (
-      text === this.lastText &&
+      actualText === this.lastText &&
+      (templateString || '') === this.lastTemplateString &&
       maxW === this.lastMaxW &&
       maxH === this.lastMaxH &&
       this.lastFontSize > 0
@@ -145,7 +154,7 @@ export class ResponsiveTextDirective implements AfterViewInit {
     }
 
     // Calculate with conservative buffer for sub-pixel accuracy
-    const ideal = this.calcFit(text, maxW * 0.98, maxH * 0.98);
+    const ideal = this.calcFit(measureText, maxW * 0.98, maxH * 0.98);
 
     span.style.fontSize = `${ideal}px`;
 
@@ -153,7 +162,8 @@ export class ResponsiveTextDirective implements AfterViewInit {
     this.verifyFit(span, maxW, maxH, ideal);
 
     // Update cache
-    this.lastText = text;
+    this.lastText = actualText;
+    this.lastTemplateString = templateString || '';
     this.lastMaxW = maxW;
     this.lastMaxH = maxH;
     this.lastFontSize = parseFloat(span.style.fontSize);

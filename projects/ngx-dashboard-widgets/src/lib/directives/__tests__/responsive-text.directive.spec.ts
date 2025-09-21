@@ -6,13 +6,14 @@ import { ResponsiveTextDirective } from '../responsive-text.directive';
 @Component({
   template: `
     <div class="container" [style.width.px]="containerWidth" [style.height.px]="containerHeight" [style.padding.px]="padding">
-      <span 
-        libResponsiveText 
-        [minFontSize]="minFont" 
-        [maxFontSize]="maxFont" 
+      <span
+        libResponsiveText
+        [minFontSize]="minFont"
+        [maxFontSize]="maxFont"
         [lineHeight]="lineHeight"
         [observeMutations]="observeMutations"
-        [debounceMs]="debounceMs">
+        [debounceMs]="debounceMs"
+        [templateString]="templateString">
         {{ text }}
       </span>
     </div>
@@ -35,6 +36,7 @@ class TestComponent {
   lineHeight = 1.1;
   observeMutations = true;
   debounceMs = 16;
+  templateString: string | undefined = undefined;
 }
 
 describe('ResponsiveTextDirective', () => {
@@ -901,6 +903,194 @@ describe('ResponsiveTextDirective', () => {
         tick();
         flush();
       }).not.toThrow();
+    }));
+  });
+
+  describe('Template String Functionality', () => {
+    beforeEach(() => {
+      // Setup measurements that respond to text length
+      mockCtx.measureText.and.callFake((text: string) => {
+        const fontSize = parseFloat(mockCtx.font.match(/(\d+)px/)?.[1] || '16');
+        return {
+          width: text.length * fontSize * 0.6,
+          fontBoundingBoxAscent: fontSize * 0.8,
+          fontBoundingBoxDescent: fontSize * 0.2
+        } as TextMetrics;
+      });
+    });
+
+    it('should use template string for sizing when provided', fakeAsync(() => {
+      component.text = 'Short';
+      component.templateString = 'Much longer template string for sizing';
+      component.containerWidth = 300;
+      component.containerHeight = 50;
+
+      fixture.detectChanges();
+      tick();
+      flush();
+
+      // Should have calculated size based on the longer template string
+      const fontSize = parseFloat(spanElement.style.fontSize);
+      expect(fontSize).toBeGreaterThan(0);
+
+      // Template string should have been used in measureText
+      const measureTextCalls = mockCtx.measureText.calls.all();
+      const templateUsed = measureTextCalls.some(call =>
+        call.args[0] === 'Much longer template string for sizing'
+      );
+      expect(templateUsed).toBe(true);
+    }));
+
+    it('should fall back to actual text when template string is undefined', fakeAsync(() => {
+      component.text = 'Actual text content';
+      component.templateString = undefined;
+
+      fixture.detectChanges();
+      tick();
+      flush();
+
+      // Should use actual text for sizing
+      const measureTextCalls = mockCtx.measureText.calls.all();
+      const actualTextUsed = measureTextCalls.some(call =>
+        call.args[0] === 'Actual text content'
+      );
+      expect(actualTextUsed).toBe(true);
+    }));
+
+    it('should handle empty template string gracefully', fakeAsync(() => {
+      component.text = 'Actual text';
+      component.templateString = '';
+      component.minFont = 16;
+
+      fixture.detectChanges();
+      tick();
+      flush();
+
+      // Should fall back to actual text when template is empty
+      const measureTextCalls = mockCtx.measureText.calls.all();
+      const actualTextUsed = measureTextCalls.some(call =>
+        call.args[0] === 'Actual text'
+      );
+      expect(actualTextUsed).toBe(true);
+    }));
+
+    it('should cache based on both text and template string', fakeAsync(() => {
+      // Reset the spy to get clean call counts
+      mockCtx.measureText.calls.reset();
+
+      component.text = 'Test text';
+      component.templateString = 'Template text';
+
+      fixture.detectChanges();
+      tick();
+      flush();
+
+      const initialCallCount = mockCtx.measureText.calls.count();
+      expect(initialCallCount).toBeGreaterThan(0); // Should have made some calls
+
+      // Same text and template - should use cache
+      fixture.detectChanges();
+      tick();
+      flush();
+
+      expect(mockCtx.measureText.calls.count()).toBe(initialCallCount);
+
+      // Change template string - should recalculate
+      component.templateString = 'Different template';
+      fixture.detectChanges();
+      tick();
+      flush();
+
+      // Should have made additional calls due to template change
+      expect(mockCtx.measureText.calls.count()).toBeGreaterThan(initialCallCount);
+    }));
+
+    it('should produce consistent sizing for same template string', fakeAsync(() => {
+      const templateString = 'Consistent template for multiple elements';
+
+      // First element with short text
+      component.text = 'A';
+      component.templateString = templateString;
+      fixture.detectChanges();
+      tick();
+      flush();
+
+      const fontSize1 = parseFloat(spanElement.style.fontSize);
+
+      // Second element with different short text but same template
+      component.text = 'XYZ';
+      component.templateString = templateString;
+      fixture.detectChanges();
+      tick();
+      flush();
+
+      const fontSize2 = parseFloat(spanElement.style.fontSize);
+
+      // Should produce same font size for same template
+      expect(fontSize2).toBe(fontSize1);
+    }));
+
+    it('should handle whitespace-only template string', fakeAsync(() => {
+      component.text = 'Actual text';
+      component.templateString = '   \n\t  ';
+      component.minFont = 16;
+
+      fixture.detectChanges();
+      tick();
+      flush();
+
+      // Should fall back to actual text when template is whitespace
+      const measureTextCalls = mockCtx.measureText.calls.all();
+      const actualTextUsed = measureTextCalls.some(call =>
+        call.args[0] === 'Actual text'
+      );
+      expect(actualTextUsed).toBe(true);
+    }));
+
+    it('should work with very long template strings', fakeAsync(() => {
+      component.text = 'Short';
+      component.templateString = 'A'.repeat(1000); // Very long template
+      component.containerWidth = 100;
+      component.containerHeight = 30;
+
+      expect(() => {
+        fixture.detectChanges();
+        tick();
+        flush();
+      }).not.toThrow();
+
+      // Should produce valid font size
+      const fontSize = parseFloat(spanElement.style.fontSize);
+      expect(fontSize).toBeGreaterThanOrEqual(component.minFont);
+      expect(fontSize).toBeLessThanOrEqual(component.maxFont);
+    }));
+
+    it('should update sizing when template string input changes', fakeAsync(() => {
+      // Reset the spy to get clean call counts
+      mockCtx.measureText.calls.reset();
+
+      component.text = 'Text';
+      component.templateString = 'Short';
+
+      fixture.detectChanges();
+      tick();
+      flush();
+
+      const initialCallCount = mockCtx.measureText.calls.count();
+      expect(initialCallCount).toBeGreaterThan(0); // Should have made some calls
+
+      // Change to longer template
+      component.templateString = 'This is a much longer template string';
+      fixture.detectChanges();
+      tick();
+      flush();
+
+      // Should have made additional measureText calls due to template change
+      expect(mockCtx.measureText.calls.count()).toBeGreaterThan(initialCallCount);
+
+      // Should produce valid font size
+      const fontSize = parseFloat(spanElement.style.fontSize);
+      expect(fontSize).toBeGreaterThan(0);
     }));
   });
 });
