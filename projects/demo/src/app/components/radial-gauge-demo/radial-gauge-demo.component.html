@@ -1,16 +1,16 @@
 <div class="gauge-demo-container">
-  <h1>Radial Gauge Component Demo</h1>
+  <h1 i18n="@@demo.radialGaugeDemo.title">Radial Gauge Component Demo</h1>
 
   <div class="demo-layout">
     <!-- Controls Panel -->
     <mat-card class="controls-panel">
       <mat-card-header>
-        <mat-card-title>Gauge Controls</mat-card-title>
+        <mat-card-title i18n="@@demo.radialGaugeDemo.controls">Gauge Controls</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <!-- Preset Configurations -->
         <div class="section">
-          <h3>Preset Configurations</h3>
+          <h3 i18n="@@demo.radialGaugeDemo.presetConfigurations">Preset Configurations</h3>
           <div class="button-grid">
             <button
               mat-raised-button
@@ -18,7 +18,7 @@
               (click)="setDefaultConfig()"
             >
               <mat-icon>speed</mat-icon>
-              Default
+              <span i18n="@@demo.radialGaugeDemo.default">Default</span>
             </button>
             <button
               mat-raised-button
@@ -26,7 +26,7 @@
               (click)="setTemperatureConfig()"
             >
               <mat-icon>thermostat</mat-icon>
-              Temperature
+              <span i18n="@@demo.radialGaugeDemo.temperature">Temperature</span>
             </button>
             <button
               mat-raised-button
@@ -34,7 +34,7 @@
               (click)="setPerformanceConfig()"
             >
               <mat-icon>analytics</mat-icon>
-              Performance
+              <span i18n="@@demo.radialGaugeDemo.performance">Performance</span>
             </button>
             <button
               mat-raised-button
@@ -42,7 +42,7 @@
               (click)="setBatteryConfig()"
             >
               <mat-icon>battery_std</mat-icon>
-              Battery
+              <span i18n="@@demo.radialGaugeDemo.battery">Battery</span>
             </button>
             <button
               mat-raised-button
@@ -50,7 +50,7 @@
               (click)="setNetworkConfig()"
             >
               <mat-icon>signal_cellular_alt</mat-icon>
-              Network
+              <span i18n="@@demo.radialGaugeDemo.network">Network</span>
             </button>
             <button
               mat-raised-button
@@ -58,17 +58,17 @@
               (click)="setStorageConfig()"
             >
               <mat-icon>storage</mat-icon>
-              Storage
+              <span i18n="@@demo.radialGaugeDemo.storage">Storage</span>
             </button>
           </div>
         </div>
 
         <!-- Value Controls -->
         <div class="section">
-          <h3>Value Settings</h3>
+          <h3 i18n="@@demo.radialGaugeDemo.valueSettings">Value Settings</h3>
 
           <div class="control-group">
-            <span>Value: {{ value() }}</span>
+            <span i18n="@@demo.radialGaugeDemo.valueLabel">Value: {{ value() }}</span>
             <mat-slider [min]="min()" [max]="max()" step="0.1" discrete>
               <input matSliderThumb [(ngModel)]="value" />
             </mat-slider>
@@ -76,6 +76,7 @@
               mat-icon-button
               (click)="randomValue()"
               matTooltip="Random Value"
+              i18n-matTooltip="@@demo.radialGaugeDemo.randomValue"
             >
               <mat-icon>casino</mat-icon>
             </button>
@@ -83,12 +84,12 @@
 
           <div class="input-row">
             <mat-form-field>
-              <mat-label>Min</mat-label>
+              <mat-label i18n="@@demo.radialGaugeDemo.min">Min</mat-label>
               <input matInput type="number" [(ngModel)]="min" />
             </mat-form-field>
 
             <mat-form-field>
-              <mat-label>Max</mat-label>
+              <mat-label i18n="@@demo.radialGaugeDemo.max">Max</mat-label>
               <input matInput type="number" [(ngModel)]="max" />
             </mat-form-field>
           </div>
@@ -96,38 +97,38 @@
 
         <!-- Size Controls -->
         <div class="section">
-          <h3>Dimensions</h3>
+          <h3 i18n="@@demo.radialGaugeDemo.dimensions">Dimensions</h3>
 
           <div class="control-group">
-            <span>Size: {{ size() }}px</span>
+            <span i18n="@@demo.radialGaugeDemo.sizeLabel">Size: {{ size() }}px</span>
             <mat-slider min="150" max="500" step="10" discrete>
               <input matSliderThumb [(ngModel)]="size" />
             </mat-slider>
           </div>
 
           <div class="control-group">
-            <span>Outer Thickness: {{ outerThickness() }}px</span>
+            <span i18n="@@demo.radialGaugeDemo.outerThicknessLabel">Outer Thickness: {{ outerThickness() }}px</span>
             <mat-slider min="10" max="60" step="2" discrete>
               <input matSliderThumb [(ngModel)]="outerThickness" />
             </mat-slider>
           </div>
 
           <div class="control-group">
-            <span>Inner Thickness: {{ innerThickness() }}px</span>
+            <span i18n="@@demo.radialGaugeDemo.innerThicknessLabel">Inner Thickness: {{ innerThickness() }}px</span>
             <mat-slider min="4" max="30" step="2" discrete>
               <input matSliderThumb [(ngModel)]="innerThickness" />
             </mat-slider>
           </div>
 
           <div class="control-group">
-            <span>Gap: {{ gap() }}px</span>
+            <span i18n="@@demo.radialGaugeDemo.gapLabel">Gap: {{ gap() }}px</span>
             <mat-slider min="0" max="20" step="1" discrete>
               <input matSliderThumb [(ngModel)]="gap" />
             </mat-slider>
           </div>
 
           <div class="control-group">
-            <span>Segment Gap: {{ segmentGapPx() }}px</span>
+            <span i18n="@@demo.radialGaugeDemo.segmentGapLabel">Segment Gap: {{ segmentGapPx() }}px</span>
             <mat-slider min="0" max="10" step="1" discrete>
               <input matSliderThumb [(ngModel)]="segmentGapPx" />
             </mat-slider>
@@ -136,7 +137,7 @@
 
         <!-- Animation Controls -->
         <div class="section">
-          <h3>Animation</h3>
+          <h3 i18n="@@demo.radialGaugeDemo.animation">Animation</h3>
 
           <div class="button-group">
             <button
@@ -145,7 +146,7 @@
               (click)="startAnimation()"
             >
               <mat-icon>play_arrow</mat-icon>
-              Start Animation
+              <span i18n="@@demo.radialGaugeDemo.startAnimation">Start Animation</span>
             </button>
             <button
               mat-raised-button
@@ -153,53 +154,54 @@
               (click)="stopAnimation()"
             >
               <mat-icon>stop</mat-icon>
-              Stop Animation
+              <span i18n="@@demo.radialGaugeDemo.stopAnimation">Stop Animation</span>
             </button>
           </div>
         </div>
 
         <!-- Advanced Features Controls -->
         <div class="section">
-          <h3>Advanced Features</h3>
+          <h3 i18n="@@demo.radialGaugeDemo.advancedFeatures">Advanced Features</h3>
 
           <div class="toggle-group">
             <mat-slide-toggle [(ngModel)]="showValueLabel">
-              Show Value Label
+              <span i18n="@@demo.radialGaugeDemo.showValueLabel">Show Value Label</span>
             </mat-slide-toggle>
             <mat-slide-toggle [(ngModel)]="hasBackground">
-              Has Background
+              <span i18n="@@demo.radialGaugeDemo.hasBackground">Has Background</span>
             </mat-slide-toggle>
           </div>
 
           <div class="input-row">
             <mat-form-field>
-              <mat-label>Label Reference</mat-label>
+              <mat-label i18n="@@demo.radialGaugeDemo.labelReference">Label Reference</mat-label>
               <input 
                 matInput 
                 placeholder="e.g., '00000' or leave empty"
+                i18n-placeholder="@@demo.radialGaugeDemo.labelReferencePlaceholder"
                 [(ngModel)]="labelReference" />
-              <mat-hint>Text/number for width calculation</mat-hint>
+              <mat-hint i18n="@@demo.radialGaugeDemo.labelReferenceHint">Text/number for width calculation</mat-hint>
             </mat-form-field>
 
             <mat-form-field>
-              <mat-label>Reference Glyph</mat-label>
+              <mat-label i18n="@@demo.radialGaugeDemo.referenceGlyph">Reference Glyph</mat-label>
               <input 
                 matInput 
                 maxlength="1"
                 [(ngModel)]="referenceGlyph" />
-              <mat-hint>Single character</mat-hint>
+              <mat-hint i18n="@@demo.radialGaugeDemo.referenceGlyphHint">Single character</mat-hint>
             </mat-form-field>
           </div>
 
           <div class="control-group">
-            <span>Label Padding: {{ labelPadding() }}px</span>
+            <span i18n="@@demo.radialGaugeDemo.labelPaddingLabel">Label Padding: {{ labelPadding() }}px</span>
             <mat-slider min="0" max="20" step="1" discrete>
               <input matSliderThumb [(ngModel)]="labelPadding" />
             </mat-slider>
           </div>
 
           <div class="control-group">
-            <span>Baseline Safety: {{ baselineSafety() }}</span>
+            <span i18n="@@demo.radialGaugeDemo.baselineSafetyLabel">Baseline Safety: {{ baselineSafety() }}</span>
             <mat-slider min="0.5" max="1" step="0.01" discrete>
               <input matSliderThumb [(ngModel)]="baselineSafety" />
             </mat-slider>
@@ -211,7 +213,7 @@
     <!-- Gauge Display -->
     <mat-card class="gauge-display">
       <mat-card-header>
-        <mat-card-title>Gauge Preview</mat-card-title>
+        <mat-card-title i18n="@@demo.radialGaugeDemo.preview">Gauge Preview</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <!-- Main Gauge -->
@@ -240,7 +242,7 @@
         <!-- Animated Gauge Example -->
         @if (isAnimating()) {
         <div class="section">
-          <h3>Animated Gauge</h3>
+          <h3 i18n="@@demo.radialGaugeDemo.animatedGauge">Animated Gauge</h3>
           <div class="gauge-wrapper">
             <ngx-radial-gauge
               [value]="animatedValue()"
@@ -252,7 +254,9 @@
               [gap]="6"
               [segments]="getActiveSegments()"
               title="Live Data"
+              i18n-title="@@demo.radialGaugeDemo.liveData"
               description="Real-time monitoring"
+              i18n-description="@@demo.radialGaugeDemo.realtimeMonitoring"
             />
           </div>
         </div>
@@ -260,8 +264,8 @@
 
         <!-- Responsive Container Demo -->
         <div class="section">
-          <h3>Responsive Container Demo</h3>
-          <p>
+          <h3 i18n="@@demo.radialGaugeDemo.responsiveContainerDemo">Responsive Container Demo</h3>
+          <p i18n="@@demo.radialGaugeDemo.responsiveDescription">
             Drag the resize handles to see the gauge adapt to container size
             changes. The gauge uses <code>fitToContainer=true</code> and
             <code>responsiveMode=true</code> for automatic sizing and
@@ -272,7 +276,7 @@
             <div class="container-controls">
               <div class="control-group">
                 <label for="container-width-slider"
-                  >Container Width: {{ containerWidth() }}px</label
+                  i18n="@@demo.radialGaugeDemo.containerWidthLabel">Container Width: {{ containerWidth() }}px</label
                 >
                 <mat-slider min="50" max="600" step="10" discrete>
                   <input
@@ -285,7 +289,7 @@
 
               <div class="control-group">
                 <label for="container-height-slider"
-                  >Container Height: {{ containerHeight() }}px</label
+                  i18n="@@demo.radialGaugeDemo.containerHeightLabel">Container Height: {{ containerHeight() }}px</label
                 >
                 <mat-slider min="50" max="600" step="10" discrete>
                   <input
@@ -298,7 +302,7 @@
 
               <div class="control-group">
                 <label for="size-thickness-ratio-slider"
-                  >Size To Thickness Ratio: {{ sizeToThicknessRatio() }}</label
+                  i18n="@@demo.radialGaugeDemo.sizeToThicknessRatioLabel">Size To Thickness Ratio: {{ sizeToThicknessRatio() }}</label
                 >
                 <mat-slider min="8" max="50" step="1" discrete>
                   <input
@@ -317,7 +321,7 @@
             >
               <div class="container-info">
                 <small
-                  >{{ containerWidth() }} × {{ containerHeight() }}px
+                  i18n="@@demo.radialGaugeDemo.dimensionsDisplay">{{ containerWidth() }} × {{ containerHeight() }}px
                   container</small
                 >
               </div>
@@ -339,10 +343,10 @@
 
         <!-- Multiple Gauges Example -->
         <div class="section">
-          <h3>Dashboard Example</h3>
+          <h3 i18n="@@demo.radialGaugeDemo.dashboardExample">Dashboard Example</h3>
           <div class="gauge-grid">
             <div class="small-gauge">
-              <h4>CPU Usage</h4>
+              <h4 i18n="@@demo.radialGaugeDemo.cpuUsage">CPU Usage</h4>
               <ngx-radial-gauge
                 [value]="65"
                 [min]="0"
@@ -354,13 +358,15 @@
                 [segmentGapPx]="2"
                 [segments]="performanceSegments()"
                 title="CPU Usage"
+                i18n-title="@@demo.radialGaugeDemo.cpuUsageTitle"
                 description="Percentage"
+                i18n-description="@@demo.radialGaugeDemo.percentage"
                 [labelReference]="'00000'"
               />
             </div>
 
             <div class="small-gauge">
-              <h4>Memory</h4>
+              <h4 i18n="@@demo.radialGaugeDemo.memory">Memory</h4>
               <ngx-radial-gauge
                 [value]="42"
                 [min]="0"
@@ -373,12 +379,14 @@
                 [segments]="performanceSegments()"
                 [showValueLabel]="false"
                 title="Memory Usage"
+                i18n-title="@@demo.radialGaugeDemo.memoryUsageTitle"
                 description="Percentage"
+                i18n-description="@@demo.radialGaugeDemo.percentageMemory"
               />
             </div>
 
             <div class="small-gauge">
-              <h4>Disk I/O</h4>
+              <h4 i18n="@@demo.radialGaugeDemo.diskIO">Disk I/O</h4>
               <ngx-radial-gauge
                 [value]="88"
                 [min]="0"
@@ -390,12 +398,14 @@
                 [segmentGapPx]="2"
                 [segments]="performanceSegments()"
                 title="Disk I/O"
+                i18n-title="@@demo.radialGaugeDemo.diskIOTitle"
                 description="Percentage"
+                i18n-description="@@demo.radialGaugeDemo.percentageDisk"
               />
             </div>
 
             <div class="small-gauge">
-              <h4>Network</h4>
+              <h4 i18n="@@demo.radialGaugeDemo.networkHeader">Network</h4>
               <ngx-radial-gauge
                 [value]="3.5"
                 [min]="0"
@@ -407,12 +417,14 @@
                 [segmentGapPx]="3"
                 [segments]="networkSegments()"
                 title="Network"
+                i18n-title="@@demo.radialGaugeDemo.networkTitle"
                 description="Signal Strength"
+                i18n-description="@@demo.radialGaugeDemo.signalStrength"
               />
             </div>
 
             <div class="small-gauge">
-              <h4>Battery</h4>
+              <h4 i18n="@@demo.radialGaugeDemo.batteryHeader">Battery</h4>
               <ngx-radial-gauge
                 [value]="72"
                 [min]="0"
@@ -425,12 +437,14 @@
                 [segments]="batterySegments()"
                 [hasBackground]="true"
                 title="Battery"
+                i18n-title="@@demo.radialGaugeDemo.batteryTitle"
                 description="Charge Level"
+                i18n-description="@@demo.radialGaugeDemo.chargeLevel"
               />
             </div>
 
             <div class="small-gauge">
-              <h4>Temperature</h4>
+              <h4 i18n="@@demo.radialGaugeDemo.temperatureHeader">Temperature</h4>
               <ngx-radial-gauge
                 [value]="22"
                 [min]="-20"
@@ -442,7 +456,9 @@
                 [segmentGapPx]="2"
                 [segments]="temperatureSegments()"
                 title="Temperature"
+                i18n-title="@@demo.radialGaugeDemo.temperatureTitle"
                 description="Celsius"
+                i18n-description="@@demo.radialGaugeDemo.celsius"
               />
             </div>
           </div>
@@ -454,10 +470,10 @@
   <!-- Code Examples -->
   <mat-card class="code-example">
     <mat-card-header>
-      <mat-card-title>Usage Examples</mat-card-title>
+      <mat-card-title i18n="@@demo.radialGaugeDemo.usageExamples">Usage Examples</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <h4>1. Responsive Container Gauge (Recommended for Dashboards)</h4>
+      <h4 i18n="@@demo.radialGaugeDemo.responsiveContainerGauge">1. Responsive Container Gauge (Recommended for Dashboards)</h4>
       <pre><code>&lt;!-- Automatically resizes to container, proportional thickness --&gt;
 &lt;div class="gauge-container"&gt;
   &lt;ngx-radial-gauge
@@ -473,7 +489,7 @@
     description="Percentage" /&gt;
 &lt;/div&gt;</code></pre>
 
-      <h4>2. Fixed Size Gauge (Traditional)</h4>
+      <h4 i18n="@@demo.radialGaugeDemo.fixedSizeGauge">2. Fixed Size Gauge (Traditional)</h4>
       <pre><code>&lt;!-- Exact pixel control over all dimensions --&gt;
 &lt;ngx-radial-gauge
   [value]="{{ value() }}"
@@ -487,7 +503,7 @@
   title="Temperature"
   description="Celsius" /&gt;</code></pre>
 
-      <h4>3. Scalable Design Gauge</h4>
+      <h4 i18n="@@demo.radialGaugeDemo.scalableDesignGauge">3. Scalable Design Gauge</h4>
       <pre><code>&lt;!-- Manual size with automatic thickness scaling --&gt;
 &lt;ngx-radial-gauge
   [value]="batteryLevel"
@@ -498,7 +514,7 @@
   title="Battery"
   description="Charge" /&gt;</code></pre>
 
-      <h4>4. Advanced Features (Text Display & Styling)</h4>
+      <h4 i18n="@@demo.radialGaugeDemo.advancedFeaturesExample">4. Advanced Features (Text Display & Styling)</h4>
       <pre><code>&lt;!-- Fine-tuned text display and visual options --&gt;
 &lt;ngx-radial-gauge
   [value]="75"
@@ -515,7 +531,7 @@
   title="Advanced Gauge"
   description="All options" /&gt;</code></pre>
 
-      <h4>TypeScript Interface</h4>
+      <h4 i18n="@@demo.radialGaugeDemo.typeScriptInterface">TypeScript Interface</h4>
       <pre><code>interface RadialGaugeSegment {{ '{' }}
   from: number;
   to: number;

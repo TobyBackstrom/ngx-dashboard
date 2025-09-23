@@ -44,8 +44,8 @@ export interface RealtimeGaugeWidgetState {
 export class RealtimeGaugeWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
     widgetTypeid: '@demo/realtime-gauge-widget',
-    name: 'Realtime Gauge',
-    description: 'Gauge with real-time data updates',
+    name: $localize`:@@demo.widgets.realtimeGauge.name:Realtime Gauge`,
+    description: $localize`:@@demo.widgets.realtimeGauge.description:Gauge with real-time data updates`,
     svgIcon,
   };
 

@@ -1,0 +1,1914 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="demo.navigation.dashboard" datatype="html">
+        <source>Dashboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/app.html</context>
+          <context context-type="linenumber">9,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.navigation.radialGaugeDemo" datatype="html">
+        <source>Radial Gauge Demo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/app.html</context>
+          <context context-type="linenumber">13,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.navigation.colors" datatype="html">
+        <source>Colors Overview</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/app.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.app.title" datatype="html">
+        <source>Dashboard Demo and Component Tests</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/app.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.switchToLight" datatype="html">
+        <source>Switch to light theme</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/app.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.switchToDark" datatype="html">
+        <source>Switch to dark theme</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/app.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.selectTheme" datatype="html">
+        <source>Select theme</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/app.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.selectSpecific" datatype="html">
+        <source>Select <x id="INTERPOLATION" equiv-text="themeName"/> theme</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/app.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.colors.title" datatype="html">
+        <source>Color System Overview</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/colors/colors.component.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.colors.subtitle" datatype="html">
+        <source>Current theme&apos;s Material Design 3 color tokens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/colors/colors.component.html</context>
+          <context context-type="linenumber">6,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.colors.variableName" datatype="html">
+        <source>Variable Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/colors/colors.component.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.colors.colorValue" datatype="html">
+        <source>Color Value</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/colors/colors.component.html</context>
+          <context context-type="linenumber">23,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.colors.preview" datatype="html">
+        <source>Preview</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/colors/colors.component.html</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.colors.colorPreview" datatype="html">
+        <source>Color preview for <x id="INTERPOLATION" equiv-text="colorName"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/colors/colors.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.dashboard.exportToFile" datatype="html">
+        <source>Export to File</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/dashboard/dashboard-fab.component.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.dashboard.importFromFile" datatype="html">
+        <source>Import from File</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/dashboard/dashboard-fab.component.html</context>
+          <context context-type="linenumber">22,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.dashboard.saveToBrowser" datatype="html">
+        <source>Save to Browser</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/dashboard/dashboard-fab.component.html</context>
+          <context context-type="linenumber">34,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.dashboard.loadFromBrowser" datatype="html">
+        <source>Load from Browser</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/dashboard/dashboard-fab.component.html</context>
+          <context context-type="linenumber">45,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.dashboard.resetToDefault" datatype="html">
+        <source>Reset to Default</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/dashboard/dashboard-fab.component.html</context>
+          <context context-type="linenumber">57,58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.dashboard.clearDashboard" datatype="html">
+        <source>Clear Dashboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/dashboard/dashboard-fab.component.html</context>
+          <context context-type="linenumber">69,70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.dashboard.closeSpeedDialMenu" datatype="html">
+        <source>Close speed dial menu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/dashboard/dashboard-fab.component.html</context>
+          <context context-type="linenumber">114,115</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.dashboard.switchToViewMode" datatype="html">
+        <source>Switch to View Mode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/dashboard/dashboard-fab.component.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.dashboard.switchToEditMode" datatype="html">
+        <source>Switch to Edit Mode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/dashboard/dashboard-fab.component.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.dashboard.closeMenu" datatype="html">
+        <source>Close menu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/dashboard/dashboard-fab.component.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.dashboard.dashboardActions" datatype="html">
+        <source>Dashboard actions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/dashboard/dashboard-fab.component.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.title" datatype="html">
+        <source>Radial Gauge Component Demo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.controls" datatype="html">
+        <source>Gauge Controls</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">8,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.presetConfigurations" datatype="html">
+        <source>Preset Configurations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">13,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.default" datatype="html">
+        <source>Default</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">21,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.temperature" datatype="html">
+        <source>Temperature</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">29,31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.performance" datatype="html">
+        <source>Performance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.battery" datatype="html">
+        <source>Battery</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">45,47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.network" datatype="html">
+        <source>Network</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">53,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.storage" datatype="html">
+        <source>Storage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">61,63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.valueSettings" datatype="html">
+        <source>Value Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">68,71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.valueLabel" datatype="html">
+        <source>Value: <x id="INTERPOLATION" equiv-text="{{ value() }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">71,72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.randomValue" datatype="html">
+        <source>Random Value</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">78,79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.min" datatype="html">
+        <source>Min</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">87,88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.max" datatype="html">
+        <source>Max</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">92,93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.dimensions" datatype="html">
+        <source>Dimensions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">100,102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.sizeLabel" datatype="html">
+        <source>Size: <x id="INTERPOLATION" equiv-text="{{ size() }}"/>px</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">103,104</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.outerThicknessLabel" datatype="html">
+        <source>Outer Thickness: <x id="INTERPOLATION" equiv-text="{{ outerThickness() }}"/>px</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">110,111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.innerThicknessLabel" datatype="html">
+        <source>Inner Thickness: <x id="INTERPOLATION" equiv-text="{{ innerThickness() }}"/>px</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">117,118</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.gapLabel" datatype="html">
+        <source>Gap: <x id="INTERPOLATION" equiv-text="{{ gap() }}"/>px</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">124,125</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.segmentGapLabel" datatype="html">
+        <source>Segment Gap: <x id="INTERPOLATION" equiv-text="{{ segmentGapPx() }}"/>px</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">131,132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.animation" datatype="html">
+        <source>Animation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">140,142</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.startAnimation" datatype="html">
+        <source>Start Animation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">149,151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.stopAnimation" datatype="html">
+        <source>Stop Animation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">157,159</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.advancedFeatures" datatype="html">
+        <source>Advanced Features</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">164,167</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.showValueLabel" datatype="html">
+        <source>Show Value Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">168,170</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.hasBackground" datatype="html">
+        <source>Has Background</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">171,173</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.labelReference" datatype="html">
+        <source>Label Reference</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">177,179</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.labelReferencePlaceholder" datatype="html">
+        <source>e.g., &apos;00000&apos; or leave empty</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">180,181</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.labelReferenceHint" datatype="html">
+        <source>Text/number for width calculation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">183,186</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.referenceGlyph" datatype="html">
+        <source>Reference Glyph</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">187,189</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.referenceGlyphHint" datatype="html">
+        <source>Single character</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">192,194</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.labelPaddingLabel" datatype="html">
+        <source>Label Padding: <x id="INTERPOLATION" equiv-text="{{ labelPadding() }}"/>px</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">197,198</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.baselineSafetyLabel" datatype="html">
+        <source>Baseline Safety: <x id="INTERPOLATION" equiv-text="{{ baselineSafety() }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">204,205</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.preview" datatype="html">
+        <source>Gauge Preview</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">216,217</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.animatedGauge" datatype="html">
+        <source>Animated Gauge</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">245,247</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.liveData" datatype="html">
+        <source>Live Data</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">256,257</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.realtimeMonitoring" datatype="html">
+        <source>Real-time monitoring</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">258,259</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.responsiveContainerDemo" datatype="html">
+        <source>Responsive Container Demo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">267,268</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.responsiveDescription" datatype="html">
+        <source> Drag the resize handles to see the gauge adapt to container size changes. The gauge uses <x id="START_TAG_CODE" ctype="x-code" equiv-text="&lt;code&gt;"/>fitToContainer=true<x id="CLOSE_TAG_CODE" ctype="x-code" equiv-text="&lt;/code&gt;"/> and <x id="START_TAG_CODE" ctype="x-code" equiv-text="&lt;code&gt;"/>responsiveMode=true<x id="CLOSE_TAG_CODE" ctype="x-code" equiv-text="&lt;/code&gt;"/> for automatic sizing and proportional thickness scaling. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">269,273</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.containerWidthLabel" datatype="html">
+        <source>Container Width: <x id="INTERPOLATION" equiv-text="{{ containerWidth() }}"/>px</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">279,280</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.containerHeightLabel" datatype="html">
+        <source>Container Height: <x id="INTERPOLATION" equiv-text="{{ containerHeight() }}"/>px</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">292,293</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.sizeToThicknessRatioLabel" datatype="html">
+        <source>Size To Thickness Ratio: <x id="INTERPOLATION" equiv-text="{{ sizeToThicknessRatio() }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">305,306</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.dimensionsDisplay" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ containerWidth() }}"/> × <x id="INTERPOLATION_1" equiv-text="{{ containerHeight() }}"/>px container</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">324,325</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.dashboardExample" datatype="html">
+        <source>Dashboard Example</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">346,348</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.cpuUsage" datatype="html">
+        <source>CPU Usage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">349,351</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.cpuUsageTitle" datatype="html">
+        <source>CPU Usage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">360,361</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.percentage" datatype="html">
+        <source>Percentage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">362,363</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.memory" datatype="html">
+        <source>Memory</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">369,371</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.memoryUsageTitle" datatype="html">
+        <source>Memory Usage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">381,382</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.percentageMemory" datatype="html">
+        <source>Percentage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">383,384</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.diskIO" datatype="html">
+        <source>Disk I/O</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">389,391</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.diskIOTitle" datatype="html">
+        <source>Disk I/O</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">400,401</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.percentageDisk" datatype="html">
+        <source>Percentage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">402,403</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.networkHeader" datatype="html">
+        <source>Network</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">408,410</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.networkTitle" datatype="html">
+        <source>Network</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">419,420</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.signalStrength" datatype="html">
+        <source>Signal Strength</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">421,422</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.batteryHeader" datatype="html">
+        <source>Battery</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">427,429</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.batteryTitle" datatype="html">
+        <source>Battery</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">439,440</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.chargeLevel" datatype="html">
+        <source>Charge Level</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">441,442</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.temperatureHeader" datatype="html">
+        <source>Temperature</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">447,449</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.temperatureTitle" datatype="html">
+        <source>Temperature</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">458,459</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.celsius" datatype="html">
+        <source>Celsius</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">460,461</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.usageExamples" datatype="html">
+        <source>Usage Examples</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">473,475</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.responsiveContainerGauge" datatype="html">
+        <source>1. Responsive Container Gauge (Recommended for Dashboards)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">476,477</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.fixedSizeGauge" datatype="html">
+        <source>2. Fixed Size Gauge (Traditional)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">492,493</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.scalableDesignGauge" datatype="html">
+        <source>3. Scalable Design Gauge</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">506,507</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.advancedFeaturesExample" datatype="html">
+        <source>4. Advanced Features (Text Display &amp; Styling)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">517,518</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.typeScriptInterface" datatype="html">
+        <source>TypeScript Interface</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html</context>
+          <context context-type="linenumber">534,535</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.titleTemperature" datatype="html">
+        <source>Temperature</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.titlePerformance" datatype="html">
+        <source>Performance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts</context>
+          <context context-type="linenumber">219</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.titleBatteryLevel" datatype="html">
+        <source>Battery Level</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts</context>
+          <context context-type="linenumber">221</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.titleNetworkSignal" datatype="html">
+        <source>Network Signal</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts</context>
+          <context context-type="linenumber">223</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.titleStorageUsage" datatype="html">
+        <source>Storage Usage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts</context>
+          <context context-type="linenumber">225</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.titleDefaultGauge" datatype="html">
+        <source>Gauge</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts</context>
+          <context context-type="linenumber">227</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.descriptionCelsius" datatype="html">
+        <source>Celsius</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts</context>
+          <context context-type="linenumber">235</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.descriptionScore" datatype="html">
+        <source>Score</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.descriptionPercentage" datatype="html">
+        <source>Percentage</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts</context>
+          <context context-type="linenumber">239</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.descriptionBars" datatype="html">
+        <source>Bars</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts</context>
+          <context context-type="linenumber">241</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.radialGaugeDemo.descriptionGBUsed" datatype="html">
+        <source>GB Used</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts</context>
+          <context context-type="linenumber">243</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.custom" datatype="html">
+        <source>Custom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.red" datatype="html">
+        <source>Red</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.green" datatype="html">
+        <source>Green</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.blue" datatype="html">
+        <source>Blue</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.yellow" datatype="html">
+        <source>Yellow</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.cyan" datatype="html">
+        <source>Cyan</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.magenta" datatype="html">
+        <source>Magenta</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.orange" datatype="html">
+        <source>Orange</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.chartreuse" datatype="html">
+        <source>Chartreuse</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.springGreen" datatype="html">
+        <source>Spring Green</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.azure" datatype="html">
+        <source>Azure</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.violet" datatype="html">
+        <source>Violet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.theme.rose" datatype="html">
+        <source>Rose</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/services/theme.service.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.title" datatype="html">
+        <source>Realtime Gauge Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">32,34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.visualSettings" datatype="html">
+        <source>Visual Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">37,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.activeDisplay" datatype="html">
+        <source>Active Display</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">41,43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.activeDisplayDescription" datatype="html">
+        <source>Display live gauge instead of passive icon</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">43,47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.background" datatype="html">
+        <source>Background</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">48,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.backgroundDescription" datatype="html">
+        <source>Add a background color to the widget</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">50,54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.showValueLabel" datatype="html">
+        <source>Show Value Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">55,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.showValueLabelDescription" datatype="html">
+        <source>Display numeric value in gauge center</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">57,61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.showLabel" datatype="html">
+        <source>Show Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">62,64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.showLabelDescription" datatype="html">
+        <source>Display a label in the top-right corner</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">64,68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.labelText" datatype="html">
+        <source>Label Text</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">69,70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.labelPlaceholder" datatype="html">
+        <source>e.g., kW, %, RPM</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.colorProfile" datatype="html">
+        <source>Color Profile</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">75,76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.colorProfileDynamic" datatype="html">
+        <source>Dynamic (Theme Colors)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">77,78</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.colorProfileStatic" datatype="html">
+        <source>Static (Performance Colors)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">78,80</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.realtimeDataSettings" datatype="html">
+        <source>Real-time Data Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">85,88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.dataSource" datatype="html">
+        <source>Data Source</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">88,89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.dataSourceNone" datatype="html">
+        <source>None (Static)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">90,91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.dataSourceRandom" datatype="html">
+        <source>Random</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">91,93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.updateInterval" datatype="html">
+        <source>Update Interval: <x id="INTERPOLATION" equiv-text="{{ localState.updateInterval }}"/>s</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">97,98</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.common.cancel" datatype="html">
+        <source>Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">113,114</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">100,101</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">81,82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.common.save" datatype="html">
+        <source>Save</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">114,115</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">101,102</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">82,83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.dialog.secondsFormat" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="value"/>s</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.name" datatype="html">
+        <source>Realtime Gauge</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-widget.component.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.realtimeGauge.description" datatype="html">
+        <source>Gauge with real-time data updates</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-widget.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.title" datatype="html">
+        <source>Sparkbar Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">28,30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.connectRealtime" datatype="html">
+        <source>Connect to realtime data feed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">36,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.frameRate" datatype="html">
+        <source>Frame Rate (FPS)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">42,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.fps1" datatype="html">
+        <source>1 FPS (Very Slow)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">48,49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.fps5" datatype="html">
+        <source>5 FPS (Slow)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">49,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.fps10" datatype="html">
+        <source>10 FPS (Moderate)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">50,51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.fps15" datatype="html">
+        <source>15 FPS (Smooth)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.fps20" datatype="html">
+        <source>20 FPS (Default)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">52,53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.fps24" datatype="html">
+        <source>24 FPS (Fast)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">53,54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.fps30" datatype="html">
+        <source>30 FPS (Faster)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">54,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.fps60" datatype="html">
+        <source>60 FPS (High Refresh)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">55,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.numberOfBars" datatype="html">
+        <source>Number of Bars</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">62,64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.bars5" datatype="html">
+        <source>5 bars (Default)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">67,68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.bars10" datatype="html">
+        <source>10 bars</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">68,69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.bars15" datatype="html">
+        <source>15 bars</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">69,70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.bars20" datatype="html">
+        <source>20 bars</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">70,71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.bars25" datatype="html">
+        <source>25 bars</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">71,72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.bars30" datatype="html">
+        <source>30 bars</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">72,73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.bars50" datatype="html">
+        <source>50 bars</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">73,74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.bars100" datatype="html">
+        <source>100 bars</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">74,76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.responsiveBarColors" datatype="html">
+        <source>Responsive bar colors</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">84,88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.dialog.showBackground" datatype="html">
+        <source>Show background</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts</context>
+          <context context-type="linenumber">93,96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.name" datatype="html">
+        <source>Sparkbar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-widget.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkbar.description" datatype="html">
+        <source>A sparkbar graph</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-widget.component.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.title" datatype="html">
+        <source>Sparkline Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">28,30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.connectRealtime" datatype="html">
+        <source>Connect to realtime data feed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">36,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.frameRate" datatype="html">
+        <source>Frame Rate (FPS)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">42,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.fps1" datatype="html">
+        <source>1 FPS (Very Slow)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">48,49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.fps5" datatype="html">
+        <source>5 FPS (Slow)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">49,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.fps10" datatype="html">
+        <source>10 FPS (Moderate)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">50,51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.fps15" datatype="html">
+        <source>15 FPS (Smooth)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.fps20" datatype="html">
+        <source>20 FPS (Default)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">52,53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.fps24" datatype="html">
+        <source>24 FPS (Fast)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">53,54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.fps30" datatype="html">
+        <source>30 FPS (Faster)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">54,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.fps60" datatype="html">
+        <source>60 FPS (High Refresh)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">55,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.responsiveLineColors" datatype="html">
+        <source>Responsive line colors</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">65,69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.dialog.showBackground" datatype="html">
+        <source>Show background</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts</context>
+          <context context-type="linenumber">74,77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.name" datatype="html">
+        <source>Sparkline</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-widget.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="demo.widgets.sparkline.description" datatype="html">
+        <source>A sparkline graph</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/demo/src/app/widgets/sparkline-widget/sparkline-widget.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.arrow.dialog.title" datatype="html">
+        <source> Arrow Settings </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.arrow.dialog.direction" datatype="html">
+        <source>Arrow Direction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts</context>
+          <context context-type="linenumber">172,173</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.arrow.dialog.direction.up" datatype="html">
+        <source>Up</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts</context>
+          <context context-type="linenumber">184,187</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.arrow.dialog.direction.right" datatype="html">
+        <source>Right</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts</context>
+          <context context-type="linenumber">202,206</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.arrow.dialog.direction.down" datatype="html">
+        <source>Down</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts</context>
+          <context context-type="linenumber">217,220</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.arrow.dialog.direction.left" datatype="html">
+        <source>Left</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.arrow.dialog.opacity" datatype="html">
+        <source> Opacity: <x id="INTERPOLATION"/>% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.arrow.dialog.background" datatype="html">
+        <source> Background </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.arrow.dialog.backgroundHint" datatype="html">
+        <source>Adds a background behind the arrow</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.common.cancel" datatype="html">
+        <source> Cancel </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.common.save" datatype="html">
+        <source> Save </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.arrow.name" datatype="html">
+        <source>Arrow</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-widget.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.arrow.description" datatype="html">
+        <source>A generic arrow</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-widget.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.title" datatype="html">
+        <source> Clock Settings </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.displayMode" datatype="html">
+        <source>Display Mode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">196,198</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.mode.digital" datatype="html">
+        <source>Digital</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">205,207</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.mode.analog" datatype="html">
+        <source>Analog</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">220,222</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.showSeconds" datatype="html">
+        <source> Show Seconds </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.background" datatype="html">
+        <source> Background </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.backgroundDescription" datatype="html">
+        <source>Adds a background behind the clock</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.timeFormat" datatype="html">
+        <source>Time Format</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.format.24h" datatype="html">
+        <source>24 Hour (14:30:45)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.format.12h" datatype="html">
+        <source>12 Hour (2:30:45 PM)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.showSecondsDescription.digital" datatype="html">
+        <source>Display seconds in the time</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.dialog.showSecondsDescription.analog" datatype="html">
+        <source>Show the second hand on the clock</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.name" datatype="html">
+        <source>Clock</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-widget.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.clock.description" datatype="html">
+        <source>Display time in analog or digital format</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-widget.component.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.placeholder" datatype="html">
+        <source>Enter your label text...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">374,375</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.title" datatype="html">
+        <source> Label Settings </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">383,386</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.labelText" datatype="html">
+        <source>Label Text</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">393,394</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.responsive" datatype="html">
+        <source> Responsive Text </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">400,401</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.responsiveDescription" datatype="html">
+        <source>Automatically adjust text size to fit the widget</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">407,410</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.fontSize" datatype="html">
+        <source>Font Size (px)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">425,427</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.alignment" datatype="html">
+        <source>Alignment</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">438,439</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.alignment.left" datatype="html">
+        <source>Left</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">450,451</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.alignment.center" datatype="html">
+        <source>Center</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">461,462</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.alignment.right" datatype="html">
+        <source>Right</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">474</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.fontWeight" datatype="html">
+        <source>Font Weight</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">490,492</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.fontWeight.normal" datatype="html">
+        <source>Normal</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">502,504</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.fontWeight.bold" datatype="html">
+        <source>Bold</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.opacity" datatype="html">
+        <source> Opacity: <x id="INTERPOLATION"/>% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.background" datatype="html">
+        <source> Background </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.backgroundDescription" datatype="html">
+        <source>Adds a background behind the text</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.templateStringPlaceholder" datatype="html">
+        <source>Optional: Text to use for size calculation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.fontSizeLimits" datatype="html">
+        <source> Font Size Limits </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.minSize" datatype="html">
+        <source>Min Size (px)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.maxSize" datatype="html">
+        <source>Max Size (px)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.templateString" datatype="html">
+        <source>Template String</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.templateStringHint" datatype="html">
+        <source>Use when displayed text varies but size should remain consistent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.minSizeError" datatype="html">
+        <source>Must be between 8-24px</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.minSizeRangeError" datatype="html">
+        <source>Must be less than max size</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.minSizeHint" datatype="html">
+        <source>8-24px range</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.maxSizeError" datatype="html">
+        <source>Must be between 16-128px</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.maxSizeRangeError" datatype="html">
+        <source>Must be greater than min size</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.dialog.maxSizeHint" datatype="html">
+        <source>16-128px range</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.name" datatype="html">
+        <source>Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-widget.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.label.description" datatype="html">
+        <source>A generic text label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-widget.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.dialog.title" datatype="html">
+        <source> Radial Gauge Settings </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">182,183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.dialog.value" datatype="html">
+        <source>Value (0-100)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">192,196</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.dialog.colorProfile" datatype="html">
+        <source> Color Profile </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.dialog.colorProfile.dynamic" datatype="html">
+        <source>Dynamic (Theme Colors)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.dialog.colorProfile.static" datatype="html">
+        <source>Static (Performance Colors)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.dialog.activeDisplay" datatype="html">
+        <source> Active Display </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.dialog.activeDisplayDescription" datatype="html">
+        <source> Display live gauge instead of passive icon </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.dialog.background" datatype="html">
+        <source> Background </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.dialog.backgroundDescription" datatype="html">
+        <source> Add a background color to the widget </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.dialog.showValueLabel" datatype="html">
+        <source> Show Value Label </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.dialog.showValueLabelDescription" datatype="html">
+        <source> Display numeric value in gauge center </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.name" datatype="html">
+        <source>Radial Gauge</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-widget.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widgets.radialGauge.description" datatype="html">
+        <source>A semi-circular gauge indicator</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-widget.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.cell.resize.dimensions" datatype="html">
+        <source> <x id="INTERPOLATION"/> × <x id="INTERPOLATION_1"/>
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/cell/cell.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.cell.menu.edit" datatype="html">
+        <source>Edit Widget</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/cell/cell.component.ts</context>
+          <context context-type="linenumber">241</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.cell.menu.settings" datatype="html">
+        <source>Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/cell/cell.component.ts</context>
+          <context context-type="linenumber">247</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.cell.menu.delete" datatype="html">
+        <source>Delete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/cell/cell.component.ts</context>
+          <context context-type="linenumber">253</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.unknown.widget.name" datatype="html">
+        <source>Unknown Widget</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/internal-widgets/unknown-widget/unknown-widget.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.unknown.widget.description" datatype="html">
+        <source>Fallback widget for unknown widget types</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/internal-widgets/unknown-widget/unknown-widget.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.cell.settings.title" datatype="html">
+        <source> Cell Display Settings </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts</context>
+          <context context-type="linenumber">137,138</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.cell.settings.cellId" datatype="html">
+        <source> Cell ID: <x id="START_TAG_STRONG" ctype="x-strong"/><x id="INTERPOLATION"/><x id="CLOSE_TAG_STRONG" ctype="x-strong"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.cell.settings.mode.normal" datatype="html">
+        <source> Normal </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.cell.settings.mode.normal.description" datatype="html">
+        <source> Standard cell display with full content visibility </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.cell.settings.mode.flat" datatype="html">
+        <source> Flat </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.cell.settings.mode.flat.description" datatype="html">
+        <source> Simplified display with reduced visual emphasis </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.common.apply" datatype="html">
+        <source> Apply </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widget.list.available" datatype="html">
+        <source>Available widgets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/widget-list/widget-list.component.html</context>
+          <context context-type="linenumber">1,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngx.dashboard.widget.list.item.ariaLabel" datatype="html">
+        <source><x id="PH" equiv-text="widget.name"/> widget: <x id="PH_1" equiv-text="widget.description"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/ngx-dashboard/src/lib/widget-list/widget-list.component.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -36,8 +36,8 @@ export interface SparklineWidgetState {
 export class SparklineWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
     widgetTypeid: '@demo/sparkline-widget',
-    name: 'Sparkline',
-    description: 'A sparkline graph',
+    name: $localize`:@@demo.widgets.sparkline.name:Sparkline`,
+    description: $localize`:@@demo.widgets.sparkline.description:A sparkline graph`,
     svgIcon,
   };
 

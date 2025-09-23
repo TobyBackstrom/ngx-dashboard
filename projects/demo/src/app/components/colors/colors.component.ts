@@ -96,6 +96,13 @@ export class ColorsComponent {
     }, { allowSignalWrites: true });
   }
 
+  /**
+   * Get color preview aria label with interpolation
+   */
+  getColorPreviewAriaLabel(colorName: string): string {
+    return $localize`:@@demo.colors.colorPreview:Color preview for ${colorName}:INTERPOLATION:`;
+  }
+
   private extractColors(): void {
     const computedStyles = getComputedStyle(this.document.documentElement);
 

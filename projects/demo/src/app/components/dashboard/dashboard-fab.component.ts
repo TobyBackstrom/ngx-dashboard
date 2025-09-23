@@ -83,4 +83,22 @@ export class DashboardFabComponent {
   setEditMode(editMode: boolean): void {
     this.editMode.set(editMode);
   }
+
+  /**
+   * Get edit mode toggle tooltip
+   */
+  getEditModeTooltip(): string {
+    return this.editMode()
+      ? $localize`:@@demo.dashboard.switchToViewMode:Switch to View Mode`
+      : $localize`:@@demo.dashboard.switchToEditMode:Switch to Edit Mode`;
+  }
+
+  /**
+   * Get main FAB tooltip
+   */
+  getMainFabTooltip(): string {
+    return this.isSpeedDialOpen()
+      ? $localize`:@@demo.dashboard.closeMenu:Close menu`
+      : $localize`:@@demo.dashboard.dashboardActions:Dashboard actions`;
+  }
 }

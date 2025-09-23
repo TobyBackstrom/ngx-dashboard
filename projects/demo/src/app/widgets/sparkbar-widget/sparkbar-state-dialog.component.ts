@@ -25,7 +25,7 @@ import { SparkbarWidgetState } from './sparkbar-widget.component';
     FormsModule,
   ],
   template: `
-    <h2 mat-dialog-title>Sparkbar Settings</h2>
+    <h2 mat-dialog-title i18n="@@demo.widgets.sparkbar.dialog.title">Sparkbar Settings</h2>
     <mat-dialog-content>
       <div class="settings-form">
         <div class="setting-item">
@@ -33,45 +33,45 @@ import { SparkbarWidgetState } from './sparkbar-widget.component';
             [(ngModel)]="formState().realtime"
             (ngModelChange)="updateRealtime($event)"
           >
-            Connect to realtime data feed
+            <span i18n="@@demo.widgets.sparkbar.dialog.connectRealtime">Connect to realtime data feed</span>
           </mat-slide-toggle>
         </div>
 
         <div class="setting-item">
           <mat-form-field appearance="outline">
-            <mat-label>Frame Rate (FPS)</mat-label>
+            <mat-label i18n="@@demo.widgets.sparkbar.dialog.frameRate">Frame Rate (FPS)</mat-label>
             <mat-select
               [(ngModel)]="formState().frameRate"
               (ngModelChange)="updateFrameRate($event)"
               [disabled]="!formState().realtime"
             >
-              <mat-option [value]="1">1 FPS (Very Slow)</mat-option>
-              <mat-option [value]="5">5 FPS (Slow)</mat-option>
-              <mat-option [value]="10">10 FPS (Moderate)</mat-option>
-              <mat-option [value]="15">15 FPS (Smooth)</mat-option>
-              <mat-option [value]="20">20 FPS (Default)</mat-option>
-              <mat-option [value]="24">24 FPS (Fast)</mat-option>
-              <mat-option [value]="30">30 FPS (Faster)</mat-option>
-              <mat-option [value]="60">60 FPS (High Refresh)</mat-option>
+              <mat-option [value]="1" i18n="@@demo.widgets.sparkbar.dialog.fps1">1 FPS (Very Slow)</mat-option>
+              <mat-option [value]="5" i18n="@@demo.widgets.sparkbar.dialog.fps5">5 FPS (Slow)</mat-option>
+              <mat-option [value]="10" i18n="@@demo.widgets.sparkbar.dialog.fps10">10 FPS (Moderate)</mat-option>
+              <mat-option [value]="15" i18n="@@demo.widgets.sparkbar.dialog.fps15">15 FPS (Smooth)</mat-option>
+              <mat-option [value]="20" i18n="@@demo.widgets.sparkbar.dialog.fps20">20 FPS (Default)</mat-option>
+              <mat-option [value]="24" i18n="@@demo.widgets.sparkbar.dialog.fps24">24 FPS (Fast)</mat-option>
+              <mat-option [value]="30" i18n="@@demo.widgets.sparkbar.dialog.fps30">30 FPS (Faster)</mat-option>
+              <mat-option [value]="60" i18n="@@demo.widgets.sparkbar.dialog.fps60">60 FPS (High Refresh)</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
 
         <div class="setting-item">
           <mat-form-field appearance="outline">
-            <mat-label>Number of Bars</mat-label>
+            <mat-label i18n="@@demo.widgets.sparkbar.dialog.numberOfBars">Number of Bars</mat-label>
             <mat-select
               [(ngModel)]="formState().numberOfBars"
               (ngModelChange)="updateNumberOfBars($event)"
             >
-              <mat-option [value]="5">5 bars (Default)</mat-option>
-              <mat-option [value]="10">10 bars</mat-option>
-              <mat-option [value]="15">15 bars</mat-option>
-              <mat-option [value]="20">20 bars</mat-option>
-              <mat-option [value]="25">25 bars</mat-option>
-              <mat-option [value]="30">30 bars</mat-option>
-              <mat-option [value]="50">50 bars</mat-option>
-              <mat-option [value]="100">100 bars</mat-option>
+              <mat-option [value]="5" i18n="@@demo.widgets.sparkbar.dialog.bars5">5 bars (Default)</mat-option>
+              <mat-option [value]="10" i18n="@@demo.widgets.sparkbar.dialog.bars10">10 bars</mat-option>
+              <mat-option [value]="15" i18n="@@demo.widgets.sparkbar.dialog.bars15">15 bars</mat-option>
+              <mat-option [value]="20" i18n="@@demo.widgets.sparkbar.dialog.bars20">20 bars</mat-option>
+              <mat-option [value]="25" i18n="@@demo.widgets.sparkbar.dialog.bars25">25 bars</mat-option>
+              <mat-option [value]="30" i18n="@@demo.widgets.sparkbar.dialog.bars30">30 bars</mat-option>
+              <mat-option [value]="50" i18n="@@demo.widgets.sparkbar.dialog.bars50">50 bars</mat-option>
+              <mat-option [value]="100" i18n="@@demo.widgets.sparkbar.dialog.bars100">100 bars</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -81,7 +81,7 @@ import { SparkbarWidgetState } from './sparkbar-widget.component';
             [(ngModel)]="formState().responsiveBarColors"
             (ngModelChange)="updateResponsiveBarColors($event)"
           >
-            Responsive bar colors
+            <span i18n="@@demo.widgets.sparkbar.dialog.responsiveBarColors">Responsive bar colors</span>
           </mat-slide-toggle>
         </div>
 
@@ -90,15 +90,15 @@ import { SparkbarWidgetState } from './sparkbar-widget.component';
             [(ngModel)]="formState().hasBackground"
             (ngModelChange)="updateBackground($event)"
           >
-            Show background
+            <span i18n="@@demo.widgets.sparkbar.dialog.showBackground">Show background</span>
           </mat-slide-toggle>
         </div>
       </div>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button (click)="save()">Save</button>
+      <button mat-button (click)="onCancel()" i18n="@@demo.common.cancel">Cancel</button>
+      <button mat-flat-button (click)="save()" i18n="@@demo.common.save">Save</button>
     </mat-dialog-actions>
   `,
   styles: [

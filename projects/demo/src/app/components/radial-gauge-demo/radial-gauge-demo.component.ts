@@ -214,17 +214,17 @@ export class RadialGaugeDemoComponent {
   getTitle(): string {
     switch (this.activeConfig()) {
       case 'temperature':
-        return 'Temperature';
+        return $localize`:@@demo.radialGaugeDemo.titleTemperature:Temperature`;
       case 'performance':
-        return 'Performance';
+        return $localize`:@@demo.radialGaugeDemo.titlePerformance:Performance`;
       case 'battery':
-        return 'Battery Level';
+        return $localize`:@@demo.radialGaugeDemo.titleBatteryLevel:Battery Level`;
       case 'network':
-        return 'Network Signal';
+        return $localize`:@@demo.radialGaugeDemo.titleNetworkSignal:Network Signal`;
       case 'storage':
-        return 'Storage Usage';
+        return $localize`:@@demo.radialGaugeDemo.titleStorageUsage:Storage Usage`;
       default:
-        return 'Gauge';
+        return $localize`:@@demo.radialGaugeDemo.titleDefaultGauge:Gauge`;
     }
   }
 
@@ -232,15 +232,15 @@ export class RadialGaugeDemoComponent {
   getDescription(): string {
     switch (this.activeConfig()) {
       case 'temperature':
-        return 'Celsius';
+        return $localize`:@@demo.radialGaugeDemo.descriptionCelsius:Celsius`;
       case 'performance':
-        return 'Score';
+        return $localize`:@@demo.radialGaugeDemo.descriptionScore:Score`;
       case 'battery':
-        return 'Percentage';
+        return $localize`:@@demo.radialGaugeDemo.descriptionPercentage:Percentage`;
       case 'network':
-        return 'Bars';
+        return $localize`:@@demo.radialGaugeDemo.descriptionBars:Bars`;
       case 'storage':
-        return 'GB Used';
+        return $localize`:@@demo.radialGaugeDemo.descriptionGBUsed:GB Used`;
       default:
         return '';
     }

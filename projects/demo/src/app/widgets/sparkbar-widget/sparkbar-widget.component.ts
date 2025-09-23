@@ -37,8 +37,8 @@ export interface SparkbarWidgetState {
 export class SparkbarWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
     widgetTypeid: '@demo/sparkbar-widget',
-    name: 'Sparkbar',
-    description: 'A sparkbar graph',
+    name: $localize`:@@demo.widgets.sparkbar.name:Sparkbar`,
+    description: $localize`:@@demo.widgets.sparkbar.description:A sparkbar graph`,
     svgIcon,
   };
 

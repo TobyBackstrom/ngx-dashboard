@@ -12,7 +12,15 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test ngx-dashboard --no-watch --browsers=ChromeHeadless && ng test ngx-dashboard-widgets --no-watch --browsers=ChromeHeadless && ng test demo --no-watch --browsers=ChromeHeadless",
     "test:ci": "ng test --no-watch --browsers=ChromeHeadless --code-coverage",
-    "lint": "ng lint demo && ng lint ngx-dashboard && ng lint ngx-dashboard-widgets"
+    "lint": "ng lint demo && ng lint ngx-dashboard && ng lint ngx-dashboard-widgets",
+    "extract-i18n": "ng extract-i18n demo",
+    "build:i18n": "ng build demo --configuration=production-all",
+    "build:i18n:es": "ng build demo --configuration=production-es",
+    "build:i18n:fr": "ng build demo --configuration=production-fr",
+    "build:i18n:de": "ng build demo --configuration=production-de",
+    "serve:es": "ng serve demo --configuration=es",
+    "serve:fr": "ng serve demo --configuration=fr",
+    "serve:de": "ng serve demo --configuration=de"
   },
   "prettier": {
     "overrides": [

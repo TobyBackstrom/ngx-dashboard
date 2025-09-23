@@ -98,6 +98,23 @@
       "root": "projects/demo",
       "sourceRoot": "projects/demo/src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "es": {
+            "translation": "projects/demo/src/locale/messages.es.xlf",
+            "baseHref": "/es/"
+          },
+          "fr": {
+            "translation": "projects/demo/src/locale/messages.fr.xlf",
+            "baseHref": "/fr/"
+          },
+          "de": {
+            "translation": "projects/demo/src/locale/messages.de.xlf",
+            "baseHref": "/de/"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular/build:application",
@@ -139,6 +156,73 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "production-es": {
+              "localize": ["es"],
+              "outputPath": "dist/demo/es/",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1MB",
+                  "maximumError": "10MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "production-fr": {
+              "localize": ["fr"],
+              "outputPath": "dist/demo/fr/",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1MB",
+                  "maximumError": "10MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "production-de": {
+              "localize": ["de"],
+              "outputPath": "dist/demo/de/",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1MB",
+                  "maximumError": "10MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "production-all": {
+              "localize": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1MB",
+                  "maximumError": "10MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
             }
           },
           "defaultConfiguration": "production"
@@ -151,12 +235,25 @@
             },
             "development": {
               "buildTarget": "demo:build:development"
+            },
+            "es": {
+              "buildTarget": "demo:build:production-es"
+            },
+            "fr": {
+              "buildTarget": "demo:build:production-fr"
+            },
+            "de": {
+              "buildTarget": "demo:build:production-de"
             }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular/build:extract-i18n"
+          "builder": "@angular/build:extract-i18n",
+          "options": {
+            "buildTarget": "demo:build",
+            "outputPath": "projects/demo/src/locale"
+          }
         },
         "test": {
           "builder": "@angular/build:karma",

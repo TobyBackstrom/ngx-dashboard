@@ -9,6 +9,7 @@
       class="speed-dial-action"
       (click)="onAction('export')"
       matTooltip="Export to File"
+      i18n-matTooltip="@@demo.dashboard.exportToFile"
       matTooltipPosition="left"
     >
       <mat-icon>file_download</mat-icon>
@@ -19,6 +20,7 @@
       class="speed-dial-action"
       (click)="onAction('import')"
       matTooltip="Import from File"
+      i18n-matTooltip="@@demo.dashboard.importFromFile"
       matTooltipPosition="left"
     >
       <mat-icon>file_upload</mat-icon>
@@ -30,6 +32,7 @@
       class="speed-dial-action"
       (click)="onAction('save')"
       matTooltip="Save to Browser"
+      i18n-matTooltip="@@demo.dashboard.saveToBrowser"
       matTooltipPosition="left"
     >
       <mat-icon>arrow_circle_down</mat-icon>
@@ -40,6 +43,7 @@
       class="speed-dial-action"
       (click)="onAction('load')"
       matTooltip="Load from Browser"
+      i18n-matTooltip="@@demo.dashboard.loadFromBrowser"
       matTooltipPosition="left"
     >
       <mat-icon>arrow_circle_up</mat-icon>
@@ -51,6 +55,7 @@
       class="speed-dial-action"
       (click)="onAction('reset')"
       matTooltip="Reset to Default"
+      i18n-matTooltip="@@demo.dashboard.resetToDefault"
       matTooltipPosition="left"
     >
       <mat-icon>restore</mat-icon>
@@ -62,6 +67,7 @@
       class="speed-dial-action"
       (click)="onAction('clear')"
       matTooltip="Clear Dashboard"
+      i18n-matTooltip="@@demo.dashboard.clearDashboard"
       matTooltipPosition="left"
       color="warn"
     >
@@ -73,7 +79,7 @@
       mat-mini-fab
       class="speed-dial-action"
       (click)="onAction('editMode')"
-      [matTooltip]="editMode() ? 'Switch to View Mode' : 'Switch to Edit Mode'"
+      [matTooltip]="getEditModeTooltip()"
       matTooltipPosition="left"
       [color]="editMode() ? 'accent' : 'primary'"
     >
@@ -87,7 +93,7 @@
     mat-fab
     class="main-fab"
     (click)="toggleSpeedDial()"
-    [matTooltip]="isSpeedDialOpen() ? 'Close menu' : 'Dashboard actions'"
+    [matTooltip]="getMainFabTooltip()"
     matTooltipPosition="left"
     color="primary"
   >
@@ -99,11 +105,12 @@
 
 <!-- Backdrop (closes speed dial when clicked) -->
 @if (isSpeedDialOpen()) {
-<div 
-  class="speed-dial-backdrop" 
-  (click)="closeSpeedDial()" 
+<div
+  class="speed-dial-backdrop"
+  (click)="closeSpeedDial()"
   (keyup.escape)="closeSpeedDial()"
   tabindex="0"
   role="button"
-  aria-label="Close speed dial menu"></div>
+  aria-label="Close speed dial menu"
+  i18n-aria-label="@@demo.dashboard.closeSpeedDialMenu"></div>
 }

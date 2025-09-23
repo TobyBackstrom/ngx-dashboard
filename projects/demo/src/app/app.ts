@@ -26,7 +26,30 @@ export class App {
   themeService = inject(ThemeService);
   private router = inject(Router);
 
-  protected title = 'Dashboard Demo and Component Tests';
+  protected title = $localize`:@@demo.app.title:Dashboard Demo and Component Tests`;
+
+  /**
+   * Get theme toggle aria label
+   */
+  getThemeToggleAriaLabel(): string {
+    return this.themeService.isDarkMode()
+      ? $localize`:@@demo.theme.switchToLight:Switch to light theme`
+      : $localize`:@@demo.theme.switchToDark:Switch to dark theme`;
+  }
+
+  /**
+   * Get theme selector aria label
+   */
+  getThemeSelectorAriaLabel(): string {
+    return $localize`:@@demo.theme.selectTheme:Select theme`;
+  }
+
+  /**
+   * Get theme option aria label
+   */
+  getThemeOptionAriaLabel(themeName: string): string {
+    return $localize`:@@demo.theme.selectSpecific:Select ${themeName}:INTERPOLATION: theme`;
+  }
 
   /**
    * Navigate to colors overview page

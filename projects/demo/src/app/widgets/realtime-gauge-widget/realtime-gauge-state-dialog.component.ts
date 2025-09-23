@@ -29,72 +29,72 @@ import { RealtimeGaugeWidgetState } from './realtime-gauge-widget.component';
     MatSliderModule,
   ],
   template: `
-    <h2 mat-dialog-title>Realtime Gauge Settings</h2>
+    <h2 mat-dialog-title i18n="@@demo.widgets.realtimeGauge.dialog.title">Realtime Gauge Settings</h2>
     <mat-dialog-content>
       <div class="settings-grid">
         <!-- Visual Settings Section -->
         <div class="settings-section">
-          <h3>Visual Settings</h3>
+          <h3 i18n="@@demo.widgets.realtimeGauge.dialog.visualSettings">Visual Settings</h3>
 
           <div class="toggle-section">
             <mat-slide-toggle [(ngModel)]="localState.active">
-              Active Display
+              <span i18n="@@demo.widgets.realtimeGauge.dialog.activeDisplay">Active Display</span>
             </mat-slide-toggle>
-            <p class="toggle-description">Display live gauge instead of passive icon</p>
+            <p class="toggle-description" i18n="@@demo.widgets.realtimeGauge.dialog.activeDisplayDescription">Display live gauge instead of passive icon</p>
           </div>
-          
+
           <div class="toggle-section">
             <mat-slide-toggle [(ngModel)]="localState.hasBackground">
-              Background
+              <span i18n="@@demo.widgets.realtimeGauge.dialog.background">Background</span>
             </mat-slide-toggle>
-            <p class="toggle-description">Add a background color to the widget</p>
+            <p class="toggle-description" i18n="@@demo.widgets.realtimeGauge.dialog.backgroundDescription">Add a background color to the widget</p>
           </div>
 
           <div class="toggle-section">
             <mat-slide-toggle [(ngModel)]="localState.showValueLabel">
-              Show Value Label
+              <span i18n="@@demo.widgets.realtimeGauge.dialog.showValueLabel">Show Value Label</span>
             </mat-slide-toggle>
-            <p class="toggle-description">Display numeric value in gauge center</p>
+            <p class="toggle-description" i18n="@@demo.widgets.realtimeGauge.dialog.showValueLabelDescription">Display numeric value in gauge center</p>
           </div>
 
           <div class="toggle-section">
             <mat-slide-toggle [(ngModel)]="localState.showLabel">
-              Show Label
+              <span i18n="@@demo.widgets.realtimeGauge.dialog.showLabel">Show Label</span>
             </mat-slide-toggle>
-            <p class="toggle-description">Display a label in the top-right corner</p>
+            <p class="toggle-description" i18n="@@demo.widgets.realtimeGauge.dialog.showLabelDescription">Display a label in the top-right corner</p>
           </div>
 
           @if (localState.showLabel) {
           <mat-form-field>
-            <mat-label>Label Text</mat-label>
-            <input matInput [(ngModel)]="localState.label" placeholder="e.g., kW, %, RPM">
+            <mat-label i18n="@@demo.widgets.realtimeGauge.dialog.labelText">Label Text</mat-label>
+            <input matInput [(ngModel)]="localState.label" placeholder="e.g., kW, %, RPM" i18n-placeholder="@@demo.widgets.realtimeGauge.dialog.labelPlaceholder">
           </mat-form-field>
           }
 
           <div class="section">
-            <h4>Color Profile</h4>
+            <h4 i18n="@@demo.widgets.realtimeGauge.dialog.colorProfile">Color Profile</h4>
             <mat-radio-group [(ngModel)]="localState.colorProfile">
-              <mat-radio-button value="dynamic">Dynamic (Theme Colors)</mat-radio-button>
-              <mat-radio-button value="static">Static (Performance Colors)</mat-radio-button>
+              <mat-radio-button value="dynamic" i18n="@@demo.widgets.realtimeGauge.dialog.colorProfileDynamic">Dynamic (Theme Colors)</mat-radio-button>
+              <mat-radio-button value="static" i18n="@@demo.widgets.realtimeGauge.dialog.colorProfileStatic">Static (Performance Colors)</mat-radio-button>
             </mat-radio-group>
           </div>
         </div>
 
         <!-- Real-time Settings Section -->
         <div class="settings-section">
-          <h3>Real-time Data Settings</h3>
+          <h3 i18n="@@demo.widgets.realtimeGauge.dialog.realtimeDataSettings">Real-time Data Settings</h3>
 
           <div class="section">
-            <h4>Data Source</h4>
+            <h4 i18n="@@demo.widgets.realtimeGauge.dialog.dataSource">Data Source</h4>
             <mat-radio-group [(ngModel)]="localState.datasource">
-              <mat-radio-button value="none">None (Static)</mat-radio-button>
-              <mat-radio-button value="random">Random</mat-radio-button>
+              <mat-radio-button value="none" i18n="@@demo.widgets.realtimeGauge.dialog.dataSourceNone">None (Static)</mat-radio-button>
+              <mat-radio-button value="random" i18n="@@demo.widgets.realtimeGauge.dialog.dataSourceRandom">Random</mat-radio-button>
             </mat-radio-group>
           </div>
 
           @if (localState.datasource === 'random') {
           <div class="section">
-            <h4>Update Interval: {{ localState.updateInterval }}s</h4>
+            <h4 i18n="@@demo.widgets.realtimeGauge.dialog.updateInterval">Update Interval: {{ localState.updateInterval }}s</h4>
             <mat-slider
               min="1"
               max="10"
@@ -110,8 +110,8 @@ import { RealtimeGaugeWidgetState } from './realtime-gauge-widget.component';
       </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-flat-button (click)="onSave()">Save</button>
+      <button mat-button (click)="onCancel()" i18n="@@demo.common.cancel">Cancel</button>
+      <button mat-flat-button (click)="onSave()" i18n="@@demo.common.save">Save</button>
     </mat-dialog-actions>
   `,
   styles: [
@@ -193,7 +193,7 @@ export class RealtimeGaugeStateDialogComponent {
   };
 
   formatSeconds(value: number): string {
-    return `${value}s`;
+    return $localize`:@@demo.widgets.realtimeGauge.dialog.secondsFormat:${value}:INTERPOLATION:s`;
   }
 
   onCancel(): void {

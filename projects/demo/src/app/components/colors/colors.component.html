@@ -1,8 +1,8 @@
 <div class="colors-container">
   <mat-card class="colors-card">
     <mat-card-header>
-      <mat-card-title>Color System Overview</mat-card-title>
-      <mat-card-subtitle
+      <mat-card-title i18n="@@demo.colors.title">Color System Overview</mat-card-title>
+      <mat-card-subtitle i18n="@@demo.colors.subtitle"
         >Current theme's Material Design 3 color tokens</mat-card-subtitle
       >
     </mat-card-header>
@@ -12,7 +12,7 @@
         <table mat-table [dataSource]="colors()" class="colors-table">
           <!-- Variable Name Column -->
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Variable Name</th>
+            <th mat-header-cell *matHeaderCellDef i18n="@@demo.colors.variableName">Variable Name</th>
             <td mat-cell *matCellDef="let color" class="variable-name">
               {{ color.name }}
             </td>
@@ -20,7 +20,7 @@
 
           <!-- Color Value Column -->
           <ng-container matColumnDef="value">
-            <th mat-header-cell *matHeaderCellDef>Color Value</th>
+            <th mat-header-cell *matHeaderCellDef i18n="@@demo.colors.colorValue">Color Value</th>
             <td mat-cell *matCellDef="let color" class="color-value">
               {{ color.value }}
             </td>
@@ -28,12 +28,12 @@
 
           <!-- Preview Column -->
           <ng-container matColumnDef="preview">
-            <th mat-header-cell *matHeaderCellDef>Preview</th>
+            <th mat-header-cell *matHeaderCellDef i18n="@@demo.colors.preview">Preview</th>
             <td mat-cell *matCellDef="let color" class="color-preview">
               <span
                 class="color-swatch"
                 [style.backgroundColor]="color.value"
-                [attr.aria-label]="'Color preview for ' + color.name"
+                [attr.aria-label]="getColorPreviewAriaLabel(color.name)"
               >
               </span>
             </td>
