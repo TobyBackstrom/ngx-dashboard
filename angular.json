@@ -38,13 +38,6 @@
             "eslintConfig": "projects/ngx-dashboard/eslint.config.js"
           }
         },
-        "extract-i18n": {
-          "builder": "@angular/build:extract-i18n",
-          "options": {
-            "buildTarget": "ngx-dashboard:build",
-            "outputPath": "projects/ngx-dashboard/src/locale"
-          }
-        }
       }
     },
     "ngx-dashboard-widgets": {
@@ -252,7 +245,9 @@
           "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "demo:build",
-            "outputPath": "projects/demo/src/locale"
+            "outputPath": "projects/demo/src/locale",
+            "format": "xlf2",
+            "outFile": "messages.xlf"
           }
         },
         "test": {
