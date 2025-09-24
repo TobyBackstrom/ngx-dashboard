@@ -2,2141 +2,1331 @@
 <xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en-US">
   <file id="ngi18n" original="ng.template">
     <unit id="demo.navigation.dashboard">
-      <notes>
-        <note category="location">projects/demo/src/app/app.html:9,11</note>
-      </notes>
       <segment>
         <source>Dashboard</source>
       </segment>
     </unit>
     <unit id="demo.navigation.radialGaugeDemo">
-      <notes>
-        <note category="location">projects/demo/src/app/app.html:13,15</note>
-      </notes>
       <segment>
         <source>Radial Gauge Demo</source>
       </segment>
     </unit>
     <unit id="demo.navigation.colors">
-      <notes>
-        <note category="location">projects/demo/src/app/app.html:17,19</note>
-      </notes>
       <segment>
         <source>Colors Overview</source>
       </segment>
     </unit>
     <unit id="demo.app.title">
-      <notes>
-        <note category="location">projects/demo/src/app/app.ts:29</note>
-      </notes>
       <segment>
         <source>Dashboard Demo and Component Tests</source>
       </segment>
     </unit>
     <unit id="demo.theme.switchToLight">
-      <notes>
-        <note category="location">projects/demo/src/app/app.ts:36</note>
-      </notes>
       <segment>
         <source>Switch to light theme</source>
       </segment>
     </unit>
     <unit id="demo.theme.switchToDark">
-      <notes>
-        <note category="location">projects/demo/src/app/app.ts:37</note>
-      </notes>
       <segment>
         <source>Switch to dark theme</source>
       </segment>
     </unit>
     <unit id="demo.theme.selectTheme">
-      <notes>
-        <note category="location">projects/demo/src/app/app.ts:44</note>
-      </notes>
       <segment>
         <source>Select theme</source>
       </segment>
     </unit>
     <unit id="demo.theme.selectSpecific">
-      <notes>
-        <note category="location">projects/demo/src/app/app.ts:51</note>
-      </notes>
       <segment>
         <source>Select <ph id="0" equiv="INTERPOLATION" disp="themeName"/> theme</source>
       </segment>
     </unit>
     <unit id="demo.colors.title">
-      <notes>
-        <note category="location">projects/demo/src/app/components/colors/colors.component.html:4,5</note>
-      </notes>
       <segment>
         <source>Color System Overview</source>
       </segment>
     </unit>
     <unit id="demo.colors.subtitle">
-      <notes>
-        <note category="location">projects/demo/src/app/components/colors/colors.component.html:6,8</note>
-      </notes>
       <segment>
         <source>Current theme&apos;s Material Design 3 color tokens</source>
       </segment>
     </unit>
     <unit id="demo.colors.variableName">
-      <notes>
-        <note category="location">projects/demo/src/app/components/colors/colors.component.html:15,16</note>
-      </notes>
       <segment>
         <source>Variable Name</source>
       </segment>
     </unit>
     <unit id="demo.colors.colorValue">
-      <notes>
-        <note category="location">projects/demo/src/app/components/colors/colors.component.html:23,24</note>
-      </notes>
       <segment>
         <source>Color Value</source>
       </segment>
     </unit>
     <unit id="demo.colors.preview">
-      <notes>
-        <note category="location">projects/demo/src/app/components/colors/colors.component.html:31,32</note>
-      </notes>
       <segment>
         <source>Preview</source>
       </segment>
     </unit>
     <unit id="demo.colors.colorPreview">
-      <notes>
-        <note category="location">projects/demo/src/app/components/colors/colors.component.ts:103</note>
-      </notes>
       <segment>
         <source>Color preview for <ph id="0" equiv="INTERPOLATION" disp="colorName"/></source>
       </segment>
     </unit>
     <unit id="demo.dashboard.exportToFile">
-      <notes>
-        <note category="location">projects/demo/src/app/components/dashboard/dashboard-fab.component.html:11,12</note>
-      </notes>
       <segment>
         <source>Export to File</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.importFromFile">
-      <notes>
-        <note category="location">projects/demo/src/app/components/dashboard/dashboard-fab.component.html:22,23</note>
-      </notes>
       <segment>
         <source>Import from File</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.saveToBrowser">
-      <notes>
-        <note category="location">projects/demo/src/app/components/dashboard/dashboard-fab.component.html:34,35</note>
-      </notes>
       <segment>
         <source>Save to Browser</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.loadFromBrowser">
-      <notes>
-        <note category="location">projects/demo/src/app/components/dashboard/dashboard-fab.component.html:45,46</note>
-      </notes>
       <segment>
         <source>Load from Browser</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.resetToDefault">
-      <notes>
-        <note category="location">projects/demo/src/app/components/dashboard/dashboard-fab.component.html:57,58</note>
-      </notes>
       <segment>
         <source>Reset to Default</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.clearDashboard">
-      <notes>
-        <note category="location">projects/demo/src/app/components/dashboard/dashboard-fab.component.html:69,70</note>
-      </notes>
       <segment>
         <source>Clear Dashboard</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.closeSpeedDialMenu">
-      <notes>
-        <note category="location">projects/demo/src/app/components/dashboard/dashboard-fab.component.html:114,115</note>
-      </notes>
       <segment>
         <source>Close speed dial menu</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.switchToViewMode">
-      <notes>
-        <note category="location">projects/demo/src/app/components/dashboard/dashboard-fab.component.ts:92</note>
-      </notes>
       <segment>
         <source>Switch to View Mode</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.switchToEditMode">
-      <notes>
-        <note category="location">projects/demo/src/app/components/dashboard/dashboard-fab.component.ts:93</note>
-      </notes>
       <segment>
         <source>Switch to Edit Mode</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.closeMenu">
-      <notes>
-        <note category="location">projects/demo/src/app/components/dashboard/dashboard-fab.component.ts:101</note>
-      </notes>
       <segment>
         <source>Close menu</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.dashboardActions">
-      <notes>
-        <note category="location">projects/demo/src/app/components/dashboard/dashboard-fab.component.ts:102</note>
-      </notes>
       <segment>
         <source>Dashboard actions</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.title">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:2,5</note>
-      </notes>
       <segment>
         <source>Radial Gauge Component Demo</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.controls">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:8,9</note>
-      </notes>
       <segment>
         <source>Gauge Controls</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.presetConfigurations">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:13,15</note>
-      </notes>
       <segment>
         <source>Preset Configurations</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.default">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:21,23</note>
-      </notes>
       <segment>
         <source>Default</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.temperature">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:29,31</note>
-      </notes>
       <segment>
         <source>Temperature</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.performance">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:37,39</note>
-      </notes>
       <segment>
         <source>Performance</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.battery">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:45,47</note>
-      </notes>
       <segment>
         <source>Battery</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.network">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:53,55</note>
-      </notes>
       <segment>
         <source>Network</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.storage">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:61,63</note>
-      </notes>
       <segment>
         <source>Storage</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.valueSettings">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:68,71</note>
-      </notes>
       <segment>
         <source>Value Settings</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.valueLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:71,72</note>
-      </notes>
       <segment>
         <source>Value: <ph id="0" equiv="INTERPOLATION" disp="{{ value() }}"/></source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.randomValue">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:78,79</note>
-      </notes>
       <segment>
         <source>Random Value</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.min">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:87,88</note>
-      </notes>
       <segment>
         <source>Min</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.max">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:92,93</note>
-      </notes>
       <segment>
         <source>Max</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.dimensions">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:100,102</note>
-      </notes>
       <segment>
         <source>Dimensions</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.sizeLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:103,104</note>
-      </notes>
       <segment>
         <source>Size: <ph id="0" equiv="INTERPOLATION" disp="{{ size() }}"/>px</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.outerThicknessLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:110,111</note>
-      </notes>
       <segment>
         <source>Outer Thickness: <ph id="0" equiv="INTERPOLATION" disp="{{ outerThickness() }}"/>px</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.innerThicknessLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:117,118</note>
-      </notes>
       <segment>
         <source>Inner Thickness: <ph id="0" equiv="INTERPOLATION" disp="{{ innerThickness() }}"/>px</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.gapLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:124,125</note>
-      </notes>
       <segment>
         <source>Gap: <ph id="0" equiv="INTERPOLATION" disp="{{ gap() }}"/>px</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.segmentGapLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:131,132</note>
-      </notes>
       <segment>
         <source>Segment Gap: <ph id="0" equiv="INTERPOLATION" disp="{{ segmentGapPx() }}"/>px</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.animation">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:140,142</note>
-      </notes>
       <segment>
         <source>Animation</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.startAnimation">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:149,151</note>
-      </notes>
       <segment>
         <source>Start Animation</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.stopAnimation">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:157,159</note>
-      </notes>
       <segment>
         <source>Stop Animation</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.advancedFeatures">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:164,167</note>
-      </notes>
       <segment>
         <source>Advanced Features</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.showValueLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:168,170</note>
-      </notes>
       <segment>
         <source>Show Value Label</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.hasBackground">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:171,173</note>
-      </notes>
       <segment>
         <source>Has Background</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.labelReference">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:177,179</note>
-      </notes>
       <segment>
         <source>Label Reference</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.labelReferencePlaceholder">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:180,181</note>
-      </notes>
       <segment>
         <source>e.g., &apos;00000&apos; or leave empty</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.labelReferenceHint">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:183,186</note>
-      </notes>
       <segment>
         <source>Text/number for width calculation</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.referenceGlyph">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:187,189</note>
-      </notes>
       <segment>
         <source>Reference Glyph</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.referenceGlyphHint">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:192,194</note>
-      </notes>
       <segment>
         <source>Single character</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.labelPaddingLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:197,198</note>
-      </notes>
       <segment>
         <source>Label Padding: <ph id="0" equiv="INTERPOLATION" disp="{{ labelPadding() }}"/>px</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.baselineSafetyLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:204,205</note>
-      </notes>
       <segment>
         <source>Baseline Safety: <ph id="0" equiv="INTERPOLATION" disp="{{ baselineSafety() }}"/></source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.preview">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:216,217</note>
-      </notes>
       <segment>
         <source>Gauge Preview</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.animatedGauge">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:245,247</note>
-      </notes>
       <segment>
         <source>Animated Gauge</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.liveData">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:256,257</note>
-      </notes>
       <segment>
         <source>Live Data</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.realtimeMonitoring">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:258,259</note>
-      </notes>
       <segment>
         <source>Real-time monitoring</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.responsiveContainerDemo">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:267,268</note>
-      </notes>
       <segment>
         <source>Responsive Container Demo</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.responsiveDescription">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:269,273</note>
-      </notes>
       <segment>
         <source> Drag the resize handles to see the gauge adapt to container size changes. The gauge uses <pc id="0" equivStart="START_TAG_CODE" equivEnd="CLOSE_TAG_CODE" type="other" dispStart="&lt;code&gt;" dispEnd="&lt;/code&gt;">fitToContainer=true</pc> and <pc id="1" equivStart="START_TAG_CODE" equivEnd="CLOSE_TAG_CODE" type="other" dispStart="&lt;code&gt;" dispEnd="&lt;/code&gt;">responsiveMode=true</pc> for automatic sizing and proportional thickness scaling. </source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.containerWidthLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:279,280</note>
-      </notes>
       <segment>
         <source>Container Width: <ph id="0" equiv="INTERPOLATION" disp="{{ containerWidth() }}"/>px</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.containerHeightLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:292,293</note>
-      </notes>
       <segment>
         <source>Container Height: <ph id="0" equiv="INTERPOLATION" disp="{{ containerHeight() }}"/>px</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.sizeToThicknessRatioLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:305,306</note>
-      </notes>
       <segment>
         <source>Size To Thickness Ratio: <ph id="0" equiv="INTERPOLATION" disp="{{ sizeToThicknessRatio() }}"/></source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.dimensionsDisplay">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:324,325</note>
-      </notes>
       <segment>
         <source><ph id="0" equiv="INTERPOLATION" disp="{{ containerWidth() }}"/> × <ph id="1" equiv="INTERPOLATION_1" disp="{{ containerHeight() }}"/>px container</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.dashboardExample">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:346,348</note>
-      </notes>
       <segment>
         <source>Dashboard Example</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.cpuUsage">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:349,351</note>
-      </notes>
       <segment>
         <source>CPU Usage</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.cpuUsageTitle">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:360,361</note>
-      </notes>
       <segment>
         <source>CPU Usage</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.percentage">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:362,363</note>
-      </notes>
       <segment>
         <source>Percentage</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.memory">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:369,371</note>
-      </notes>
       <segment>
         <source>Memory</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.memoryUsageTitle">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:381,382</note>
-      </notes>
       <segment>
         <source>Memory Usage</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.percentageMemory">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:383,384</note>
-      </notes>
       <segment>
         <source>Percentage</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.diskIO">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:389,391</note>
-      </notes>
       <segment>
         <source>Disk I/O</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.diskIOTitle">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:400,401</note>
-      </notes>
       <segment>
         <source>Disk I/O</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.percentageDisk">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:402,403</note>
-      </notes>
       <segment>
         <source>Percentage</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.networkHeader">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:408,410</note>
-      </notes>
       <segment>
         <source>Network</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.networkTitle">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:419,420</note>
-      </notes>
       <segment>
         <source>Network</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.signalStrength">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:421,422</note>
-      </notes>
       <segment>
         <source>Signal Strength</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.batteryHeader">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:427,429</note>
-      </notes>
       <segment>
         <source>Battery</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.batteryTitle">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:439,440</note>
-      </notes>
       <segment>
         <source>Battery</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.chargeLevel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:441,442</note>
-      </notes>
       <segment>
         <source>Charge Level</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.temperatureHeader">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:447,449</note>
-      </notes>
       <segment>
         <source>Temperature</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.temperatureTitle">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:458,459</note>
-      </notes>
       <segment>
         <source>Temperature</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.celsius">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:460,461</note>
-      </notes>
       <segment>
         <source>Celsius</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.usageExamples">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:473,475</note>
-      </notes>
       <segment>
         <source>Usage Examples</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.responsiveContainerGauge">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:476,477</note>
-      </notes>
       <segment>
         <source>1. Responsive Container Gauge (Recommended for Dashboards)</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.fixedSizeGauge">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:492,493</note>
-      </notes>
       <segment>
         <source>2. Fixed Size Gauge (Traditional)</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.scalableDesignGauge">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:506,507</note>
-      </notes>
       <segment>
         <source>3. Scalable Design Gauge</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.advancedFeaturesExample">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:517,518</note>
-      </notes>
       <segment>
         <source>4. Advanced Features (Text Display &amp; Styling)</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.typeScriptInterface">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.html:534,535</note>
-      </notes>
       <segment>
         <source>TypeScript Interface</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.titleTemperature">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts:217</note>
-      </notes>
       <segment>
         <source>Temperature</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.titlePerformance">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts:219</note>
-      </notes>
       <segment>
         <source>Performance</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.titleBatteryLevel">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts:221</note>
-      </notes>
       <segment>
         <source>Battery Level</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.titleNetworkSignal">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts:223</note>
-      </notes>
       <segment>
         <source>Network Signal</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.titleStorageUsage">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts:225</note>
-      </notes>
       <segment>
         <source>Storage Usage</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.titleDefaultGauge">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts:227</note>
-      </notes>
       <segment>
         <source>Gauge</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.descriptionCelsius">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts:235</note>
-      </notes>
       <segment>
         <source>Celsius</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.descriptionScore">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts:237</note>
-      </notes>
       <segment>
         <source>Score</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.descriptionPercentage">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts:239</note>
-      </notes>
       <segment>
         <source>Percentage</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.descriptionBars">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts:241</note>
-      </notes>
       <segment>
         <source>Bars</source>
       </segment>
     </unit>
     <unit id="demo.radialGaugeDemo.descriptionGBUsed">
-      <notes>
-        <note category="location">projects/demo/src/app/components/radial-gauge-demo/radial-gauge-demo.component.ts:243</note>
-      </notes>
       <segment>
         <source>GB Used</source>
       </segment>
     </unit>
     <unit id="demo.theme.custom">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:84</note>
-      </notes>
       <segment>
         <source>Custom</source>
       </segment>
     </unit>
     <unit id="demo.theme.red">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:90</note>
-      </notes>
       <segment>
         <source>Red</source>
       </segment>
     </unit>
     <unit id="demo.theme.green">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:96</note>
-      </notes>
       <segment>
         <source>Green</source>
       </segment>
     </unit>
     <unit id="demo.theme.blue">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:102</note>
-      </notes>
       <segment>
         <source>Blue</source>
       </segment>
     </unit>
     <unit id="demo.theme.yellow">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:108</note>
-      </notes>
       <segment>
         <source>Yellow</source>
       </segment>
     </unit>
     <unit id="demo.theme.cyan">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:114</note>
-      </notes>
       <segment>
         <source>Cyan</source>
       </segment>
     </unit>
     <unit id="demo.theme.magenta">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:120</note>
-      </notes>
       <segment>
         <source>Magenta</source>
       </segment>
     </unit>
     <unit id="demo.theme.orange">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:126</note>
-      </notes>
       <segment>
         <source>Orange</source>
       </segment>
     </unit>
     <unit id="demo.theme.chartreuse">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:132</note>
-      </notes>
       <segment>
         <source>Chartreuse</source>
       </segment>
     </unit>
     <unit id="demo.theme.springGreen">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:138</note>
-      </notes>
       <segment>
         <source>Spring Green</source>
       </segment>
     </unit>
     <unit id="demo.theme.azure">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:144</note>
-      </notes>
       <segment>
         <source>Azure</source>
       </segment>
     </unit>
     <unit id="demo.theme.violet">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:150</note>
-      </notes>
       <segment>
         <source>Violet</source>
       </segment>
     </unit>
     <unit id="demo.theme.rose">
-      <notes>
-        <note category="location">projects/demo/src/app/services/theme.service.ts:156</note>
-      </notes>
       <segment>
         <source>Rose</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.title">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:32,34</note>
-      </notes>
       <segment>
         <source>Realtime Gauge Settings</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.visualSettings">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:37,40</note>
-      </notes>
       <segment>
         <source>Visual Settings</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.activeDisplay">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:41,43</note>
-      </notes>
       <segment>
         <source>Active Display</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.activeDisplayDescription">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:43,47</note>
-      </notes>
       <segment>
         <source>Display live gauge instead of passive icon</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.background">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:48,50</note>
-      </notes>
       <segment>
         <source>Background</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.backgroundDescription">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:50,54</note>
-      </notes>
       <segment>
         <source>Add a background color to the widget</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.showValueLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:55,57</note>
-      </notes>
       <segment>
         <source>Show Value Label</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.showValueLabelDescription">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:57,61</note>
-      </notes>
       <segment>
         <source>Display numeric value in gauge center</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.showLabel">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:62,64</note>
-      </notes>
       <segment>
         <source>Show Label</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.showLabelDescription">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:64,68</note>
-      </notes>
       <segment>
         <source>Display a label in the top-right corner</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.labelText">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:69,70</note>
-      </notes>
       <segment>
         <source>Label Text</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.labelPlaceholder">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:70</note>
-      </notes>
       <segment>
         <source>e.g., kW, %, RPM</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.colorProfile">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:75,76</note>
-      </notes>
       <segment>
         <source>Color Profile</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.colorProfileDynamic">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:77,78</note>
-      </notes>
       <segment>
         <source>Dynamic (Theme Colors)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.colorProfileStatic">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:78,80</note>
-      </notes>
       <segment>
         <source>Static (Performance Colors)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.realtimeDataSettings">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:85,88</note>
-      </notes>
       <segment>
         <source>Real-time Data Settings</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.dataSource">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:88,89</note>
-      </notes>
       <segment>
         <source>Data Source</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.dataSourceNone">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:90,91</note>
-      </notes>
       <segment>
         <source>None (Static)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.dataSourceRandom">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:91,93</note>
-      </notes>
       <segment>
         <source>Random</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.updateInterval">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:97,98</note>
-      </notes>
       <segment>
         <source>Update Interval: <ph id="0" equiv="INTERPOLATION" disp="{{ localState.updateInterval }}"/>s</source>
       </segment>
     </unit>
     <unit id="demo.common.cancel">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:113,114</note>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:100,101</note>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:81,82</note>
-      </notes>
       <segment>
         <source>Cancel</source>
       </segment>
     </unit>
     <unit id="demo.common.save">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:114,115</note>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:101,102</note>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:82,83</note>
-      </notes>
       <segment>
         <source>Save</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.dialog.secondsFormat">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-state-dialog.component.ts:196</note>
-      </notes>
       <segment>
         <source><ph id="0" equiv="INTERPOLATION" disp="value"/>s</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.name">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-widget.component.ts:47</note>
-      </notes>
       <segment>
         <source>Realtime Gauge</source>
       </segment>
     </unit>
     <unit id="demo.widgets.realtimeGauge.description">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/realtime-gauge-widget/realtime-gauge-widget.component.ts:48</note>
-      </notes>
       <segment>
         <source>Gauge with real-time data updates</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.title">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:28,30</note>
-      </notes>
       <segment>
         <source>Sparkbar Settings</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.connectRealtime">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:36,40</note>
-      </notes>
       <segment>
         <source>Connect to realtime data feed</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.frameRate">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:42,44</note>
-      </notes>
       <segment>
         <source>Frame Rate (FPS)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.fps1">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:48,49</note>
-      </notes>
       <segment>
         <source>1 FPS (Very Slow)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.fps5">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:49,50</note>
-      </notes>
       <segment>
         <source>5 FPS (Slow)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.fps10">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:50,51</note>
-      </notes>
       <segment>
         <source>10 FPS (Moderate)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.fps15">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:51,52</note>
-      </notes>
       <segment>
         <source>15 FPS (Smooth)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.fps20">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:52,53</note>
-      </notes>
       <segment>
         <source>20 FPS (Default)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.fps24">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:53,54</note>
-      </notes>
       <segment>
         <source>24 FPS (Fast)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.fps30">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:54,55</note>
-      </notes>
       <segment>
         <source>30 FPS (Faster)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.fps60">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:55,57</note>
-      </notes>
       <segment>
         <source>60 FPS (High Refresh)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.numberOfBars">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:62,64</note>
-      </notes>
       <segment>
         <source>Number of Bars</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.bars5">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:67,68</note>
-      </notes>
       <segment>
         <source>5 bars (Default)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.bars10">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:68,69</note>
-      </notes>
       <segment>
         <source>10 bars</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.bars15">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:69,70</note>
-      </notes>
       <segment>
         <source>15 bars</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.bars20">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:70,71</note>
-      </notes>
       <segment>
         <source>20 bars</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.bars25">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:71,72</note>
-      </notes>
       <segment>
         <source>25 bars</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.bars30">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:72,73</note>
-      </notes>
       <segment>
         <source>30 bars</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.bars50">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:73,74</note>
-      </notes>
       <segment>
         <source>50 bars</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.bars100">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:74,76</note>
-      </notes>
       <segment>
         <source>100 bars</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.responsiveBarColors">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:84,88</note>
-      </notes>
       <segment>
         <source>Responsive bar colors</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.dialog.showBackground">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-state-dialog.component.ts:93,96</note>
-      </notes>
       <segment>
         <source>Show background</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.name">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-widget.component.ts:40</note>
-      </notes>
       <segment>
         <source>Sparkbar</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkbar.description">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkbar-widget/sparkbar-widget.component.ts:41</note>
-      </notes>
       <segment>
         <source>A sparkbar graph</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.title">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:28,30</note>
-      </notes>
       <segment>
         <source>Sparkline Settings</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.connectRealtime">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:36,40</note>
-      </notes>
       <segment>
         <source>Connect to realtime data feed</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.frameRate">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:42,44</note>
-      </notes>
       <segment>
         <source>Frame Rate (FPS)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.fps1">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:48,49</note>
-      </notes>
       <segment>
         <source>1 FPS (Very Slow)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.fps5">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:49,50</note>
-      </notes>
       <segment>
         <source>5 FPS (Slow)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.fps10">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:50,51</note>
-      </notes>
       <segment>
         <source>10 FPS (Moderate)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.fps15">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:51,52</note>
-      </notes>
       <segment>
         <source>15 FPS (Smooth)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.fps20">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:52,53</note>
-      </notes>
       <segment>
         <source>20 FPS (Default)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.fps24">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:53,54</note>
-      </notes>
       <segment>
         <source>24 FPS (Fast)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.fps30">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:54,55</note>
-      </notes>
       <segment>
         <source>30 FPS (Faster)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.fps60">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:55,57</note>
-      </notes>
       <segment>
         <source>60 FPS (High Refresh)</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.responsiveLineColors">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:65,69</note>
-      </notes>
       <segment>
         <source>Responsive line colors</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.dialog.showBackground">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-state-dialog.component.ts:74,77</note>
-      </notes>
       <segment>
         <source>Show background</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.name">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-widget.component.ts:39</note>
-      </notes>
       <segment>
         <source>Sparkline</source>
       </segment>
     </unit>
     <unit id="demo.widgets.sparkline.description">
-      <notes>
-        <note category="location">projects/demo/src/app/widgets/sparkline-widget/sparkline-widget.component.ts:40</note>
-      </notes>
       <segment>
         <source>A sparkline graph</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.title">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts:163</note>
-      </notes>
       <segment>
         <source> Arrow Settings </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.direction">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts:172,173</note>
-      </notes>
       <segment>
         <source>Arrow Direction</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.direction.up">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts:184,187</note>
-      </notes>
       <segment>
         <source>Up</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.direction.right">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts:202,206</note>
-      </notes>
       <segment>
         <source>Right</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.direction.down">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts:217,220</note>
-      </notes>
       <segment>
         <source>Down</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.direction.left">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts:232</note>
-      </notes>
       <segment>
         <source>Left</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.opacity">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts:232</note>
-      </notes>
       <segment>
         <source> Opacity: <ph id="0" equiv="INTERPOLATION"/>% </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.background">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts:232</note>
-      </notes>
       <segment>
         <source> Background </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.backgroundHint">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts:232</note>
-      </notes>
       <segment>
         <source>Adds a background behind the arrow</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.common.cancel">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts:232</note>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:226</note>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:203</note>
-        <note category="location">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts:160</note>
-      </notes>
       <segment>
         <source> Cancel </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.common.save">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-state-dialog.component.ts:232</note>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:226</note>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:203</note>
-      </notes>
       <segment>
         <source> Save </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.name">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-widget.component.ts:24</note>
-      </notes>
       <segment>
         <source>Arrow</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.description">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/arrow-widget/arrow-widget.component.ts:25</note>
-      </notes>
       <segment>
         <source>A generic arrow</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.title">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:189</note>
-      </notes>
       <segment>
         <source> Clock Settings </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.displayMode">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:196,198</note>
-      </notes>
       <segment>
         <source>Display Mode</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.mode.digital">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:205,207</note>
-      </notes>
       <segment>
         <source>Digital</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.mode.analog">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:220,222</note>
-      </notes>
       <segment>
         <source>Analog</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.showSeconds">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:226</note>
-      </notes>
       <segment>
         <source> Show Seconds </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.background">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:226</note>
-      </notes>
       <segment>
         <source> Background </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.backgroundDescription">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:226</note>
-      </notes>
       <segment>
         <source>Adds a background behind the clock</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.timeFormat">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:226</note>
-      </notes>
       <segment>
         <source>Time Format</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.format.24h">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:226</note>
-      </notes>
       <segment>
         <source>24 Hour (14:30:45)</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.format.12h">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:226</note>
-      </notes>
       <segment>
         <source>12 Hour (2:30:45 PM)</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.showSecondsDescription.digital">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:226</note>
-      </notes>
       <segment>
         <source>Display seconds in the time</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.dialog.showSecondsDescription.analog">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-state-dialog.component.ts:226</note>
-      </notes>
       <segment>
         <source>Show the second hand on the clock</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.name">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-widget.component.ts:28</note>
-      </notes>
       <segment>
         <source>Clock</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.clock.description">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/clock-widget/clock-widget.component.ts:29</note>
-      </notes>
       <segment>
         <source>Display time in analog or digital format</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.placeholder">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:374,375</note>
-      </notes>
       <segment>
         <source>Enter your label text...</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.title">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:383,386</note>
-      </notes>
       <segment>
         <source> Label Settings </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.labelText">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:393,394</note>
-      </notes>
       <segment>
         <source>Label Text</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.responsive">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:400,401</note>
-      </notes>
       <segment>
         <source> Responsive Text </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.responsiveDescription">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:407,410</note>
-      </notes>
       <segment>
         <source>Automatically adjust text size to fit the widget</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.fontSize">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:425,427</note>
-      </notes>
       <segment>
         <source>Font Size (px)</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.alignment">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:438,439</note>
-      </notes>
       <segment>
         <source>Alignment</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.alignment.left">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:450,451</note>
-      </notes>
       <segment>
         <source>Left</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.alignment.center">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:461,462</note>
-      </notes>
       <segment>
         <source>Center</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.alignment.right">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:474</note>
-      </notes>
       <segment>
         <source>Right</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.fontWeight">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:490,492</note>
-      </notes>
       <segment>
         <source>Font Weight</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.fontWeight.normal">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:502,504</note>
-      </notes>
       <segment>
         <source>Normal</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.fontWeight.bold">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>Bold</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.opacity">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source> Opacity: <ph id="0" equiv="INTERPOLATION"/>% </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.background">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source> Background </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.backgroundDescription">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>Adds a background behind the text</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.templateStringPlaceholder">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>Optional: Text to use for size calculation</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.fontSizeLimits">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source> Font Size Limits </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.minSize">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>Min Size (px)</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.maxSize">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>Max Size (px)</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.templateString">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>Template String</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.templateStringHint">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>Use when displayed text varies but size should remain consistent</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.minSizeError">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>Must be between 8-24px</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.minSizeRangeError">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>Must be less than max size</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.minSizeHint">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>8-24px range</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.maxSizeError">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>Must be between 16-128px</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.maxSizeRangeError">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>Must be greater than min size</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.maxSizeHint">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-state-dialog.component.ts:510</note>
-      </notes>
       <segment>
         <source>16-128px range</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.name">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-widget.component.ts:34</note>
-      </notes>
       <segment>
         <source>Label</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.description">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/label-widget/label-widget.component.ts:35</note>
-      </notes>
       <segment>
         <source>A generic text label</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.dialog.title">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:182,183</note>
-      </notes>
       <segment>
         <source> Radial Gauge Settings </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.dialog.value">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:192,196</note>
-      </notes>
       <segment>
         <source>Value (0-100)</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.dialog.colorProfile">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:203</note>
-      </notes>
       <segment>
         <source> Color Profile </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.dialog.colorProfile.dynamic">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:203</note>
-      </notes>
       <segment>
         <source>Dynamic (Theme Colors)</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.dialog.colorProfile.static">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:203</note>
-      </notes>
       <segment>
         <source>Static (Performance Colors)</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.dialog.activeDisplay">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:203</note>
-      </notes>
       <segment>
         <source> Active Display </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.dialog.activeDisplayDescription">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:203</note>
-      </notes>
       <segment>
         <source> Display live gauge instead of passive icon </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.dialog.background">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:203</note>
-      </notes>
       <segment>
         <source> Background </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.dialog.backgroundDescription">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:203</note>
-      </notes>
       <segment>
         <source> Add a background color to the widget </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.dialog.showValueLabel">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:203</note>
-      </notes>
       <segment>
         <source> Show Value Label </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.dialog.showValueLabelDescription">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-state-dialog.component.ts:203</note>
-      </notes>
       <segment>
         <source> Display numeric value in gauge center </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.name">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-widget.component.ts:27</note>
-      </notes>
       <segment>
         <source>Radial Gauge</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.radialGauge.description">
-      <notes>
-        <note category="location">projects/ngx-dashboard-widgets/src/lib/widgets/radial-gauge-widget/radial-gauge-widget.component.ts:28</note>
-      </notes>
       <segment>
         <source>A semi-circular gauge indicator</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.cell.resize.dimensions">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/cell/cell.component.html:1</note>
-      </notes>
       <segment>
-        <source> <ph id="0" equiv="INTERPOLATION"/> × <ph id="1" equiv="INTERPOLATION_1"/>
-</source>
+        <source> <ph id="0" equiv="INTERPOLATION"/> × <ph id="1" equiv="INTERPOLATION_1"/> </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.cell.menu.edit">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/cell/cell.component.ts:241</note>
-      </notes>
       <segment>
         <source>Edit Widget</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.cell.menu.settings">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/cell/cell.component.ts:247</note>
-      </notes>
       <segment>
         <source>Settings</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.cell.menu.delete">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/cell/cell.component.ts:253</note>
-      </notes>
       <segment>
         <source>Delete</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.unknown.widget.name">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/internal-widgets/unknown-widget/unknown-widget.component.ts:49</note>
-      </notes>
       <segment>
         <source>Unknown Widget</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.unknown.widget.description">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/internal-widgets/unknown-widget/unknown-widget.component.ts:50</note>
-      </notes>
       <segment>
         <source>Fallback widget for unknown widget types</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.cell.settings.title">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts:137,138</note>
-      </notes>
       <segment>
         <source> Cell Display Settings </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.cell.settings.cellId">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts:160</note>
-      </notes>
       <segment>
         <source> Cell ID: <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other"><ph id="1" equiv="INTERPOLATION"/></pc></source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.cell.settings.mode.normal">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts:160</note>
-      </notes>
       <segment>
         <source> Normal </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.cell.settings.mode.normal.description">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts:160</note>
-      </notes>
       <segment>
         <source> Standard cell display with full content visibility </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.cell.settings.mode.flat">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts:160</note>
-      </notes>
       <segment>
         <source> Flat </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.cell.settings.mode.flat.description">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts:160</note>
-      </notes>
       <segment>
         <source> Simplified display with reduced visual emphasis </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.common.apply">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/providers/cell-settings-dialog/cell-settings-dialog.component.ts:160</note>
-      </notes>
       <segment>
         <source> Apply </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widget.list.available">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/widget-list/widget-list.component.html:1,4</note>
-      </notes>
       <segment>
         <source>Available widgets</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widget.list.item.ariaLabel">
-      <notes>
-        <note category="location">projects/ngx-dashboard/src/lib/widget-list/widget-list.component.ts:109</note>
-      </notes>
       <segment>
         <source><ph id="0" equiv="PH" disp="widget.name"/> widget: <ph id="1" equiv="PH_1" disp="widget.description"/></source>
       </segment>

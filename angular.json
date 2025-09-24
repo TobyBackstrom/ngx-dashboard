@@ -242,12 +242,16 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular/build:extract-i18n",
+          "builder": "ng-extract-i18n-merge:ng-extract-i18n-merge",
           "options": {
             "buildTarget": "demo:build",
             "outputPath": "projects/demo/src/locale",
             "format": "xlf2",
-            "outFile": "messages.xlf"
+            "targetFiles": [
+              "messages.es.xlf",
+              "messages.fr.xlf",
+              "messages.de.xlf"
+            ]
           }
         },
         "test": {
