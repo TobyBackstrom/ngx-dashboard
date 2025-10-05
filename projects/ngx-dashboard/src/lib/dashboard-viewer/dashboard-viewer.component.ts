@@ -93,6 +93,15 @@ export class DashboardViewerComponent {
         gutterSize: this.gutterSize(),
       });
     });
+
+    // Clear selection when selection mode is disabled
+    effect(() => {
+      if (!this.enableSelection()) {
+        this.selectionStart.set(null);
+        this.selectionCurrent.set(null);
+        this.isSelecting.set(false);
+      }
+    });
   }
 
   /**
@@ -209,11 +218,8 @@ export class DashboardViewerComponent {
     // Clean up listeners
     this.cleanupListeners();
 
-    // Clear selection visuals after a short delay
-    setTimeout(() => {
-      this.selectionStart.set(null);
-      this.selectionCurrent.set(null);
-    }, 150);
+    // Don't clear selection - let the parent control when to clear
+    // Selection remains visible until enableSelection becomes false
   }
 
   /**

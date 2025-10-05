@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { httpResource } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
 import {
   DashboardComponent as NgxDashboardComponent,
   WidgetListComponent,
@@ -23,6 +24,7 @@ import {
   LocalStoragePersistenceService,
 } from '../../services';
 import { DashboardFabComponent } from './dashboard-fab.component';
+import { CellSelectionDialogComponent } from './cell-selection-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -38,6 +40,7 @@ export class DashboardComponent {
     LocalStoragePersistenceService
   );
   private document = inject(DOCUMENT);
+  private dialog = inject(MatDialog);
 
   // Dashboard resource for auto-loading with dynamic base href
   protected dashboardResource = httpResource<DashboardDataDto | null>(() => {
@@ -185,9 +188,20 @@ export class DashboardComponent {
   }
 
   onRangeSelected(range: GridRange): void {
-    console.log('Selected range:', range);
-    // Reset select mode after selection
-    this.selectMode.set(false);
+    const dialogRef = this.dialog.open(CellSelectionDialogComponent, {
+      width: '400px',
+      maxWidth: '90vw',
+      autoFocus: false,
+      data: range,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      // result will be true if OK was clicked, false if Cancel was clicked, or undefined if dialog was dismissed
+      console.log('Dialog result:', result);
+
+      // Reset select mode after dialog closes
+      this.selectMode.set(false);
+    });
   }
 
   /**

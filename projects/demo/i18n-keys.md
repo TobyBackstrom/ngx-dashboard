@@ -1,6 +1,6 @@
 # Demo Application i18n Translation Keys
 
-This document lists all the translation keys used in the demo application. The demo app demonstrates comprehensive i18n support with 266 translation keys.
+This document lists all the translation keys used in the demo application. The demo app demonstrates comprehensive i18n support with 275 translation keys.
 
 ## Setup Requirements
 
@@ -75,6 +75,16 @@ To use i18n features with the demo application:
 - `@@demo.dashboard.switchToEditMode` - "Switch to Edit Mode"
 - `@@demo.dashboard.closeMenu` - "Close menu"
 - `@@demo.dashboard.dashboardActions` - "Dashboard actions"
+
+### Cell Selection Dialog (8 keys)
+- `@@demo.dashboard.cellSelection.dialog.title` - "Cell Selection"
+- `@@demo.dashboard.cellSelection.dialog.topLeft` - "Top Left"
+- `@@demo.dashboard.cellSelection.dialog.bottomRight` - "Bottom Right"
+- `@@demo.dashboard.cellSelection.dialog.row` - "Row"
+- `@@demo.dashboard.cellSelection.dialog.col` - "Column"
+- `@@demo.dashboard.cellSelection.dialog.dimensions` - "Dimensions"
+- `@@demo.dashboard.cellSelection.dialog.rows` - "Rows"
+- `@@demo.dashboard.cellSelection.dialog.cols` - "Columns"
 
 ### Radial Gauge Demo - Controls (94 keys)
 
@@ -247,9 +257,10 @@ To use i18n features with the demo application:
 - `@@demo.widgets.sparkline.dialog.responsiveLineColors` - "Responsive line colors"
 - `@@demo.widgets.sparkline.dialog.showBackground` - "Show background"
 
-### Common Actions (2 keys)
+### Common Actions (3 keys)
 - `@@demo.common.cancel` - "Cancel"
 - `@@demo.common.save` - "Save"
+- `@@demo.common.ok` - "OK"
 
 ### NGX Dashboard Widgets Library - 77 keys
 
@@ -395,7 +406,7 @@ When including the demo application in a multi-locale build:
 
 - Interpolations like `<x id="INTERPOLATION"/>` must be preserved in translations
 - HTML entities like `&apos;` should be maintained
-- Total count: **266 translation keys**
+- Total count: **275 translation keys**
 - Keys are namespaced to prevent conflicts:
   - `@@demo.*` - Demo application keys
   - `@@ngx.dashboard.*` - Core dashboard library keys
