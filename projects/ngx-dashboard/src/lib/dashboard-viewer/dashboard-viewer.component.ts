@@ -16,7 +16,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { CellComponent } from '../cell/cell.component';
 import { DashboardStore } from '../store/dashboard-store';
-import { CellIdUtils } from '../models';
 
 export interface GridRange {
   topLeft: { row: number; col: number };
@@ -77,8 +76,12 @@ export class DashboardViewerComponent {
   });
 
   // Generate array for template iteration
-  rowNumbers = computed(() => Array.from({ length: this.rows() }, (_, i) => i + 1));
-  colNumbers = computed(() => Array.from({ length: this.columns() }, (_, i) => i + 1));
+  rowNumbers = computed(() =>
+    Array.from({ length: this.rows() }, (_, i) => i + 1)
+  );
+  colNumbers = computed(() =>
+    Array.from({ length: this.columns() }, (_, i) => i + 1)
+  );
 
   // Document-level event listeners (cleanup needed)
   #mouseMoveListener?: () => void;
@@ -102,33 +105,6 @@ export class DashboardViewerComponent {
         this.isSelecting.set(false);
       }
     });
-  }
-
-  /**
-   * Get current widget states from all cell components.
-   * Used during dashboard export to get live widget states.
-   */
-  getCurrentWidgetStates(): Map<string, unknown> {
-    const stateMap = new Map<string, unknown>();
-    
-    const cells = this.cellComponents();
-    for (const cell of cells) {
-      const cellId = cell.cellId();
-      const currentState = cell.getCurrentWidgetState();
-      if (currentState !== undefined) {
-        stateMap.set(CellIdUtils.toString(cellId), currentState);
-      }
-    }
-    
-    return stateMap;
-  }
-
-  /**
-   * Export dashboard with live widget states from current component instances.
-   * This ensures the most up-to-date widget states are captured.
-   */
-  exportDashboard() {
-    return this.#store.exportDashboard(() => this.getCurrentWidgetStates());
   }
 
   // Selection methods
@@ -169,10 +145,8 @@ export class DashboardViewerComponent {
       () => this.onDocumentMouseMove()
     );
 
-    this.#mouseUpListener = this.#renderer.listen(
-      'document',
-      'mouseup',
-      () => this.onDocumentMouseUp()
+    this.#mouseUpListener = this.#renderer.listen('document', 'mouseup', () =>
+      this.onDocumentMouseUp()
     );
 
     // Register cleanup

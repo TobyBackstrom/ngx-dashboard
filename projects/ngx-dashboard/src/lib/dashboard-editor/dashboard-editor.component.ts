@@ -188,31 +188,4 @@ export class DashboardEditorComponent {
     this.#store.handleDrop(event.data, event.target);
     // Note: Store handles all validation and error handling internally
   }
-
-  /**
-   * Get current widget states from all cell components.
-   * Used during dashboard export to get live widget states.
-   */
-  getCurrentWidgetStates(): Map<string, unknown> {
-    const stateMap = new Map<string, unknown>();
-    
-    const cells = this.cellComponents();
-    for (const cell of cells) {
-      const cellId = cell.cellId();
-      const currentState = cell.getCurrentWidgetState();
-      if (currentState !== undefined) {
-        stateMap.set(CellIdUtils.toString(cellId), currentState);
-      }
-    }
-    
-    return stateMap;
-  }
-
-  /**
-   * Export dashboard with live widget states from current component instances.
-   * This ensures the most up-to-date widget states are captured.
-   */
-  exportDashboard() {
-    return this.#store.exportDashboard(() => this.getCurrentWidgetStates());
-  }
 }

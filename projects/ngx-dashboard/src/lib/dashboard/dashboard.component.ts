@@ -24,6 +24,7 @@ import { DashboardDataDto } from '../models/dashboard-data.dto';
 import { DashboardBridgeService } from '../services/dashboard-bridge.service';
 import { DashboardViewportService } from '../services/dashboard-viewport.service';
 import { ReservedSpace } from '../models/reserved-space';
+import { CellIdUtils } from '../models';
 
 @Component({
   selector: 'ngx-dashboard',
@@ -125,16 +126,35 @@ export class DashboardComponent implements OnChanges {
     }
   }
 
+  /**
+   * Get current widget states from all cell components.
+   * Used during dashboard export to get live widget states.
+   */
+  private getCurrentWidgetStates(): Map<string, unknown> {
+    const stateMap = new Map<string, unknown>();
+
+    // Get cell components from the active child
+    const cells = this.editMode()
+      ? this.dashboardEditor()?.cellComponents()
+      : this.dashboardViewer()?.cellComponents();
+
+    if (cells) {
+      for (const cell of cells) {
+        const cellId = cell.cellId();
+        const currentState = cell.getCurrentWidgetState();
+        if (currentState !== undefined) {
+          stateMap.set(CellIdUtils.toString(cellId), currentState);
+        }
+      }
+    }
+
+    return stateMap;
+  }
+
   // Public export/import methods
   exportDashboard(): DashboardDataDto {
-    // Delegate to the active child component
-    if (this.editMode()) {
-      const editor = this.dashboardEditor();
-      return editor ? editor.exportDashboard() : this.#store.exportDashboard();
-    } else {
-      const viewer = this.dashboardViewer();
-      return viewer ? viewer.exportDashboard() : this.#store.exportDashboard();
-    }
+    // Export dashboard with live widget states
+    return this.#store.exportDashboard(() => this.getCurrentWidgetStates());
   }
 
   loadDashboard(data: DashboardDataDto): void {
@@ -162,26 +182,27 @@ export class DashboardComponent implements OnChanges {
     this.#isPreservingStates = true;
 
     try {
-      let currentWidgetStates: Map<string, unknown> | null = null;
+      const stateMap = new Map<string, unknown>();
 
-      if (previousEditMode) {
-        // Previously in edit mode, collect states from editor
-        const editor = this.dashboardEditor();
-        if (editor) {
-          currentWidgetStates = editor.getCurrentWidgetStates();
-        }
-      } else {
-        // Previously in view mode, collect states from viewer
-        const viewer = this.dashboardViewer();
-        if (viewer) {
-          currentWidgetStates = viewer.getCurrentWidgetStates();
+      // Get cell components from the previously active child
+      const cells = previousEditMode
+        ? this.dashboardEditor()?.cellComponents()
+        : this.dashboardViewer()?.cellComponents();
+
+      if (cells) {
+        for (const cell of cells) {
+          const cellId = cell.cellId();
+          const currentState = cell.getCurrentWidgetState();
+          if (currentState !== undefined) {
+            stateMap.set(CellIdUtils.toString(cellId), currentState);
+          }
         }
       }
 
       // Update the store with the live widget states using untracked to avoid triggering effects
-      if (currentWidgetStates && currentWidgetStates.size > 0) {
+      if (stateMap.size > 0) {
         untracked(() => {
-          this.#store.updateAllWidgetStates(currentWidgetStates);
+          this.#store.updateAllWidgetStates(stateMap);
         });
       }
     } finally {

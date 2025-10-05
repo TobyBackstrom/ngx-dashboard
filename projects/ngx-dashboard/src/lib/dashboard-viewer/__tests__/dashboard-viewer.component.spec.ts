@@ -102,16 +102,6 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       expect(component.cells().length).toBe(2);
       expect(component.cells()[0]).toEqual(widget1);
       expect(component.cells()[1]).toEqual(widget2);
-
-      // Action: Export dashboard
-      const exported = component.exportDashboard();
-
-      // Verify: Export contains dashboard structure
-      expect(exported.version).toBe('1.0.0');
-      expect(exported.rows).toBe(8);
-      expect(exported.columns).toBe(12);
-      expect(exported.gutterSize).toBe('1em');
-      expect(exported.cells.length).toBe(2);
     });
   });
 
@@ -196,63 +186,6 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       // Verify: No widgets rendered
       expect(fixture.nativeElement.querySelectorAll('lib-cell').length).toBe(0);
       expect(component.cells().length).toBe(0);
-      
-      // Verify: Export works with empty state
-      const exported = component.exportDashboard();
-      expect(exported.cells.length).toBe(0);
-      expect(exported.version).toBe('1.0.0');
-      expect(exported.rows).toBe(8);
-      expect(exported.columns).toBe(12);
-      
-      // Verify: Widget state collection works with no widgets
-      const widgetStates = component.getCurrentWidgetStates();
-      expect(widgetStates.size).toBe(0);
-      expect(widgetStates instanceof Map).toBe(true);
-    });
-  });
-
-  describe('Export Functionality with Live Widget States', () => {
-    it('should export dashboard with live widget states from component instances', () => {
-      // SCENARIO: User modifies widget states and exports - should get current states, not store states
-      
-      // Setup: Add widget with initial state
-      const widget: CellData = {
-        widgetId: WidgetIdUtils.generate(),
-        cellId: CellIdUtils.create(1, 1),
-        row: 1,
-        col: 1,
-        rowSpan: 1,
-        colSpan: 1,
-        flat: false,
-        widgetFactory: mockWidgetFactory,
-        widgetState: { value: 'Initial State' }
-      };
-      
-      store.addWidget(widget);
-      fixture.detectChanges();
-      
-      // Verify: Widget is rendered
-      const cellElements = fixture.nativeElement.querySelectorAll('lib-cell');
-      expect(cellElements.length).toBe(1);
-      
-      // Action: Export dashboard (should include live states)
-      const exported = component.exportDashboard();
-      
-      // Verify: Export structure is correct
-      expect(exported.version).toBe('1.0.0');
-      expect(exported.cells.length).toBe(1);
-      expect(exported.cells[0].widgetTypeid).toBe('test-widget');
-      expect(exported.cells[0].row).toBe(1);
-      expect(exported.cells[0].col).toBe(1);
-      
-      // Verify: getCurrentWidgetStates returns proper map structure
-      const widgetStates = component.getCurrentWidgetStates();
-      expect(widgetStates instanceof Map).toBe(true);
-      
-      // The actual state collection depends on cell components being properly rendered
-      // This tests that the method exists and returns the right type with WidgetId keys
-      const widgetIdKey = WidgetIdUtils.toString(widget.widgetId);
-      expect(typeof widgetIdKey).toBe('string');
     });
   });
 

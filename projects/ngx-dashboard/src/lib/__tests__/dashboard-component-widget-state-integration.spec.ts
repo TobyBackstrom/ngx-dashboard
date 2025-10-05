@@ -357,6 +357,31 @@ describe('DashboardComponent - Widget State Integration', () => {
         })
       );
     });
+
+    it('should export empty dashboard correctly', async () => {
+      const dashboardData: DashboardDataDto = {
+        version: '1.0.0',
+        dashboardId: 'test-dashboard-empty',
+        rows: 8,
+        columns: 12,
+        gutterSize: '1em',
+        cells: [],
+      };
+
+      fixture.componentRef.setInput('dashboardData', dashboardData);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const exported = component.exportDashboard();
+
+      expect(exported.version).toBe('1.0.0');
+      expect(exported.dashboardId).toBe('test-dashboard-empty');
+      expect(exported.rows).toBe(8);
+      expect(exported.columns).toBe(12);
+      expect(exported.gutterSize).toBe('1em');
+      expect(exported.cells).toEqual([]);
+      expect(exported.cells.length).toBe(0);
+    });
   });
 
   describe('Widget state preservation during mode switching', () => {
