@@ -16,7 +16,7 @@ import {
   createEmptyDashboard,
   ReservedSpace,
   DashboardDataDto,
-  CellSelectionBounds,
+  GridRange,
 } from '@dragonworks/ngx-dashboard';
 import {
   FilePersistenceService,
@@ -184,8 +184,8 @@ export class DashboardComponent {
     this.dashboardResource.reload();
   }
 
-  onCellsSelected(selection: CellSelectionBounds): void {
-    console.log('Selected cells:', selection);
+  onRangeSelected(range: GridRange): void {
+    console.log('Selected range:', range);
     // Reset select mode after selection
     this.selectMode.set(false);
   }

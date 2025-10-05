@@ -14,7 +14,7 @@
     [columns]="store.columns()"
     [gutterSize]="store.gutterSize()"
     [enableSelection]="enableSelection()"
-    (cellsSelected)="cellsSelected.emit($event)"
+    (rangeSelected)="rangeSelected.emit($event)"
   ></ngx-dashboard-viewer>
   }
 </div>

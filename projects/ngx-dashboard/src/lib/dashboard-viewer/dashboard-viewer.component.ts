@@ -18,7 +18,7 @@ import { CellComponent } from '../cell/cell.component';
 import { DashboardStore } from '../store/dashboard-store';
 import { CellIdUtils } from '../models';
 
-export interface CellSelectionBounds {
+export interface GridRange {
   topLeft: { row: number; col: number };
   bottomRight: { row: number; col: number };
 }
@@ -52,7 +52,7 @@ export class DashboardViewerComponent {
 
   // Selection feature
   enableSelection = input<boolean>(false);
-  cellsSelected = output<CellSelectionBounds>();
+  rangeSelected = output<GridRange>();
 
   // store signals - read-only
   cells = this.#store.cells;
@@ -200,7 +200,7 @@ export class DashboardViewerComponent {
     // Emit selection event
     const bounds = this.selectionBounds();
     if (bounds) {
-      this.cellsSelected.emit({
+      this.rangeSelected.emit({
         topLeft: { row: bounds.startRow, col: bounds.startCol },
         bottomRight: { row: bounds.endRow, col: bounds.endCol },
       });

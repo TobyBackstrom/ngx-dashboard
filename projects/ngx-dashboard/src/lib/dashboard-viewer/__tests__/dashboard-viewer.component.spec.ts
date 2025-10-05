@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, signal } from '@angular/core';
-import { DashboardViewerComponent } from '../dashboard-viewer.component';
+import { DashboardViewerComponent, GridRange } from '../dashboard-viewer.component';
 import { DashboardStore } from '../../store/dashboard-store';
 import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, Widget } from '../../models';
 
@@ -253,6 +253,180 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       // This tests that the method exists and returns the right type with WidgetId keys
       const widgetIdKey = WidgetIdUtils.toString(widget.widgetId);
       expect(typeof widgetIdKey).toBe('string');
+    });
+  });
+
+  describe('Selection Overlay Grid', () => {
+    beforeEach(() => {
+      // Enable selection for these tests
+      fixture.componentRef.setInput('enableSelection', true);
+      fixture.detectChanges();
+    });
+
+    it('should emit GridRange when selection completes', () => {
+      // SCENARIO: User drags to select cells, selection completes on mouse up
+
+      const emittedRanges: GridRange[] = [];
+      component.rangeSelected.subscribe((range: GridRange) => {
+        emittedRanges.push(range);
+      });
+
+      // Action: Start selection at (2, 3)
+      const startEvent = new MouseEvent('mousedown', { button: 0 });
+      component.onGhostCellMouseDown(startEvent, 2, 3);
+
+      // Action: Drag to (4, 6)
+      component.onGhostCellMouseEnter(4, 6);
+
+      // Action: Complete selection
+      const mouseUpEvent = new MouseEvent('mouseup');
+      document.dispatchEvent(mouseUpEvent);
+
+      // Verify: GridRange emitted with correct normalized coordinates
+      expect(emittedRanges.length).toBe(1);
+      expect(emittedRanges[0]).toEqual({
+        topLeft: { row: 2, col: 3 },
+        bottomRight: { row: 4, col: 6 }
+      });
+    });
+
+    it('should normalize coordinates regardless of drag direction', () => {
+      // SCENARIO: User drags in reverse direction (bottom-right to top-left)
+
+      const emittedRanges: GridRange[] = [];
+      component.rangeSelected.subscribe((range: GridRange) => {
+        emittedRanges.push(range);
+      });
+
+      // Action: Start at bottom-right (5, 8)
+      const startEvent = new MouseEvent('mousedown', { button: 0 });
+      component.onGhostCellMouseDown(startEvent, 5, 8);
+
+      // Action: Drag to top-left (2, 3)
+      component.onGhostCellMouseEnter(2, 3);
+
+      // Action: Complete selection
+      const mouseUpEvent = new MouseEvent('mouseup');
+      document.dispatchEvent(mouseUpEvent);
+
+      // Verify: Coordinates are normalized (topLeft is min, bottomRight is max)
+      expect(emittedRanges.length).toBe(1);
+      expect(emittedRanges[0]).toEqual({
+        topLeft: { row: 2, col: 3 },
+        bottomRight: { row: 5, col: 8 }
+      });
+    });
+
+    it('should handle single-cell selection (click without drag)', () => {
+      // SCENARIO: User clicks a single cell without dragging
+
+      const emittedRanges: GridRange[] = [];
+      component.rangeSelected.subscribe((range: GridRange) => {
+        emittedRanges.push(range);
+      });
+
+      // Action: Click cell (3, 4) - start and end at same position
+      const startEvent = new MouseEvent('mousedown', { button: 0 });
+      component.onGhostCellMouseDown(startEvent, 3, 4);
+
+      // No drag - selectionCurrent stays at same position
+
+      // Action: Complete selection
+      const mouseUpEvent = new MouseEvent('mouseup');
+      document.dispatchEvent(mouseUpEvent);
+
+      // Verify: Single cell range emitted
+      expect(emittedRanges.length).toBe(1);
+      expect(emittedRanges[0]).toEqual({
+        topLeft: { row: 3, col: 4 },
+        bottomRight: { row: 3, col: 4 }
+      });
+    });
+
+    it('should clean up document listeners on component destroy', () => {
+      // SCENARIO: Component destroyed while selection active - prevent memory leaks
+
+      // Action: Start selection
+      const startEvent = new MouseEvent('mousedown', { button: 0 });
+      component.onGhostCellMouseDown(startEvent, 1, 1);
+
+      // Verify: Selection is active
+      expect(component.isSelecting()).toBe(true);
+
+      // Spy on document event removal (via renderer's listen cleanup)
+      let listenersCleaned = false;
+      const originalDestroy = fixture.destroy.bind(fixture);
+      fixture.destroy = () => {
+        originalDestroy();
+        listenersCleaned = true;
+      };
+
+      // Action: Destroy component
+      fixture.destroy();
+
+      // Verify: Cleanup occurred (listeners should be removed via DestroyRef)
+      expect(listenersCleaned).toBe(true);
+    });
+
+    it('should not trigger selection when enableSelection is false', () => {
+      // SCENARIO: Selection feature disabled, mouse events should not trigger selection
+
+      // Setup: Disable selection
+      fixture.componentRef.setInput('enableSelection', false);
+      fixture.detectChanges();
+
+      const emittedRanges: GridRange[] = [];
+      component.rangeSelected.subscribe((range: GridRange) => {
+        emittedRanges.push(range);
+      });
+
+      // Action: Attempt to start selection
+      const startEvent = new MouseEvent('mousedown', { button: 0 });
+      component.onGhostCellMouseDown(startEvent, 2, 3);
+
+      // Verify: Selection did not start
+      expect(component.isSelecting()).toBe(false);
+
+      // Action: Complete "selection"
+      const mouseUpEvent = new MouseEvent('mouseup');
+      document.dispatchEvent(mouseUpEvent);
+
+      // Verify: No range emitted
+      expect(emittedRanges.length).toBe(0);
+    });
+
+    it('should only respond to left mouse button', () => {
+      // SCENARIO: User right-clicks or middle-clicks - should not trigger selection
+
+      const emittedRanges: GridRange[] = [];
+      component.rangeSelected.subscribe((range: GridRange) => {
+        emittedRanges.push(range);
+      });
+
+      // Action: Right-click (button 2)
+      const rightClickEvent = new MouseEvent('mousedown', { button: 2 });
+      component.onGhostCellMouseDown(rightClickEvent, 2, 3);
+
+      // Verify: Selection did not start
+      expect(component.isSelecting()).toBe(false);
+
+      // Action: Middle-click (button 1)
+      const middleClickEvent = new MouseEvent('mousedown', { button: 1 });
+      component.onGhostCellMouseDown(middleClickEvent, 2, 3);
+
+      // Verify: Selection still did not start
+      expect(component.isSelecting()).toBe(false);
+
+      // Action: Left-click (button 0) - should work
+      const leftClickEvent = new MouseEvent('mousedown', { button: 0 });
+      component.onGhostCellMouseDown(leftClickEvent, 2, 3);
+
+      // Verify: Selection started
+      expect(component.isSelecting()).toBe(true);
+
+      // Cleanup
+      const mouseUpEvent = new MouseEvent('mouseup');
+      document.dispatchEvent(mouseUpEvent);
     });
   });
 });

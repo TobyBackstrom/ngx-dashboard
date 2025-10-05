@@ -17,7 +17,7 @@ import {
   SimpleChanges,
   untracked,
 } from '@angular/core';
-import { DashboardViewerComponent, CellSelectionBounds } from '../dashboard-viewer/dashboard-viewer.component';
+import { DashboardViewerComponent, GridRange } from '../dashboard-viewer/dashboard-viewer.component';
 import { DashboardEditorComponent } from '../dashboard-editor/dashboard-editor.component';
 import { DashboardStore } from '../store/dashboard-store';
 import { DashboardDataDto } from '../models/dashboard-data.dto';
@@ -60,7 +60,7 @@ export class DashboardComponent implements OnChanges {
   enableSelection = input<boolean>(false);
 
   // Component outputs
-  cellsSelected = output<CellSelectionBounds>();
+  rangeSelected = output<GridRange>();
 
   // Store signals - shared by both child components
   cells = this.#store.cells;
