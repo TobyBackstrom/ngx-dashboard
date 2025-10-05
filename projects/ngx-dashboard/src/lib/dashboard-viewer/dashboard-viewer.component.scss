@@ -10,6 +10,7 @@
   aspect-ratio: var(--columns) / var(--rows);
   width: 100%;
   height: auto;
+  position: relative; // For absolute positioning of overlay
 
   background-color: var(--mat-sys-surface-container);
 }
@@ -47,4 +48,48 @@
 .top-grid {
   z-index: 2;
   pointer-events: none;
+}
+
+/* Selection overlay - mirror grid for cell selection */
+.selection-overlay-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  // Mirror the main grid's layout exactly
+  display: grid;
+  gap: var(--gutter-size);
+  padding: var(--gutter-size);
+  grid-template-columns: repeat(var(--columns), var(--cell-size));
+  grid-template-rows: repeat(var(--rows), var(--cell-size));
+
+  z-index: 5; // Above cells to block all interactions
+  pointer-events: auto; // Block all mouse events from reaching cells below
+  user-select: none; // Prevent text selection during drag
+}
+
+.selection-ghost-cell {
+  cursor: crosshair;
+  transition: background-color 0.1s ease, border-radius 0.1s ease;
+  border-radius: 2px;
+
+  // Hover effect when not selecting
+  &:hover:not(.selecting) {
+    background-color: var(--mat-sys-primary);
+    opacity: 0.08;
+  }
+
+  // Active selection state
+  &.selected {
+    background-color: var(--mat-sys-primary);
+    opacity: 0.25;
+    border-radius: 4px;
+  }
+
+  // Cursor during active selection
+  &.selecting {
+    cursor: crosshair;
+  }
 }

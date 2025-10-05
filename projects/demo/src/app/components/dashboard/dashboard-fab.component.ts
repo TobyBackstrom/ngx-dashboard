@@ -28,15 +28,17 @@ export class DashboardFabComponent {
   loadFromLocalStorage = output<void>();
   clearDashboard = output<void>();
   resetToDefault = output<void>();
+  selectToggle = output<void>();
 
-  // Edit mode input (will be passed from parent)
+  // Edit mode and select mode inputs (will be passed from parent)
   editMode = signal(false);
+  selectMode = signal(false);
 
   /**
    * Toggle the speed dial menu
    */
   toggleSpeedDial(): void {
-    this.isSpeedDialOpen.update(open => !open);
+    this.isSpeedDialOpen.update((open) => !open);
   }
 
   /**
@@ -51,7 +53,7 @@ export class DashboardFabComponent {
    */
   onAction(action: string): void {
     this.closeSpeedDial();
-    
+
     switch (action) {
       case 'editMode':
         this.editModeToggle.emit();
@@ -74,6 +76,9 @@ export class DashboardFabComponent {
       case 'reset':
         this.resetToDefault.emit();
         break;
+      case 'select':
+        this.selectToggle.emit();
+        break;
     }
   }
 
@@ -82,6 +87,22 @@ export class DashboardFabComponent {
    */
   setEditMode(editMode: boolean): void {
     this.editMode.set(editMode);
+  }
+
+  /**
+   * Set select mode from parent
+   */
+  setSelectMode(selectMode: boolean): void {
+    this.selectMode.set(selectMode);
+  }
+
+  /**
+   * Get select mode toggle tooltip
+   */
+  getSelectModeTooltip(): string {
+    return this.selectMode()
+      ? $localize`:@@demo.dashboard.cancelSelect:Cancel Select`
+      : $localize`:@@demo.dashboard.selectArea:Select Area`;
   }
 
   /**

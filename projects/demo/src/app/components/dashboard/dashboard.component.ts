@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
   signal,
   effect,
+  HostListener,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { httpResource } from '@angular/common/http';
@@ -15,6 +16,7 @@ import {
   createEmptyDashboard,
   ReservedSpace,
   DashboardDataDto,
+  CellSelectionBounds,
 } from '@dragonworks/ngx-dashboard';
 import {
   FilePersistenceService,
@@ -39,13 +41,15 @@ export class DashboardComponent {
 
   // Dashboard resource for auto-loading with dynamic base href
   protected dashboardResource = httpResource<DashboardDataDto | null>(() => {
-    const baseHref = this.document.querySelector('base')?.href || window.location.origin + '/';
+    const baseHref =
+      this.document.querySelector('base')?.href || window.location.origin + '/';
     const dashboardUrl = new URL('demo-dashboard.json', baseHref).href;
     return { url: dashboardUrl };
   });
 
   // Local state
   protected editMode = signal(false);
+  protected selectMode = signal(false);
 
   // Dashboard configuration
   protected dashboardConfig = createEmptyDashboard(
@@ -71,6 +75,11 @@ export class DashboardComponent {
           this.dashboard().loadDashboard(dashboardData);
         });
       }
+    });
+
+    // Sync select mode with FAB
+    effect(() => {
+      this.fab().setSelectMode(this.selectMode());
     });
   }
 
@@ -173,5 +182,35 @@ export class DashboardComponent {
   onResetToDefault(): void {
     // Trigger reload of the resource - effect will handle the loading automatically
     this.dashboardResource.reload();
+  }
+
+  onCellsSelected(selection: CellSelectionBounds): void {
+    console.log('Selected cells:', selection);
+    // Reset select mode after selection
+    this.selectMode.set(false);
+  }
+
+  /**
+   * Toggle select mode - enables area selection
+   */
+  onSelectToggle(): void {
+    this.selectMode.update((mode) => !mode);
+  }
+
+  /**
+   * Cancel select mode
+   */
+  cancelSelect(): void {
+    this.selectMode.set(false);
+  }
+
+  /**
+   * Handle ESC key to cancel select mode
+   */
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.selectMode()) {
+      this.cancelSelect();
+    }
   }
 }

@@ -1,5 +1,5 @@
 <!-- Dashboard viewer - read-only grid -->
-<div class="grid top-grid">
+<div class="grid top-grid" #gridElement>
   @for (cell of cells(); track cell.widgetId) {
     <lib-cell
       class="grid-cell"
@@ -18,3 +18,22 @@
     </lib-cell>
   }
 </div>
+
+<!-- Selection overlay grid - mirror of main grid for cell selection -->
+@if (enableSelection()) {
+  <div class="selection-overlay-grid">
+    @for (row of rowNumbers(); track row) {
+      @for (col of colNumbers(); track col) {
+        <div
+          class="selection-ghost-cell"
+          [class.selected]="isCellSelected(row, col)"
+          [class.selecting]="isSelecting()"
+          [style.grid-row]="row"
+          [style.grid-column]="col"
+          (mousedown)="onGhostCellMouseDown($event, row, col)"
+          (mouseenter)="onGhostCellMouseEnter(row, col)"
+        ></div>
+      }
+    }
+  </div>
+}

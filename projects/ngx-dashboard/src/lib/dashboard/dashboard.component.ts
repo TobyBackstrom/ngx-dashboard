@@ -10,13 +10,14 @@ import {
   effect,
   inject,
   input,
+  output,
   viewChild,
   DestroyRef,
   OnChanges,
   SimpleChanges,
   untracked,
 } from '@angular/core';
-import { DashboardViewerComponent } from '../dashboard-viewer/dashboard-viewer.component';
+import { DashboardViewerComponent, CellSelectionBounds } from '../dashboard-viewer/dashboard-viewer.component';
 import { DashboardEditorComponent } from '../dashboard-editor/dashboard-editor.component';
 import { DashboardStore } from '../store/dashboard-store';
 import { DashboardDataDto } from '../models/dashboard-data.dto';
@@ -56,6 +57,10 @@ export class DashboardComponent implements OnChanges {
   dashboardData = input.required<DashboardDataDto>();
   editMode = input<boolean>(false);
   reservedSpace = input<ReservedSpace>();
+  enableSelection = input<boolean>(false);
+
+  // Component outputs
+  cellsSelected = output<CellSelectionBounds>();
 
   // Store signals - shared by both child components
   cells = this.#store.cells;

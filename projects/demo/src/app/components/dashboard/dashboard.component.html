@@ -5,6 +5,8 @@
       [dashboardData]="dashboardConfig"
       [editMode]="editMode()"
       [reservedSpace]="dashboardReservedSpace()"
+      [enableSelection]="selectMode()"
+      (cellsSelected)="onCellsSelected($event)"
     >
     </ngx-dashboard>
   </div>
@@ -24,4 +26,5 @@
   (loadFromLocalStorage)="onLoadFromLocalStorage()"
   (clearDashboard)="onClearDashboard()"
   (resetToDefault)="onResetToDefault()"
+  (selectToggle)="onSelectToggle()"
 ></app-dashboard-fab>

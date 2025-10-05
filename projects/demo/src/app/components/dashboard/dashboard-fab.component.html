@@ -74,6 +74,18 @@
       <mat-icon>delete</mat-icon>
     </button>
 
+    <!-- Area Selection -->
+    <button
+      mat-mini-fab
+      class="speed-dial-action"
+      (click)="onAction('select')"
+      [matTooltip]="getSelectModeTooltip()"
+      matTooltipPosition="left"
+      [color]="selectMode() ? 'accent' : undefined"
+    >
+      <mat-icon>{{ selectMode() ? "close" : "select_all" }}</mat-icon>
+    </button>
+
     <!-- Edit/View Mode Toggle -->
     <button
       mat-mini-fab
