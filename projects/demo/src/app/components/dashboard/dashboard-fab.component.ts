@@ -9,6 +9,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+/**
+ * Valid dashboard action types
+ */
+type DashboardAction =
+  | 'editMode'
+  | 'export'
+  | 'import'
+  | 'save'
+  | 'load'
+  | 'clear'
+  | 'reset'
+  | 'select';
+
 @Component({
   selector: 'app-dashboard-fab',
   imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
@@ -35,6 +48,21 @@ export class DashboardFabComponent {
   selectMode = signal(false);
 
   /**
+   * Command map for action handlers
+   * Maps each action type to its corresponding output emission
+   */
+  private readonly actionHandlers: Record<DashboardAction, () => void> = {
+    editMode: () => this.editModeToggle.emit(),
+    export: () => this.exportToFile.emit(),
+    import: () => this.importFromFile.emit(),
+    save: () => this.saveToLocalStorage.emit(),
+    load: () => this.loadFromLocalStorage.emit(),
+    clear: () => this.clearDashboard.emit(),
+    reset: () => this.resetToDefault.emit(),
+    select: () => this.selectToggle.emit(),
+  };
+
+  /**
    * Toggle the speed dial menu
    */
   toggleSpeedDial(): void {
@@ -50,36 +78,11 @@ export class DashboardFabComponent {
 
   /**
    * Handle action click and emit to parent
+   * Uses command map pattern for extensibility
    */
-  onAction(action: string): void {
+  onAction(action: DashboardAction): void {
     this.closeSpeedDial();
-
-    switch (action) {
-      case 'editMode':
-        this.editModeToggle.emit();
-        break;
-      case 'export':
-        this.exportToFile.emit();
-        break;
-      case 'import':
-        this.importFromFile.emit();
-        break;
-      case 'save':
-        this.saveToLocalStorage.emit();
-        break;
-      case 'load':
-        this.loadFromLocalStorage.emit();
-        break;
-      case 'clear':
-        this.clearDashboard.emit();
-        break;
-      case 'reset':
-        this.resetToDefault.emit();
-        break;
-      case 'select':
-        this.selectToggle.emit();
-        break;
-    }
+    this.actionHandlers[action]?.();
   }
 
   /**
