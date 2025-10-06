@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 import { CellComponent } from '../cell/cell.component';
 import { DashboardStore } from '../store/dashboard-store';
 
-export interface GridRange {
+export interface GridRegion {
   topLeft: { row: number; col: number };
   bottomRight: { row: number; col: number };
 }
@@ -51,7 +51,7 @@ export class DashboardViewerComponent {
 
   // Selection feature
   enableSelection = input<boolean>(false);
-  rangeSelected = output<GridRange>();
+  regionSelected = output<GridRegion>();
 
   // store signals - read-only
   cells = this.#store.cells;
@@ -183,7 +183,7 @@ export class DashboardViewerComponent {
     // Emit selection event
     const bounds = this.selectionBounds();
     if (bounds) {
-      this.rangeSelected.emit({
+      this.regionSelected.emit({
         topLeft: { row: bounds.startRow, col: bounds.startCol },
         bottomRight: { row: bounds.endRow, col: bounds.endCol },
       });

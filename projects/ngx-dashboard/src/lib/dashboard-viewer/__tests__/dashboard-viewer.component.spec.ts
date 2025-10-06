@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, signal } from '@angular/core';
-import { DashboardViewerComponent, GridRange } from '../dashboard-viewer.component';
+import { DashboardViewerComponent, GridRegion } from '../dashboard-viewer.component';
 import { DashboardStore } from '../../store/dashboard-store';
 import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, Widget } from '../../models';
 
@@ -196,12 +196,12 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       fixture.detectChanges();
     });
 
-    it('should emit GridRange when selection completes', () => {
+    it('should emit GridRegion when selection completes', () => {
       // SCENARIO: User drags to select cells, selection completes on mouse up
 
-      const emittedRanges: GridRange[] = [];
-      component.rangeSelected.subscribe((range: GridRange) => {
-        emittedRanges.push(range);
+      const emittedRegions: GridRegion[] = [];
+      component.regionSelected.subscribe((region: GridRegion) => {
+        emittedRegions.push(region);
       });
 
       // Action: Start selection at (2, 3)
@@ -215,9 +215,9 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       const mouseUpEvent = new MouseEvent('mouseup');
       document.dispatchEvent(mouseUpEvent);
 
-      // Verify: GridRange emitted with correct normalized coordinates
-      expect(emittedRanges.length).toBe(1);
-      expect(emittedRanges[0]).toEqual({
+      // Verify: GridRegion emitted with correct normalized coordinates
+      expect(emittedRegions.length).toBe(1);
+      expect(emittedRegions[0]).toEqual({
         topLeft: { row: 2, col: 3 },
         bottomRight: { row: 4, col: 6 }
       });
@@ -226,9 +226,9 @@ describe('DashboardViewerComponent - Integration Tests', () => {
     it('should normalize coordinates regardless of drag direction', () => {
       // SCENARIO: User drags in reverse direction (bottom-right to top-left)
 
-      const emittedRanges: GridRange[] = [];
-      component.rangeSelected.subscribe((range: GridRange) => {
-        emittedRanges.push(range);
+      const emittedRegions: GridRegion[] = [];
+      component.regionSelected.subscribe((region: GridRegion) => {
+        emittedRegions.push(region);
       });
 
       // Action: Start at bottom-right (5, 8)
@@ -243,8 +243,8 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       document.dispatchEvent(mouseUpEvent);
 
       // Verify: Coordinates are normalized (topLeft is min, bottomRight is max)
-      expect(emittedRanges.length).toBe(1);
-      expect(emittedRanges[0]).toEqual({
+      expect(emittedRegions.length).toBe(1);
+      expect(emittedRegions[0]).toEqual({
         topLeft: { row: 2, col: 3 },
         bottomRight: { row: 5, col: 8 }
       });
@@ -253,9 +253,9 @@ describe('DashboardViewerComponent - Integration Tests', () => {
     it('should handle single-cell selection (click without drag)', () => {
       // SCENARIO: User clicks a single cell without dragging
 
-      const emittedRanges: GridRange[] = [];
-      component.rangeSelected.subscribe((range: GridRange) => {
-        emittedRanges.push(range);
+      const emittedRegions: GridRegion[] = [];
+      component.regionSelected.subscribe((region: GridRegion) => {
+        emittedRegions.push(region);
       });
 
       // Action: Click cell (3, 4) - start and end at same position
@@ -268,9 +268,9 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       const mouseUpEvent = new MouseEvent('mouseup');
       document.dispatchEvent(mouseUpEvent);
 
-      // Verify: Single cell range emitted
-      expect(emittedRanges.length).toBe(1);
-      expect(emittedRanges[0]).toEqual({
+      // Verify: Single cell region emitted
+      expect(emittedRegions.length).toBe(1);
+      expect(emittedRegions[0]).toEqual({
         topLeft: { row: 3, col: 4 },
         bottomRight: { row: 3, col: 4 }
       });
@@ -308,9 +308,9 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       fixture.componentRef.setInput('enableSelection', false);
       fixture.detectChanges();
 
-      const emittedRanges: GridRange[] = [];
-      component.rangeSelected.subscribe((range: GridRange) => {
-        emittedRanges.push(range);
+      const emittedRegions: GridRegion[] = [];
+      component.regionSelected.subscribe((region: GridRegion) => {
+        emittedRegions.push(region);
       });
 
       // Action: Attempt to start selection
@@ -324,16 +324,16 @@ describe('DashboardViewerComponent - Integration Tests', () => {
       const mouseUpEvent = new MouseEvent('mouseup');
       document.dispatchEvent(mouseUpEvent);
 
-      // Verify: No range emitted
-      expect(emittedRanges.length).toBe(0);
+      // Verify: No region emitted
+      expect(emittedRegions.length).toBe(0);
     });
 
     it('should only respond to left mouse button', () => {
       // SCENARIO: User right-clicks or middle-clicks - should not trigger selection
 
-      const emittedRanges: GridRange[] = [];
-      component.rangeSelected.subscribe((range: GridRange) => {
-        emittedRanges.push(range);
+      const emittedRegions: GridRegion[] = [];
+      component.regionSelected.subscribe((region: GridRegion) => {
+        emittedRegions.push(region);
       });
 
       // Action: Right-click (button 2)

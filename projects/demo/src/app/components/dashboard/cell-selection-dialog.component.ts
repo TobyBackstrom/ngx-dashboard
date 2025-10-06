@@ -5,7 +5,7 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { GridRange } from '@dragonworks/ngx-dashboard';
+import { GridRegion } from '@dragonworks/ngx-dashboard';
 
 @Component({
   selector: 'app-cell-selection-dialog',
@@ -76,7 +76,7 @@ import { GridRange } from '@dragonworks/ngx-dashboard';
   ],
 })
 export class CellSelectionDialogComponent {
-  protected readonly data = inject<GridRange>(MAT_DIALOG_DATA);
+  protected readonly data = inject<GridRegion>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(
     MatDialogRef<CellSelectionDialogComponent>
   );

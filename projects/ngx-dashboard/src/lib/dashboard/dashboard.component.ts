@@ -17,7 +17,7 @@ import {
   SimpleChanges,
   untracked,
 } from '@angular/core';
-import { DashboardViewerComponent, GridRange } from '../dashboard-viewer/dashboard-viewer.component';
+import { DashboardViewerComponent, GridRegion } from '../dashboard-viewer/dashboard-viewer.component';
 import { DashboardEditorComponent } from '../dashboard-editor/dashboard-editor.component';
 import { DashboardStore } from '../store/dashboard-store';
 import { DashboardDataDto } from '../models/dashboard-data.dto';
@@ -61,7 +61,7 @@ export class DashboardComponent implements OnChanges {
   enableSelection = input<boolean>(false);
 
   // Component outputs
-  rangeSelected = output<GridRange>();
+  regionSelected = output<GridRegion>();
 
   // Store signals - shared by both child components
   cells = this.#store.cells;
