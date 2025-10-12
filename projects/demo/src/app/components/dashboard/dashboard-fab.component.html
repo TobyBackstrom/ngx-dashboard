@@ -74,7 +74,8 @@
       <mat-icon>delete</mat-icon>
     </button>
 
-    <!-- Area Selection -->
+    <!-- Area Selection (only available in view mode) -->
+    @if (!editMode()) {
     <button
       mat-mini-fab
       class="speed-dial-action"
@@ -85,6 +86,7 @@
     >
       <mat-icon>{{ selectMode() ? "close" : "select_all" }}</mat-icon>
     </button>
+    }
 
     <!-- Edit/View Mode Toggle -->
     <button

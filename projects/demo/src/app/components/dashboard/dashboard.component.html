@@ -35,6 +35,8 @@
 @if (!selectMode()) {
 <app-dashboard-fab
   #fab
+  [editMode]="editMode()"
+  [selectMode]="selectMode()"
   (editModeToggle)="onEditModeToggle()"
   (exportToFile)="onExportToFile()"
   (importFromFile)="onImportFromFile()"

@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   signal,
   output,
+  input,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -43,9 +44,9 @@ export class DashboardFabComponent {
   resetToDefault = output<void>();
   selectToggle = output<void>();
 
-  // Edit mode and select mode inputs (will be passed from parent)
-  editMode = signal(false);
-  selectMode = signal(false);
+  // Edit mode and select mode inputs from parent
+  editMode = input(false);
+  selectMode = input(false);
 
   /**
    * Command map for action handlers
@@ -83,20 +84,6 @@ export class DashboardFabComponent {
   onAction(action: DashboardAction): void {
     this.closeSpeedDial();
     this.actionHandlers[action]?.();
-  }
-
-  /**
-   * Set edit mode from parent
-   */
-  setEditMode(editMode: boolean): void {
-    this.editMode.set(editMode);
-  }
-
-  /**
-   * Set select mode from parent
-   */
-  setSelectMode(selectMode: boolean): void {
-    this.selectMode.set(selectMode);
   }
 
   /**

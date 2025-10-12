@@ -76,7 +76,6 @@ export class DashboardComponent {
 
   // Component references
   dashboard = viewChild.required<NgxDashboardComponent>('dashboard');
-  fab = viewChild.required<DashboardFabComponent>('fab');
 
   constructor() {
     // Auto-load dashboard when resource resolves - use queueMicrotask for ViewChild availability
@@ -105,10 +104,14 @@ export class DashboardComponent {
 
   /**
    * Toggle edit mode
+   * Automatically disables selection mode when entering edit mode
    */
   onEditModeToggle(): void {
     this.editMode.update((mode) => !mode);
-    this.fab().setEditMode(this.editMode());
+    // Disable selection mode when entering edit mode
+    if (this.editMode()) {
+      this.selectMode.set(false);
+    }
   }
 
   /**
@@ -212,7 +215,6 @@ export class DashboardComponent {
 
       // Reset select mode after dialog closes
       this.selectMode.set(false);
-      this.fab().setSelectMode(false);
     });
   }
 
@@ -221,7 +223,6 @@ export class DashboardComponent {
    */
   onSelectToggle(): void {
     this.selectMode.update((mode) => !mode);
-    this.fab().setSelectMode(this.selectMode());
 
     // Show instructions when entering selection mode
     if (this.selectMode()) {
@@ -241,7 +242,6 @@ export class DashboardComponent {
    */
   cancelSelect(): void {
     this.selectMode.set(false);
-    this.fab().setSelectMode(false);
   }
 
   /**
