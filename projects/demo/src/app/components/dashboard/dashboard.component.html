@@ -16,7 +16,23 @@
   }
 </div>
 
+<!-- Selection Mode: Cancel Button -->
+@if (selectMode()) {
+<button
+  mat-fab
+  class="cancel-selection-fab"
+  (click)="cancelSelect()"
+  matTooltip="Cancel Selection (ESC)"
+  i18n-matTooltip="@@demo.dashboard.cancelSelectionEsc"
+  matTooltipPosition="left"
+  color="warn"
+>
+  <mat-icon>close</mat-icon>
+</button>
+}
+
 <!-- Dashboard FAB with Speed Dial -->
+@if (!selectMode()) {
 <app-dashboard-fab
   #fab
   (editModeToggle)="onEditModeToggle()"
@@ -28,3 +44,4 @@
   (resetToDefault)="onResetToDefault()"
   (selectToggle)="onSelectToggle()"
 ></app-dashboard-fab>
+}

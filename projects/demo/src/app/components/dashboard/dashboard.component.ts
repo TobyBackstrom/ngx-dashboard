@@ -11,6 +11,10 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   DashboardComponent as NgxDashboardComponent,
   WidgetListComponent,
@@ -28,7 +32,14 @@ import { CellSelectionDialogComponent } from './cell-selection-dialog.component'
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgxDashboardComponent, WidgetListComponent, DashboardFabComponent],
+  imports: [
+    NgxDashboardComponent,
+    WidgetListComponent,
+    DashboardFabComponent,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +52,7 @@ export class DashboardComponent {
   );
   private document = inject(DOCUMENT);
   private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
 
   // Dashboard resource for auto-loading with dynamic base href
   protected dashboardResource = httpResource<DashboardDataDto | null>(() => {
@@ -209,6 +221,18 @@ export class DashboardComponent {
    */
   onSelectToggle(): void {
     this.selectMode.update((mode) => !mode);
+
+    // Show instructions when entering selection mode
+    if (this.selectMode()) {
+      this.snackBar.open(
+        $localize`:@@demo.dashboard.selectionModeInstructions:Drag to select area • Press ESC to cancel`,
+        undefined,
+        {
+          duration: 4000,
+          panelClass: 'centered-snackbar',
+        }
+      );
+    }
   }
 
   /**

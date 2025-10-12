@@ -189,3 +189,10 @@ body {
     background-color: var(--mat-sys-surface);
   }
 }
+
+// Centered snackbar for selection mode instructions
+.centered-snackbar {
+  .mat-mdc-snack-bar-label {
+    text-align: center;
+  }
+}
