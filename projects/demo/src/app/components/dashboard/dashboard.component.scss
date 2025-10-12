@@ -52,3 +52,29 @@
   right: 24px;
   z-index: 1000;
 }
+
+// Exit zoom FAB - positioned like the main FAB
+.exit-zoom-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+}
+
+// Zoom mode indicator
+.zoom-indicator {
+  position: fixed;
+  top: 72px; // Below toolbar
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--mat-sys-inverse-surface);
+  color: var(--mat-sys-inverse-on-surface);
+  padding: 8px 16px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 50;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}

@@ -1,3 +1,11 @@
+<!-- Zoom Mode Indicator -->
+@if (isZoomed()) {
+<div class="zoom-indicator">
+  <mat-icon>zoom_in</mat-icon>
+  <span i18n="@@demo.dashboard.zoomModeActive">Zoom Mode Active</span>
+</div>
+}
+
 <div class="dashboard-viewport-container">
   <div class="dashboard-wrapper">
     <ngx-dashboard
@@ -31,8 +39,23 @@
 </button>
 }
 
-<!-- Dashboard FAB with Speed Dial -->
-@if (!selectMode()) {
+<!-- Zoom Mode: Exit Zoom FAB -->
+@if (isZoomed()) {
+<button
+  mat-fab
+  class="exit-zoom-fab"
+  (click)="exitZoom()"
+  matTooltip="Exit Zoom (ESC)"
+  i18n-matTooltip="@@demo.dashboard.exitZoomEsc"
+  matTooltipPosition="left"
+  color="accent"
+>
+  <mat-icon>zoom_out</mat-icon>
+</button>
+}
+
+<!-- Normal Mode: Dashboard FAB with Speed Dial -->
+@if (!selectMode() && !isZoomed()) {
 <app-dashboard-fab
   #fab
   [editMode]="editMode()"

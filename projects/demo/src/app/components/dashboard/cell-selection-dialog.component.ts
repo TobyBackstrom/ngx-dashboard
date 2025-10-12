@@ -41,6 +41,7 @@ import { GridSelection } from '@dragonworks/ngx-dashboard';
 
     <mat-dialog-actions align="end">
       <button mat-button (click)="onCancel()" i18n="@@demo.common.cancel">Cancel</button>
+      <button mat-flat-button (click)="onZoom()" color="accent" i18n="@@demo.dashboard.zoomToSelection">Zoom to Selection</button>
       <button mat-flat-button (click)="onOk()" i18n="@@demo.common.ok">OK</button>
     </mat-dialog-actions>
   `,
@@ -95,5 +96,9 @@ export class CellSelectionDialogComponent {
 
   onOk(): void {
     this.dialogRef.close(true);
+  }
+
+  onZoom(): void {
+    this.dialogRef.close('zoom');
   }
 }

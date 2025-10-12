@@ -153,10 +153,11 @@ export class DashboardComponent implements OnChanges {
 
   // Public export/import methods (overloaded for selection support)
   exportDashboard(): DashboardDataDto;
-  exportDashboard(selection: GridSelection): DashboardDataDto;
-  exportDashboard(selection?: GridSelection): DashboardDataDto {
+  exportDashboard(selection: GridSelection, useMinimalBounds?: boolean): DashboardDataDto;
+  exportDashboard(selection?: GridSelection, useMinimalBounds?: boolean): DashboardDataDto {
     // Export dashboard with live widget states, optionally filtering by selection
-    return this.#store.exportDashboard(() => this.getCurrentWidgetStates(), selection);
+    const options = useMinimalBounds !== undefined ? { useMinimalBounds } : undefined;
+    return this.#store.exportDashboard(() => this.getCurrentWidgetStates(), selection, options);
   }
 
   loadDashboard(data: DashboardDataDto): void {

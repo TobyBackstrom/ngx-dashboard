@@ -9,7 +9,7 @@ import {
 import { DashboardService } from '../services/dashboard.service';
 import { inject, computed } from '@angular/core';
 import { calculateCollisionInfo } from './features/utils/collision.utils';
-import { applySelectionFilter } from './features/utils/export.utils';
+import { applySelectionFilter, SelectionFilterOptions } from './features/utils/export.utils';
 import {
   CellId,
   CellIdUtils,
@@ -118,7 +118,8 @@ export const DashboardStore = signalStore(
     // EXPORT/IMPORT METHODS (need access to multiple features)
     exportDashboard(
       getCurrentWidgetStates?: () => Map<string, unknown>,
-      selection?: GridSelection
+      selection?: GridSelection,
+      selectionOptions?: SelectionFilterOptions
     ): DashboardDataDto {
       // Get live widget states if callback provided, otherwise use stored states
       const liveWidgetStates =
@@ -133,7 +134,7 @@ export const DashboardStore = signalStore(
 
       // Apply selection filtering if specified
       if (selection) {
-        const selectionResult = applySelectionFilter(selection, store.cells());
+        const selectionResult = applySelectionFilter(selection, store.cells(), selectionOptions);
         widgetsToExport = selectionResult.cells;
         exportRows = selectionResult.rows;
         exportColumns = selectionResult.columns;

@@ -65,6 +65,8 @@ export class DashboardComponent {
   // Local state
   protected editMode = signal(false);
   protected selectMode = signal(false);
+  protected isZoomed = signal(false);
+  protected originalDashboard = signal<DashboardDataDto | null>(null);
 
   // Dashboard configuration
   protected dashboardConfig = createEmptyDashboard(
@@ -198,10 +200,6 @@ export class DashboardComponent {
   }
 
   onSelectionComplete(selection: GridSelection): void {
-    // Export the selected area and log to console
-    const exportedData = this.dashboard().exportDashboard(selection);
-    console.log('Exported dashboard data for selection:', exportedData);
-
     const dialogRef = this.dialog.open(CellSelectionDialogComponent, {
       width: '400px',
       maxWidth: '90vw',
@@ -210,10 +208,31 @@ export class DashboardComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      // result will be true if OK was clicked, false if Cancel was clicked, or undefined if dialog was dismissed
-      console.log('Dialog result:', result);
+      if (result === 'zoom') {
+        // Store the current dashboard state before zooming
+        const currentDashboard = this.dashboard().exportDashboard();
+        this.originalDashboard.set(currentDashboard);
 
-      // Reset select mode after dialog closes
+        // Export and load the zoomed area with minimal bounding box
+        const zoomedData = this.dashboard().exportDashboard(selection, true);
+        this.dashboard().loadDashboard(zoomedData);
+
+        // Enter zoom mode
+        this.isZoomed.set(true);
+
+        // Show zoom indicator
+        this.snackBar.open(
+          $localize`:@@demo.dashboard.zoomModeActive:Zoomed in • Press ESC to exit`,
+          undefined,
+          { duration: 3000 }
+        );
+      } else if (result === true) {
+        // Log the selection if OK was clicked (original behavior - no minimal bounds)
+        const exportedData = this.dashboard().exportDashboard(selection, false);
+        console.log('Exported dashboard data for selection:', exportedData);
+      }
+
+      // Always reset select mode after dialog closes
       this.selectMode.set(false);
     });
   }
@@ -245,11 +264,31 @@ export class DashboardComponent {
   }
 
   /**
-   * Handle ESC key to cancel select mode
+   * Exit zoom mode and restore original dashboard
+   */
+  exitZoom(): void {
+    const original = this.originalDashboard();
+    if (original && this.isZoomed()) {
+      this.dashboard().loadDashboard(original);
+      this.originalDashboard.set(null);
+      this.isZoomed.set(false);
+
+      this.snackBar.open(
+        $localize`:@@demo.dashboard.exitedZoom:Returned to full dashboard`,
+        undefined,
+        { duration: 2000 }
+      );
+    }
+  }
+
+  /**
+   * Handle ESC key to cancel select mode or exit zoom
    */
   @HostListener('document:keydown.escape')
   onEscapeKey(): void {
-    if (this.selectMode()) {
+    if (this.isZoomed()) {
+      this.exitZoom();
+    } else if (this.selectMode()) {
       this.cancelSelect();
     }
   }
