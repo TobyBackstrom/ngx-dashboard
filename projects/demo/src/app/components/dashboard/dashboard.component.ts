@@ -91,11 +91,6 @@ export class DashboardComponent {
         });
       }
     });
-
-    // Sync select mode with FAB
-    effect(() => {
-      this.fab().setSelectMode(this.selectMode());
-    });
   }
 
   // Reserved space configuration for viewport constraints
@@ -200,6 +195,10 @@ export class DashboardComponent {
   }
 
   onSelectionComplete(selection: GridSelection): void {
+    // Export the selected area and log to console
+    const exportedData = this.dashboard().exportDashboard(selection);
+    console.log('Exported dashboard data for selection:', exportedData);
+
     const dialogRef = this.dialog.open(CellSelectionDialogComponent, {
       width: '400px',
       maxWidth: '90vw',
@@ -213,6 +212,7 @@ export class DashboardComponent {
 
       // Reset select mode after dialog closes
       this.selectMode.set(false);
+      this.fab().setSelectMode(false);
     });
   }
 
@@ -221,6 +221,7 @@ export class DashboardComponent {
    */
   onSelectToggle(): void {
     this.selectMode.update((mode) => !mode);
+    this.fab().setSelectMode(this.selectMode());
 
     // Show instructions when entering selection mode
     if (this.selectMode()) {
@@ -240,6 +241,7 @@ export class DashboardComponent {
    */
   cancelSelect(): void {
     this.selectMode.set(false);
+    this.fab().setSelectMode(false);
   }
 
   /**
