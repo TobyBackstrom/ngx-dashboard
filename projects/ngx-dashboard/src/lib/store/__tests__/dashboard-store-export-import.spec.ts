@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto } from '../../models';
-import { GridSelection } from '../../dashboard-viewer/dashboard-viewer.component';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto, GridSelection } from '../../models';
 
 describe('DashboardStore - Export/Import Functionality', () => {
   let store: InstanceType<typeof DashboardStore>;

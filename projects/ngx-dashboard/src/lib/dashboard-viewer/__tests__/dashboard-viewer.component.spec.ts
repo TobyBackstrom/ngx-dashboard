@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, signal } from '@angular/core';
-import { DashboardViewerComponent, GridSelection } from '../dashboard-viewer.component';
+import { DashboardViewerComponent } from '../dashboard-viewer.component';
 import { DashboardStore } from '../../store/dashboard-store';
-import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, Widget } from '../../models';
+import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, Widget, GridSelection } from '../../models';
 
 // Mock test widget component
 @Component({

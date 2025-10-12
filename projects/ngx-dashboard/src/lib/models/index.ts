@@ -6,6 +6,7 @@ export * from './cell-dialog';
 export * from './dashboard-data.dto';
 export * from './dashboard-data.utils';
 export * from './drag-data';
+export * from './grid-selection';
 export * from './reserved-space';
 export * from './widget';
 export * from './widget-factory';

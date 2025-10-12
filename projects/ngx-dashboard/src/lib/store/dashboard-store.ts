@@ -17,8 +17,8 @@ import {
   DragData,
   DashboardDataDto,
   WidgetIdUtils,
+  GridSelection,
 } from '../models';
-import { GridSelection } from '../dashboard-viewer/dashboard-viewer.component';
 import { withGridConfig } from './features/grid-config.feature';
 import { withWidgetManagement } from './features/widget-management.feature';
 import { withDragDrop } from './features/drag-drop.feature';

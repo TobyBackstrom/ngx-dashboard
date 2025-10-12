@@ -16,11 +16,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { CellComponent } from '../cell/cell.component';
 import { DashboardStore } from '../store/dashboard-store';
-
-export interface GridSelection {
-  topLeft: { row: number; col: number };
-  bottomRight: { row: number; col: number };
-}
+import { GridSelection } from '../models/grid-selection';
 
 @Component({
   selector: 'ngx-dashboard-viewer',

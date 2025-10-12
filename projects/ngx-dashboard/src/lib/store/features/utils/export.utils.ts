@@ -1,5 +1,4 @@
-import { CellData } from '../../../models';
-import { GridSelection } from '../../../dashboard-viewer/dashboard-viewer.component';
+import { CellData, GridSelection } from '../../../models';
 
 /**
  * Result of applying selection filtering to dashboard cells.

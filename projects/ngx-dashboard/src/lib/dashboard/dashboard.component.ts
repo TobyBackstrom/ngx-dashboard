@@ -17,14 +17,14 @@ import {
   SimpleChanges,
   untracked,
 } from '@angular/core';
-import { DashboardViewerComponent, GridSelection } from '../dashboard-viewer/dashboard-viewer.component';
+import { DashboardViewerComponent } from '../dashboard-viewer/dashboard-viewer.component';
 import { DashboardEditorComponent } from '../dashboard-editor/dashboard-editor.component';
 import { DashboardStore } from '../store/dashboard-store';
 import { DashboardDataDto } from '../models/dashboard-data.dto';
 import { DashboardBridgeService } from '../services/dashboard-bridge.service';
 import { DashboardViewportService } from '../services/dashboard-viewport.service';
 import { ReservedSpace } from '../models/reserved-space';
-import { CellIdUtils } from '../models';
+import { CellIdUtils, GridSelection } from '../models';
 
 @Component({
   selector: 'ngx-dashboard',
