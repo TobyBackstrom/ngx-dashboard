@@ -17,7 +17,7 @@ import {
   createEmptyDashboard,
   ReservedSpace,
   DashboardDataDto,
-  GridRegion,
+  GridSelection,
 } from '@dragonworks/ngx-dashboard';
 import {
   FilePersistenceService,
@@ -187,12 +187,12 @@ export class DashboardComponent {
     this.dashboardResource.reload();
   }
 
-  onRegionSelected(region: GridRegion): void {
+  onSelectionComplete(selection: GridSelection): void {
     const dialogRef = this.dialog.open(CellSelectionDialogComponent, {
       width: '400px',
       maxWidth: '90vw',
       autoFocus: false,
-      data: region,
+      data: selection,
     });
 
     dialogRef.afterClosed().subscribe((result) => {

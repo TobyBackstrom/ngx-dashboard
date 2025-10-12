@@ -9,7 +9,7 @@ import {
 import { DashboardService } from '../services/dashboard.service';
 import { inject, computed } from '@angular/core';
 import { calculateCollisionInfo } from './features/utils/collision.utils';
-import { applyRegionFilter } from './features/utils/export.utils';
+import { applySelectionFilter } from './features/utils/export.utils';
 import {
   CellId,
   CellIdUtils,
@@ -18,7 +18,7 @@ import {
   DashboardDataDto,
   WidgetIdUtils,
 } from '../models';
-import { GridRegion } from '../dashboard-viewer/dashboard-viewer.component';
+import { GridSelection } from '../dashboard-viewer/dashboard-viewer.component';
 import { withGridConfig } from './features/grid-config.feature';
 import { withWidgetManagement } from './features/widget-management.feature';
 import { withDragDrop } from './features/drag-drop.feature';
@@ -118,7 +118,7 @@ export const DashboardStore = signalStore(
     // EXPORT/IMPORT METHODS (need access to multiple features)
     exportDashboard(
       getCurrentWidgetStates?: () => Map<string, unknown>,
-      region?: GridRegion
+      selection?: GridSelection
     ): DashboardDataDto {
       // Get live widget states if callback provided, otherwise use stored states
       const liveWidgetStates =
@@ -131,14 +131,14 @@ export const DashboardStore = signalStore(
       let rowOffset = 0;
       let colOffset = 0;
 
-      // Apply region filtering if specified
-      if (region) {
-        const regionResult = applyRegionFilter(region, store.cells());
-        widgetsToExport = regionResult.cells;
-        exportRows = regionResult.rows;
-        exportColumns = regionResult.columns;
-        rowOffset = regionResult.rowOffset;
-        colOffset = regionResult.colOffset;
+      // Apply selection filtering if specified
+      if (selection) {
+        const selectionResult = applySelectionFilter(selection, store.cells());
+        widgetsToExport = selectionResult.cells;
+        exportRows = selectionResult.rows;
+        exportColumns = selectionResult.columns;
+        rowOffset = selectionResult.rowOffset;
+        colOffset = selectionResult.colOffset;
       }
 
       return {
@@ -153,9 +153,9 @@ export const DashboardStore = signalStore(
             const cellIdString = CellIdUtils.toString(cell.cellId);
             const currentState = liveWidgetStates.get(cellIdString);
 
-            // Transform coordinates if region is specified
-            const exportRow = region ? cell.row - rowOffset : cell.row;
-            const exportCol = region ? cell.col - colOffset : cell.col;
+            // Transform coordinates if selection is specified
+            const exportRow = selection ? cell.row - rowOffset : cell.row;
+            const exportCol = selection ? cell.col - colOffset : cell.col;
 
             return {
               row: exportRow,

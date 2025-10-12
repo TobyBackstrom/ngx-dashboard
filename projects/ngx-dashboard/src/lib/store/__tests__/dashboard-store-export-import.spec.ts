@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
 import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto } from '../../models';
-import { GridRegion } from '../../dashboard-viewer/dashboard-viewer.component';
+import { GridSelection } from '../../dashboard-viewer/dashboard-viewer.component';
 
 describe('DashboardStore - Export/Import Functionality', () => {
   let store: InstanceType<typeof DashboardStore>;
@@ -773,23 +773,23 @@ describe('DashboardStore - Export/Import Functionality', () => {
     });
   });
 
-  describe('exportDashboard with GridRegion (selection export)', () => {
-    it('should export empty region with correct dimensions', () => {
+  describe('exportDashboard with GridSelection (selection export)', () => {
+    it('should export empty selection with correct dimensions', () => {
       store.setGridConfig({ rows: 8, columns: 16 });
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 2, col: 3 },
         bottomRight: { row: 4, col: 6 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.rows).toBe(3); // 4 - 2 + 1 = 3
       expect(exported.columns).toBe(4); // 6 - 3 + 1 = 4
       expect(exported.cells).toEqual([]);
     });
 
-    it('should export single widget completely within region', () => {
+    it('should export single widget completely within selection', () => {
       store.setGridConfig({ rows: 8, columns: 16 });
 
       const cell: CellData = {
@@ -806,12 +806,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(cell);
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 2, col: 4 },
         bottomRight: { row: 5, col: 8 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.rows).toBe(4); // 5 - 2 + 1
       expect(exported.columns).toBe(5); // 8 - 4 + 1
@@ -827,7 +827,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       });
     });
 
-    it('should exclude widget that starts outside region', () => {
+    it('should exclude widget that starts outside selection', () => {
       store.setGridConfig({ rows: 8, columns: 16 });
 
       const cell: CellData = {
@@ -843,18 +843,18 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(cell);
 
-      // Region starts at row 2, but widget starts at row 1
-      const region: GridRegion = {
+      // Selection starts at row 2, but widget starts at row 1
+      const selection: GridSelection = {
         topLeft: { row: 2, col: 2 },
         bottomRight: { row: 5, col: 6 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.cells.length).toBe(0);
     });
 
-    it('should exclude widget that extends outside region', () => {
+    it('should exclude widget that extends outside selection', () => {
       store.setGridConfig({ rows: 8, columns: 16 });
 
       const cell: CellData = {
@@ -870,18 +870,18 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(cell);
 
-      // Widget extends from row 3 to row 5 (inclusive), but region ends at row 4
-      const region: GridRegion = {
+      // Widget extends from row 3 to row 5 (inclusive), but selection ends at row 4
+      const selection: GridSelection = {
         topLeft: { row: 2, col: 4 },
         bottomRight: { row: 4, col: 8 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.cells.length).toBe(0);
     });
 
-    it('should export multiple widgets within region with correct coordinate transformation', () => {
+    it('should export multiple widgets within selection with correct coordinate transformation', () => {
       store.setGridConfig({ rows: 10, columns: 12 });
 
       const cell1: CellData = {
@@ -922,12 +922,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
       store.addWidget(cell2);
       store.addWidget(cell3);
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 3, col: 4 },
         bottomRight: { row: 6, col: 8 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.rows).toBe(4); // 6 - 3 + 1
       expect(exported.columns).toBe(5); // 8 - 4 + 1
@@ -968,7 +968,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       });
     });
 
-    it('should handle 1x1 region (single cell)', () => {
+    it('should handle 1x1 selection (single cell)', () => {
       store.setGridConfig({ rows: 8, columns: 16 });
 
       const cell: CellData = {
@@ -984,12 +984,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(cell);
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 5, col: 7 },
         bottomRight: { row: 5, col: 7 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.rows).toBe(1);
       expect(exported.columns).toBe(1);
@@ -1005,7 +1005,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       });
     });
 
-    it('should handle full dashboard region (same as no region)', () => {
+    it('should handle full dashboard selection (same as no selection)', () => {
       store.setGridConfig({ rows: 4, columns: 6 });
 
       const cell1: CellData = {
@@ -1033,18 +1033,18 @@ describe('DashboardStore - Export/Import Functionality', () => {
       store.addWidget(cell1);
       store.addWidget(cell2);
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 1, col: 1 },
         bottomRight: { row: 4, col: 6 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.rows).toBe(4);
       expect(exported.columns).toBe(6);
       expect(exported.cells.length).toBe(2);
 
-      // Coordinates should remain the same when region matches full dashboard
+      // Coordinates should remain the same when selection matches full dashboard
       expect(exported.cells).toContain(jasmine.objectContaining({
         row: 1,
         col: 1,
@@ -1057,7 +1057,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       }));
     });
 
-    it('should handle widget spanning multiple cells within region', () => {
+    it('should handle widget spanning multiple cells within selection', () => {
       store.setGridConfig({ rows: 10, columns: 12 });
 
       const cell: CellData = {
@@ -1074,12 +1074,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(cell);
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 2, col: 4 },
         bottomRight: { row: 7, col: 10 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.rows).toBe(6); // 7 - 2 + 1
       expect(exported.columns).toBe(7); // 10 - 4 + 1
@@ -1095,7 +1095,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       });
     });
 
-    it('should exclude widgets outside region bounds', () => {
+    it('should exclude widgets outside selection bounds', () => {
       store.setGridConfig({ rows: 10, columns: 12 });
 
       const widgetInside: CellData = {
@@ -1159,18 +1159,18 @@ describe('DashboardStore - Export/Import Functionality', () => {
       store.addWidget(widgetLeft);
       store.addWidget(widgetRight);
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 3, col: 4 },
         bottomRight: { row: 6, col: 8 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.cells.length).toBe(1);
       expect(exported.cells[0].widgetState).toEqual({ position: 'inside' });
     });
 
-    it('should export region with live widget states', () => {
+    it('should export selection with live widget states', () => {
       store.setGridConfig({ rows: 8, columns: 12 });
 
       const cell1: CellData = {
@@ -1202,19 +1202,19 @@ describe('DashboardStore - Export/Import Functionality', () => {
       liveStates.set('3-4', { fresh: 'live1' });
       liveStates.set('5-6', { fresh: 'live2' });
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 3, col: 4 },
         bottomRight: { row: 6, col: 8 }
       };
 
-      const exported = store.exportDashboard(() => liveStates, region);
+      const exported = store.exportDashboard(() => liveStates, selection);
 
       expect(exported.cells.length).toBe(2);
       expect(exported.cells[0].widgetState).toEqual({ fresh: 'live1' });
       expect(exported.cells[1].widgetState).toEqual({ fresh: 'live2' });
     });
 
-    it('should filter unknown widgets when exporting region', () => {
+    it('should filter unknown widgets when exporting selection', () => {
       store.setGridConfig({ rows: 8, columns: 12 });
 
       const unknownWidgetFactory: WidgetFactory = {
@@ -1247,33 +1247,33 @@ describe('DashboardStore - Export/Import Functionality', () => {
       store.addWidget(validCell);
       store.addWidget(unknownCell);
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 2, col: 3 },
         bottomRight: { row: 6, col: 8 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.cells.length).toBe(1);
       expect(exported.cells[0].widgetState).toEqual({ valid: true });
     });
 
-    it('should preserve gutterSize when exporting region', () => {
+    it('should preserve gutterSize when exporting selection', () => {
       store.setGridConfig({ rows: 10, columns: 15, gutterSize: '2.5rem' });
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 3, col: 5 },
         bottomRight: { row: 7, col: 10 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.gutterSize).toBe('2.5rem');
       expect(exported.rows).toBe(5);
       expect(exported.columns).toBe(6);
     });
 
-    it('should handle region export with widgets at exact boundaries', () => {
+    it('should handle selection export with widgets at exact boundaries', () => {
       store.setGridConfig({ rows: 8, columns: 12 });
 
       const topLeftWidget: CellData = {
@@ -1301,12 +1301,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
       store.addWidget(topLeftWidget);
       store.addWidget(bottomRightWidget);
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 3, col: 4 },
         bottomRight: { row: 6, col: 8 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.rows).toBe(4);
       expect(exported.columns).toBe(5);
@@ -1325,7 +1325,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       }));
     });
 
-    it('should handle inverted region coordinates (bottomRight < topLeft)', () => {
+    it('should handle inverted selection coordinates (bottomRight < topLeft)', () => {
       store.setGridConfig({ rows: 8, columns: 12 });
 
       const cell: CellData = {
@@ -1341,13 +1341,13 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(cell);
 
-      // Invalid region: bottomRight coordinates less than topLeft
-      const region: GridRegion = {
+      // Invalid selection: bottomRight coordinates less than topLeft
+      const selection: GridSelection = {
         topLeft: { row: 6, col: 8 },
         bottomRight: { row: 3, col: 4 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       // Implementation produces negative dimensions and no widgets
       expect(exported.rows).toBeLessThan(0);
@@ -1355,7 +1355,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       expect(exported.cells.length).toBe(0);
     });
 
-    it('should handle region extending beyond grid boundaries', () => {
+    it('should handle selection extending beyond grid boundaries', () => {
       store.setGridConfig({ rows: 8, columns: 12 });
 
       const cell: CellData = {
@@ -1371,13 +1371,13 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(cell);
 
-      // Region extends beyond grid (grid is 8x12, region goes to 10x15)
-      const region: GridRegion = {
+      // Selection extends beyond grid (grid is 8x12, selection goes to 10x15)
+      const selection: GridSelection = {
         topLeft: { row: 6, col: 10 },
         bottomRight: { row: 10, col: 15 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       // Should calculate dimensions regardless of grid bounds
       expect(exported.rows).toBe(5); // 10 - 6 + 1
@@ -1394,24 +1394,24 @@ describe('DashboardStore - Export/Import Functionality', () => {
       });
     });
 
-    it('should handle empty 1x1 region with no widgets', () => {
+    it('should handle empty 1x1 selection with no widgets', () => {
       store.setGridConfig({ rows: 8, columns: 12 });
 
       // No widgets added
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 4, col: 6 },
         bottomRight: { row: 4, col: 6 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.rows).toBe(1);
       expect(exported.columns).toBe(1);
       expect(exported.cells).toEqual([]);
     });
 
-    it('should handle region starting at origin (row/col 1) with no offset', () => {
+    it('should handle selection starting at origin (row/col 1) with no offset', () => {
       store.setGridConfig({ rows: 8, columns: 12 });
 
       const cell: CellData = {
@@ -1427,12 +1427,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(cell);
 
-      const region: GridRegion = {
+      const selection: GridSelection = {
         topLeft: { row: 1, col: 1 },
         bottomRight: { row: 3, col: 3 }
       };
 
-      const exported = store.exportDashboard(undefined, region);
+      const exported = store.exportDashboard(undefined, selection);
 
       expect(exported.rows).toBe(3);
       expect(exported.columns).toBe(3);

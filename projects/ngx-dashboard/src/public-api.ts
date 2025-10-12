@@ -7,7 +7,7 @@ export { DashboardComponent } from './lib/dashboard/dashboard.component';
 export { WidgetListComponent } from './lib/widget-list/widget-list.component';
 
 // Dashboard viewer types (for selection feature)
-export type { GridRegion } from './lib/dashboard-viewer/dashboard-viewer.component';
+export type { GridSelection } from './lib/dashboard-viewer/dashboard-viewer.component';
 
 // Public Services
 export { DashboardService } from './lib/services/dashboard.service';

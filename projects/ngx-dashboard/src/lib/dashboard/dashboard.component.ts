@@ -17,7 +17,7 @@ import {
   SimpleChanges,
   untracked,
 } from '@angular/core';
-import { DashboardViewerComponent, GridRegion } from '../dashboard-viewer/dashboard-viewer.component';
+import { DashboardViewerComponent, GridSelection } from '../dashboard-viewer/dashboard-viewer.component';
 import { DashboardEditorComponent } from '../dashboard-editor/dashboard-editor.component';
 import { DashboardStore } from '../store/dashboard-store';
 import { DashboardDataDto } from '../models/dashboard-data.dto';
@@ -61,7 +61,7 @@ export class DashboardComponent implements OnChanges {
   enableSelection = input<boolean>(false);
 
   // Component outputs
-  regionSelected = output<GridRegion>();
+  selectionComplete = output<GridSelection>();
 
   // Store signals - shared by both child components
   cells = this.#store.cells;
@@ -153,10 +153,10 @@ export class DashboardComponent implements OnChanges {
 
   // Public export/import methods (overloaded for selection support)
   exportDashboard(): DashboardDataDto;
-  exportDashboard(region: GridRegion): DashboardDataDto;
-  exportDashboard(region?: GridRegion): DashboardDataDto {
-    // Export dashboard with live widget states, optionally filtering by region
-    return this.#store.exportDashboard(() => this.getCurrentWidgetStates(), region);
+  exportDashboard(selection: GridSelection): DashboardDataDto;
+  exportDashboard(selection?: GridSelection): DashboardDataDto {
+    // Export dashboard with live widget states, optionally filtering by selection
+    return this.#store.exportDashboard(() => this.getCurrentWidgetStates(), selection);
   }
 
   loadDashboard(data: DashboardDataDto): void {

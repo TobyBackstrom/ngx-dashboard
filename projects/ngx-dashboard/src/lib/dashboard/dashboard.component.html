@@ -14,7 +14,7 @@
     [columns]="store.columns()"
     [gutterSize]="store.gutterSize()"
     [enableSelection]="enableSelection()"
-    (regionSelected)="regionSelected.emit($event)"
+    (selectionComplete)="selectionComplete.emit($event)"
   ></ngx-dashboard-viewer>
   }
 </div>

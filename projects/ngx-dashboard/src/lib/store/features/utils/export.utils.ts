@@ -1,10 +1,10 @@
 import { CellData } from '../../../models';
-import { GridRegion } from '../../../dashboard-viewer/dashboard-viewer.component';
+import { GridSelection } from '../../../dashboard-viewer/dashboard-viewer.component';
 
 /**
- * Result of applying region filtering to dashboard cells.
+ * Result of applying selection filtering to dashboard cells.
  */
-export interface RegionFilterResult {
+export interface SelectionFilterResult {
   cells: CellData[];
   rows: number;
   columns: number;
@@ -13,32 +13,32 @@ export interface RegionFilterResult {
 }
 
 /**
- * Apply region filtering to extract cells within specified bounds.
+ * Apply selection filtering to extract cells within specified bounds.
  * Calculates new grid dimensions and coordinate offsets for export.
  *
- * @param region - The grid region to filter by
+ * @param selection - The grid selection to filter by
  * @param allCells - All cells in the dashboard
  * @returns Filtered cells with export parameters
  */
-export function applyRegionFilter(region: GridRegion, allCells: CellData[]): RegionFilterResult {
+export function applySelectionFilter(selection: GridSelection, allCells: CellData[]): SelectionFilterResult {
   // Calculate new grid dimensions based on selection
-  const exportRows = region.bottomRight.row - region.topLeft.row + 1;
-  const exportColumns = region.bottomRight.col - region.topLeft.col + 1;
+  const exportRows = selection.bottomRight.row - selection.topLeft.row + 1;
+  const exportColumns = selection.bottomRight.col - selection.topLeft.col + 1;
 
   // Calculate offsets for coordinate transformation
-  const rowOffset = region.topLeft.row - 1;
-  const colOffset = region.topLeft.col - 1;
+  const rowOffset = selection.topLeft.row - 1;
+  const colOffset = selection.topLeft.col - 1;
 
-  // Filter widgets that are completely within the region bounds
+  // Filter widgets that are completely within the selection bounds
   const filteredCells = allCells.filter((cell) => {
     const cellEndRow = cell.row + cell.rowSpan - 1;
     const cellEndCol = cell.col + cell.colSpan - 1;
 
-    // Widget must be completely within the region
-    return cell.row >= region.topLeft.row &&
-           cell.col >= region.topLeft.col &&
-           cellEndRow <= region.bottomRight.row &&
-           cellEndCol <= region.bottomRight.col;
+    // Widget must be completely within the selection
+    return cell.row >= selection.topLeft.row &&
+           cell.col >= selection.topLeft.col &&
+           cellEndRow <= selection.bottomRight.row &&
+           cellEndCol <= selection.bottomRight.col;
   });
 
   return {
