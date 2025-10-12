@@ -201,7 +201,7 @@ export class DashboardComponent {
 
   onSelectionComplete(selection: GridSelection): void {
     const dialogRef = this.dialog.open(CellSelectionDialogComponent, {
-      width: '400px',
+      width: '300px',
       maxWidth: '90vw',
       autoFocus: false,
       data: selection,
@@ -229,12 +229,6 @@ export class DashboardComponent {
           undefined,
           { duration: 3000 }
         );
-      } else if (result === true) {
-        // Log the selection if OK was clicked (original behavior - no minimal bounds)
-        const exportedData = this.dashboard().exportDashboard(selection, {
-          useMinimalBounds: false,
-        });
-        console.log('Exported dashboard data for selection:', exportedData);
       }
 
       // Always reset select mode after dialog closes
