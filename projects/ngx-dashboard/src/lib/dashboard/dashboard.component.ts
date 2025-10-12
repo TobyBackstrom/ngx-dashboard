@@ -151,10 +151,12 @@ export class DashboardComponent implements OnChanges {
     return stateMap;
   }
 
-  // Public export/import methods
-  exportDashboard(): DashboardDataDto {
-    // Export dashboard with live widget states
-    return this.#store.exportDashboard(() => this.getCurrentWidgetStates());
+  // Public export/import methods (overloaded for selection support)
+  exportDashboard(): DashboardDataDto;
+  exportDashboard(region: GridRegion): DashboardDataDto;
+  exportDashboard(region?: GridRegion): DashboardDataDto {
+    // Export dashboard with live widget states, optionally filtering by region
+    return this.#store.exportDashboard(() => this.getCurrentWidgetStates(), region);
   }
 
   loadDashboard(data: DashboardDataDto): void {

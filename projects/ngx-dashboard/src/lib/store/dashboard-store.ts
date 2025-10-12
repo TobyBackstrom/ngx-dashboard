@@ -9,6 +9,7 @@ import {
 import { DashboardService } from '../services/dashboard.service';
 import { inject, computed } from '@angular/core';
 import { calculateCollisionInfo } from './features/utils/collision.utils';
+import { applyRegionFilter } from './features/utils/export.utils';
 import {
   CellId,
   CellIdUtils,
@@ -17,6 +18,7 @@ import {
   DashboardDataDto,
   WidgetIdUtils,
 } from '../models';
+import { GridRegion } from '../dashboard-viewer/dashboard-viewer.component';
 import { withGridConfig } from './features/grid-config.feature';
 import { withWidgetManagement } from './features/widget-management.feature';
 import { withDragDrop } from './features/drag-drop.feature';
@@ -115,27 +117,49 @@ export const DashboardStore = signalStore(
 
     // EXPORT/IMPORT METHODS (need access to multiple features)
     exportDashboard(
-      getCurrentWidgetStates?: () => Map<string, unknown>
+      getCurrentWidgetStates?: () => Map<string, unknown>,
+      region?: GridRegion
     ): DashboardDataDto {
       // Get live widget states if callback provided, otherwise use stored states
       const liveWidgetStates =
         getCurrentWidgetStates?.() || new Map<string, unknown>();
 
+      // Determine which widgets to export and grid dimensions
+      let widgetsToExport = store.cells();
+      let exportRows = store.rows();
+      let exportColumns = store.columns();
+      let rowOffset = 0;
+      let colOffset = 0;
+
+      // Apply region filtering if specified
+      if (region) {
+        const regionResult = applyRegionFilter(region, store.cells());
+        widgetsToExport = regionResult.cells;
+        exportRows = regionResult.rows;
+        exportColumns = regionResult.columns;
+        rowOffset = regionResult.rowOffset;
+        colOffset = regionResult.colOffset;
+      }
+
       return {
         version: '1.0.0',
         dashboardId: store.dashboardId(),
-        rows: store.rows(),
-        columns: store.columns(),
+        rows: exportRows,
+        columns: exportColumns,
         gutterSize: store.gutterSize(),
-        cells: store.cells()
+        cells: widgetsToExport
           .filter((cell) => cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget')
           .map((cell) => {
             const cellIdString = CellIdUtils.toString(cell.cellId);
             const currentState = liveWidgetStates.get(cellIdString);
 
+            // Transform coordinates if region is specified
+            const exportRow = region ? cell.row - rowOffset : cell.row;
+            const exportCol = region ? cell.col - colOffset : cell.col;
+
             return {
-              row: cell.row,
-              col: cell.col,
+              row: exportRow,
+              col: exportCol,
               rowSpan: cell.rowSpan,
               colSpan: cell.colSpan,
               flat: cell.flat,

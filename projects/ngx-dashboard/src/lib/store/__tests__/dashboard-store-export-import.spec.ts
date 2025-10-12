@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
 import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto } from '../../models';
+import { GridRegion } from '../../dashboard-viewer/dashboard-viewer.component';
 
 describe('DashboardStore - Export/Import Functionality', () => {
   let store: InstanceType<typeof DashboardStore>;
@@ -769,6 +770,682 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       expect(exported.cells.length).toBe(1);
       expect(exported.cells[0].widgetState).toEqual({ existing: 'state' });
+    });
+  });
+
+  describe('exportDashboard with GridRegion (selection export)', () => {
+    it('should export empty region with correct dimensions', () => {
+      store.setGridConfig({ rows: 8, columns: 16 });
+
+      const region: GridRegion = {
+        topLeft: { row: 2, col: 3 },
+        bottomRight: { row: 4, col: 6 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.rows).toBe(3); // 4 - 2 + 1 = 3
+      expect(exported.columns).toBe(4); // 6 - 3 + 1 = 4
+      expect(exported.cells).toEqual([]);
+    });
+
+    it('should export single widget completely within region', () => {
+      store.setGridConfig({ rows: 8, columns: 16 });
+
+      const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(3, 5),
+        row: 3,
+        col: 5,
+        rowSpan: 1,
+        colSpan: 2,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { color: 'blue' },
+        flat: true,
+      };
+
+      store.addWidget(cell);
+
+      const region: GridRegion = {
+        topLeft: { row: 2, col: 4 },
+        bottomRight: { row: 5, col: 8 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.rows).toBe(4); // 5 - 2 + 1
+      expect(exported.columns).toBe(5); // 8 - 4 + 1
+      expect(exported.cells.length).toBe(1);
+      expect(exported.cells[0]).toEqual({
+        row: 2, // 3 - (2 - 1) = 2
+        col: 2, // 5 - (4 - 1) = 2
+        rowSpan: 1,
+        colSpan: 2,
+        flat: true,
+        widgetTypeid: 'test-widget',
+        widgetState: { color: 'blue' },
+      });
+    });
+
+    it('should exclude widget that starts outside region', () => {
+      store.setGridConfig({ rows: 8, columns: 16 });
+
+      const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(1, 3),
+        row: 1,
+        col: 3,
+        rowSpan: 2,
+        colSpan: 2,
+        widgetFactory: mockWidgetFactory,
+        widgetState: {},
+      };
+
+      store.addWidget(cell);
+
+      // Region starts at row 2, but widget starts at row 1
+      const region: GridRegion = {
+        topLeft: { row: 2, col: 2 },
+        bottomRight: { row: 5, col: 6 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.cells.length).toBe(0);
+    });
+
+    it('should exclude widget that extends outside region', () => {
+      store.setGridConfig({ rows: 8, columns: 16 });
+
+      const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(3, 5),
+        row: 3,
+        col: 5,
+        rowSpan: 3,
+        colSpan: 2,
+        widgetFactory: mockWidgetFactory,
+        widgetState: {},
+      };
+
+      store.addWidget(cell);
+
+      // Widget extends from row 3 to row 5 (inclusive), but region ends at row 4
+      const region: GridRegion = {
+        topLeft: { row: 2, col: 4 },
+        bottomRight: { row: 4, col: 8 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.cells.length).toBe(0);
+    });
+
+    it('should export multiple widgets within region with correct coordinate transformation', () => {
+      store.setGridConfig({ rows: 10, columns: 12 });
+
+      const cell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(3, 4),
+        row: 3,
+        col: 4,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { id: 'widget1' },
+      };
+
+      const cell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(5, 7),
+        row: 5,
+        col: 7,
+        rowSpan: 2,
+        colSpan: 2,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { id: 'widget2' },
+        flat: true,
+      };
+
+      const cell3: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(4, 5),
+        row: 4,
+        col: 5,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { id: 'widget3' },
+      };
+
+      store.addWidget(cell1);
+      store.addWidget(cell2);
+      store.addWidget(cell3);
+
+      const region: GridRegion = {
+        topLeft: { row: 3, col: 4 },
+        bottomRight: { row: 6, col: 8 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.rows).toBe(4); // 6 - 3 + 1
+      expect(exported.columns).toBe(5); // 8 - 4 + 1
+      expect(exported.cells.length).toBe(3);
+
+      // Check coordinate transformations
+      const widget1 = exported.cells.find(c => (c.widgetState as any).id === 'widget1');
+      expect(widget1).toEqual({
+        row: 1, // 3 - (3 - 1) = 1
+        col: 1, // 4 - (4 - 1) = 1
+        rowSpan: 1,
+        colSpan: 1,
+        flat: undefined,
+        widgetTypeid: 'test-widget',
+        widgetState: { id: 'widget1' },
+      });
+
+      const widget2 = exported.cells.find(c => (c.widgetState as any).id === 'widget2');
+      expect(widget2).toEqual({
+        row: 3, // 5 - (3 - 1) = 3
+        col: 4, // 7 - (4 - 1) = 4
+        rowSpan: 2,
+        colSpan: 2,
+        flat: true,
+        widgetTypeid: 'test-widget',
+        widgetState: { id: 'widget2' },
+      });
+
+      const widget3 = exported.cells.find(c => (c.widgetState as any).id === 'widget3');
+      expect(widget3).toEqual({
+        row: 2, // 4 - (3 - 1) = 2
+        col: 2, // 5 - (4 - 1) = 2
+        rowSpan: 1,
+        colSpan: 1,
+        flat: undefined,
+        widgetTypeid: 'test-widget',
+        widgetState: { id: 'widget3' },
+      });
+    });
+
+    it('should handle 1x1 region (single cell)', () => {
+      store.setGridConfig({ rows: 8, columns: 16 });
+
+      const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(5, 7),
+        row: 5,
+        col: 7,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { single: true },
+      };
+
+      store.addWidget(cell);
+
+      const region: GridRegion = {
+        topLeft: { row: 5, col: 7 },
+        bottomRight: { row: 5, col: 7 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.rows).toBe(1);
+      expect(exported.columns).toBe(1);
+      expect(exported.cells.length).toBe(1);
+      expect(exported.cells[0]).toEqual({
+        row: 1, // 5 - (5 - 1) = 1
+        col: 1, // 7 - (7 - 1) = 1
+        rowSpan: 1,
+        colSpan: 1,
+        flat: undefined,
+        widgetTypeid: 'test-widget',
+        widgetState: { single: true },
+      });
+    });
+
+    it('should handle full dashboard region (same as no region)', () => {
+      store.setGridConfig({ rows: 4, columns: 6 });
+
+      const cell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(1, 1),
+        row: 1,
+        col: 1,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { pos: 'top-left' },
+      };
+
+      const cell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(4, 6),
+        row: 4,
+        col: 6,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { pos: 'bottom-right' },
+      };
+
+      store.addWidget(cell1);
+      store.addWidget(cell2);
+
+      const region: GridRegion = {
+        topLeft: { row: 1, col: 1 },
+        bottomRight: { row: 4, col: 6 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.rows).toBe(4);
+      expect(exported.columns).toBe(6);
+      expect(exported.cells.length).toBe(2);
+
+      // Coordinates should remain the same when region matches full dashboard
+      expect(exported.cells).toContain(jasmine.objectContaining({
+        row: 1,
+        col: 1,
+        widgetState: { pos: 'top-left' },
+      }));
+      expect(exported.cells).toContain(jasmine.objectContaining({
+        row: 4,
+        col: 6,
+        widgetState: { pos: 'bottom-right' },
+      }));
+    });
+
+    it('should handle widget spanning multiple cells within region', () => {
+      store.setGridConfig({ rows: 10, columns: 12 });
+
+      const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(3, 5),
+        row: 3,
+        col: 5,
+        rowSpan: 3,
+        colSpan: 4,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { large: true },
+        flat: false,
+      };
+
+      store.addWidget(cell);
+
+      const region: GridRegion = {
+        topLeft: { row: 2, col: 4 },
+        bottomRight: { row: 7, col: 10 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.rows).toBe(6); // 7 - 2 + 1
+      expect(exported.columns).toBe(7); // 10 - 4 + 1
+      expect(exported.cells.length).toBe(1);
+      expect(exported.cells[0]).toEqual({
+        row: 2, // 3 - (2 - 1) = 2
+        col: 2, // 5 - (4 - 1) = 2
+        rowSpan: 3,
+        colSpan: 4,
+        flat: false,
+        widgetTypeid: 'test-widget',
+        widgetState: { large: true },
+      });
+    });
+
+    it('should exclude widgets outside region bounds', () => {
+      store.setGridConfig({ rows: 10, columns: 12 });
+
+      const widgetInside: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(4, 5),
+        row: 4,
+        col: 5,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { position: 'inside' },
+      };
+
+      const widgetAbove: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(1, 5),
+        row: 1,
+        col: 5,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { position: 'above' },
+      };
+
+      const widgetBelow: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(8, 5),
+        row: 8,
+        col: 5,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { position: 'below' },
+      };
+
+      const widgetLeft: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(4, 2),
+        row: 4,
+        col: 2,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { position: 'left' },
+      };
+
+      const widgetRight: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(4, 9),
+        row: 4,
+        col: 9,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { position: 'right' },
+      };
+
+      store.addWidget(widgetInside);
+      store.addWidget(widgetAbove);
+      store.addWidget(widgetBelow);
+      store.addWidget(widgetLeft);
+      store.addWidget(widgetRight);
+
+      const region: GridRegion = {
+        topLeft: { row: 3, col: 4 },
+        bottomRight: { row: 6, col: 8 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.cells.length).toBe(1);
+      expect(exported.cells[0].widgetState).toEqual({ position: 'inside' });
+    });
+
+    it('should export region with live widget states', () => {
+      store.setGridConfig({ rows: 8, columns: 12 });
+
+      const cell1: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(3, 4),
+        row: 3,
+        col: 4,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { stale: 'data1' },
+      };
+
+      const cell2: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(5, 6),
+        row: 5,
+        col: 6,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { stale: 'data2' },
+      };
+
+      store.addWidget(cell1);
+      store.addWidget(cell2);
+
+      const liveStates = new Map<string, unknown>();
+      liveStates.set('3-4', { fresh: 'live1' });
+      liveStates.set('5-6', { fresh: 'live2' });
+
+      const region: GridRegion = {
+        topLeft: { row: 3, col: 4 },
+        bottomRight: { row: 6, col: 8 }
+      };
+
+      const exported = store.exportDashboard(() => liveStates, region);
+
+      expect(exported.cells.length).toBe(2);
+      expect(exported.cells[0].widgetState).toEqual({ fresh: 'live1' });
+      expect(exported.cells[1].widgetState).toEqual({ fresh: 'live2' });
+    });
+
+    it('should filter unknown widgets when exporting region', () => {
+      store.setGridConfig({ rows: 8, columns: 12 });
+
+      const unknownWidgetFactory: WidgetFactory = {
+        widgetTypeid: '__internal/unknown-widget',
+        createInstance: jasmine.createSpy()
+      } as unknown as WidgetFactory;
+
+      const validCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(3, 4),
+        row: 3,
+        col: 4,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { valid: true },
+      };
+
+      const unknownCell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(4, 5),
+        row: 4,
+        col: 5,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: unknownWidgetFactory,
+        widgetState: { unknown: true },
+      };
+
+      store.addWidget(validCell);
+      store.addWidget(unknownCell);
+
+      const region: GridRegion = {
+        topLeft: { row: 2, col: 3 },
+        bottomRight: { row: 6, col: 8 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.cells.length).toBe(1);
+      expect(exported.cells[0].widgetState).toEqual({ valid: true });
+    });
+
+    it('should preserve gutterSize when exporting region', () => {
+      store.setGridConfig({ rows: 10, columns: 15, gutterSize: '2.5rem' });
+
+      const region: GridRegion = {
+        topLeft: { row: 3, col: 5 },
+        bottomRight: { row: 7, col: 10 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.gutterSize).toBe('2.5rem');
+      expect(exported.rows).toBe(5);
+      expect(exported.columns).toBe(6);
+    });
+
+    it('should handle region export with widgets at exact boundaries', () => {
+      store.setGridConfig({ rows: 8, columns: 12 });
+
+      const topLeftWidget: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(3, 4),
+        row: 3,
+        col: 4,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { corner: 'top-left' },
+      };
+
+      const bottomRightWidget: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(6, 8),
+        row: 6,
+        col: 8,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { corner: 'bottom-right' },
+      };
+
+      store.addWidget(topLeftWidget);
+      store.addWidget(bottomRightWidget);
+
+      const region: GridRegion = {
+        topLeft: { row: 3, col: 4 },
+        bottomRight: { row: 6, col: 8 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.rows).toBe(4);
+      expect(exported.columns).toBe(5);
+      expect(exported.cells.length).toBe(2);
+
+      expect(exported.cells).toContain(jasmine.objectContaining({
+        row: 1,
+        col: 1,
+        widgetState: { corner: 'top-left' },
+      }));
+
+      expect(exported.cells).toContain(jasmine.objectContaining({
+        row: 4,
+        col: 5,
+        widgetState: { corner: 'bottom-right' },
+      }));
+    });
+
+    it('should handle inverted region coordinates (bottomRight < topLeft)', () => {
+      store.setGridConfig({ rows: 8, columns: 12 });
+
+      const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(4, 5),
+        row: 4,
+        col: 5,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { test: 'inverted-region' },
+      };
+
+      store.addWidget(cell);
+
+      // Invalid region: bottomRight coordinates less than topLeft
+      const region: GridRegion = {
+        topLeft: { row: 6, col: 8 },
+        bottomRight: { row: 3, col: 4 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      // Implementation produces negative dimensions and no widgets
+      expect(exported.rows).toBeLessThan(0);
+      expect(exported.columns).toBeLessThan(0);
+      expect(exported.cells.length).toBe(0);
+    });
+
+    it('should handle region extending beyond grid boundaries', () => {
+      store.setGridConfig({ rows: 8, columns: 12 });
+
+      const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(7, 11),
+        row: 7,
+        col: 11,
+        rowSpan: 1,
+        colSpan: 1,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { edge: true },
+      };
+
+      store.addWidget(cell);
+
+      // Region extends beyond grid (grid is 8x12, region goes to 10x15)
+      const region: GridRegion = {
+        topLeft: { row: 6, col: 10 },
+        bottomRight: { row: 10, col: 15 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      // Should calculate dimensions regardless of grid bounds
+      expect(exported.rows).toBe(5); // 10 - 6 + 1
+      expect(exported.columns).toBe(6); // 15 - 10 + 1
+      expect(exported.cells.length).toBe(1);
+      expect(exported.cells[0]).toEqual({
+        row: 2, // 7 - (6 - 1) = 2
+        col: 2, // 11 - (10 - 1) = 2
+        rowSpan: 1,
+        colSpan: 1,
+        flat: undefined,
+        widgetTypeid: 'test-widget',
+        widgetState: { edge: true },
+      });
+    });
+
+    it('should handle empty 1x1 region with no widgets', () => {
+      store.setGridConfig({ rows: 8, columns: 12 });
+
+      // No widgets added
+
+      const region: GridRegion = {
+        topLeft: { row: 4, col: 6 },
+        bottomRight: { row: 4, col: 6 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.rows).toBe(1);
+      expect(exported.columns).toBe(1);
+      expect(exported.cells).toEqual([]);
+    });
+
+    it('should handle region starting at origin (row/col 1) with no offset', () => {
+      store.setGridConfig({ rows: 8, columns: 12 });
+
+      const cell: CellData = {
+        widgetId: WidgetIdUtils.generate(),
+        cellId: CellIdUtils.create(1, 1),
+        row: 1,
+        col: 1,
+        rowSpan: 2,
+        colSpan: 2,
+        widgetFactory: mockWidgetFactory,
+        widgetState: { position: 'origin' },
+      };
+
+      store.addWidget(cell);
+
+      const region: GridRegion = {
+        topLeft: { row: 1, col: 1 },
+        bottomRight: { row: 3, col: 3 }
+      };
+
+      const exported = store.exportDashboard(undefined, region);
+
+      expect(exported.rows).toBe(3);
+      expect(exported.columns).toBe(3);
+      expect(exported.cells.length).toBe(1);
+      expect(exported.cells[0]).toEqual({
+        row: 1, // 1 - (1 - 1) = 1 (no offset)
+        col: 1, // 1 - (1 - 1) = 1 (no offset)
+        rowSpan: 2,
+        colSpan: 2,
+        flat: undefined,
+        widgetTypeid: 'test-widget',
+        widgetState: { position: 'origin' },
+      });
     });
   });
 });
