@@ -1447,4 +1447,1037 @@ describe('DashboardStore - Export/Import Functionality', () => {
       });
     });
   });
+
+  describe('exportDashboard with SelectionFilterOptions (useMinimalBounds)', () => {
+    let unknownWidgetFactory: WidgetFactory;
+
+    beforeEach(() => {
+      store.setGridConfig({ rows: 12, columns: 16 });
+      unknownWidgetFactory = {
+        widgetTypeid: '__internal/unknown-widget',
+        name: 'Unknown Widget',
+        description: 'Fallback widget',
+        svgIcon: '<svg></svg>',
+        createInstance: jasmine.createSpy()
+      } as unknown as WidgetFactory;
+    });
+
+    describe('Basic parameter variations', () => {
+      it('should use selection bounds exactly when useMinimalBounds is false', () => {
+        const cell1: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(3, 5),
+          row: 3,
+          col: 5,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { id: 'widget1' },
+        };
+
+        const cell2: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(7, 10),
+          row: 7,
+          col: 10,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { id: 'widget2' },
+        };
+
+        store.addWidget(cell1);
+        store.addWidget(cell2);
+
+        // Large selection with gaps between widgets
+        const selection: GridSelection = {
+          topLeft: { row: 2, col: 4 },
+          bottomRight: { row: 10, col: 12 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+
+        // Should use full selection bounds, not minimal
+        expect(exported.rows).toBe(9); // 10 - 2 + 1
+        expect(exported.columns).toBe(9); // 12 - 4 + 1
+        expect(exported.cells.length).toBe(2);
+
+        // Verify coordinates use full selection bounds
+        const widget1 = exported.cells.find(c => (c.widgetState as any).id === 'widget1');
+        const widget2 = exported.cells.find(c => (c.widgetState as any).id === 'widget2');
+
+        expect(widget1?.row).toBe(2); // 3 - (2 - 1)
+        expect(widget1?.col).toBe(2); // 5 - (4 - 1)
+        expect(widget2?.row).toBe(6); // 7 - (2 - 1)
+        expect(widget2?.col).toBe(7); // 10 - (4 - 1)
+      });
+
+      it('should shrink to minimal bounding box when useMinimalBounds is true', () => {
+        const cell1: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(3, 5),
+          row: 3,
+          col: 5,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { id: 'widget1' },
+        };
+
+        const cell2: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(7, 10),
+          row: 7,
+          col: 10,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { id: 'widget2' },
+        };
+
+        store.addWidget(cell1);
+        store.addWidget(cell2);
+
+        // Large selection with gaps between widgets
+        const selection: GridSelection = {
+          topLeft: { row: 2, col: 4 },
+          bottomRight: { row: 10, col: 12 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // Should shrink to minimal bounds (3-7 rows, 5-10 cols)
+        expect(exported.rows).toBe(5); // 7 - 3 + 1
+        expect(exported.columns).toBe(6); // 10 - 5 + 1
+        expect(exported.cells.length).toBe(2);
+
+        // Verify coordinates use minimal bounds
+        const widget1 = exported.cells.find(c => (c.widgetState as any).id === 'widget1');
+        const widget2 = exported.cells.find(c => (c.widgetState as any).id === 'widget2');
+
+        expect(widget1?.row).toBe(1); // 3 - (3 - 1)
+        expect(widget1?.col).toBe(1); // 5 - (5 - 1)
+        expect(widget2?.row).toBe(5); // 7 - (3 - 1)
+        expect(widget2?.col).toBe(6); // 10 - (5 - 1)
+      });
+
+      it('should behave identically to default when useMinimalBounds is false', () => {
+        const cell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(4, 6),
+          row: 4,
+          col: 6,
+          rowSpan: 2,
+          colSpan: 3,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { test: 'data' },
+          flat: true,
+        };
+
+        store.addWidget(cell);
+
+        const selection: GridSelection = {
+          topLeft: { row: 3, col: 5 },
+          bottomRight: { row: 8, col: 10 }
+        };
+
+        const exportedDefault = store.exportDashboard(undefined, selection);
+        const exportedExplicitFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+
+        // Should produce identical results
+        expect(exportedExplicitFalse.rows).toBe(exportedDefault.rows);
+        expect(exportedExplicitFalse.columns).toBe(exportedDefault.columns);
+        expect(exportedExplicitFalse.cells.length).toBe(exportedDefault.cells.length);
+        expect(exportedExplicitFalse.cells[0]).toEqual(exportedDefault.cells[0]);
+      });
+
+      it('should ignore options when no selection is provided', () => {
+        const cell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(2, 3),
+          row: 2,
+          col: 3,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { value: 42 },
+        };
+
+        store.addWidget(cell);
+
+        // Export without selection but with options
+        const exported = store.exportDashboard(undefined, undefined, { useMinimalBounds: true });
+
+        // Should export full dashboard (options ignored)
+        expect(exported.rows).toBe(12);
+        expect(exported.columns).toBe(16);
+        expect(exported.cells.length).toBe(1);
+        expect(exported.cells[0].row).toBe(2);
+        expect(exported.cells[0].col).toBe(3);
+      });
+    });
+
+    describe('Widget layout variations', () => {
+      it('should handle scattered widgets with large gaps (useMinimalBounds: true)', () => {
+        const widgets: CellData[] = [
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(2, 2),
+            row: 2,
+            col: 2,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { position: 'top-left' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(2, 10),
+            row: 2,
+            col: 10,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { position: 'top-right' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(10, 2),
+            row: 10,
+            col: 2,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { position: 'bottom-left' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(10, 10),
+            row: 10,
+            col: 10,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { position: 'bottom-right' },
+          }
+        ];
+
+        widgets.forEach(w => store.addWidget(w));
+
+        const selection: GridSelection = {
+          topLeft: { row: 1, col: 1 },
+          bottomRight: { row: 12, col: 12 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // Should shrink significantly from 12x12 to 9x9 (widgets span row 2-10, col 2-10)
+        expect(exported.rows).toBe(9); // 10 - 2 + 1
+        expect(exported.columns).toBe(9); // 10 - 2 + 1
+        expect(exported.cells.length).toBe(4);
+
+        // Verify all widgets are in minimal coordinate space
+        const topLeft = exported.cells.find(c => (c.widgetState as any).position === 'top-left');
+        const bottomRight = exported.cells.find(c => (c.widgetState as any).position === 'bottom-right');
+
+        expect(topLeft?.row).toBe(1); // 2 - (2 - 1)
+        expect(topLeft?.col).toBe(1); // 2 - (2 - 1)
+        expect(bottomRight?.row).toBe(9); // 10 - (2 - 1)
+        expect(bottomRight?.col).toBe(9); // 10 - (2 - 1)
+      });
+
+      it('should handle tightly packed widgets (minimal bounds similar to selection)', () => {
+        const widgets: CellData[] = [
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(3, 4),
+            row: 3,
+            col: 4,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: 'w1' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(3, 5),
+            row: 3,
+            col: 5,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: 'w2' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(4, 4),
+            row: 4,
+            col: 4,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: 'w3' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(4, 5),
+            row: 4,
+            col: 5,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: 'w4' },
+          }
+        ];
+
+        widgets.forEach(w => store.addWidget(w));
+
+        // Selection closely matches widget bounds
+        const selection: GridSelection = {
+          topLeft: { row: 3, col: 4 },
+          bottomRight: { row: 4, col: 5 }
+        };
+
+        const exportedFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+        const exportedTrue = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // When tightly packed, both should produce identical results
+        expect(exportedTrue.rows).toBe(exportedFalse.rows);
+        expect(exportedTrue.columns).toBe(exportedFalse.columns);
+        expect(exportedTrue.cells.length).toBe(4);
+        expect(exportedFalse.cells.length).toBe(4);
+      });
+
+      it('should handle single widget centered in large selection', () => {
+        const cell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(6, 8),
+          row: 6,
+          col: 8,
+          rowSpan: 2,
+          colSpan: 3,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { centered: true },
+          flat: true,
+        };
+
+        store.addWidget(cell);
+
+        const selection: GridSelection = {
+          topLeft: { row: 2, col: 4 },
+          bottomRight: { row: 10, col: 14 }
+        };
+
+        const exportedFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+        const exportedTrue = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // With false: uses full selection (9x11)
+        expect(exportedFalse.rows).toBe(9); // 10 - 2 + 1
+        expect(exportedFalse.columns).toBe(11); // 14 - 4 + 1
+        expect(exportedFalse.cells[0].row).toBe(5); // 6 - (2 - 1)
+        expect(exportedFalse.cells[0].col).toBe(5); // 8 - (4 - 1)
+
+        // With true: shrinks to widget size (2x3)
+        expect(exportedTrue.rows).toBe(2); // Widget rowSpan
+        expect(exportedTrue.columns).toBe(3); // Widget colSpan
+        expect(exportedTrue.cells[0].row).toBe(1); // 6 - (6 - 1)
+        expect(exportedTrue.cells[0].col).toBe(1); // 8 - (8 - 1)
+        expect(exportedTrue.cells[0].rowSpan).toBe(2);
+        expect(exportedTrue.cells[0].colSpan).toBe(3);
+      });
+
+      it('should handle widgets with spans across minimal bounds', () => {
+        const widgets: CellData[] = [
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(3, 4),
+            row: 3,
+            col: 4,
+            rowSpan: 3,
+            colSpan: 2,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: 'wide' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(7, 8),
+            row: 7,
+            col: 8,
+            rowSpan: 1,
+            colSpan: 4,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: 'tall' },
+          }
+        ];
+
+        widgets.forEach(w => store.addWidget(w));
+
+        const selection: GridSelection = {
+          topLeft: { row: 2, col: 3 },
+          bottomRight: { row: 10, col: 15 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // Widget1 spans to row 5, col 5
+        // Widget2 spans to row 7, col 11
+        // Minimal bounds: row 3-7, col 4-11
+        expect(exported.rows).toBe(5); // 7 - 3 + 1
+        expect(exported.columns).toBe(8); // 11 - 4 + 1
+        expect(exported.cells.length).toBe(2);
+
+        const wide = exported.cells.find(c => (c.widgetState as any).id === 'wide');
+        const tall = exported.cells.find(c => (c.widgetState as any).id === 'tall');
+
+        expect(wide?.row).toBe(1); // 3 - (3 - 1)
+        expect(wide?.col).toBe(1); // 4 - (4 - 1)
+        expect(wide?.rowSpan).toBe(3);
+        expect(wide?.colSpan).toBe(2);
+
+        expect(tall?.row).toBe(5); // 7 - (3 - 1)
+        expect(tall?.col).toBe(5); // 8 - (4 - 1)
+        expect(tall?.rowSpan).toBe(1);
+        expect(tall?.colSpan).toBe(4);
+      });
+    });
+
+    describe('Integration with other features', () => {
+      it('should work with live widget states and useMinimalBounds: true', () => {
+        const widgets: CellData[] = [
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(3, 5),
+            row: 3,
+            col: 5,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { stale: 'data1' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(7, 9),
+            row: 7,
+            col: 9,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { stale: 'data2' },
+          }
+        ];
+
+        widgets.forEach(w => store.addWidget(w));
+
+        const liveStates = new Map<string, unknown>();
+        liveStates.set('3-5', { fresh: 'live1', updated: true });
+        liveStates.set('7-9', { fresh: 'live2', updated: true });
+
+        const selection: GridSelection = {
+          topLeft: { row: 2, col: 4 },
+          bottomRight: { row: 10, col: 12 }
+        };
+
+        const exported = store.exportDashboard(() => liveStates, selection, { useMinimalBounds: true });
+
+        // Should shrink to minimal bounds and use live states
+        expect(exported.rows).toBe(5); // 7 - 3 + 1
+        expect(exported.columns).toBe(5); // 9 - 5 + 1
+        expect(exported.cells.length).toBe(2);
+
+        // Verify live states are used
+        expect(exported.cells[0].widgetState).toEqual({ fresh: 'live1', updated: true });
+        expect(exported.cells[1].widgetState).toEqual({ fresh: 'live2', updated: true });
+      });
+
+      it('should filter unknown widgets with useMinimalBounds: true', () => {
+        const validCell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(3, 5),
+          row: 3,
+          col: 5,
+          rowSpan: 2,
+          colSpan: 2,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { valid: true },
+        };
+
+        const unknownCell1: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(2, 4),
+          row: 2,
+          col: 4,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: unknownWidgetFactory,
+          widgetState: { unknown: true },
+        };
+
+        const unknownCell2: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(8, 10),
+          row: 8,
+          col: 10,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: unknownWidgetFactory,
+          widgetState: { unknown: true },
+        };
+
+        store.addWidget(validCell);
+        store.addWidget(unknownCell1);
+        store.addWidget(unknownCell2);
+
+        const selection: GridSelection = {
+          topLeft: { row: 1, col: 3 },
+          bottomRight: { row: 10, col: 12 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // Minimal bounds calculated INCLUDING unknown widgets
+        // Valid widget: (3,5) extends to (4,6)
+        // Unknown1: (2,4)
+        // Unknown2: (8,10)
+        // Minimal bounds: row 2-8, col 4-10
+        expect(exported.cells.length).toBe(1); // Unknown widgets filtered from export
+        expect(exported.rows).toBe(7); // 8 - 2 + 1 (includes unknown widget bounds)
+        expect(exported.columns).toBe(7); // 10 - 4 + 1 (includes unknown widget bounds)
+        expect(exported.cells[0].widgetState).toEqual({ valid: true });
+      });
+
+      it('should filter unknown widgets with useMinimalBounds: false', () => {
+        const validCell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(5, 6),
+          row: 5,
+          col: 6,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { valid: true },
+        };
+
+        const unknownCell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(7, 8),
+          row: 7,
+          col: 8,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: unknownWidgetFactory,
+          widgetState: { unknown: true },
+        };
+
+        store.addWidget(validCell);
+        store.addWidget(unknownCell);
+
+        const selection: GridSelection = {
+          topLeft: { row: 4, col: 5 },
+          bottomRight: { row: 9, col: 10 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+
+        // Should use full selection bounds and filter unknown widget
+        expect(exported.cells.length).toBe(1);
+        expect(exported.rows).toBe(6); // 9 - 4 + 1
+        expect(exported.columns).toBe(6); // 10 - 5 + 1
+        expect(exported.cells[0].widgetState).toEqual({ valid: true });
+      });
+
+      it('should combine live states, unknown widget filtering, and minimal bounds', () => {
+        const validCell1: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(3, 4),
+          row: 3,
+          col: 4,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { stale: 'data1' },
+        };
+
+        const validCell2: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(6, 9),
+          row: 6,
+          col: 9,
+          rowSpan: 2,
+          colSpan: 2,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { stale: 'data2' },
+        };
+
+        const unknownCell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(10, 12),
+          row: 10,
+          col: 12,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: unknownWidgetFactory,
+          widgetState: { unknown: true },
+        };
+
+        store.addWidget(validCell1);
+        store.addWidget(validCell2);
+        store.addWidget(unknownCell);
+
+        const liveStates = new Map<string, unknown>();
+        liveStates.set('3-4', { fresh: 'live1' });
+        liveStates.set('6-9', { fresh: 'live2' });
+        liveStates.set('10-12', { fresh: 'should-be-ignored' });
+
+        const selection: GridSelection = {
+          topLeft: { row: 2, col: 3 },
+          bottomRight: { row: 12, col: 14 }
+        };
+
+        const exported = store.exportDashboard(() => liveStates, selection, { useMinimalBounds: true });
+
+        // Minimal bounds calculated INCLUDING unknown widget
+        // Valid1: (3,4)
+        // Valid2: (6,9) extends to (7,10)
+        // Unknown: (10,12)
+        // Minimal bounds: row 3-10, col 4-12
+        expect(exported.cells.length).toBe(2); // Unknown filtered from export
+        expect(exported.rows).toBe(8); // 10 - 3 + 1 (includes unknown)
+        expect(exported.columns).toBe(9); // 12 - 4 + 1 (includes unknown)
+
+        expect(exported.cells[0].widgetState).toEqual({ fresh: 'live1' });
+        expect(exported.cells[1].widgetState).toEqual({ fresh: 'live2' });
+      });
+    });
+
+    describe('Edge cases', () => {
+      it('should handle empty selection (no widgets) with useMinimalBounds: true', () => {
+        const cell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(1, 1),
+          row: 1,
+          col: 1,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { outside: true },
+        };
+
+        store.addWidget(cell);
+
+        // Selection doesn't contain any widgets
+        const selection: GridSelection = {
+          topLeft: { row: 5, col: 7 },
+          bottomRight: { row: 8, col: 10 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // Should fall back to selection bounds when no widgets
+        expect(exported.cells.length).toBe(0);
+        expect(exported.rows).toBe(4); // 8 - 5 + 1
+        expect(exported.columns).toBe(4); // 10 - 7 + 1
+      });
+
+      it('should handle single cell selection with useMinimalBounds: true', () => {
+        const cell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(5, 7),
+          row: 5,
+          col: 7,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { single: true },
+        };
+
+        store.addWidget(cell);
+
+        const selection: GridSelection = {
+          topLeft: { row: 5, col: 7 },
+          bottomRight: { row: 5, col: 7 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // Single cell selection - minimal bounds same as selection
+        expect(exported.rows).toBe(1);
+        expect(exported.columns).toBe(1);
+        expect(exported.cells.length).toBe(1);
+        expect(exported.cells[0].row).toBe(1);
+        expect(exported.cells[0].col).toBe(1);
+      });
+
+      it('should handle selection at grid origin with minimal bounds', () => {
+        const cell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(1, 1),
+          row: 1,
+          col: 1,
+          rowSpan: 2,
+          colSpan: 2,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { origin: true },
+        };
+
+        store.addWidget(cell);
+
+        const selection: GridSelection = {
+          topLeft: { row: 1, col: 1 },
+          bottomRight: { row: 5, col: 5 }
+        };
+
+        const exportedFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+        const exportedTrue = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // False: uses selection (5x5)
+        expect(exportedFalse.rows).toBe(5);
+        expect(exportedFalse.columns).toBe(5);
+        expect(exportedFalse.cells[0].row).toBe(1);
+        expect(exportedFalse.cells[0].col).toBe(1);
+
+        // True: shrinks to widget (2x2)
+        expect(exportedTrue.rows).toBe(2);
+        expect(exportedTrue.columns).toBe(2);
+        expect(exportedTrue.cells[0].row).toBe(1);
+        expect(exportedTrue.cells[0].col).toBe(1);
+      });
+
+      it('should handle large widget spanning entire minimal bounds', () => {
+        const cell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(4, 6),
+          row: 4,
+          col: 6,
+          rowSpan: 5,
+          colSpan: 7,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { huge: true },
+          flat: false,
+        };
+
+        store.addWidget(cell);
+
+        const selection: GridSelection = {
+          topLeft: { row: 2, col: 4 },
+          bottomRight: { row: 10, col: 15 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // Widget spans from (4,6) to (8,12)
+        expect(exported.rows).toBe(5); // Widget rowSpan
+        expect(exported.columns).toBe(7); // Widget colSpan
+        expect(exported.cells.length).toBe(1);
+        expect(exported.cells[0].row).toBe(1);
+        expect(exported.cells[0].col).toBe(1);
+        expect(exported.cells[0].rowSpan).toBe(5);
+        expect(exported.cells[0].colSpan).toBe(7);
+      });
+
+      it('should preserve gutterSize with minimal bounds', () => {
+        store.setGridConfig({ rows: 12, columns: 16, gutterSize: '1.5rem' });
+
+        const cell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(5, 7),
+          row: 5,
+          col: 7,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: { test: true },
+        };
+
+        store.addWidget(cell);
+
+        const selection: GridSelection = {
+          topLeft: { row: 3, col: 5 },
+          bottomRight: { row: 9, col: 11 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        expect(exported.gutterSize).toBe('1.5rem');
+        expect(exported.rows).toBe(1);
+        expect(exported.columns).toBe(1);
+      });
+
+      it('should handle only unknown widgets in selection with minimal bounds', () => {
+        const unknownCell1: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(3, 5),
+          row: 3,
+          col: 5,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: unknownWidgetFactory,
+          widgetState: { unknown: 'widget1' },
+        };
+
+        const unknownCell2: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(7, 9),
+          row: 7,
+          col: 9,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: unknownWidgetFactory,
+          widgetState: { unknown: 'widget2' },
+        };
+
+        store.addWidget(unknownCell1);
+        store.addWidget(unknownCell2);
+
+        const selection: GridSelection = {
+          topLeft: { row: 2, col: 4 },
+          bottomRight: { row: 10, col: 12 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // Minimal bounds calculated on unknown widgets (before filtering)
+        // Unknown1: (3,5)
+        // Unknown2: (7,9)
+        // Minimal bounds: row 3-7, col 5-9
+        expect(exported.cells.length).toBe(0); // All widgets filtered from export
+        expect(exported.rows).toBe(5); // 7 - 3 + 1 (based on unknown widget positions)
+        expect(exported.columns).toBe(5); // 9 - 5 + 1 (based on unknown widget positions)
+      });
+    });
+
+    describe('Coordinate transformation verification', () => {
+      it('should transform coordinates correctly with scattered widgets and minimal bounds', () => {
+        const widgets: CellData[] = [
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(4, 6),
+            row: 4,
+            col: 6,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: 'A' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(8, 12),
+            row: 8,
+            col: 12,
+            rowSpan: 2,
+            colSpan: 3,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: 'B' },
+          }
+        ];
+
+        widgets.forEach(w => store.addWidget(w));
+
+        const selection: GridSelection = {
+          topLeft: { row: 2, col: 4 },
+          bottomRight: { row: 12, col: 16 }
+        };
+
+        const exportedFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+        const exportedTrue = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // False: transforms relative to selection topLeft (2, 4)
+        const falseA = exportedFalse.cells.find(c => (c.widgetState as any).id === 'A');
+        const falseB = exportedFalse.cells.find(c => (c.widgetState as any).id === 'B');
+        expect(falseA?.row).toBe(3); // 4 - (2 - 1)
+        expect(falseA?.col).toBe(3); // 6 - (4 - 1)
+        expect(falseB?.row).toBe(7); // 8 - (2 - 1)
+        expect(falseB?.col).toBe(9); // 12 - (4 - 1)
+
+        // True: transforms relative to minimal bounds topLeft (4, 6)
+        const trueA = exportedTrue.cells.find(c => (c.widgetState as any).id === 'A');
+        const trueB = exportedTrue.cells.find(c => (c.widgetState as any).id === 'B');
+        expect(trueA?.row).toBe(1); // 4 - (4 - 1)
+        expect(trueA?.col).toBe(1); // 6 - (6 - 1)
+        expect(trueB?.row).toBe(5); // 8 - (4 - 1)
+        expect(trueB?.col).toBe(7); // 12 - (6 - 1)
+
+        // Verify dimensions
+        expect(exportedFalse.rows).toBe(11); // Selection: 12 - 2 + 1
+        expect(exportedTrue.rows).toBe(6); // Minimal: 9 - 4 + 1 = 6 (row 4-9)
+        expect(exportedFalse.columns).toBe(13); // Selection: 16 - 4 + 1
+        expect(exportedTrue.columns).toBe(9); // Minimal: 14 - 6 + 1 = 9 (col 6-14)
+      });
+
+      it('should maintain relative widget positions with minimal bounds', () => {
+        const widgets: CellData[] = [
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(3, 5),
+            row: 3,
+            col: 5,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: '1' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(5, 5),
+            row: 5,
+            col: 5,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: '2' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(3, 8),
+            row: 3,
+            col: 8,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: '3' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(5, 8),
+            row: 5,
+            col: 8,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: '4' },
+          }
+        ];
+
+        widgets.forEach(w => store.addWidget(w));
+
+        const selection: GridSelection = {
+          topLeft: { row: 1, col: 1 },
+          bottomRight: { row: 10, col: 12 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // Should maintain 2x2 grid pattern with 2-row and 3-col spacing
+        const w1 = exported.cells.find(c => (c.widgetState as any).id === '1');
+        const w2 = exported.cells.find(c => (c.widgetState as any).id === '2');
+        const w3 = exported.cells.find(c => (c.widgetState as any).id === '3');
+        const w4 = exported.cells.find(c => (c.widgetState as any).id === '4');
+
+        // All should be transformed to minimal coordinate space starting at (1,1)
+        expect(w1?.row).toBe(1); // 3 - (3 - 1)
+        expect(w1?.col).toBe(1); // 5 - (5 - 1)
+        expect(w2?.row).toBe(3); // 5 - (3 - 1)
+        expect(w2?.col).toBe(1); // 5 - (5 - 1)
+        expect(w3?.row).toBe(1); // 3 - (3 - 1)
+        expect(w3?.col).toBe(4); // 8 - (5 - 1)
+        expect(w4?.row).toBe(3); // 5 - (3 - 1)
+        expect(w4?.col).toBe(4); // 8 - (5 - 1)
+
+        // Verify relative spacing is maintained
+        expect(w2!.row - w1!.row).toBe(2); // Row spacing preserved
+        expect(w3!.col - w1!.col).toBe(3); // Column spacing preserved
+      });
+    });
+
+    describe('Dimension calculations', () => {
+      it('should calculate dimensions correctly with useMinimalBounds: false', () => {
+        const cell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(5, 8),
+          row: 5,
+          col: 8,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: {},
+        };
+
+        store.addWidget(cell);
+
+        const selection: GridSelection = {
+          topLeft: { row: 3, col: 6 },
+          bottomRight: { row: 9, col: 12 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+
+        // Should use full selection dimensions
+        expect(exported.rows).toBe(7); // 9 - 3 + 1
+        expect(exported.columns).toBe(7); // 12 - 6 + 1
+      });
+
+      it('should calculate dimensions correctly with useMinimalBounds: true', () => {
+        const cell: CellData = {
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(5, 8),
+          row: 5,
+          col: 8,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: {},
+        };
+
+        store.addWidget(cell);
+
+        const selection: GridSelection = {
+          topLeft: { row: 3, col: 6 },
+          bottomRight: { row: 9, col: 12 }
+        };
+
+        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // Should shrink to widget dimensions
+        expect(exported.rows).toBe(1); // Widget is 1x1
+        expect(exported.columns).toBe(1);
+      });
+
+      it('should show significant dimension reduction with scattered widgets', () => {
+        const widgets: CellData[] = [
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(2, 3),
+            row: 2,
+            col: 3,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: '1' },
+          },
+          {
+            widgetId: WidgetIdUtils.generate(),
+            cellId: CellIdUtils.create(10, 14),
+            row: 10,
+            col: 14,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetFactory: mockWidgetFactory,
+            widgetState: { id: '2' },
+          }
+        ];
+
+        widgets.forEach(w => store.addWidget(w));
+
+        const selection: GridSelection = {
+          topLeft: { row: 1, col: 1 },
+          bottomRight: { row: 12, col: 16 }
+        };
+
+        const exportedFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+        const exportedTrue = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+
+        // False: 12x16 = 192 cells
+        expect(exportedFalse.rows).toBe(12);
+        expect(exportedFalse.columns).toBe(16);
+
+        // True: 9x12 = 108 cells (43% reduction)
+        expect(exportedTrue.rows).toBe(9); // 10 - 2 + 1
+        expect(exportedTrue.columns).toBe(12); // 14 - 3 + 1
+
+        // Verify significant reduction
+        const falseArea = exportedFalse.rows * exportedFalse.columns;
+        const trueArea = exportedTrue.rows * exportedTrue.columns;
+        expect(trueArea).toBeLessThan(falseArea * 0.6); // At least 40% reduction
+      });
+    });
+  });
 });
