@@ -106,13 +106,32 @@ export function applySelectionFilter(
     actualMaxCol = selection.bottomRight.col;
   }
 
-  // Calculate new grid dimensions based on actual bounds
-  const exportRows = actualMaxRow - actualMinRow + 1;
-  const exportColumns = actualMaxCol - actualMinCol + 1;
+  // Apply padding if specified (after minimal bounds calculation)
+  const padding = options.padding ?? 0;
+  let desiredMinRow = actualMinRow;
+  let desiredMinCol = actualMinCol;
 
-  // Calculate offsets for coordinate transformation
-  const rowOffset = actualMinRow - 1;
-  const colOffset = actualMinCol - 1;
+  if (padding > 0) {
+    // Calculate desired bounds (may go below 1)
+    desiredMinRow = actualMinRow - padding;
+    const desiredMaxRow = actualMaxRow + padding;
+    desiredMinCol = actualMinCol - padding;
+    const desiredMaxCol = actualMaxCol + padding;
+
+    // Clamp to grid minimum (1-indexed)
+    actualMinRow = Math.max(1, desiredMinRow);
+    actualMaxRow = desiredMaxRow;
+    actualMinCol = Math.max(1, desiredMinCol);
+    actualMaxCol = desiredMaxCol;
+  }
+
+  // Calculate new grid dimensions from desired bounds (includes full padding)
+  const exportRows = actualMaxRow - desiredMinRow + 1;
+  const exportColumns = actualMaxCol - desiredMinCol + 1;
+
+  // Calculate offsets for coordinate transformation (from desired, not clamped)
+  const rowOffset = desiredMinRow - 1;
+  const colOffset = desiredMinCol - 1;
 
   return {
     cells: filteredCells,

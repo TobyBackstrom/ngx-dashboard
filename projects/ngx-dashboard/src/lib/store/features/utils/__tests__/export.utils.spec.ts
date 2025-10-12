@@ -320,5 +320,212 @@ describe('export.utils', () => {
         expect(result.cells.length).toBe(0); // Widget extends beyond selection
       });
     });
+
+    describe('with padding option', () => {
+      it('should add padding to selection bounds', () => {
+        const allCells = [
+          createMockCell(3, 3),
+          createMockCell(4, 4),
+        ];
+
+        const selection: GridSelection = {
+          topLeft: { row: 3, col: 3 },
+          bottomRight: { row: 4, col: 4 },
+        };
+
+        const options: SelectionFilterOptions = { padding: 1 };
+        const result = applySelectionFilter(selection, allCells, options);
+
+        expect(result.cells.length).toBe(2);
+        expect(result.rows).toBe(4); // (4 + 1) - (3 - 1) + 1 = 4
+        expect(result.columns).toBe(4); // (4 + 1) - (3 - 1) + 1 = 4
+        expect(result.rowOffset).toBe(1); // (3 - 1) - 1
+        expect(result.colOffset).toBe(1); // (3 - 1) - 1
+      });
+
+      it('should add padding with minimal bounds enabled', () => {
+        const allCells = [
+          createMockCell(3, 3),
+          createMockCell(5, 5),
+        ];
+
+        // Large selection containing widgets with gaps
+        const selection: GridSelection = {
+          topLeft: { row: 1, col: 1 },
+          bottomRight: { row: 8, col: 8 },
+        };
+
+        const options: SelectionFilterOptions = {
+          useMinimalBounds: true,
+          padding: 1,
+        };
+        const result = applySelectionFilter(selection, allCells, options);
+
+        expect(result.cells.length).toBe(2);
+        // Minimal bounds: 3-5, with padding: 2-6
+        expect(result.rows).toBe(5); // 6 - 2 + 1
+        expect(result.columns).toBe(5); // 6 - 2 + 1
+        expect(result.rowOffset).toBe(1); // 2 - 1
+        expect(result.colOffset).toBe(1); // 2 - 1
+      });
+
+      it('should clamp padding to grid origin (row/col 1)', () => {
+        const allCells = [
+          createMockCell(2, 2),
+        ];
+
+        const selection: GridSelection = {
+          topLeft: { row: 2, col: 2 },
+          bottomRight: { row: 2, col: 2 },
+        };
+
+        const options: SelectionFilterOptions = { padding: 5 };
+        const result = applySelectionFilter(selection, allCells, options);
+
+        expect(result.cells.length).toBe(1);
+        // Desired bounds: 2-5=-3 to 2+5=7 (11 cells including full padding)
+        // Actual min clamped to 1, but dimensions include full padding
+        expect(result.rows).toBe(11); // 7 - (-3) + 1
+        expect(result.columns).toBe(11); // 7 - (-3) + 1
+        // Offset from desired min (not clamped), so widgets shift by padding amount
+        expect(result.rowOffset).toBe(-4); // -3 - 1
+        expect(result.colOffset).toBe(-4); // -3 - 1
+      });
+
+      it('should handle padding of 0 as no padding', () => {
+        const allCells = [
+          createMockCell(3, 3),
+          createMockCell(4, 4),
+        ];
+
+        const selection: GridSelection = {
+          topLeft: { row: 3, col: 3 },
+          bottomRight: { row: 4, col: 4 },
+        };
+
+        const withPadding = applySelectionFilter(selection, allCells, { padding: 0 });
+        const withoutPadding = applySelectionFilter(selection, allCells, {});
+
+        expect(withPadding.rows).toBe(withoutPadding.rows);
+        expect(withPadding.columns).toBe(withoutPadding.columns);
+        expect(withPadding.rowOffset).toBe(withoutPadding.rowOffset);
+        expect(withPadding.colOffset).toBe(withoutPadding.colOffset);
+      });
+
+      it('should handle large padding value', () => {
+        const allCells = [
+          createMockCell(10, 10),
+        ];
+
+        const selection: GridSelection = {
+          topLeft: { row: 10, col: 10 },
+          bottomRight: { row: 10, col: 10 },
+        };
+
+        const options: SelectionFilterOptions = { padding: 3 };
+        const result = applySelectionFilter(selection, allCells, options);
+
+        expect(result.cells.length).toBe(1);
+        // 10 - 3 = 7, 10 + 3 = 13
+        expect(result.rows).toBe(7); // 13 - 7 + 1
+        expect(result.columns).toBe(7); // 13 - 7 + 1
+        expect(result.rowOffset).toBe(6); // 7 - 1
+        expect(result.colOffset).toBe(6); // 7 - 1
+      });
+
+      it('should preserve gaps in padded area with scattered widgets', () => {
+        const allCells = [
+          createMockCell(3, 3),
+          createMockCell(3, 7),
+          createMockCell(7, 3),
+          createMockCell(7, 7),
+        ];
+
+        const selection: GridSelection = {
+          topLeft: { row: 3, col: 3 },
+          bottomRight: { row: 7, col: 7 },
+        };
+
+        const options: SelectionFilterOptions = { padding: 1 };
+        const result = applySelectionFilter(selection, allCells, options);
+
+        expect(result.cells.length).toBe(4);
+        // 3 - 1 = 2, 7 + 1 = 8
+        expect(result.rows).toBe(7); // 8 - 2 + 1
+        expect(result.columns).toBe(7); // 8 - 2 + 1
+        expect(result.rowOffset).toBe(1); // 2 - 1
+        expect(result.colOffset).toBe(1); // 2 - 1
+      });
+
+      it('should add padding at grid origin', () => {
+        const allCells = [
+          createMockCell(1, 1),
+        ];
+
+        const selection: GridSelection = {
+          topLeft: { row: 1, col: 1 },
+          bottomRight: { row: 1, col: 1 },
+        };
+
+        const options: SelectionFilterOptions = { padding: 2 };
+        const result = applySelectionFilter(selection, allCells, options);
+
+        expect(result.cells.length).toBe(1);
+        // Desired bounds: 1-2=-1 to 1+2=3 (5 cells including full padding)
+        // Actual min clamped to 1, but dimensions include full padding
+        expect(result.rows).toBe(5); // 3 - (-1) + 1
+        expect(result.columns).toBe(5); // 3 - (-1) + 1
+        // Offset from desired min (not clamped), so widget at 1,1 exports to 3,3
+        expect(result.rowOffset).toBe(-2); // -1 - 1
+        expect(result.colOffset).toBe(-2); // -1 - 1
+      });
+
+      it('should add padding to empty selection', () => {
+        const allCells = [
+          createMockCell(1, 1),
+          createMockCell(10, 10),
+        ];
+
+        const selection: GridSelection = {
+          topLeft: { row: 4, col: 4 },
+          bottomRight: { row: 6, col: 6 },
+        };
+
+        const options: SelectionFilterOptions = { padding: 1 };
+        const result = applySelectionFilter(selection, allCells, options);
+
+        expect(result.cells.length).toBe(0);
+        // Empty selection: 4 - 1 = 3, 6 + 1 = 7
+        expect(result.rows).toBe(5); // 7 - 3 + 1
+        expect(result.columns).toBe(5); // 7 - 3 + 1
+        expect(result.rowOffset).toBe(2); // 3 - 1
+        expect(result.colOffset).toBe(2); // 3 - 1
+      });
+
+      it('should combine padding with minimal bounds and large spans', () => {
+        const allCells = [
+          createMockCell(5, 5, 3, 4), // extends to 7,8
+        ];
+
+        const selection: GridSelection = {
+          topLeft: { row: 1, col: 1 },
+          bottomRight: { row: 10, col: 10 },
+        };
+
+        const options: SelectionFilterOptions = {
+          useMinimalBounds: true,
+          padding: 2,
+        };
+        const result = applySelectionFilter(selection, allCells, options);
+
+        expect(result.cells.length).toBe(1);
+        // Minimal bounds: 5-7 rows, 5-8 cols
+        // With padding: 3-9 rows, 3-10 cols
+        expect(result.rows).toBe(7); // 9 - 3 + 1
+        expect(result.columns).toBe(8); // 10 - 3 + 1
+        expect(result.rowOffset).toBe(2); // 3 - 1
+        expect(result.colOffset).toBe(2); // 3 - 1
+      });
+    });
   });
 });
