@@ -214,7 +214,7 @@ export class DashboardComponent {
         this.originalDashboard.set(currentDashboard);
 
         // Export and load the zoomed area with minimal bounding box
-        const zoomedData = this.dashboard().exportDashboard(selection, true);
+        const zoomedData = this.dashboard().exportDashboard(selection, { useMinimalBounds: true });
         this.dashboard().loadDashboard(zoomedData);
 
         // Enter zoom mode
@@ -228,7 +228,7 @@ export class DashboardComponent {
         );
       } else if (result === true) {
         // Log the selection if OK was clicked (original behavior - no minimal bounds)
-        const exportedData = this.dashboard().exportDashboard(selection, false);
+        const exportedData = this.dashboard().exportDashboard(selection, { useMinimalBounds: false });
         console.log('Exported dashboard data for selection:', exportedData);
       }
 

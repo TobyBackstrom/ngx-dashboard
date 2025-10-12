@@ -9,7 +9,7 @@ import {
 import { DashboardService } from '../services/dashboard.service';
 import { inject, computed } from '@angular/core';
 import { calculateCollisionInfo } from './features/utils/collision.utils';
-import { applySelectionFilter, SelectionFilterOptions } from './features/utils/export.utils';
+import { applySelectionFilter } from './features/utils/export.utils';
 import {
   CellId,
   CellIdUtils,
@@ -18,6 +18,7 @@ import {
   DashboardDataDto,
   WidgetIdUtils,
   GridSelection,
+  SelectionFilterOptions,
 } from '../models';
 import { withGridConfig } from './features/grid-config.feature';
 import { withWidgetManagement } from './features/widget-management.feature';

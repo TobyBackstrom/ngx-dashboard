@@ -1,8 +1,7 @@
-import { CellData, GridSelection, CellIdUtils, WidgetFactory, WidgetId } from '../../../../models';
+import { CellData, GridSelection, CellIdUtils, WidgetFactory, WidgetId, SelectionFilterOptions } from '../../../../models';
 import {
   calculateMinimalBoundingBox,
   applySelectionFilter,
-  SelectionFilterOptions,
 } from '../export.utils';
 
 describe('export.utils', () => {

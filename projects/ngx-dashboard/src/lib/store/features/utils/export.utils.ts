@@ -1,4 +1,4 @@
-import { CellData, GridSelection } from '../../../models';
+import { CellData, GridSelection, SelectionFilterOptions } from '../../../models';
 
 /**
  * Result of applying selection filtering to dashboard cells.
@@ -9,17 +9,6 @@ export interface SelectionFilterResult {
   columns: number;
   rowOffset: number;
   colOffset: number;
-}
-
-/**
- * Options for selection filtering.
- */
-export interface SelectionFilterOptions {
-  /**
-   * If true, shrink the bounds to the minimal bounding box containing all widgets.
-   * If false (default), use the selection bounds as-is.
-   */
-  useMinimalBounds?: boolean;
 }
 
 /**

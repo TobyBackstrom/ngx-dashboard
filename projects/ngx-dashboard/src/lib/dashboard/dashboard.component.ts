@@ -24,7 +24,7 @@ import { DashboardDataDto } from '../models/dashboard-data.dto';
 import { DashboardBridgeService } from '../services/dashboard-bridge.service';
 import { DashboardViewportService } from '../services/dashboard-viewport.service';
 import { ReservedSpace } from '../models/reserved-space';
-import { CellIdUtils, GridSelection } from '../models';
+import { CellIdUtils, GridSelection, SelectionFilterOptions } from '../models';
 
 @Component({
   selector: 'ngx-dashboard',
@@ -153,10 +153,9 @@ export class DashboardComponent implements OnChanges {
 
   // Public export/import methods (overloaded for selection support)
   exportDashboard(): DashboardDataDto;
-  exportDashboard(selection: GridSelection, useMinimalBounds?: boolean): DashboardDataDto;
-  exportDashboard(selection?: GridSelection, useMinimalBounds?: boolean): DashboardDataDto {
+  exportDashboard(selection: GridSelection, options?: SelectionFilterOptions): DashboardDataDto;
+  exportDashboard(selection?: GridSelection, options?: SelectionFilterOptions): DashboardDataDto {
     // Export dashboard with live widget states, optionally filtering by selection
-    const options = useMinimalBounds !== undefined ? { useMinimalBounds } : undefined;
     return this.#store.exportDashboard(() => this.getCurrentWidgetStates(), selection, options);
   }
 
