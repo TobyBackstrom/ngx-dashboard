@@ -34,7 +34,7 @@ Core dashboard library providing the fundamental grid and widget management syst
 
 - **Grid System** - Responsive drag-and-drop grid with collision detection and boundary constraints
 - **Cell Components** - Resizable cells with live preview, context menus, and dual flat/elevated appearance modes
-- **Provider System** - Extensible architecture for custom dialogs and persistence layers
+- **Extensible Provider System** - Dependency injection-based architecture enabling custom dialog and UI implementations ([detailed docs](docs/provider-system-architecture.md))
 - **Error Handling** - Graceful fallback components for unknown widget types with state preservation
 
 ### [@dragonworks/ngx-dashboard-widgets](./projects/ngx-dashboard-widgets)
