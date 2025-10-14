@@ -1,4 +1,4 @@
-import { Component, viewChild, inject, ChangeDetectionStrategy, effect, computed } from '@angular/core';
+import { Component, viewChild, inject, ChangeDetectionStrategy, effect, computed, DestroyRef, Renderer2 } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
@@ -74,20 +74,40 @@ import {
 })
 export class CellContextMenuComponent {
   menuTrigger = viewChild.required('menuTrigger', { read: MatMenuTrigger });
-  
+
   menuService = inject(CellContextMenuService);
-  
+  #renderer = inject(Renderer2);
+  #destroyRef = inject(DestroyRef);
+
   menuPosition = computed(() => {
     const menu = this.menuService.activeMenu();
     return menu ? { left: `${menu.x}px`, top: `${menu.y}px` } : { left: '0px', top: '0px' };
   });
-  
+
   menuItems = computed(() => {
     const menu = this.menuService.activeMenu();
     return menu?.items || [];
   });
-  
+
   constructor() {
+    // Material Menu has a backdrop that blocks events from reaching other elements.
+    // When any right-click occurs while menu is open, we need to:
+    // 1. Close the current menu
+    // 2. Prevent the browser's default context menu
+    //
+    // Users will need to right-click again to open empty cell menus.
+    // This follows standard UX patterns used by most applications.
+    const unlisten = this.#renderer.listen('document', 'contextmenu', (event: Event) => {
+      if (this.menuService.activeMenu()) {
+        // Prevent browser's default context menu when closing widget menu
+        event.preventDefault();
+        this.menuService.hide();
+      }
+    });
+
+    this.#destroyRef.onDestroy(() => {
+      unlisten();
+    });
     effect(() => {
       const menu = this.menuService.activeMenu();
       if (menu) {

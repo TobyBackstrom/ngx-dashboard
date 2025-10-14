@@ -3,6 +3,7 @@ import { DropZoneComponent } from '../drop-zone.component';
 import { DashboardStore } from '../../store/dashboard-store';
 import { DragData, CellIdUtils, WidgetIdUtils, WidgetMetadata } from '../../models';
 import { DashboardService } from '../../services/dashboard.service';
+import { EMPTY_CELL_CONTEXT_PROVIDER } from '../../providers/empty-cell-context';
 
 describe('DropZoneComponent - Focused Regression Tests', () => {
   let component: DropZoneComponent;
@@ -458,5 +459,149 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
       expect(component.dropZoneId()).toBe('drop-zone-5-6');
       expect(component.dropData()).toEqual({ row: 5, col: 6 });
     });
+  });
+
+  describe('Context Menu Handling', () => {
+    it('should always prevent default browser menu when right-clicking empty cell in edit mode', () => {
+      // Component prevents default regardless of provider
+      fixture.componentRef.setInput('editMode', true);
+      fixture.detectChanges();
+
+      const event = new MouseEvent('contextmenu', { bubbles: true });
+      spyOn(event, 'preventDefault');
+
+      component.onContextMenu(event);
+
+      // Component always calls preventDefault in edit mode
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it('should not prevent default or handle context menu when not in edit mode', () => {
+      fixture.componentRef.setInput('editMode', false);
+      fixture.detectChanges();
+
+      const event = new MouseEvent('contextmenu', { bubbles: true });
+      spyOn(event, 'preventDefault');
+
+      component.onContextMenu(event);
+
+      // Should not call preventDefault when not in edit mode
+      expect(event.preventDefault).not.toHaveBeenCalled();
+    });
+
+    it('should allow events to bubble up (not stop propagation)', () => {
+      fixture.componentRef.setInput('editMode', true);
+      fixture.detectChanges();
+
+      const event = new MouseEvent('contextmenu', { bubbles: true });
+      spyOn(event, 'stopPropagation');
+
+      component.onContextMenu(event);
+
+      // Should not stop event propagation
+      expect(event.stopPropagation).not.toHaveBeenCalled();
+    });
+
+    it('should handle context menu at grid boundaries', () => {
+      // Test at (1,1) - top-left corner boundary
+      fixture.componentRef.setInput('row', 1);
+      fixture.componentRef.setInput('col', 1);
+      fixture.componentRef.setInput('editMode', true);
+      fixture.detectChanges();
+
+      const event = new MouseEvent('contextmenu', { bubbles: true });
+      spyOn(event, 'preventDefault');
+
+      component.onContextMenu(event);
+
+      // Should still prevent default at boundaries
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
+  });
+});
+
+describe('DropZoneComponent - Context Menu with Custom Provider', () => {
+  let component: DropZoneComponent;
+  let fixture: ComponentFixture<DropZoneComponent>;
+  let store: InstanceType<typeof DashboardStore>;
+  let mockProvider: jasmine.SpyObj<any>;
+
+  beforeEach(async () => {
+    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory']);
+    mockProvider = jasmine.createSpyObj('EmptyCellContextProvider', ['handleEmptyCellContext']);
+
+    await TestBed.configureTestingModule({
+      imports: [DropZoneComponent],
+      providers: [
+        DashboardStore,
+        { provide: DashboardService, useValue: dashboardServiceSpy },
+        { provide: EMPTY_CELL_CONTEXT_PROVIDER, useValue: mockProvider }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(DropZoneComponent);
+    component = fixture.componentInstance;
+    store = TestBed.inject(DashboardStore);
+
+    // Set required inputs
+    fixture.componentRef.setInput('row', 3);
+    fixture.componentRef.setInput('col', 4);
+    fixture.componentRef.setInput('index', 12);
+    fixture.componentRef.setInput('editMode', true);
+
+    fixture.detectChanges();
+  });
+
+  it('should call custom provider with default grid configuration values', () => {
+    const event = new MouseEvent('contextmenu', { bubbles: true });
+
+    component.onContextMenu(event);
+
+    expect(mockProvider.handleEmptyCellContext).toHaveBeenCalledWith(
+      event,
+      {
+        row: 3,
+        col: 4,
+        totalRows: 8, // Default value from DashboardStore
+        totalColumns: 16, // Default value from DashboardStore
+        gutterSize: '0.5em' // Default value from DashboardStore
+      }
+    );
+  });
+
+  it('should pass correct grid configuration to provider', () => {
+    // Set up grid configuration
+    store.setGridConfig({ rows: 8, columns: 12, gutterSize: '2em' });
+
+    fixture.componentRef.setInput('row', 5);
+    fixture.componentRef.setInput('col', 7);
+    fixture.componentRef.setInput('index', 60);
+    fixture.detectChanges();
+
+    const event = new MouseEvent('contextmenu', { bubbles: true });
+
+    component.onContextMenu(event);
+
+    expect(mockProvider.handleEmptyCellContext).toHaveBeenCalledWith(
+      event,
+      {
+        row: 5,
+        col: 7,
+        totalRows: 8,
+        totalColumns: 12,
+        gutterSize: '2em'
+      }
+    );
+  });
+
+  it('should not call provider when not in edit mode', () => {
+    fixture.componentRef.setInput('editMode', false);
+    fixture.detectChanges();
+
+    const event = new MouseEvent('contextmenu', { bubbles: true });
+
+    component.onContextMenu(event);
+
+    expect(mockProvider.handleEmptyCellContext).not.toHaveBeenCalled();
   });
 });

@@ -11,6 +11,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { DashboardStore } from '../store/dashboard-store';
 import { DragData } from '../models';
+import { EMPTY_CELL_CONTEXT_PROVIDER } from '../providers/empty-cell-context';
 
 @Component({
   selector: 'lib-drop-zone',
@@ -63,6 +64,9 @@ export class DropZoneComponent {
 
   readonly #store = inject(DashboardStore);
   readonly #elementRef = inject(ElementRef);
+  readonly #contextProvider = inject(EMPTY_CELL_CONTEXT_PROVIDER, {
+    optional: true,
+  });
 
   get nativeElement(): HTMLElement {
     return this.#elementRef.nativeElement;
@@ -116,6 +120,27 @@ export class DropZoneComponent {
       this.dragDrop.emit({
         data,
         target: { row: this.row(), col: this.col() },
+      });
+    }
+  }
+
+  /**
+   * Handle context menu events on empty cells.
+   * Only active in edit mode. Delegates to the context provider if available.
+   */
+  onContextMenu(event: MouseEvent): void {
+    if (!this.editMode()) return;
+
+    // Always prevent default browser menu in edit mode
+    event.preventDefault();
+
+    if (this.#contextProvider) {
+      this.#contextProvider.handleEmptyCellContext(event, {
+        row: this.row(),
+        col: this.col(),
+        totalRows: this.#store.rows(),
+        totalColumns: this.#store.columns(),
+        gutterSize: this.#store.gutterSize(),
       });
     }
   }
