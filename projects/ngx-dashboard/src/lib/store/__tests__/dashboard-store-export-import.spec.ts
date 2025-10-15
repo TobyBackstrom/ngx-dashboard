@@ -32,8 +32,6 @@ describe('DashboardStore - Export/Import Functionality', () => {
     } as unknown as WidgetFactory;
 
     mockDashboardService.getFactory.and.returnValue(mockWidgetFactory);
-      mockDashboardService.collectSharedStates.and.returnValue(new Map());
-      mockDashboardService.restoreSharedStates.and.stub();
     mockDashboardService.collectSharedStates.and.returnValue(new Map());
     mockDashboardService.restoreSharedStates.and.stub();
   });

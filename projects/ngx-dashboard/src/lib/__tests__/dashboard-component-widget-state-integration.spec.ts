@@ -79,6 +79,8 @@ describe('DashboardComponent - Widget State Integration', () => {
       'getFactory',
       'registerWidgetType',
       'getAllFactories',
+      'collectSharedStates',
+      'restoreSharedStates',
     ]);
 
     await TestBed.configureTestingModule({
@@ -108,6 +110,8 @@ describe('DashboardComponent - Widget State Integration', () => {
     };
 
     dashboardService.getFactory.and.returnValue(testWidgetFactory);
+    dashboardService.collectSharedStates.and.returnValue(new Map());
+    dashboardService.restoreSharedStates.and.stub();
   });
 
   describe('Widget state preservation during export', () => {

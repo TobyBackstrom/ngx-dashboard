@@ -106,13 +106,19 @@ export const DashboardStore = signalStore(
 
     endResize(apply: boolean) {
       store._endResize(apply, {
-        updateWidgetSpan: (cellId: CellId, rowSpan: number, colSpan: number) => {
+        updateWidgetSpan: (
+          cellId: CellId,
+          rowSpan: number,
+          colSpan: number
+        ) => {
           // Adapter: find widget by cellId and update using widgetId
-          const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId));
+          const widget = store
+            .cells()
+            .find((c) => CellIdUtils.equals(c.cellId, cellId));
           if (widget) {
             store.updateWidgetSpan(widget.widgetId, rowSpan, colSpan);
           }
-        }
+        },
       });
     },
 
@@ -135,7 +141,11 @@ export const DashboardStore = signalStore(
 
       // Apply selection filtering if specified
       if (selection) {
-        const selectionResult = applySelectionFilter(selection, store.cells(), selectionOptions);
+        const selectionResult = applySelectionFilter(
+          selection,
+          store.cells(),
+          selectionOptions
+        );
         widgetsToExport = selectionResult.cells;
         exportRows = selectionResult.rows;
         exportColumns = selectionResult.columns;
@@ -146,24 +156,32 @@ export const DashboardStore = signalStore(
       // Collect widget types in use for shared state collection
       const activeWidgetTypes = new Set(
         widgetsToExport
-          .filter((cell) => cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget')
+          .filter(
+            (cell) =>
+              cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget'
+          )
           .map((cell) => cell.widgetFactory.widgetTypeid)
       );
 
       // Collect shared states from DashboardService
-      const sharedStatesMap = store.dashboardService.collectSharedStates(activeWidgetTypes);
-      const sharedStates = sharedStatesMap.size > 0
-        ? Object.fromEntries(sharedStatesMap)
-        : undefined;
+      const sharedStatesMap =
+        store.dashboardService.collectSharedStates(activeWidgetTypes);
+      const sharedStates =
+        sharedStatesMap.size > 0
+          ? Object.fromEntries(sharedStatesMap)
+          : undefined;
 
       return {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: store.dashboardId(),
         rows: exportRows,
         columns: exportColumns,
         gutterSize: store.gutterSize(),
         cells: widgetsToExport
-          .filter((cell) => cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget')
+          .filter(
+            (cell) =>
+              cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget'
+          )
           .map((cell) => {
             const cellIdString = CellIdUtils.toString(cell.cellId);
             const currentState = liveWidgetStates.get(cellIdString);
@@ -183,7 +201,7 @@ export const DashboardStore = signalStore(
                 currentState !== undefined ? currentState : cell.widgetState,
             };
           }),
-        sharedStates,
+        ...(sharedStates && { sharedStates }),
       };
     },
 
