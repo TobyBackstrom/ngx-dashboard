@@ -83,7 +83,7 @@ describe('DashboardViewportService', () => {
     store = TestBed.inject(DashboardStore);
 
     // Initialize store with dashboard data
-    store.initializeFromDto({
+    store.loadDashboard({
       version: '1.1.0',
       dashboardId: 'test-dashboard',
       rows: 8,

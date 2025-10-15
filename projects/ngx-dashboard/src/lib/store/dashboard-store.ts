@@ -244,47 +244,6 @@ export const DashboardStore = signalStore(
         widgetsById,
       });
     },
-
-    // INITIALIZATION METHODS
-    initializeFromDto(dashboardData: DashboardDataDto): void {
-      // Restore shared states FIRST, before creating widget instances
-      if (dashboardData.sharedStates) {
-        const statesMap = new Map(Object.entries(dashboardData.sharedStates));
-        store.dashboardService.restoreSharedStates(statesMap);
-      }
-
-      // Inline the loadDashboard logic since it's defined later in the same methods block
-      const widgetsById: Record<string, CellData> = {};
-
-      dashboardData.cells.forEach((cellData) => {
-        const factory = store.dashboardService.getFactory(
-          cellData.widgetTypeid
-        );
-
-        const widgetId = WidgetIdUtils.generate();
-        const cell: CellData = {
-          widgetId,
-          cellId: CellIdUtils.create(cellData.row, cellData.col),
-          row: cellData.row,
-          col: cellData.col,
-          rowSpan: cellData.rowSpan,
-          colSpan: cellData.colSpan,
-          flat: cellData.flat,
-          widgetFactory: factory,
-          widgetState: cellData.widgetState,
-        };
-
-        widgetsById[WidgetIdUtils.toString(widgetId)] = cell;
-      });
-
-      patchState(store, {
-        dashboardId: dashboardData.dashboardId,
-        rows: dashboardData.rows,
-        columns: dashboardData.columns,
-        gutterSize: dashboardData.gutterSize,
-        widgetsById,
-      });
-    },
   })),
 
   // Cross-feature computed properties that depend on resize + widget data (using utility functions)

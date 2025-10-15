@@ -85,7 +85,7 @@ export class DashboardComponent implements OnChanges {
     effect(() => {
       const data = this.dashboardData();
       if (data) {
-        this.#store.initializeFromDto(data);
+        this.#store.loadDashboard(data);
         // Register with bridge service after dashboard ID is set
         this.#bridge.updateDashboardRegistration(this.#store);
         this.#isInitialized = true;
@@ -153,10 +153,20 @@ export class DashboardComponent implements OnChanges {
 
   // Public export/import methods (overloaded for selection support)
   exportDashboard(): DashboardDataDto;
-  exportDashboard(selection: GridSelection, options?: SelectionFilterOptions): DashboardDataDto;
-  exportDashboard(selection?: GridSelection, options?: SelectionFilterOptions): DashboardDataDto {
+  exportDashboard(
+    selection: GridSelection,
+    options?: SelectionFilterOptions
+  ): DashboardDataDto;
+  exportDashboard(
+    selection?: GridSelection,
+    options?: SelectionFilterOptions
+  ): DashboardDataDto {
     // Export dashboard with live widget states, optionally filtering by selection
-    return this.#store.exportDashboard(() => this.getCurrentWidgetStates(), selection, options);
+    return this.#store.exportDashboard(
+      () => this.getCurrentWidgetStates(),
+      selection,
+      options
+    );
   }
 
   loadDashboard(data: DashboardDataDto): void {

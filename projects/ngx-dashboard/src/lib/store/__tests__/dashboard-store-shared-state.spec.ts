@@ -517,7 +517,7 @@ describe('DashboardStore - Shared State Functionality', () => {
     });
   });
 
-  describe('initializeFromDto with Shared States', () => {
+  describe('loadDashboard with Shared States', () => {
     it('should restore shared states when initializing from DTO', () => {
       const dashboardData: DashboardDataDto = {
         version: '1.1.0',
@@ -540,7 +540,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         },
       };
 
-      store.initializeFromDto(dashboardData);
+      store.loadDashboard(dashboardData);
 
       // Verify restoreSharedStates was called
       expect(mockDashboardService.restoreSharedStates).toHaveBeenCalledWith(
