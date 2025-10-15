@@ -7,6 +7,7 @@ The Widget Shared State feature allows widget families (multiple instances of th
 ## When to Use Shared State
 
 Use shared state when:
+
 - Multiple widget instances need to share the same configuration
 - You want to avoid duplicating state across many widget instances
 - Changes to one widget should affect all widgets of that type
@@ -37,8 +38,8 @@ Registration → Usage → Serialization → Deserialization
 Create a service that implements the `WidgetSharedStateProvider` interface:
 
 ```typescript
-import { Injectable, signal } from '@angular/core';
-import { WidgetSharedStateProvider } from '@dragonworks/ngx-dashboard';
+import { Injectable, signal } from "@angular/core";
+import { WidgetSharedStateProvider } from "@dragonworks/ngx-dashboard";
 
 export interface ParkingSpaceSharedConfig {
   color: string;
@@ -46,12 +47,12 @@ export interface ParkingSpaceSharedConfig {
   availabilityThreshold: number;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class ParkingSpaceSharedState implements WidgetSharedStateProvider<ParkingSpaceSharedConfig> {
   private state = signal<ParkingSpaceSharedConfig>({
-    color: '#4CAF50',
+    color: "#4CAF50",
     pricePerHour: 5,
-    availabilityThreshold: 0.8
+    availabilityThreshold: 0.8,
   });
 
   // Required by WidgetSharedStateProvider interface
@@ -69,11 +70,11 @@ export class ParkingSpaceSharedState implements WidgetSharedStateProvider<Parkin
 
   // Additional helper methods
   updateColor(color: string): void {
-    this.state.update(s => ({ ...s, color }));
+    this.state.update((s) => ({ ...s, color }));
   }
 
   updatePricing(pricePerHour: number): void {
-    this.state.update(s => ({ ...s, pricePerHour }));
+    this.state.update((s) => ({ ...s, pricePerHour }));
   }
 }
 ```
@@ -144,10 +145,10 @@ export class ParkingSpaceWidgetComponent implements Widget {
 In your app configuration, register both the widget and its shared state provider:
 
 ```typescript
-import { ApplicationConfig, provideEnvironmentInitializer, inject } from '@angular/core';
-import { DashboardService } from '@dragonworks/ngx-dashboard';
-import { ParkingSpaceWidgetComponent } from './widgets/parking-space-widget.component';
-import { ParkingSpaceSharedState } from './services/parking-space-shared-state.service';
+import { ApplicationConfig, provideEnvironmentInitializer, inject } from "@angular/core";
+import { DashboardService } from "@dragonworks/ngx-dashboard";
+import { ParkingSpaceWidgetComponent } from "./widgets/parking-space-widget.component";
+import { ParkingSpaceSharedState } from "./services/parking-space-shared-state.service";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -157,13 +158,13 @@ export const appConfig: ApplicationConfig = {
       // Register widget with its shared state provider
       dashboardService.registerWidgetType(
         ParkingSpaceWidgetComponent,
-        ParkingSpaceSharedState  // Pass the service class
+        ParkingSpaceSharedState // Pass the service class
       );
 
       // Widgets without shared state work as before
       dashboardService.registerWidgetType(OtherWidgetComponent);
-    })
-  ]
+    }),
+  ],
 };
 ```
 
@@ -173,7 +174,7 @@ When a dashboard is exported, the shared states are included in a separate secti
 
 ```json
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "dashboardId": "parking-dashboard",
   "rows": 8,
   "columns": 12,
@@ -199,7 +200,7 @@ When a dashboard is exported, the shared states are included in a separate secti
   "sharedStates": {
     "@app/parking-space": {
       "color": "#FF5722",
-      "pricePerHour": 7.50,
+      "pricePerHour": 7.5,
       "availabilityThreshold": 0.75
     }
   }
@@ -221,7 +222,7 @@ This ensures that when widgets are instantiated, the shared state is already ava
 ### 1. Use Signals for Reactive Updates
 
 ```typescript
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class MyWidgetSharedState implements WidgetSharedStateProvider<MyConfig> {
   private state = signal<MyConfig>(defaultConfig);
   readonly config = this.state.asReadonly(); // Expose as readonly
@@ -256,10 +257,10 @@ interface SharedState {
 
 // ❌ Bad: Mixed concerns
 interface MixedState {
-  id: string;          // Instance-specific
-  label: string;       // Instance-specific
-  theme: string;       // Should be shared
-  units: string;       // Should be shared
+  id: string; // Instance-specific
+  label: string; // Instance-specific
+  theme: string; // Should be shared
+  units: string; // Should be shared
 }
 ```
 
@@ -328,18 +329,22 @@ updateTheme(newColor: string): void {
 Shared state providers can be used for cross-widget communication within a widget family:
 
 ```typescript
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class WidgetGroupSharedState implements WidgetSharedStateProvider<GroupConfig> {
   private state = signal<GroupConfig>({ selectedId: null });
   readonly config = this.state.asReadonly();
 
   selectWidget(id: string): void {
-    this.state.update(s => ({ ...s, selectedId: id }));
+    this.state.update((s) => ({ ...s, selectedId: id }));
   }
 
   // Framework methods
-  getSharedState() { return this.state(); }
-  setSharedState(state: GroupConfig) { this.state.set(state); }
+  getSharedState() {
+    return this.state();
+  }
+  setSharedState(state: GroupConfig) {
+    this.state.set(state);
+  }
 }
 ```
 
@@ -368,6 +373,7 @@ registerWidgetType<T = unknown>(
 ```
 
 **Parameters:**
+
 - `widget` - The widget component class with static metadata
 - `sharedStateProvider` - (Optional) Shared state provider service or instance
 
@@ -383,7 +389,7 @@ interface DashboardDataDto {
   columns: number;
   gutterSize: string;
   cells: CellDataDto[];
-  sharedStates?: Record<string, unknown>;  // NEW: Widget family shared states
+  sharedStates?: Record<string, unknown>; // NEW: Widget family shared states
 }
 ```
 
