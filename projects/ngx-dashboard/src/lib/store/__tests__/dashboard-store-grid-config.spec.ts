@@ -6,7 +6,7 @@ describe('DashboardStore - Grid Configuration', () => {
   let store: InstanceType<typeof DashboardStore>;
 
   beforeEach(() => {
-    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory']);
+    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
     
     TestBed.configureTestingModule({
       providers: [

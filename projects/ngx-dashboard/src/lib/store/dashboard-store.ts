@@ -143,6 +143,19 @@ export const DashboardStore = signalStore(
         colOffset = selectionResult.colOffset;
       }
 
+      // Collect widget types in use for shared state collection
+      const activeWidgetTypes = new Set(
+        widgetsToExport
+          .filter((cell) => cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget')
+          .map((cell) => cell.widgetFactory.widgetTypeid)
+      );
+
+      // Collect shared states from DashboardService
+      const sharedStatesMap = store.dashboardService.collectSharedStates(activeWidgetTypes);
+      const sharedStates = sharedStatesMap.size > 0
+        ? Object.fromEntries(sharedStatesMap)
+        : undefined;
+
       return {
         version: '1.0.0',
         dashboardId: store.dashboardId(),
@@ -170,13 +183,20 @@ export const DashboardStore = signalStore(
                 currentState !== undefined ? currentState : cell.widgetState,
             };
           }),
+        sharedStates,
       };
     },
 
     loadDashboard(data: DashboardDataDto): void {
+      // Restore shared states FIRST, before creating widget instances
+      if (data.sharedStates) {
+        const statesMap = new Map(Object.entries(data.sharedStates));
+        store.dashboardService.restoreSharedStates(statesMap);
+      }
+
       // Import full dashboard data with grid configuration
       const widgetsById: Record<string, CellData> = {};
-      
+
       data.cells.forEach((cellData) => {
         const factory = store.dashboardService.getFactory(
           cellData.widgetTypeid
@@ -194,7 +214,7 @@ export const DashboardStore = signalStore(
           widgetFactory: factory,
           widgetState: cellData.widgetState,
         };
-        
+
         widgetsById[WidgetIdUtils.toString(widgetId)] = cell;
       });
 
@@ -209,9 +229,15 @@ export const DashboardStore = signalStore(
 
     // INITIALIZATION METHODS
     initializeFromDto(dashboardData: DashboardDataDto): void {
+      // Restore shared states FIRST, before creating widget instances
+      if (dashboardData.sharedStates) {
+        const statesMap = new Map(Object.entries(dashboardData.sharedStates));
+        store.dashboardService.restoreSharedStates(statesMap);
+      }
+
       // Inline the loadDashboard logic since it's defined later in the same methods block
       const widgetsById: Record<string, CellData> = {};
-      
+
       dashboardData.cells.forEach((cellData) => {
         const factory = store.dashboardService.getFactory(
           cellData.widgetTypeid
@@ -229,7 +255,7 @@ export const DashboardStore = signalStore(
           widgetFactory: factory,
           widgetState: cellData.widgetState,
         };
-        
+
         widgetsById[WidgetIdUtils.toString(widgetId)] = cell;
       });
 

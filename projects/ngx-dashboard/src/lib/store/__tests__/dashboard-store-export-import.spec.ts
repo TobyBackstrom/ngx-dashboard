@@ -9,25 +9,33 @@ describe('DashboardStore - Export/Import Functionality', () => {
   let mockDashboardService: jasmine.SpyObj<DashboardService>;
 
   beforeEach(() => {
-    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory']);
-    
+    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', [
+      'getFactory',
+      'collectSharedStates',
+      'restoreSharedStates'
+    ]);
+
     TestBed.configureTestingModule({
       providers: [
         DashboardStore,
         { provide: DashboardService, useValue: dashboardServiceSpy }
       ]
     });
-    
+
     store = TestBed.inject(DashboardStore);
     mockDashboardService = TestBed.inject(DashboardService) as jasmine.SpyObj<DashboardService>;
     store.setGridConfig({ rows: 8, columns: 12 });
-    
+
     mockWidgetFactory = {
       widgetTypeid: 'test-widget',
       createComponent: jasmine.createSpy()
     } as unknown as WidgetFactory;
 
     mockDashboardService.getFactory.and.returnValue(mockWidgetFactory);
+      mockDashboardService.collectSharedStates.and.returnValue(new Map());
+      mockDashboardService.restoreSharedStates.and.stub();
+    mockDashboardService.collectSharedStates.and.returnValue(new Map());
+    mockDashboardService.restoreSharedStates.and.stub();
   });
 
   describe('exportDashboard', () => {

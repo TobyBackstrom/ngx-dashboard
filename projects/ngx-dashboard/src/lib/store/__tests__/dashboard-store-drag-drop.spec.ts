@@ -10,7 +10,7 @@ describe('DashboardStore - Drag & Drop Operations', () => {
   let dashboardService: jasmine.SpyObj<DashboardService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('DashboardService', ['getFactory']);
+    const spy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
     
     TestBed.configureTestingModule({
       providers: [
@@ -36,6 +36,8 @@ describe('DashboardStore - Drag & Drop Operations', () => {
     } as unknown as WidgetFactory;
 
     dashboardService.getFactory.and.returnValue(mockWidgetFactory);
+      dashboardService.collectSharedStates.and.returnValue(new Map());
+      dashboardService.restoreSharedStates.and.stub();
   });
 
   describe('dragData management', () => {

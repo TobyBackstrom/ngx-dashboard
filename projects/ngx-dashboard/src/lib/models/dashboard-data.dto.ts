@@ -18,6 +18,14 @@ export interface DashboardDataDto {
 
   /** Array of serializable cell data */
   cells: CellDataDto[];
+
+  /**
+   * Shared states for widget families (optional).
+   * Maps widget type ID to shared state object.
+   * This allows widget families to share configuration across all instances.
+   * @since 1.1.0
+   */
+  sharedStates?: Record<string, unknown>;
 }
 
 /**

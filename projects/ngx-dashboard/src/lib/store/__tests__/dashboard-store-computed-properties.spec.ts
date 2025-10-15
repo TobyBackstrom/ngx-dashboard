@@ -10,7 +10,7 @@ describe('DashboardStore - Computed Properties', () => {
   let dashboardService: jasmine.SpyObj<DashboardService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('DashboardService', ['getFactory']);
+    const spy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
     
     TestBed.configureTestingModule({
       providers: [
@@ -36,6 +36,8 @@ describe('DashboardStore - Computed Properties', () => {
     };
 
     dashboardService.getFactory.and.returnValue(mockWidgetFactory);
+      dashboardService.collectSharedStates.and.returnValue(new Map());
+      dashboardService.restoreSharedStates.and.stub();
   });
 
   describe('resizePreviewCells', () => {

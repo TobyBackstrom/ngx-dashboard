@@ -15,6 +15,7 @@ export { DashboardService } from './lib/services/dashboard.service';
 
 // Core Widget Types
 export type { Widget, WidgetMetadata } from './lib/models/widget';
+export type { WidgetSharedStateProvider } from './lib/models/widget-shared-state-provider';
 
 // Data Transfer Types
 export type {

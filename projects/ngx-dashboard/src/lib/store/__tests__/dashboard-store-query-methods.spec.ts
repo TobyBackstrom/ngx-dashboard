@@ -9,7 +9,7 @@ describe('DashboardStore - Grid Query Methods', () => {
   let mockWidgetFactory: WidgetFactory;
 
   beforeEach(() => {
-    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory']);
+    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
     
     TestBed.configureTestingModule({
       providers: [

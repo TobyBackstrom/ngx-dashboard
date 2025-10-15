@@ -8,7 +8,7 @@ describe('DashboardStore - Collision Detection', () => {
   let dashboardService: jasmine.SpyObj<DashboardService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('DashboardService', ['getFactory']);
+    const spy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
     
     TestBed.configureTestingModule({
       providers: [
@@ -584,6 +584,8 @@ describe('DashboardStore - Collision Detection', () => {
 
       // Mock the dashboard service getFactory method
       dashboardService.getFactory.and.returnValue(mockWidgetFactory);
+      dashboardService.collectSharedStates.and.returnValue(new Map());
+      dashboardService.restoreSharedStates.and.stub();
     });
 
     it('should create widget when dropping widget drag data on empty space', () => {

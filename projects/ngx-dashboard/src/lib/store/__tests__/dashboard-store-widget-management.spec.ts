@@ -9,7 +9,7 @@ describe('DashboardStore - Widget Management', () => {
   let mockDashboardService: jasmine.SpyObj<DashboardService>;
 
   beforeEach(() => {
-    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory']);
+    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
     
     TestBed.configureTestingModule({
       providers: [
@@ -28,6 +28,8 @@ describe('DashboardStore - Widget Management', () => {
     } as unknown as WidgetFactory;
 
     mockDashboardService.getFactory.and.returnValue(mockWidgetFactory);
+      mockDashboardService.collectSharedStates.and.returnValue(new Map());
+      mockDashboardService.restoreSharedStates.and.stub();
   });
 
   describe('addWidget', () => {
