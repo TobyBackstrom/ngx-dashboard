@@ -1,7 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto, GridSelection } from '../../models';
+import {
+  CellIdUtils,
+  WidgetIdUtils,
+  CellData,
+  WidgetFactory,
+  DashboardDataDto,
+  GridSelection,
+} from '../../models';
 
 describe('DashboardStore - Export/Import Functionality', () => {
   let store: InstanceType<typeof DashboardStore>;
@@ -12,23 +19,25 @@ describe('DashboardStore - Export/Import Functionality', () => {
     const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', [
       'getFactory',
       'collectSharedStates',
-      'restoreSharedStates'
+      'restoreSharedStates',
     ]);
 
     TestBed.configureTestingModule({
       providers: [
         DashboardStore,
-        { provide: DashboardService, useValue: dashboardServiceSpy }
-      ]
+        { provide: DashboardService, useValue: dashboardServiceSpy },
+      ],
     });
 
     store = TestBed.inject(DashboardStore);
-    mockDashboardService = TestBed.inject(DashboardService) as jasmine.SpyObj<DashboardService>;
+    mockDashboardService = TestBed.inject(
+      DashboardService
+    ) as jasmine.SpyObj<DashboardService>;
     store.setGridConfig({ rows: 8, columns: 12 });
 
     mockWidgetFactory = {
       widgetTypeid: 'test-widget',
-      createComponent: jasmine.createSpy()
+      createComponent: jasmine.createSpy(),
     } as unknown as WidgetFactory;
 
     mockDashboardService.getFactory.and.returnValue(mockWidgetFactory);
@@ -41,12 +50,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
       const exported = store.exportDashboard();
 
       expect(exported).toEqual({
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: '',
         rows: 8,
         columns: 12,
         gutterSize: '0.5em',
-        cells: []
+        cells: [],
       });
     });
 
@@ -107,24 +116,28 @@ describe('DashboardStore - Export/Import Functionality', () => {
       const exported = store.exportDashboard();
 
       expect(exported.cells.length).toBe(2);
-      expect(exported.cells).toContain(jasmine.objectContaining({
-        row: 1,
-        col: 1,
-        rowSpan: 1,
-        colSpan: 1,
-        flat: undefined,
-        widgetTypeid: 'test-widget',
-        widgetState: {},
-      }));
-      expect(exported.cells).toContain(jasmine.objectContaining({
-        row: 5,
-        col: 8,
-        rowSpan: 2,
-        colSpan: 4,
-        flat: false,
-        widgetTypeid: 'test-widget',
-        widgetState: { size: 'large' },
-      }));
+      expect(exported.cells).toContain(
+        jasmine.objectContaining({
+          row: 1,
+          col: 1,
+          rowSpan: 1,
+          colSpan: 1,
+          flat: undefined,
+          widgetTypeid: 'test-widget',
+          widgetState: {},
+        })
+      );
+      expect(exported.cells).toContain(
+        jasmine.objectContaining({
+          row: 5,
+          col: 8,
+          rowSpan: 2,
+          colSpan: 4,
+          flat: false,
+          widgetTypeid: 'test-widget',
+          widgetState: { size: 'large' },
+        })
+      );
     });
 
     it('should export custom grid configuration', () => {
@@ -140,12 +153,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
   describe('loadDashboard', () => {
     it('should load empty dashboard', () => {
       const data: DashboardDataDto = {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: 'test-dashboard-1',
         rows: 10,
         columns: 15,
         gutterSize: '1em',
-        cells: []
+        cells: [],
       };
 
       store.loadDashboard(data);
@@ -158,20 +171,22 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should load dashboard with single widget', () => {
       const data: DashboardDataDto = {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: 'test-dashboard-2',
         rows: 8,
         columns: 12,
         gutterSize: '0.5em',
-        cells: [{
-          row: 5,
-          col: 7,
-          rowSpan: 3,
-          colSpan: 2,
-          flat: true,
-          widgetTypeid: 'test-widget',
-          widgetState: { text: 'Hello World' },
-        }]
+        cells: [
+          {
+            row: 5,
+            col: 7,
+            rowSpan: 3,
+            colSpan: 2,
+            flat: true,
+            widgetTypeid: 'test-widget',
+            widgetState: { text: 'Hello World' },
+          },
+        ],
       };
 
       store.loadDashboard(data);
@@ -190,7 +205,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     it('should load dashboard with multiple widgets', () => {
       const data: DashboardDataDto = {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: 'test-dashboard-3',
         rows: 16,
         columns: 16,
@@ -212,8 +227,8 @@ describe('DashboardStore - Export/Import Functionality', () => {
             flat: false,
             widgetTypeid: 'test-widget',
             widgetState: { config: 'advanced' },
-          }
-        ]
+          },
+        ],
       };
 
       store.loadDashboard(data);
@@ -228,20 +243,25 @@ describe('DashboardStore - Export/Import Functionality', () => {
       const consoleSpy = spyOn(console, 'warn');
       const fallbackFactory = {
         widgetTypeid: '__internal/unknown-widget',
-        createInstance: jasmine.createSpy()
+        createInstance: jasmine.createSpy(),
       } as unknown as WidgetFactory;
-      
+
       // Call the real getFactory method which handles fallback logic
       mockDashboardService.getFactory.and.callFake((widgetTypeid: string) => {
-        if (widgetTypeid === 'unknown-widget' || widgetTypeid === 'another-unknown-widget') {
-          console.warn(`Unknown widget type: ${widgetTypeid}, using fallback error widget`);
+        if (
+          widgetTypeid === 'unknown-widget' ||
+          widgetTypeid === 'another-unknown-widget'
+        ) {
+          console.warn(
+            `Unknown widget type: ${widgetTypeid}, using fallback error widget`
+          );
           return fallbackFactory;
         }
         return mockWidgetFactory;
       });
 
       const data: DashboardDataDto = {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: 'test-dashboard-4',
         rows: 8,
         columns: 12,
@@ -262,35 +282,41 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 2,
             widgetTypeid: 'another-unknown-widget',
             widgetState: {},
-          }
-        ]
+          },
+        ],
       };
 
       store.loadDashboard(data);
 
       expect(store.cells().length).toBe(2); // Fallback widgets created instead of skipped
-      expect(consoleSpy).toHaveBeenCalledWith('Unknown widget type: unknown-widget, using fallback error widget');
-      expect(consoleSpy).toHaveBeenCalledWith('Unknown widget type: another-unknown-widget, using fallback error widget');
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Unknown widget type: unknown-widget, using fallback error widget'
+      );
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Unknown widget type: another-unknown-widget, using fallback error widget'
+      );
     });
 
     it('should load mixed valid and invalid widgets', () => {
       const consoleSpy = spyOn(console, 'warn');
       const fallbackFactory = {
         widgetTypeid: '__internal/unknown-widget',
-        createInstance: jasmine.createSpy()
+        createInstance: jasmine.createSpy(),
       } as unknown as WidgetFactory;
-      
+
       // Mock factory to return fallback for unknown widgets with console warning
       mockDashboardService.getFactory.and.callFake((widgetTypeid: string) => {
         if (widgetTypeid === 'unknown-widget') {
-          console.warn(`Unknown widget type: ${widgetTypeid}, using fallback error widget`);
+          console.warn(
+            `Unknown widget type: ${widgetTypeid}, using fallback error widget`
+          );
           return fallbackFactory;
         }
         return mockWidgetFactory;
       });
 
       const data: DashboardDataDto = {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: 'test-dashboard-5',
         rows: 8,
         columns: 12,
@@ -319,14 +345,16 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 2,
             widgetTypeid: 'test-widget',
             widgetState: {},
-          }
-        ]
+          },
+        ],
       };
 
       store.loadDashboard(data);
 
       expect(store.cells().length).toBe(3); // All widgets loaded (2 valid + 1 fallback)
-      expect(consoleSpy).toHaveBeenCalledWith('Unknown widget type: unknown-widget, using fallback error widget');
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Unknown widget type: unknown-widget, using fallback error widget'
+      );
     });
 
     it('should replace existing dashboard content', () => {
@@ -346,7 +374,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       // Load new data
       const data: DashboardDataDto = {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: 'test-dashboard-6',
         rows: 20,
         columns: 25,
@@ -359,8 +387,8 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 4,
             widgetTypeid: 'test-widget',
             widgetState: { replaced: true },
-          }
-        ]
+          },
+        ],
       };
 
       store.loadDashboard(data);
@@ -384,7 +412,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
         name: 'Unknown Widget',
         description: 'Fallback widget',
         svgIcon: '<svg></svg>',
-        createInstance: jasmine.createSpy()
+        createInstance: jasmine.createSpy(),
       } as unknown as WidgetFactory;
     });
 
@@ -413,7 +441,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(validCell);
       store.addWidget(unknownCell);
-      
+
       expect(store.cells().length).toBe(2); // Both widgets added to store
 
       const exported = store.exportDashboard();
@@ -455,7 +483,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       store.addWidget(unknownCell1);
       store.addWidget(unknownCell2);
-      
+
       expect(store.cells().length).toBe(2); // Both unknown widgets added to store
 
       const exported = store.exportDashboard();
@@ -502,30 +530,34 @@ describe('DashboardStore - Export/Import Functionality', () => {
       store.addWidget(validCell1);
       store.addWidget(unknownCell);
       store.addWidget(validCell2);
-      
+
       expect(store.cells().length).toBe(3); // All widgets added to store
 
       const exported = store.exportDashboard();
 
       expect(exported.cells.length).toBe(2); // Only valid widgets exported
-      expect(exported.cells).toContain(jasmine.objectContaining({
-        row: 1,
-        col: 1,
-        rowSpan: 1,
-        colSpan: 1,
-        flat: undefined,
-        widgetTypeid: 'test-widget',
-        widgetState: { type: 'first' },
-      }));
-      expect(exported.cells).toContain(jasmine.objectContaining({
-        row: 3,
-        col: 3,
-        rowSpan: 2,
-        colSpan: 3,
-        flat: true,
-        widgetTypeid: 'test-widget',
-        widgetState: { type: 'second' },
-      }));
+      expect(exported.cells).toContain(
+        jasmine.objectContaining({
+          row: 1,
+          col: 1,
+          rowSpan: 1,
+          colSpan: 1,
+          flat: undefined,
+          widgetTypeid: 'test-widget',
+          widgetState: { type: 'first' },
+        })
+      );
+      expect(exported.cells).toContain(
+        jasmine.objectContaining({
+          row: 3,
+          col: 3,
+          rowSpan: 2,
+          colSpan: 3,
+          flat: true,
+          widgetTypeid: 'test-widget',
+          widgetState: { type: 'second' },
+        })
+      );
     });
 
     it('should filter unknown widgets with live widget states callback', () => {
@@ -698,11 +730,18 @@ describe('DashboardStore - Export/Import Functionality', () => {
       const exported = store.exportDashboard(() => liveStates);
 
       expect(exported.cells.length).toBe(2);
-      
-      const cell1Export = exported.cells.find(c => c.row === 1 && c.col === 1);
-      const cell2Export = exported.cells.find(c => c.row === 2 && c.col === 2);
-      
-      expect(cell1Export?.widgetState).toEqual({ live: 'state1', modified: true });
+
+      const cell1Export = exported.cells.find(
+        (c) => c.row === 1 && c.col === 1
+      );
+      const cell2Export = exported.cells.find(
+        (c) => c.row === 2 && c.col === 2
+      );
+
+      expect(cell1Export?.widgetState).toEqual({
+        live: 'state1',
+        modified: true,
+      });
       expect(cell2Export?.widgetState).toEqual({ stored: 'state2' });
     });
 
@@ -784,7 +823,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 2, col: 3 },
-        bottomRight: { row: 4, col: 6 }
+        bottomRight: { row: 4, col: 6 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -813,7 +852,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 2, col: 4 },
-        bottomRight: { row: 5, col: 8 }
+        bottomRight: { row: 5, col: 8 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -851,7 +890,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       // Selection starts at row 2, but widget starts at row 1
       const selection: GridSelection = {
         topLeft: { row: 2, col: 2 },
-        bottomRight: { row: 5, col: 6 }
+        bottomRight: { row: 5, col: 6 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -878,7 +917,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       // Widget extends from row 3 to row 5 (inclusive), but selection ends at row 4
       const selection: GridSelection = {
         topLeft: { row: 2, col: 4 },
-        bottomRight: { row: 4, col: 8 }
+        bottomRight: { row: 4, col: 8 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -929,7 +968,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 3, col: 4 },
-        bottomRight: { row: 6, col: 8 }
+        bottomRight: { row: 6, col: 8 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -939,7 +978,9 @@ describe('DashboardStore - Export/Import Functionality', () => {
       expect(exported.cells.length).toBe(3);
 
       // Check coordinate transformations
-      const widget1 = exported.cells.find(c => (c.widgetState as any).id === 'widget1');
+      const widget1 = exported.cells.find(
+        (c) => (c.widgetState as any).id === 'widget1'
+      );
       expect(widget1).toEqual({
         row: 1, // 3 - (3 - 1) = 1
         col: 1, // 4 - (4 - 1) = 1
@@ -950,7 +991,9 @@ describe('DashboardStore - Export/Import Functionality', () => {
         widgetState: { id: 'widget1' },
       });
 
-      const widget2 = exported.cells.find(c => (c.widgetState as any).id === 'widget2');
+      const widget2 = exported.cells.find(
+        (c) => (c.widgetState as any).id === 'widget2'
+      );
       expect(widget2).toEqual({
         row: 3, // 5 - (3 - 1) = 3
         col: 4, // 7 - (4 - 1) = 4
@@ -961,7 +1004,9 @@ describe('DashboardStore - Export/Import Functionality', () => {
         widgetState: { id: 'widget2' },
       });
 
-      const widget3 = exported.cells.find(c => (c.widgetState as any).id === 'widget3');
+      const widget3 = exported.cells.find(
+        (c) => (c.widgetState as any).id === 'widget3'
+      );
       expect(widget3).toEqual({
         row: 2, // 4 - (3 - 1) = 2
         col: 2, // 5 - (4 - 1) = 2
@@ -991,7 +1036,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 5, col: 7 },
-        bottomRight: { row: 5, col: 7 }
+        bottomRight: { row: 5, col: 7 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -1040,7 +1085,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 1, col: 1 },
-        bottomRight: { row: 4, col: 6 }
+        bottomRight: { row: 4, col: 6 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -1050,16 +1095,20 @@ describe('DashboardStore - Export/Import Functionality', () => {
       expect(exported.cells.length).toBe(2);
 
       // Coordinates should remain the same when selection matches full dashboard
-      expect(exported.cells).toContain(jasmine.objectContaining({
-        row: 1,
-        col: 1,
-        widgetState: { pos: 'top-left' },
-      }));
-      expect(exported.cells).toContain(jasmine.objectContaining({
-        row: 4,
-        col: 6,
-        widgetState: { pos: 'bottom-right' },
-      }));
+      expect(exported.cells).toContain(
+        jasmine.objectContaining({
+          row: 1,
+          col: 1,
+          widgetState: { pos: 'top-left' },
+        })
+      );
+      expect(exported.cells).toContain(
+        jasmine.objectContaining({
+          row: 4,
+          col: 6,
+          widgetState: { pos: 'bottom-right' },
+        })
+      );
     });
 
     it('should handle widget spanning multiple cells within selection', () => {
@@ -1081,7 +1130,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 2, col: 4 },
-        bottomRight: { row: 7, col: 10 }
+        bottomRight: { row: 7, col: 10 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -1166,7 +1215,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 3, col: 4 },
-        bottomRight: { row: 6, col: 8 }
+        bottomRight: { row: 6, col: 8 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -1209,7 +1258,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 3, col: 4 },
-        bottomRight: { row: 6, col: 8 }
+        bottomRight: { row: 6, col: 8 },
       };
 
       const exported = store.exportDashboard(() => liveStates, selection);
@@ -1224,7 +1273,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const unknownWidgetFactory: WidgetFactory = {
         widgetTypeid: '__internal/unknown-widget',
-        createInstance: jasmine.createSpy()
+        createInstance: jasmine.createSpy(),
       } as unknown as WidgetFactory;
 
       const validCell: CellData = {
@@ -1254,7 +1303,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 2, col: 3 },
-        bottomRight: { row: 6, col: 8 }
+        bottomRight: { row: 6, col: 8 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -1268,7 +1317,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 3, col: 5 },
-        bottomRight: { row: 7, col: 10 }
+        bottomRight: { row: 7, col: 10 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -1308,7 +1357,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 3, col: 4 },
-        bottomRight: { row: 6, col: 8 }
+        bottomRight: { row: 6, col: 8 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -1317,17 +1366,21 @@ describe('DashboardStore - Export/Import Functionality', () => {
       expect(exported.columns).toBe(5);
       expect(exported.cells.length).toBe(2);
 
-      expect(exported.cells).toContain(jasmine.objectContaining({
-        row: 1,
-        col: 1,
-        widgetState: { corner: 'top-left' },
-      }));
+      expect(exported.cells).toContain(
+        jasmine.objectContaining({
+          row: 1,
+          col: 1,
+          widgetState: { corner: 'top-left' },
+        })
+      );
 
-      expect(exported.cells).toContain(jasmine.objectContaining({
-        row: 4,
-        col: 5,
-        widgetState: { corner: 'bottom-right' },
-      }));
+      expect(exported.cells).toContain(
+        jasmine.objectContaining({
+          row: 4,
+          col: 5,
+          widgetState: { corner: 'bottom-right' },
+        })
+      );
     });
 
     it('should handle inverted selection coordinates (bottomRight < topLeft)', () => {
@@ -1349,7 +1402,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       // Invalid selection: bottomRight coordinates less than topLeft
       const selection: GridSelection = {
         topLeft: { row: 6, col: 8 },
-        bottomRight: { row: 3, col: 4 }
+        bottomRight: { row: 3, col: 4 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -1379,7 +1432,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       // Selection extends beyond grid (grid is 8x12, selection goes to 10x15)
       const selection: GridSelection = {
         topLeft: { row: 6, col: 10 },
-        bottomRight: { row: 10, col: 15 }
+        bottomRight: { row: 10, col: 15 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -1406,7 +1459,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 4, col: 6 },
-        bottomRight: { row: 4, col: 6 }
+        bottomRight: { row: 4, col: 6 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -1434,7 +1487,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
       const selection: GridSelection = {
         topLeft: { row: 1, col: 1 },
-        bottomRight: { row: 3, col: 3 }
+        bottomRight: { row: 3, col: 3 },
       };
 
       const exported = store.exportDashboard(undefined, selection);
@@ -1464,7 +1517,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
         name: 'Unknown Widget',
         description: 'Fallback widget',
         svgIcon: '<svg></svg>',
-        createInstance: jasmine.createSpy()
+        createInstance: jasmine.createSpy(),
       } as unknown as WidgetFactory;
     });
 
@@ -1498,10 +1551,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
         // Large selection with gaps between widgets
         const selection: GridSelection = {
           topLeft: { row: 2, col: 4 },
-          bottomRight: { row: 10, col: 12 }
+          bottomRight: { row: 10, col: 12 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: false,
+        });
 
         // Should use full selection bounds, not minimal
         expect(exported.rows).toBe(9); // 10 - 2 + 1
@@ -1509,8 +1564,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
         expect(exported.cells.length).toBe(2);
 
         // Verify coordinates use full selection bounds
-        const widget1 = exported.cells.find(c => (c.widgetState as any).id === 'widget1');
-        const widget2 = exported.cells.find(c => (c.widgetState as any).id === 'widget2');
+        const widget1 = exported.cells.find(
+          (c) => (c.widgetState as any).id === 'widget1'
+        );
+        const widget2 = exported.cells.find(
+          (c) => (c.widgetState as any).id === 'widget2'
+        );
 
         expect(widget1?.row).toBe(2); // 3 - (2 - 1)
         expect(widget1?.col).toBe(2); // 5 - (4 - 1)
@@ -1547,10 +1606,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
         // Large selection with gaps between widgets
         const selection: GridSelection = {
           topLeft: { row: 2, col: 4 },
-          bottomRight: { row: 10, col: 12 }
+          bottomRight: { row: 10, col: 12 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // Should shrink to minimal bounds (3-7 rows, 5-10 cols)
         expect(exported.rows).toBe(5); // 7 - 3 + 1
@@ -1558,8 +1619,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
         expect(exported.cells.length).toBe(2);
 
         // Verify coordinates use minimal bounds
-        const widget1 = exported.cells.find(c => (c.widgetState as any).id === 'widget1');
-        const widget2 = exported.cells.find(c => (c.widgetState as any).id === 'widget2');
+        const widget1 = exported.cells.find(
+          (c) => (c.widgetState as any).id === 'widget1'
+        );
+        const widget2 = exported.cells.find(
+          (c) => (c.widgetState as any).id === 'widget2'
+        );
 
         expect(widget1?.row).toBe(1); // 3 - (3 - 1)
         expect(widget1?.col).toBe(1); // 5 - (5 - 1)
@@ -1584,17 +1649,25 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 3, col: 5 },
-          bottomRight: { row: 8, col: 10 }
+          bottomRight: { row: 8, col: 10 },
         };
 
         const exportedDefault = store.exportDashboard(undefined, selection);
-        const exportedExplicitFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+        const exportedExplicitFalse = store.exportDashboard(
+          undefined,
+          selection,
+          { useMinimalBounds: false }
+        );
 
         // Should produce identical results
         expect(exportedExplicitFalse.rows).toBe(exportedDefault.rows);
         expect(exportedExplicitFalse.columns).toBe(exportedDefault.columns);
-        expect(exportedExplicitFalse.cells.length).toBe(exportedDefault.cells.length);
-        expect(exportedExplicitFalse.cells[0]).toEqual(exportedDefault.cells[0]);
+        expect(exportedExplicitFalse.cells.length).toBe(
+          exportedDefault.cells.length
+        );
+        expect(exportedExplicitFalse.cells[0]).toEqual(
+          exportedDefault.cells[0]
+        );
       });
 
       it('should ignore options when no selection is provided', () => {
@@ -1612,7 +1685,9 @@ describe('DashboardStore - Export/Import Functionality', () => {
         store.addWidget(cell);
 
         // Export without selection but with options
-        const exported = store.exportDashboard(undefined, undefined, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, undefined, {
+          useMinimalBounds: true,
+        });
 
         // Should export full dashboard (options ignored)
         expect(exported.rows).toBe(12);
@@ -1665,17 +1740,19 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 1,
             widgetFactory: mockWidgetFactory,
             widgetState: { position: 'bottom-right' },
-          }
+          },
         ];
 
-        widgets.forEach(w => store.addWidget(w));
+        widgets.forEach((w) => store.addWidget(w));
 
         const selection: GridSelection = {
           topLeft: { row: 1, col: 1 },
-          bottomRight: { row: 12, col: 12 }
+          bottomRight: { row: 12, col: 12 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // Should shrink significantly from 12x12 to 9x9 (widgets span row 2-10, col 2-10)
         expect(exported.rows).toBe(9); // 10 - 2 + 1
@@ -1683,8 +1760,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
         expect(exported.cells.length).toBe(4);
 
         // Verify all widgets are in minimal coordinate space
-        const topLeft = exported.cells.find(c => (c.widgetState as any).position === 'top-left');
-        const bottomRight = exported.cells.find(c => (c.widgetState as any).position === 'bottom-right');
+        const topLeft = exported.cells.find(
+          (c) => (c.widgetState as any).position === 'top-left'
+        );
+        const bottomRight = exported.cells.find(
+          (c) => (c.widgetState as any).position === 'bottom-right'
+        );
 
         expect(topLeft?.row).toBe(1); // 2 - (2 - 1)
         expect(topLeft?.col).toBe(1); // 2 - (2 - 1)
@@ -1733,19 +1814,23 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 1,
             widgetFactory: mockWidgetFactory,
             widgetState: { id: 'w4' },
-          }
+          },
         ];
 
-        widgets.forEach(w => store.addWidget(w));
+        widgets.forEach((w) => store.addWidget(w));
 
         // Selection closely matches widget bounds
         const selection: GridSelection = {
           topLeft: { row: 3, col: 4 },
-          bottomRight: { row: 4, col: 5 }
+          bottomRight: { row: 4, col: 5 },
         };
 
-        const exportedFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
-        const exportedTrue = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exportedFalse = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: false,
+        });
+        const exportedTrue = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // When tightly packed, both should produce identical results
         expect(exportedTrue.rows).toBe(exportedFalse.rows);
@@ -1771,11 +1856,15 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 2, col: 4 },
-          bottomRight: { row: 10, col: 14 }
+          bottomRight: { row: 10, col: 14 },
         };
 
-        const exportedFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
-        const exportedTrue = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exportedFalse = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: false,
+        });
+        const exportedTrue = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // With false: uses full selection (9x11)
         expect(exportedFalse.rows).toBe(9); // 10 - 2 + 1
@@ -1813,17 +1902,19 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 4,
             widgetFactory: mockWidgetFactory,
             widgetState: { id: 'tall' },
-          }
+          },
         ];
 
-        widgets.forEach(w => store.addWidget(w));
+        widgets.forEach((w) => store.addWidget(w));
 
         const selection: GridSelection = {
           topLeft: { row: 2, col: 3 },
-          bottomRight: { row: 10, col: 15 }
+          bottomRight: { row: 10, col: 15 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // Widget1 spans to row 5, col 5
         // Widget2 spans to row 7, col 11
@@ -1832,8 +1923,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
         expect(exported.columns).toBe(8); // 11 - 4 + 1
         expect(exported.cells.length).toBe(2);
 
-        const wide = exported.cells.find(c => (c.widgetState as any).id === 'wide');
-        const tall = exported.cells.find(c => (c.widgetState as any).id === 'tall');
+        const wide = exported.cells.find(
+          (c) => (c.widgetState as any).id === 'wide'
+        );
+        const tall = exported.cells.find(
+          (c) => (c.widgetState as any).id === 'tall'
+        );
 
         expect(wide?.row).toBe(1); // 3 - (3 - 1)
         expect(wide?.col).toBe(1); // 4 - (4 - 1)
@@ -1869,10 +1964,10 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 1,
             widgetFactory: mockWidgetFactory,
             widgetState: { stale: 'data2' },
-          }
+          },
         ];
 
-        widgets.forEach(w => store.addWidget(w));
+        widgets.forEach((w) => store.addWidget(w));
 
         const liveStates = new Map<string, unknown>();
         liveStates.set('3-5', { fresh: 'live1', updated: true });
@@ -1880,10 +1975,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 2, col: 4 },
-          bottomRight: { row: 10, col: 12 }
+          bottomRight: { row: 10, col: 12 },
         };
 
-        const exported = store.exportDashboard(() => liveStates, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(() => liveStates, selection, {
+          useMinimalBounds: true,
+        });
 
         // Should shrink to minimal bounds and use live states
         expect(exported.rows).toBe(5); // 7 - 3 + 1
@@ -1891,8 +1988,14 @@ describe('DashboardStore - Export/Import Functionality', () => {
         expect(exported.cells.length).toBe(2);
 
         // Verify live states are used
-        expect(exported.cells[0].widgetState).toEqual({ fresh: 'live1', updated: true });
-        expect(exported.cells[1].widgetState).toEqual({ fresh: 'live2', updated: true });
+        expect(exported.cells[0].widgetState).toEqual({
+          fresh: 'live1',
+          updated: true,
+        });
+        expect(exported.cells[1].widgetState).toEqual({
+          fresh: 'live2',
+          updated: true,
+        });
       });
 
       it('should filter unknown widgets with useMinimalBounds: true', () => {
@@ -1935,10 +2038,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 1, col: 3 },
-          bottomRight: { row: 10, col: 12 }
+          bottomRight: { row: 10, col: 12 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // Minimal bounds calculated INCLUDING unknown widgets
         // Valid widget: (3,5) extends to (4,6)
@@ -1979,10 +2084,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 4, col: 5 },
-          bottomRight: { row: 9, col: 10 }
+          bottomRight: { row: 9, col: 10 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: false,
+        });
 
         // Should use full selection bounds and filter unknown widget
         expect(exported.cells.length).toBe(1);
@@ -2036,10 +2143,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 2, col: 3 },
-          bottomRight: { row: 12, col: 14 }
+          bottomRight: { row: 12, col: 14 },
         };
 
-        const exported = store.exportDashboard(() => liveStates, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(() => liveStates, selection, {
+          useMinimalBounds: true,
+        });
 
         // Minimal bounds calculated INCLUDING unknown widget
         // Valid1: (3,4)
@@ -2073,10 +2182,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
         // Selection doesn't contain any widgets
         const selection: GridSelection = {
           topLeft: { row: 5, col: 7 },
-          bottomRight: { row: 8, col: 10 }
+          bottomRight: { row: 8, col: 10 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // Should fall back to selection bounds when no widgets
         expect(exported.cells.length).toBe(0);
@@ -2100,10 +2211,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 5, col: 7 },
-          bottomRight: { row: 5, col: 7 }
+          bottomRight: { row: 5, col: 7 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // Single cell selection - minimal bounds same as selection
         expect(exported.rows).toBe(1);
@@ -2129,11 +2242,15 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 1, col: 1 },
-          bottomRight: { row: 5, col: 5 }
+          bottomRight: { row: 5, col: 5 },
         };
 
-        const exportedFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
-        const exportedTrue = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exportedFalse = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: false,
+        });
+        const exportedTrue = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // False: uses selection (5x5)
         expect(exportedFalse.rows).toBe(5);
@@ -2165,10 +2282,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 2, col: 4 },
-          bottomRight: { row: 10, col: 15 }
+          bottomRight: { row: 10, col: 15 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // Widget spans from (4,6) to (8,12)
         expect(exported.rows).toBe(5); // Widget rowSpan
@@ -2198,10 +2317,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 3, col: 5 },
-          bottomRight: { row: 9, col: 11 }
+          bottomRight: { row: 9, col: 11 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         expect(exported.gutterSize).toBe('1.5rem');
         expect(exported.rows).toBe(1);
@@ -2236,10 +2357,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 2, col: 4 },
-          bottomRight: { row: 10, col: 12 }
+          bottomRight: { row: 10, col: 12 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // Minimal bounds calculated on unknown widgets (before filtering)
         // Unknown1: (3,5)
@@ -2273,30 +2396,42 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 3,
             widgetFactory: mockWidgetFactory,
             widgetState: { id: 'B' },
-          }
+          },
         ];
 
-        widgets.forEach(w => store.addWidget(w));
+        widgets.forEach((w) => store.addWidget(w));
 
         const selection: GridSelection = {
           topLeft: { row: 2, col: 4 },
-          bottomRight: { row: 12, col: 16 }
+          bottomRight: { row: 12, col: 16 },
         };
 
-        const exportedFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
-        const exportedTrue = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exportedFalse = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: false,
+        });
+        const exportedTrue = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // False: transforms relative to selection topLeft (2, 4)
-        const falseA = exportedFalse.cells.find(c => (c.widgetState as any).id === 'A');
-        const falseB = exportedFalse.cells.find(c => (c.widgetState as any).id === 'B');
+        const falseA = exportedFalse.cells.find(
+          (c) => (c.widgetState as any).id === 'A'
+        );
+        const falseB = exportedFalse.cells.find(
+          (c) => (c.widgetState as any).id === 'B'
+        );
         expect(falseA?.row).toBe(3); // 4 - (2 - 1)
         expect(falseA?.col).toBe(3); // 6 - (4 - 1)
         expect(falseB?.row).toBe(7); // 8 - (2 - 1)
         expect(falseB?.col).toBe(9); // 12 - (4 - 1)
 
         // True: transforms relative to minimal bounds topLeft (4, 6)
-        const trueA = exportedTrue.cells.find(c => (c.widgetState as any).id === 'A');
-        const trueB = exportedTrue.cells.find(c => (c.widgetState as any).id === 'B');
+        const trueA = exportedTrue.cells.find(
+          (c) => (c.widgetState as any).id === 'A'
+        );
+        const trueB = exportedTrue.cells.find(
+          (c) => (c.widgetState as any).id === 'B'
+        );
         expect(trueA?.row).toBe(1); // 4 - (4 - 1)
         expect(trueA?.col).toBe(1); // 6 - (6 - 1)
         expect(trueB?.row).toBe(5); // 8 - (4 - 1)
@@ -2350,23 +2485,33 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 1,
             widgetFactory: mockWidgetFactory,
             widgetState: { id: '4' },
-          }
+          },
         ];
 
-        widgets.forEach(w => store.addWidget(w));
+        widgets.forEach((w) => store.addWidget(w));
 
         const selection: GridSelection = {
           topLeft: { row: 1, col: 1 },
-          bottomRight: { row: 10, col: 12 }
+          bottomRight: { row: 10, col: 12 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // Should maintain 2x2 grid pattern with 2-row and 3-col spacing
-        const w1 = exported.cells.find(c => (c.widgetState as any).id === '1');
-        const w2 = exported.cells.find(c => (c.widgetState as any).id === '2');
-        const w3 = exported.cells.find(c => (c.widgetState as any).id === '3');
-        const w4 = exported.cells.find(c => (c.widgetState as any).id === '4');
+        const w1 = exported.cells.find(
+          (c) => (c.widgetState as any).id === '1'
+        );
+        const w2 = exported.cells.find(
+          (c) => (c.widgetState as any).id === '2'
+        );
+        const w3 = exported.cells.find(
+          (c) => (c.widgetState as any).id === '3'
+        );
+        const w4 = exported.cells.find(
+          (c) => (c.widgetState as any).id === '4'
+        );
 
         // All should be transformed to minimal coordinate space starting at (1,1)
         expect(w1?.row).toBe(1); // 3 - (3 - 1)
@@ -2401,10 +2546,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 3, col: 6 },
-          bottomRight: { row: 9, col: 12 }
+          bottomRight: { row: 9, col: 12 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: false,
+        });
 
         // Should use full selection dimensions
         expect(exported.rows).toBe(7); // 9 - 3 + 1
@@ -2427,10 +2574,12 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
         const selection: GridSelection = {
           topLeft: { row: 3, col: 6 },
-          bottomRight: { row: 9, col: 12 }
+          bottomRight: { row: 9, col: 12 },
         };
 
-        const exported = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exported = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // Should shrink to widget dimensions
         expect(exported.rows).toBe(1); // Widget is 1x1
@@ -2458,18 +2607,22 @@ describe('DashboardStore - Export/Import Functionality', () => {
             colSpan: 1,
             widgetFactory: mockWidgetFactory,
             widgetState: { id: '2' },
-          }
+          },
         ];
 
-        widgets.forEach(w => store.addWidget(w));
+        widgets.forEach((w) => store.addWidget(w));
 
         const selection: GridSelection = {
           topLeft: { row: 1, col: 1 },
-          bottomRight: { row: 12, col: 16 }
+          bottomRight: { row: 12, col: 16 },
         };
 
-        const exportedFalse = store.exportDashboard(undefined, selection, { useMinimalBounds: false });
-        const exportedTrue = store.exportDashboard(undefined, selection, { useMinimalBounds: true });
+        const exportedFalse = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: false,
+        });
+        const exportedTrue = store.exportDashboard(undefined, selection, {
+          useMinimalBounds: true,
+        });
 
         // False: 12x16 = 192 cells
         expect(exportedFalse.rows).toBe(12);

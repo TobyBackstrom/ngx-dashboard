@@ -1,7 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../services/dashboard.service';
 import { DashboardStore } from '../dashboard-store';
-import { CellIdUtils, WidgetIdUtils, CellData, WidgetFactory, DashboardDataDto } from '../../models';
+import {
+  CellIdUtils,
+  WidgetIdUtils,
+  CellData,
+  WidgetFactory,
+  DashboardDataDto,
+} from '../../models';
 
 describe('DashboardStore - Shared State Functionality', () => {
   let store: InstanceType<typeof DashboardStore>;
@@ -16,34 +22,36 @@ describe('DashboardStore - Shared State Functionality', () => {
     const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', [
       'getFactory',
       'collectSharedStates',
-      'restoreSharedStates'
+      'restoreSharedStates',
     ]);
 
     TestBed.configureTestingModule({
       providers: [
         DashboardStore,
-        { provide: DashboardService, useValue: dashboardServiceSpy }
-      ]
+        { provide: DashboardService, useValue: dashboardServiceSpy },
+      ],
     });
 
     store = TestBed.inject(DashboardStore);
-    mockDashboardService = TestBed.inject(DashboardService) as jasmine.SpyObj<DashboardService>;
+    mockDashboardService = TestBed.inject(
+      DashboardService
+    ) as jasmine.SpyObj<DashboardService>;
     store.setGridConfig({ rows: 8, columns: 12 });
 
     // Create mock widget factories
     widgetFactoryWithSharedState = {
       widgetTypeid: 'widget-with-shared-state',
-      createComponent: jasmine.createSpy()
+      createComponent: jasmine.createSpy(),
     } as unknown as WidgetFactory;
 
     widgetFactoryWithDifferentSharedState = {
       widgetTypeid: 'widget-with-different-shared-state',
-      createComponent: jasmine.createSpy()
+      createComponent: jasmine.createSpy(),
     } as unknown as WidgetFactory;
 
     widgetFactoryWithoutSharedState = {
       widgetTypeid: 'widget-without-shared-state',
-      createComponent: jasmine.createSpy()
+      createComponent: jasmine.createSpy(),
     } as unknown as WidgetFactory;
 
     // Setup default return values
@@ -64,7 +72,7 @@ describe('DashboardStore - Shared State Functionality', () => {
   describe('Export with Shared States', () => {
     it('should collect shared states from active widget types during export', () => {
       const sharedStateMap = new Map<string, unknown>([
-        ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }]
+        ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }],
       ]);
       mockDashboardService.collectSharedStates.and.returnValue(sharedStateMap);
 
@@ -76,7 +84,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithSharedState,
-        widgetState: { instanceData: 'test' }
+        widgetState: { instanceData: 'test' },
       };
 
       store.addWidget(cell);
@@ -89,14 +97,14 @@ describe('DashboardStore - Shared State Functionality', () => {
 
       // Verify shared states are included in export
       expect(exported.sharedStates).toEqual({
-        'widget-with-shared-state': { theme: 'dark', globalSetting: 42 }
+        'widget-with-shared-state': { theme: 'dark', globalSetting: 42 },
       });
     });
 
     it('should collect shared states from multiple different widget types', () => {
       const sharedStateMap = new Map<string, unknown>([
         ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }],
-        ['widget-with-different-shared-state', { color: 'blue', size: 100 }]
+        ['widget-with-different-shared-state', { color: 'blue', size: 100 }],
       ]);
       mockDashboardService.collectSharedStates.and.returnValue(sharedStateMap);
 
@@ -108,7 +116,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithSharedState,
-        widgetState: { instanceData: 'test1' }
+        widgetState: { instanceData: 'test1' },
       };
 
       const cell2: CellData = {
@@ -119,7 +127,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithDifferentSharedState,
-        widgetState: { instanceData: 'test2' }
+        widgetState: { instanceData: 'test2' },
       };
 
       store.addWidget(cell1);
@@ -127,7 +135,10 @@ describe('DashboardStore - Shared State Functionality', () => {
       const exported = store.exportDashboard();
 
       // Verify collectSharedStates was called with both widget types
-      const expectedSet = new Set(['widget-with-shared-state', 'widget-with-different-shared-state']);
+      const expectedSet = new Set([
+        'widget-with-shared-state',
+        'widget-with-different-shared-state',
+      ]);
       expect(mockDashboardService.collectSharedStates).toHaveBeenCalledWith(
         jasmine.objectContaining(expectedSet)
       );
@@ -135,7 +146,7 @@ describe('DashboardStore - Shared State Functionality', () => {
       // Verify both shared states are included
       expect(exported.sharedStates).toEqual({
         'widget-with-shared-state': { theme: 'dark', globalSetting: 42 },
-        'widget-with-different-shared-state': { color: 'blue', size: 100 }
+        'widget-with-different-shared-state': { color: 'blue', size: 100 },
       });
     });
 
@@ -150,7 +161,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithoutSharedState,
-        widgetState: { instanceData: 'test' }
+        widgetState: { instanceData: 'test' },
       };
 
       store.addWidget(cell);
@@ -173,7 +184,7 @@ describe('DashboardStore - Shared State Functionality', () => {
 
     it('should collect shared states only from widget types currently on dashboard', () => {
       const sharedStateMap = new Map<string, unknown>([
-        ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }]
+        ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }],
       ]);
       mockDashboardService.collectSharedStates.and.returnValue(sharedStateMap);
 
@@ -186,7 +197,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithSharedState,
-        widgetState: { instanceData: 'test1' }
+        widgetState: { instanceData: 'test1' },
       };
 
       const cell2: CellData = {
@@ -197,7 +208,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithSharedState,
-        widgetState: { instanceData: 'test2' }
+        widgetState: { instanceData: 'test2' },
       };
 
       store.addWidget(cell1);
@@ -205,14 +216,15 @@ describe('DashboardStore - Shared State Functionality', () => {
       store.exportDashboard();
 
       // Verify collectSharedStates is called only once per widget type
-      const capturedSet = mockDashboardService.collectSharedStates.calls.mostRecent().args[0];
+      const capturedSet =
+        mockDashboardService.collectSharedStates.calls.mostRecent().args[0];
       expect(capturedSet.size).toBe(1);
       expect(capturedSet.has('widget-with-shared-state')).toBe(true);
     });
 
     it('should handle mixed scenario with some widgets having shared state and some without', () => {
       const sharedStateMap = new Map<string, unknown>([
-        ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }]
+        ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }],
       ]);
       mockDashboardService.collectSharedStates.and.returnValue(sharedStateMap);
 
@@ -224,7 +236,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithSharedState,
-        widgetState: { instanceData: 'test1' }
+        widgetState: { instanceData: 'test1' },
       };
 
       const cellWithoutSharedState: CellData = {
@@ -235,7 +247,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithoutSharedState,
-        widgetState: { instanceData: 'test2' }
+        widgetState: { instanceData: 'test2' },
       };
 
       store.addWidget(cellWithSharedState);
@@ -243,13 +255,14 @@ describe('DashboardStore - Shared State Functionality', () => {
       const exported = store.exportDashboard();
 
       // Verify collectSharedStates is called with both widget types
-      const capturedSet = mockDashboardService.collectSharedStates.calls.mostRecent().args[0];
+      const capturedSet =
+        mockDashboardService.collectSharedStates.calls.mostRecent().args[0];
       expect(capturedSet.has('widget-with-shared-state')).toBe(true);
       expect(capturedSet.has('widget-without-shared-state')).toBe(true);
 
       // Verify only the widget with shared state has its state in the export
       expect(exported.sharedStates).toEqual({
-        'widget-with-shared-state': { theme: 'dark', globalSetting: 42 }
+        'widget-with-shared-state': { theme: 'dark', globalSetting: 42 },
       });
     });
   });
@@ -257,7 +270,7 @@ describe('DashboardStore - Shared State Functionality', () => {
   describe('Import with Shared States', () => {
     it('should restore shared states before creating widget instances', () => {
       const dashboardData: DashboardDataDto = {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: 'test-dashboard',
         rows: 8,
         columns: 12,
@@ -269,12 +282,12 @@ describe('DashboardStore - Shared State Functionality', () => {
             rowSpan: 1,
             colSpan: 1,
             widgetTypeid: 'widget-with-shared-state',
-            widgetState: { instanceData: 'test' }
-          }
+            widgetState: { instanceData: 'test' },
+          },
         ],
         sharedStates: {
-          'widget-with-shared-state': { theme: 'dark', globalSetting: 42 }
-        }
+          'widget-with-shared-state': { theme: 'dark', globalSetting: 42 },
+        },
       };
 
       store.loadDashboard(dashboardData);
@@ -282,7 +295,9 @@ describe('DashboardStore - Shared State Functionality', () => {
       // Verify restoreSharedStates was called
       expect(mockDashboardService.restoreSharedStates).toHaveBeenCalledWith(
         jasmine.objectContaining(
-          new Map([['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }]])
+          new Map([
+            ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }],
+          ])
         )
       );
 
@@ -293,7 +308,7 @@ describe('DashboardStore - Shared State Functionality', () => {
 
     it('should restore multiple shared states for different widget types', () => {
       const dashboardData: DashboardDataDto = {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: 'test-dashboard',
         rows: 8,
         columns: 12,
@@ -305,7 +320,7 @@ describe('DashboardStore - Shared State Functionality', () => {
             rowSpan: 1,
             colSpan: 1,
             widgetTypeid: 'widget-with-shared-state',
-            widgetState: { instanceData: 'test1' }
+            widgetState: { instanceData: 'test1' },
           },
           {
             row: 2,
@@ -313,13 +328,13 @@ describe('DashboardStore - Shared State Functionality', () => {
             rowSpan: 1,
             colSpan: 1,
             widgetTypeid: 'widget-with-different-shared-state',
-            widgetState: { instanceData: 'test2' }
-          }
+            widgetState: { instanceData: 'test2' },
+          },
         ],
         sharedStates: {
           'widget-with-shared-state': { theme: 'dark', globalSetting: 42 },
-          'widget-with-different-shared-state': { color: 'blue', size: 100 }
-        }
+          'widget-with-different-shared-state': { color: 'blue', size: 100 },
+        },
       };
 
       store.loadDashboard(dashboardData);
@@ -327,7 +342,7 @@ describe('DashboardStore - Shared State Functionality', () => {
       // Verify restoreSharedStates was called with all shared states
       const expectedMap = new Map([
         ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }],
-        ['widget-with-different-shared-state', { color: 'blue', size: 100 }]
+        ['widget-with-different-shared-state', { color: 'blue', size: 100 }],
       ]);
 
       expect(mockDashboardService.restoreSharedStates).toHaveBeenCalledWith(
@@ -337,7 +352,7 @@ describe('DashboardStore - Shared State Functionality', () => {
 
     it('should handle dashboard import without shared states', () => {
       const dashboardData: DashboardDataDto = {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: 'test-dashboard',
         rows: 8,
         columns: 12,
@@ -349,9 +364,9 @@ describe('DashboardStore - Shared State Functionality', () => {
             rowSpan: 1,
             colSpan: 1,
             widgetTypeid: 'widget-without-shared-state',
-            widgetState: { instanceData: 'test' }
-          }
-        ]
+            widgetState: { instanceData: 'test' },
+          },
+        ],
         // No sharedStates property
       };
 
@@ -362,20 +377,22 @@ describe('DashboardStore - Shared State Functionality', () => {
 
       // Verify widgets are still created correctly
       expect(store.cells().length).toBe(1);
-      expect(store.cells()[0].widgetFactory).toBe(widgetFactoryWithoutSharedState);
+      expect(store.cells()[0].widgetFactory).toBe(
+        widgetFactoryWithoutSharedState
+      );
     });
 
     it('should handle empty dashboard import with shared states', () => {
       const dashboardData: DashboardDataDto = {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: 'test-dashboard',
         rows: 8,
         columns: 12,
         gutterSize: '1em',
         cells: [],
         sharedStates: {
-          'widget-with-shared-state': { theme: 'dark', globalSetting: 42 }
-        }
+          'widget-with-shared-state': { theme: 'dark', globalSetting: 42 },
+        },
       };
 
       store.loadDashboard(dashboardData);
@@ -383,7 +400,9 @@ describe('DashboardStore - Shared State Functionality', () => {
       // Verify restoreSharedStates was called even though no widgets exist
       expect(mockDashboardService.restoreSharedStates).toHaveBeenCalledWith(
         jasmine.objectContaining(
-          new Map([['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }]])
+          new Map([
+            ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }],
+          ])
         )
       );
 
@@ -396,7 +415,7 @@ describe('DashboardStore - Shared State Functionality', () => {
     it('should preserve shared states through export and import cycle', () => {
       // Setup: Create dashboard with widgets that have shared states
       const sharedStateMap = new Map<string, unknown>([
-        ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }]
+        ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }],
       ]);
       mockDashboardService.collectSharedStates.and.returnValue(sharedStateMap);
 
@@ -408,7 +427,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithSharedState,
-        widgetState: { instanceData: 'test' }
+        widgetState: { instanceData: 'test' },
       };
 
       store.addWidget(cell);
@@ -417,7 +436,7 @@ describe('DashboardStore - Shared State Functionality', () => {
       const exported = store.exportDashboard();
 
       expect(exported.sharedStates).toEqual({
-        'widget-with-shared-state': { theme: 'dark', globalSetting: 42 }
+        'widget-with-shared-state': { theme: 'dark', globalSetting: 42 },
       });
 
       // Reset the store
@@ -429,7 +448,9 @@ describe('DashboardStore - Shared State Functionality', () => {
       // Verify shared states were restored
       expect(mockDashboardService.restoreSharedStates).toHaveBeenCalledWith(
         jasmine.objectContaining(
-          new Map([['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }]])
+          new Map([
+            ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }],
+          ])
         )
       );
 
@@ -443,7 +464,7 @@ describe('DashboardStore - Shared State Functionality', () => {
     it('should preserve shared states for multiple widget types through export/import cycle', () => {
       const sharedStateMap = new Map<string, unknown>([
         ['widget-with-shared-state', { theme: 'dark', globalSetting: 42 }],
-        ['widget-with-different-shared-state', { color: 'blue', size: 100 }]
+        ['widget-with-different-shared-state', { color: 'blue', size: 100 }],
       ]);
       mockDashboardService.collectSharedStates.and.returnValue(sharedStateMap);
 
@@ -455,7 +476,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithSharedState,
-        widgetState: { instanceData: 'test1' }
+        widgetState: { instanceData: 'test1' },
       };
 
       const cell2: CellData = {
@@ -466,7 +487,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithDifferentSharedState,
-        widgetState: { instanceData: 'test2' }
+        widgetState: { instanceData: 'test2' },
       };
 
       store.addWidget(cell1);
@@ -480,9 +501,16 @@ describe('DashboardStore - Shared State Functionality', () => {
       store.loadDashboard(exported);
 
       // Verify both shared states were restored
-      const restoredMap = mockDashboardService.restoreSharedStates.calls.mostRecent().args[0];
-      expect(restoredMap.get('widget-with-shared-state')).toEqual({ theme: 'dark', globalSetting: 42 });
-      expect(restoredMap.get('widget-with-different-shared-state')).toEqual({ color: 'blue', size: 100 });
+      const restoredMap =
+        mockDashboardService.restoreSharedStates.calls.mostRecent().args[0];
+      expect(restoredMap.get('widget-with-shared-state')).toEqual({
+        theme: 'dark',
+        globalSetting: 42,
+      });
+      expect(restoredMap.get('widget-with-different-shared-state')).toEqual({
+        color: 'blue',
+        size: 100,
+      });
 
       // Verify both widgets were recreated
       expect(store.cells().length).toBe(2);
@@ -492,7 +520,7 @@ describe('DashboardStore - Shared State Functionality', () => {
   describe('initializeFromDto with Shared States', () => {
     it('should restore shared states when initializing from DTO', () => {
       const dashboardData: DashboardDataDto = {
-        version: '1.0.0',
+        version: '1.1.0',
         dashboardId: 'initialized-dashboard',
         rows: 8,
         columns: 12,
@@ -504,12 +532,12 @@ describe('DashboardStore - Shared State Functionality', () => {
             rowSpan: 1,
             colSpan: 1,
             widgetTypeid: 'widget-with-shared-state',
-            widgetState: { instanceData: 'init-test' }
-          }
+            widgetState: { instanceData: 'init-test' },
+          },
         ],
         sharedStates: {
-          'widget-with-shared-state': { theme: 'light', globalSetting: 99 }
-        }
+          'widget-with-shared-state': { theme: 'light', globalSetting: 99 },
+        },
       };
 
       store.initializeFromDto(dashboardData);
@@ -517,7 +545,9 @@ describe('DashboardStore - Shared State Functionality', () => {
       // Verify restoreSharedStates was called
       expect(mockDashboardService.restoreSharedStates).toHaveBeenCalledWith(
         jasmine.objectContaining(
-          new Map([['widget-with-shared-state', { theme: 'light', globalSetting: 99 }]])
+          new Map([
+            ['widget-with-shared-state', { theme: 'light', globalSetting: 99 }],
+          ])
         )
       );
 
@@ -534,7 +564,7 @@ describe('DashboardStore - Shared State Functionality', () => {
   describe('Edge Cases', () => {
     it('should handle shared state with undefined values', () => {
       const sharedStateMap = new Map<string, unknown>([
-        ['widget-with-shared-state', undefined]
+        ['widget-with-shared-state', undefined],
       ]);
       mockDashboardService.collectSharedStates.and.returnValue(sharedStateMap);
 
@@ -546,7 +576,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithSharedState,
-        widgetState: { instanceData: 'test' }
+        widgetState: { instanceData: 'test' },
       };
 
       store.addWidget(cell);
@@ -554,13 +584,13 @@ describe('DashboardStore - Shared State Functionality', () => {
 
       // When shared state value is undefined, it should not be included in the export
       expect(exported.sharedStates).toEqual({
-        'widget-with-shared-state': undefined
+        'widget-with-shared-state': undefined,
       });
     });
 
     it('should handle shared state with null values', () => {
       const sharedStateMap = new Map<string, unknown>([
-        ['widget-with-shared-state', null]
+        ['widget-with-shared-state', null],
       ]);
       mockDashboardService.collectSharedStates.and.returnValue(sharedStateMap);
 
@@ -572,7 +602,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithSharedState,
-        widgetState: { instanceData: 'test' }
+        widgetState: { instanceData: 'test' },
       };
 
       store.addWidget(cell);
@@ -580,7 +610,7 @@ describe('DashboardStore - Shared State Functionality', () => {
 
       // Null values should be preserved in the export
       expect(exported.sharedStates).toEqual({
-        'widget-with-shared-state': null
+        'widget-with-shared-state': null,
       });
     });
 
@@ -590,16 +620,16 @@ describe('DashboardStore - Shared State Functionality', () => {
         settings: {
           nested: {
             deep: {
-              value: 42
-            }
+              value: 42,
+            },
           },
           array: [1, 2, 3],
-          map: { key1: 'value1', key2: 'value2' }
-        }
+          map: { key1: 'value1', key2: 'value2' },
+        },
       };
 
       const sharedStateMap = new Map<string, unknown>([
-        ['widget-with-shared-state', complexSharedState]
+        ['widget-with-shared-state', complexSharedState],
       ]);
       mockDashboardService.collectSharedStates.and.returnValue(sharedStateMap);
 
@@ -611,7 +641,7 @@ describe('DashboardStore - Shared State Functionality', () => {
         rowSpan: 1,
         colSpan: 1,
         widgetFactory: widgetFactoryWithSharedState,
-        widgetState: { instanceData: 'test' }
+        widgetState: { instanceData: 'test' },
       };
 
       store.addWidget(cell);
@@ -619,7 +649,7 @@ describe('DashboardStore - Shared State Functionality', () => {
 
       // Complex objects should be preserved
       expect(exported.sharedStates).toEqual({
-        'widget-with-shared-state': complexSharedState
+        'widget-with-shared-state': complexSharedState,
       });
     });
   });
