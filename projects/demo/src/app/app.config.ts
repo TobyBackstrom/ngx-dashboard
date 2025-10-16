@@ -7,7 +7,11 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-import { DashboardService } from '@dragonworks/ngx-dashboard';
+import {
+  DashboardService,
+  EMPTY_CELL_CONTEXT_PROVIDER,
+  WidgetListContextMenuProvider,
+} from '@dragonworks/ngx-dashboard';
 import {
   ArrowWidgetComponent,
   LabelWidgetComponent,
@@ -26,6 +30,11 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(),
+    // Enable context menu on empty cells to show available widgets
+    {
+      provide: EMPTY_CELL_CONTEXT_PROVIDER,
+      useClass: WidgetListContextMenuProvider,
+    },
     provideEnvironmentInitializer(() => {
       const dashboardService = inject(DashboardService);
       dashboardService.registerWidgetType(ArrowWidgetComponent);

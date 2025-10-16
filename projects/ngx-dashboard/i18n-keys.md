@@ -35,6 +35,7 @@ To use i18n features with ngx-dashboard, your consuming application must have `@
 - `@@ngx.dashboard.cell.menu.edit` - "Edit Widget"
 - `@@ngx.dashboard.cell.menu.settings` - "Settings"
 - `@@ngx.dashboard.cell.menu.delete` - "Delete"
+- `@@ngx.dashboard.emptyCellMenu.noWidgets` - "No widgets available" (shown when no widgets are registered)
 
 ### Cell Settings Dialog
 

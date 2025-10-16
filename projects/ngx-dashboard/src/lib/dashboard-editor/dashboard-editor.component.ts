@@ -17,6 +17,7 @@ import { CellComponent } from '../cell/cell.component';
 import { CellContextMenuComponent } from '../cell/cell-context-menu.component';
 import { CellContextMenuService } from '../cell/cell-context-menu.service';
 import { DropZoneComponent } from '../drop-zone/drop-zone.component';
+import { EmptyCellContextMenuComponent } from '../drop-zone/empty-cell-context-menu.component';
 import { CellId, CellIdUtils, WidgetId, DragData, CellData } from '../models';
 import { DashboardStore } from '../store/dashboard-store';
 
@@ -28,6 +29,7 @@ import { DashboardStore } from '../store/dashboard-store';
     CommonModule,
     DropZoneComponent,
     CellContextMenuComponent,
+    EmptyCellContextMenuComponent,
   ],
   providers: [
     CellContextMenuService,

@@ -12,6 +12,14 @@ export interface EmptyCellContext {
   totalColumns: number;
   /** The gutter size between cells (e.g., '1em') */
   gutterSize: string;
+  /**
+   * Optional callback to create a widget at this position.
+   * When provided, allows the context provider to create widgets directly.
+   *
+   * @param widgetTypeid - The widget type identifier to create
+   * @returns true if widget was created successfully, false otherwise
+   */
+  createWidget?: (widgetTypeid: string) => boolean;
 }
 
 /**

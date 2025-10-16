@@ -559,13 +559,14 @@ describe('DropZoneComponent - Context Menu with Custom Provider', () => {
 
     expect(mockProvider.handleEmptyCellContext).toHaveBeenCalledWith(
       event,
-      {
+      jasmine.objectContaining({
         row: 3,
         col: 4,
         totalRows: 8, // Default value from DashboardStore
         totalColumns: 16, // Default value from DashboardStore
-        gutterSize: '0.5em' // Default value from DashboardStore
-      }
+        gutterSize: '0.5em', // Default value from DashboardStore
+        createWidget: jasmine.any(Function)
+      })
     );
   });
 
@@ -584,13 +585,14 @@ describe('DropZoneComponent - Context Menu with Custom Provider', () => {
 
     expect(mockProvider.handleEmptyCellContext).toHaveBeenCalledWith(
       event,
-      {
+      jasmine.objectContaining({
         row: 5,
         col: 7,
         totalRows: 8,
         totalColumns: 12,
-        gutterSize: '2em'
-      }
+        gutterSize: '2em',
+        createWidget: jasmine.any(Function)
+      })
     );
   });
 

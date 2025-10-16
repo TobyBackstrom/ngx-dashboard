@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardStore } from '../store/dashboard-store';
 import { DragData } from '../models';
 import { EMPTY_CELL_CONTEXT_PROVIDER } from '../providers/empty-cell-context';
+import { DashboardService } from '../services/dashboard.service';
 
 @Component({
   selector: 'lib-drop-zone',
@@ -52,7 +53,7 @@ export class DropZoneComponent {
 
   // Abstract drag state from store
   dragData = computed(() => this.#store.dragData());
-  
+
   // Computed drop effect based on drag data and validity
   dropEffect = computed(() => {
     const data = this.dragData();
@@ -64,6 +65,7 @@ export class DropZoneComponent {
 
   readonly #store = inject(DashboardStore);
   readonly #elementRef = inject(ElementRef);
+  readonly #dashboardService = inject(DashboardService);
   readonly #contextProvider = inject(EMPTY_CELL_CONTEXT_PROVIDER, {
     optional: true,
   });
@@ -131,8 +133,11 @@ export class DropZoneComponent {
   onContextMenu(event: MouseEvent): void {
     if (!this.editMode()) return;
 
-    // Always prevent default browser menu in edit mode
+    // Prevent default browser menu and stop propagation in edit mode
+    // stopPropagation prevents the event from reaching the document-level
+    // listener in EmptyCellContextMenuComponent which would immediately hide the menu
     event.preventDefault();
+    event.stopPropagation();
 
     if (this.#contextProvider) {
       this.#contextProvider.handleEmptyCellContext(event, {
@@ -141,6 +146,11 @@ export class DropZoneComponent {
         totalRows: this.#store.rows(),
         totalColumns: this.#store.columns(),
         gutterSize: this.#store.gutterSize(),
+        createWidget: (widgetTypeid: string) => {
+          const factory = this.#dashboardService.getFactory(widgetTypeid);
+          this.#store.createWidget(this.row(), this.col(), factory, undefined);
+          return true; // Widget created successfully
+        },
       });
     }
   }

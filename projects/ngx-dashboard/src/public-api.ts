@@ -39,3 +39,4 @@ export { EMPTY_CELL_CONTEXT_PROVIDER } from './lib/providers/empty-cell-context/
 export { DefaultEmptyCellContextProvider } from './lib/providers/empty-cell-context/default-empty-cell-context.provider';
 export { EmptyCellContextProvider } from './lib/providers/empty-cell-context/empty-cell-context.provider';
 export type { EmptyCellContext } from './lib/providers/empty-cell-context/empty-cell-context.provider';
+export { WidgetListContextMenuProvider } from './lib/providers/empty-cell-context/widget-list-context-menu.provider';
