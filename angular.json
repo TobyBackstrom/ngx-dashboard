@@ -25,7 +25,12 @@
           "builder": "@angular/build:karma",
           "options": {
             "tsConfig": "projects/ngx-dashboard/tsconfig.spec.json",
-            "main": "projects/ngx-dashboard/src/test-setup.ts"
+            "main": "projects/ngx-dashboard/src/test-setup.ts",
+            "polyfills": [
+              "@angular/localize/init",
+              "zone.js",
+              "zone.js/testing"
+            ]
           }
         },
         "lint": {
