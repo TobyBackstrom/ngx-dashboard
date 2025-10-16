@@ -7,6 +7,7 @@ The ngx-dashboard library provides an extensible provider system for handling ri
 ## Table of Contents
 
 - [Default Behavior](#default-behavior)
+- [Built-in Widget List Menu](#built-in-widget-list-menu)
 - [User Experience Flow](#user-experience-flow)
 - [Provider Architecture](#provider-architecture)
 - [Implementation Guide](#implementation-guide)
@@ -44,6 +45,86 @@ export class DefaultEmptyCellContextProvider extends EmptyCellContextProvider {
 - **View mode** - In view mode, right-clicks are not intercepted (browser menu appears normally)
 - **Occupied cells** - Cells containing widgets use their own context menu system
 
+## Built-in Widget List Menu
+
+The library includes a ready-to-use provider that displays all available widgets in a context menu when right-clicking empty cells. This is the easiest way to add widget selection functionality without writing custom code.
+
+### Quick Setup
+
+Enable the widget list menu by configuring the provider in your application:
+
+```typescript
+import { ApplicationConfig } from '@angular/core';
+import {
+  EMPTY_CELL_CONTEXT_PROVIDER,
+  WidgetListContextMenuProvider
+} from '@dragonworks/ngx-dashboard';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ... other providers
+    {
+      provide: EMPTY_CELL_CONTEXT_PROVIDER,
+      useClass: WidgetListContextMenuProvider
+    }
+  ]
+};
+```
+
+### Features
+
+- **Automatic Widget Discovery** - Shows all registered widgets automatically
+- **SVG Icon Display** - Uses each widget's metadata icon
+- **Instant Widget Creation** - Click any widget to add it to the cell
+- **Material Design** - Built with Angular Material for consistent UI
+- **Zero Configuration** - Works out-of-the-box with no additional setup
+
+### How It Works
+
+When you right-click an empty cell in edit mode:
+
+1. A Material Design context menu appears at your cursor
+2. The menu lists all widgets registered via `DashboardService.registerWidgetType()`
+3. Each menu item shows the widget's icon and display name
+4. Clicking a widget instantly creates it at the clicked position
+5. If no widgets are registered, displays "No widgets available"
+
+### Example
+
+```typescript
+// Register widgets in your app initialization
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // Enable the widget list menu
+    {
+      provide: EMPTY_CELL_CONTEXT_PROVIDER,
+      useClass: WidgetListContextMenuProvider
+    },
+    // Register widgets
+    provideEnvironmentInitializer(() => {
+      const dashboardService = inject(DashboardService);
+      dashboardService.registerWidgetType(LabelWidgetComponent);
+      dashboardService.registerWidgetType(ClockWidgetComponent);
+      dashboardService.registerWidgetType(GaugeWidgetComponent);
+    })
+  ]
+};
+```
+
+Now when users right-click empty cells in edit mode, they'll see a menu with Label, Clock, and Gauge options.
+
+### Coexistence with Drag-and-Drop
+
+The widget list menu works alongside the traditional drag-and-drop widget list. Users can:
+- **Drag widgets** from the widget list sidebar (traditional method)
+- **Right-click empty cells** to quickly add widgets (new method)
+
+Both methods create widgets in the same way and maintain identical functionality.
+
+### Customization
+
+If you need more control than the built-in provider offers (custom menu styling, additional actions, etc.), see the [Implementation Guide](#implementation-guide) below for creating custom providers.
+
 ## User Experience Flow
 
 ### Scenario 1: Right-Click Empty Cell (Default Provider)
@@ -52,13 +133,21 @@ User Action: Right-click empty cell in edit mode
 Result: Browser menu prevented, no visual feedback
 ```
 
-### Scenario 2: Widget Menu Open → Right-Click Empty Cell
+### Scenario 2: Right-Click Empty Cell (Widget List Provider)
+```
+User Action: Right-click empty cell in edit mode
+Result: Context menu appears with available widgets
+User Action: Click a widget from the menu
+Result: Widget is instantly created at that position
+```
+
+### Scenario 3: Widget Menu Open → Right-Click Empty Cell
 ```
 User Action: Right-click widget (menu opens)
 User Action: Right-click empty cell without closing menu
 Result: Widget menu closes, browser menu prevented
 User Action: Right-click empty cell again
-Result: Custom provider executes (if configured)
+Result: Empty cell menu appears (if WidgetListContextMenuProvider configured)
 ```
 
 This two-click pattern follows standard UX conventions used by VS Code, Windows Explorer, and other applications. When any context menu is open, clicking elsewhere closes it first.
@@ -74,6 +163,7 @@ export interface EmptyCellContext {
   totalRows: number;  // Total grid rows
   totalColumns: number; // Total grid columns
   gutterSize: string; // CSS gutter size (e.g., '0.5em')
+  createWidget?: (widgetTypeid: string) => boolean; // Optional callback to create widget
 }
 
 export abstract class EmptyCellContextProvider {
@@ -83,6 +173,8 @@ export abstract class EmptyCellContextProvider {
   ): void;
 }
 ```
+
+The `createWidget` callback is an optional convenience method that allows providers to programmatically create widgets without directly accessing the dashboard store. It takes a widget type ID and returns `true` if the widget was created successfully, `false` otherwise. This is used internally by `WidgetListContextMenuProvider`.
 
 ### Injection Token
 
@@ -571,8 +663,34 @@ interface EmptyCellContext {
   totalRows: number;  // Total number of rows in the grid
   totalColumns: number; // Total number of columns in the grid
   gutterSize: string; // CSS gutter size (e.g., '0.5em', '10px')
+  createWidget?: (widgetTypeid: string) => boolean; // Optional widget creation callback
 }
 ```
+
+### createWidget Callback
+
+The optional `createWidget` callback provides a convenient way to programmatically create widgets at the clicked position:
+
+```typescript
+handleEmptyCellContext(event: MouseEvent, context: EmptyCellContext): void {
+  if (context.createWidget) {
+    // Create a clock widget at the clicked position
+    const success = context.createWidget('clock-widget');
+
+    if (success) {
+      console.log('Widget created successfully');
+    } else {
+      console.error('Failed to create widget - position may be occupied');
+    }
+  }
+}
+```
+
+**Benefits:**
+- No need to inject `DashboardStore` or `DashboardService`
+- Automatic handling of widget factory lookup
+- Returns success/failure status
+- Maintains clean separation of concerns
 
 ### Usage Examples:
 
