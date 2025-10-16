@@ -489,7 +489,7 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
       expect(event.preventDefault).not.toHaveBeenCalled();
     });
 
-    it('should allow events to bubble up (not stop propagation)', () => {
+    it('should stop event propagation to prevent interference with menu system', () => {
       fixture.componentRef.setInput('editMode', true);
       fixture.detectChanges();
 
@@ -498,8 +498,9 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
 
       component.onContextMenu(event);
 
-      // Should not stop event propagation
-      expect(event.stopPropagation).not.toHaveBeenCalled();
+      // Must stop propagation to prevent the document-level listener in
+      // EmptyCellContextMenuComponent from immediately closing the menu
+      expect(event.stopPropagation).toHaveBeenCalled();
     });
 
     it('should handle context menu at grid boundaries', () => {
