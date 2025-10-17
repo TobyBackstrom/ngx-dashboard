@@ -20,7 +20,27 @@
   </div>
 
   @if (editMode()) {
-  <ngx-dashboard-widget-list class="widget-list"></ngx-dashboard-widget-list>
+  <div class="widget-list-container" [class.collapsed]="isWidgetListCollapsed()">
+    <div
+      class="widget-list-header"
+      (click)="toggleWidgetList()"
+      (keydown.enter)="toggleWidgetList()"
+      (keydown.space)="toggleWidgetList(); $event.preventDefault()"
+      role="button"
+      tabindex="0"
+      [attr.aria-label]="isWidgetListCollapsed() ? 'Expand widget list (Ctrl+B)' : 'Collapse widget list (Ctrl+B)'"
+      [attr.aria-expanded]="!isWidgetListCollapsed()"
+      [matTooltip]="isWidgetListCollapsed() ? 'Click to expand widgets (Ctrl+B)' : 'Click to collapse widgets (Ctrl+B)'"
+      i18n-matTooltip="@@demo.dashboard.toggleWidgetListHeader"
+      matTooltipPosition="left"
+    >
+      <mat-icon class="widgets-icon">dashboard</mat-icon>
+      @if (!isWidgetListCollapsed()) {
+      <span class="widgets-title" i18n="@@demo.dashboard.widgetsTitle">Widgets</span>
+      }
+    </div>
+    <ngx-dashboard-widget-list class="widget-list"></ngx-dashboard-widget-list>
+  </div>
   }
 </div>
 

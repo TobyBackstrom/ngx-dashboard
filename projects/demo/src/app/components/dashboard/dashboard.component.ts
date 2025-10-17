@@ -67,6 +67,7 @@ export class DashboardComponent {
   protected selectMode = signal(false);
   protected isZoomed = signal(false);
   protected originalDashboard = signal<DashboardDataDto | null>(null);
+  protected isWidgetListCollapsed = signal(true);
 
   // Dashboard configuration
   protected dashboardConfig = createEmptyDashboard(
@@ -100,7 +101,9 @@ export class DashboardComponent {
       top: 56 + 16, // Compact toolbar height and padding
       bottom: 16 + 12 + 12, // Bottom padding from dashboard-viewport-container, dashboard border
       left: 16, // Left padding
-      right: 16 + (this.editMode() ? 320 + 16 : 0), // Right padding + widget list width when in edit mode
+      right:
+        16 +
+        (this.editMode() ? (this.isWidgetListCollapsed() ? 64 : 320) + 16 : 0), // Right padding + widget list width when in edit mode
     })
   );
 
@@ -281,6 +284,13 @@ export class DashboardComponent {
   }
 
   /**
+   * Toggle widget list collapsed state
+   */
+  toggleWidgetList(): void {
+    this.isWidgetListCollapsed.update((collapsed) => !collapsed);
+  }
+
+  /**
    * Handle ESC key to cancel select mode or exit zoom
    */
   @HostListener('document:keydown.escape')
@@ -289,6 +299,22 @@ export class DashboardComponent {
       this.exitZoom();
     } else if (this.selectMode()) {
       this.cancelSelect();
+    }
+  }
+
+  /**
+   * Handle Ctrl+B keyboard shortcut to toggle widget list
+   */
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    // Ctrl+B or Cmd+B to toggle widget list
+    if (
+      (event.ctrlKey || event.metaKey) &&
+      event.key === 'b' &&
+      this.editMode()
+    ) {
+      event.preventDefault();
+      this.toggleWidgetList();
     }
   }
 }
