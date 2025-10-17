@@ -86,14 +86,13 @@ import {
             mat-menu-item
             (click)="executeAction(item)"
             [disabled]="item.disabled"
-            class="widget-menu-item"
             [attr.aria-label]="item.label">
             @if (item.svgIcon) {
               <div class="widget-icon" [innerHTML]="sanitizeSvg(item.svgIcon)"></div>
             } @else if (item.icon) {
               <mat-icon>{{ item.icon }}</mat-icon>
             }
-            <span>{{ item.label }}</span>
+            {{ item.label }}
           </button>
         }
       }
@@ -110,20 +109,14 @@ import {
         overflow-y: auto;
       }
 
-      .widget-menu-item {
-        display: flex;
-        align-items: center;
-        gap: var(--mat-sys-space-3, 12px);
-        min-height: 48px;
-      }
-
       .widget-icon {
         width: 24px;
         height: 24px;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        vertical-align: middle;
 
         :deep(svg) {
           width: 20px;
