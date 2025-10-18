@@ -1,5 +1,5 @@
 <!-- Speed Dial Container -->
-<div class="speed-dial-container">
+<div class="speed-dial-container" [style.right.px]="isWidgetListCollapsed() ? 20 : 24">
   <!-- Speed Dial Actions (appear when open) -->
   @if (isSpeedDialOpen()) {
   <div class="speed-dial-actions">

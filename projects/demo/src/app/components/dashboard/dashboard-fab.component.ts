@@ -47,6 +47,7 @@ export class DashboardFabComponent {
   // Edit mode and select mode inputs from parent
   editMode = input(false);
   selectMode = input(false);
+  isWidgetListCollapsed = input(true);
 
   /**
    * Command map for action handlers
