@@ -15,6 +15,9 @@
     role="listitem"
     [attr.aria-grabbed]="activeWidget() === widget.widgetTypeid"
     [attr.aria-label]="getWidgetAriaLabel(widget)"
+    [matTooltip]="widget.description"
+    [matTooltipDisabled]="!collapsed()"
+    matTooltipPosition="right"
     tabindex="0"
   >
     <div class="icon" [innerHTML]="widget.safeSvgIcon" aria-hidden="true"></div>

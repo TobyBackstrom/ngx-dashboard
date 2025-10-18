@@ -5,12 +5,14 @@ import {
   inject,
   Renderer2,
   signal,
+  input,
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { DragData, WidgetMetadata } from '../models';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DashboardService } from '../services/dashboard.service';
 import { DashboardBridgeService } from '../services/dashboard-bridge.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 interface WidgetDisplayItem extends WidgetMetadata {
   safeSvgIcon?: SafeHtml;
@@ -19,7 +21,7 @@ interface WidgetDisplayItem extends WidgetMetadata {
 @Component({
   selector: 'ngx-dashboard-widget-list',
   standalone: true,
-  imports: [],
+  imports: [MatTooltipModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './widget-list.component.html',
   styleUrl: './widget-list.component.scss',
@@ -29,6 +31,9 @@ export class WidgetListComponent {
   readonly #sanitizer = inject(DomSanitizer);
   readonly #renderer = inject(Renderer2);
   readonly #bridge = inject(DashboardBridgeService);
+
+  // Input to track collapsed state for tooltip display
+  collapsed = input<boolean>(false);
 
   activeWidget = signal<string | null>(null);
 

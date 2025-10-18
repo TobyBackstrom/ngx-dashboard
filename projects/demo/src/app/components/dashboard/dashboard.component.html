@@ -39,7 +39,10 @@
       <span class="widgets-title" i18n="@@demo.dashboard.widgetsTitle">Widgets</span>
       }
     </div>
-    <ngx-dashboard-widget-list class="widget-list"></ngx-dashboard-widget-list>
+    <ngx-dashboard-widget-list
+      class="widget-list"
+      [collapsed]="isWidgetListCollapsed()"
+    ></ngx-dashboard-widget-list>
   </div>
   }
 </div>
