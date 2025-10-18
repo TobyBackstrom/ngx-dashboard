@@ -23,6 +23,7 @@ import { DashboardStore } from '../store/dashboard-store';
 import { DashboardDataDto } from '../models/dashboard-data.dto';
 import { DashboardBridgeService } from '../services/dashboard-bridge.service';
 import { DashboardViewportService } from '../services/dashboard-viewport.service';
+import { EmptyCellContextMenuService } from '../services/empty-cell-context-menu.service';
 import { ReservedSpace } from '../models/reserved-space';
 import { CellIdUtils, GridSelection, SelectionFilterOptions } from '../models';
 
@@ -48,6 +49,7 @@ export class DashboardComponent implements OnChanges {
   #store = inject(DashboardStore);
   #bridge = inject(DashboardBridgeService);
   #viewport = inject(DashboardViewportService);
+  #emptyCellMenuService = inject(EmptyCellContextMenuService);
   #destroyRef = inject(DestroyRef);
 
   // Public accessors for template
@@ -105,6 +107,17 @@ export class DashboardComponent implements OnChanges {
       const reserved = this.reservedSpace();
       if (reserved) {
         this.#viewport.setReservedSpace(reserved);
+      }
+    });
+
+    // Reset last widget selection when exiting edit mode
+    effect(() => {
+      const isEditMode = this.editMode();
+      if (!isEditMode) {
+        // Reset last selection when exiting edit mode
+        untracked(() => {
+          this.#emptyCellMenuService.setLastSelection(null);
+        });
       }
     });
   }

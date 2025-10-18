@@ -215,6 +215,10 @@ export class EmptyCellContextMenuComponent {
 
   executeAction(item: EmptyCellContextMenuItem): void {
     if (!item.divider && item.action) {
+      // Track widget type if provided
+      if (item.widgetTypeId) {
+        this.menuService.setLastSelection(item.widgetTypeId);
+      }
       item.action();
       this.menuService.hide();
     }

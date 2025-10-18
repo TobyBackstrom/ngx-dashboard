@@ -11,6 +11,7 @@ export type EmptyCellContextMenuItem =
       svgIcon?: string; // SVG icon HTML string
       action: () => void;
       disabled?: boolean;
+      widgetTypeId?: string; // Widget type identifier for tracking selection
       divider?: false;
     }
   | {
@@ -20,6 +21,7 @@ export type EmptyCellContextMenuItem =
       svgIcon?: never;
       action?: never;
       disabled?: never;
+      widgetTypeId?: never;
     };
 
 /**
@@ -39,7 +41,10 @@ export class EmptyCellContextMenuService {
     items: EmptyCellContextMenuItem[];
   } | null>(null);
 
+  #lastSelectedWidgetTypeId = signal<string | null>(null);
+
   activeMenu = this.#activeMenu.asReadonly();
+  lastSelectedWidgetTypeId = this.#lastSelectedWidgetTypeId.asReadonly();
 
   /**
    * Show the context menu at specific coordinates with given items.
@@ -57,5 +62,15 @@ export class EmptyCellContextMenuService {
    */
   hide(): void {
     this.#activeMenu.set(null);
+  }
+
+  /**
+   * Set the last selected widget type ID for quick-repeat functionality.
+   * Pass null to clear the last selection.
+   *
+   * @param widgetTypeId - The widget type identifier, or null to clear
+   */
+  setLastSelection(widgetTypeId: string | null): void {
+    this.#lastSelectedWidgetTypeId.set(widgetTypeId);
   }
 }

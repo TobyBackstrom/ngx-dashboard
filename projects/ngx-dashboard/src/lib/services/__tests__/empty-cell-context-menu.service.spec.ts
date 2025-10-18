@@ -136,12 +136,6 @@ describe('EmptyCellContextMenuService', () => {
   });
 
   describe('activeMenu signal', () => {
-    it('should be readonly', () => {
-      // TypeScript compilation ensures this, but we can verify behavior
-      const menu = service.activeMenu();
-      expect(typeof menu).toBe('object');
-    });
-
     it('should update when show() is called', () => {
       const action = jasmine.createSpy('action');
       const items: EmptyCellContextMenuItem[] = [
@@ -157,6 +151,41 @@ describe('EmptyCellContextMenuService', () => {
       expect(menu1).not.toBe(menu2);
       expect(menu2?.x).toBe(30);
       expect(menu2?.y).toBe(40);
+    });
+  });
+
+  describe('lastSelectedWidgetTypeId', () => {
+    it('should initialize with null', () => {
+      expect(service.lastSelectedWidgetTypeId()).toBeNull();
+    });
+  });
+
+  describe('setLastSelection()', () => {
+    it('should set the last selected widget type ID', () => {
+      service.setLastSelection('test-widget-type');
+      expect(service.lastSelectedWidgetTypeId()).toBe('test-widget-type');
+    });
+
+    it('should update to new widget type ID when called multiple times', () => {
+      service.setLastSelection('widget-a');
+      expect(service.lastSelectedWidgetTypeId()).toBe('widget-a');
+
+      service.setLastSelection('widget-b');
+      expect(service.lastSelectedWidgetTypeId()).toBe('widget-b');
+    });
+
+    it('should clear the last selection when passed null', () => {
+      service.setLastSelection('test-widget-type');
+      expect(service.lastSelectedWidgetTypeId()).toBe('test-widget-type');
+
+      service.setLastSelection(null);
+      expect(service.lastSelectedWidgetTypeId()).toBeNull();
+    });
+
+    it('should support setting the same widget type ID multiple times', () => {
+      service.setLastSelection('widget-a');
+      service.setLastSelection('widget-a');
+      expect(service.lastSelectedWidgetTypeId()).toBe('widget-a');
     });
   });
 });

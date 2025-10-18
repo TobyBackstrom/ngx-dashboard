@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, signal, ViewContainerRef } from '@angular/core';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { DashboardService } from '../services/dashboard.service';
+import { EmptyCellContextMenuService } from '../services/empty-cell-context-menu.service';
 import {
   WidgetFactory,
   DashboardDataDto,
@@ -584,6 +585,145 @@ describe('DashboardComponent - Widget State Integration', () => {
       } else {
         fail('Widget component not found in view mode');
       }
+    });
+  });
+
+  describe('Empty cell context menu integration', () => {
+    let menuService: EmptyCellContextMenuService;
+
+    beforeEach(() => {
+      menuService = TestBed.inject(EmptyCellContextMenuService);
+      // Reset service state before each test
+      menuService.setLastSelection(null);
+    });
+
+    it('should reset last widget selection when exiting edit mode', async () => {
+      const dashboardData: DashboardDataDto = {
+        version: '1.1.0',
+        dashboardId: 'test-dashboard-menu',
+        rows: 5,
+        columns: 5,
+        gutterSize: '1em',
+        cells: [],
+      };
+
+      // Start in edit mode
+      fixture.componentRef.setInput('dashboardData', dashboardData);
+      fixture.componentRef.setInput('editMode', true);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Set a last selection
+      menuService.setLastSelection('test-widget-type');
+      expect(menuService.lastSelectedWidgetTypeId()).toBe('test-widget-type');
+
+      // Exit edit mode
+      fixture.componentRef.setInput('editMode', false);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Verify last selection was reset
+      expect(menuService.lastSelectedWidgetTypeId()).toBeNull();
+    });
+
+    it('should not reset last widget selection when entering edit mode', async () => {
+      const dashboardData: DashboardDataDto = {
+        version: '1.1.0',
+        dashboardId: 'test-dashboard-menu',
+        rows: 5,
+        columns: 5,
+        gutterSize: '1em',
+        cells: [],
+      };
+
+      // Start in view mode
+      fixture.componentRef.setInput('dashboardData', dashboardData);
+      fixture.componentRef.setInput('editMode', false);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Set a last selection (shouldn't normally happen in view mode, but testing the logic)
+      menuService.setLastSelection('test-widget-type');
+      expect(menuService.lastSelectedWidgetTypeId()).toBe('test-widget-type');
+
+      // Enter edit mode
+      fixture.componentRef.setInput('editMode', true);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Verify last selection was not reset when entering edit mode
+      expect(menuService.lastSelectedWidgetTypeId()).toBe('test-widget-type');
+    });
+
+    it('should reset last widget selection on multiple edit mode cycles', async () => {
+      const dashboardData: DashboardDataDto = {
+        version: '1.1.0',
+        dashboardId: 'test-dashboard-menu',
+        rows: 5,
+        columns: 5,
+        gutterSize: '1em',
+        cells: [],
+      };
+
+      fixture.componentRef.setInput('dashboardData', dashboardData);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Cycle 1: Enter edit mode, set selection, exit
+      fixture.componentRef.setInput('editMode', true);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      menuService.setLastSelection('widget-type-1');
+      expect(menuService.lastSelectedWidgetTypeId()).toBe('widget-type-1');
+
+      fixture.componentRef.setInput('editMode', false);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(menuService.lastSelectedWidgetTypeId()).toBeNull();
+
+      // Cycle 2: Enter edit mode again, set different selection, exit
+      fixture.componentRef.setInput('editMode', true);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      menuService.setLastSelection('widget-type-2');
+      expect(menuService.lastSelectedWidgetTypeId()).toBe('widget-type-2');
+
+      fixture.componentRef.setInput('editMode', false);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(menuService.lastSelectedWidgetTypeId()).toBeNull();
+    });
+
+    it('should handle edit mode toggling without setting last selection', async () => {
+      const dashboardData: DashboardDataDto = {
+        version: '1.1.0',
+        dashboardId: 'test-dashboard-menu',
+        rows: 5,
+        columns: 5,
+        gutterSize: '1em',
+        cells: [],
+      };
+
+      fixture.componentRef.setInput('dashboardData', dashboardData);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Enter and exit edit mode without setting any selection
+      fixture.componentRef.setInput('editMode', true);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(menuService.lastSelectedWidgetTypeId()).toBeNull();
+
+      fixture.componentRef.setInput('editMode', false);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(menuService.lastSelectedWidgetTypeId()).toBeNull();
     });
   });
 });

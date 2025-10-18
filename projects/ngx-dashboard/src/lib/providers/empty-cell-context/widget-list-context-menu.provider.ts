@@ -52,6 +52,7 @@ export class WidgetListContextMenuProvider extends EmptyCellContextProvider {
   /**
    * Create menu items from available widget types.
    * Each item includes the widget's icon and display name.
+   * If a widget was previously selected, it appears first as a quick-repeat option.
    *
    * @param widgets - Array of widget component classes
    * @param context - The empty cell context with createWidget callback
@@ -74,11 +75,46 @@ export class WidgetListContextMenuProvider extends EmptyCellContextProvider {
       ];
     }
 
-    return widgets.map((widget: WidgetComponentClass) => ({
-      label: widget.metadata.name,
-      svgIcon: widget.metadata.svgIcon,
-      action: () => this.#createWidget(widget.metadata.widgetTypeid, context),
-    }));
+    // Build standard menu items with widgetTypeId
+    const allItems: EmptyCellContextMenuItem[] = widgets.map(
+      (widget: WidgetComponentClass) => ({
+        label: widget.metadata.name,
+        svgIcon: widget.metadata.svgIcon,
+        widgetTypeId: widget.metadata.widgetTypeid,
+        action: () => this.#createWidget(widget.metadata.widgetTypeid, context),
+      })
+    );
+
+    // Check if there's a last selected widget to show as quick-repeat
+    const lastSelectedTypeId = this.#menuService.lastSelectedWidgetTypeId();
+    if (!lastSelectedTypeId) {
+      return allItems;
+    }
+
+    // Find the last selected widget in the list
+    const lastSelectedWidget = widgets.find(
+      (w) => w.metadata.widgetTypeid === lastSelectedTypeId
+    );
+
+    if (!lastSelectedWidget) {
+      // Last selected widget no longer available, return normal list
+      return allItems;
+    }
+
+    // Create quick-repeat item (duplicate of the last selected widget)
+    const quickRepeatItem: EmptyCellContextMenuItem = {
+      label: lastSelectedWidget.metadata.name,
+      svgIcon: lastSelectedWidget.metadata.svgIcon,
+      widgetTypeId: lastSelectedWidget.metadata.widgetTypeid,
+      action: () =>
+        this.#createWidget(lastSelectedWidget.metadata.widgetTypeid, context),
+    };
+
+    // Create divider
+    const divider: EmptyCellContextMenuItem = { divider: true };
+
+    // Return special structure: [quick-repeat, divider, full list]
+    return [quickRepeatItem, divider, ...allItems];
   }
 
   /**
