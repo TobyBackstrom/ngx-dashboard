@@ -5,6 +5,7 @@ import {
   MAT_DIALOG_DATA,
   MatDialogRef,
   MatDialogModule,
+  MatDialog,
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { TemperatureWidgetState } from './temperature-widget.component';
@@ -12,6 +13,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { TemperatureSharedState } from './temperature-shared-state.service';
+import { TemperatureSharedStateDialogComponent } from './temperature-shared-state-dialog.component';
+
+export interface TemperatureDialogData {
+  instanceState: TemperatureWidgetState;
+  sharedStateProvider: TemperatureSharedState;
+}
 
 @Component({
   selector: 'demo-temperature-state-dialog',
@@ -52,32 +60,68 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         >
       </mat-form-field>
 
-      <!-- Unit Selection -->
-      <mat-form-field appearance="outline" class="unit-field">
-        <mat-label i18n="@@demo.widgets.temperature.dialog.unit"
-          >Temperature Unit</mat-label
+      <!-- Use Shared Unit Toggle -->
+      <div class="toggle-field">
+        <mat-slide-toggle
+          [checked]="useSharedUnit()"
+          (change)="useSharedUnit.set($event.checked)"
+          i18n="@@demo.widgets.temperature.dialog.useSharedUnit"
         >
-        <mat-select
-          [value]="unit()"
-          (selectionChange)="unit.set($any($event.value))"
+          Use shared unit
+        </mat-slide-toggle>
+        <span
+          class="toggle-hint"
+          i18n="@@demo.widgets.temperature.dialog.useSharedUnitDescription"
+          >Use the same unit across all temperature widgets</span
         >
-          <mat-option
-            value="C"
-            i18n="@@demo.widgets.temperature.dialog.unitCelsius"
-            >Celsius (°C)</mat-option
+      </div>
+
+      <!-- Unit Selection (when not using shared) -->
+      @if (!useSharedUnit()) {
+        <mat-form-field appearance="outline" class="unit-field">
+          <mat-label i18n="@@demo.widgets.temperature.dialog.unit"
+            >Temperature Unit</mat-label
           >
-          <mat-option
-            value="F"
-            i18n="@@demo.widgets.temperature.dialog.unitFahrenheit"
-            >Fahrenheit (°F)</mat-option
+          <mat-select
+            [value]="unit()"
+            (selectionChange)="unit.set($any($event.value))"
           >
-          <mat-option
-            value="K"
-            i18n="@@demo.widgets.temperature.dialog.unitKelvin"
-            >Kelvin (K)</mat-option
+            <mat-option
+              value="C"
+              i18n="@@demo.widgets.temperature.dialog.unitCelsius"
+              >Celsius (°C)</mat-option
+            >
+            <mat-option
+              value="F"
+              i18n="@@demo.widgets.temperature.dialog.unitFahrenheit"
+              >Fahrenheit (°F)</mat-option
+            >
+            <mat-option
+              value="K"
+              i18n="@@demo.widgets.temperature.dialog.unitKelvin"
+              >Kelvin (K)</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      }
+
+      <!-- Shared Unit Display (when using shared) -->
+      @if (useSharedUnit()) {
+        <mat-form-field appearance="outline" class="unit-field">
+          <mat-label i18n="@@demo.widgets.temperature.dialog.sharedUnit"
+            >Shared Unit</mat-label
           >
-        </mat-select>
-      </mat-form-field>
+          <input
+            matInput
+            type="text"
+            [value]="sharedUnitDisplay()"
+            readonly
+          />
+          <mat-hint i18n="@@demo.widgets.temperature.dialog.sharedUnitHint"
+            >This unit is shared across all temperature widgets</mat-hint
+          >
+        </mat-form-field>
+      }
 
       <!-- Label Input -->
       <mat-form-field appearance="outline" class="label-field">
@@ -113,7 +157,15 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
       </div>
     </mat-dialog-content>
 
-    <mat-dialog-actions align="end">
+    <mat-dialog-actions align="start">
+      <button
+        mat-button
+        (click)="openSharedStateDialog()"
+        i18n="@@demo.widgets.temperature.dialog.editSharedState"
+      >
+        Edit shared state…
+      </button>
+      <div style="flex: 1"></div>
       <button
         mat-button
         (click)="onCancel()"
@@ -164,24 +216,40 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   ],
 })
 export class TemperatureStateDialogComponent {
-  private readonly data = inject<TemperatureWidgetState>(MAT_DIALOG_DATA);
+  private readonly data = inject<TemperatureDialogData>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<TemperatureStateDialogComponent>);
+  private readonly dialog = inject(MatDialog);
 
   // Placeholders for i18n extraction
   readonly temperaturePlaceholder = $localize`:@@demo.widgets.temperature.dialog.temperatureValuePlaceholder:Enter temperature`;
   readonly labelPlaceholder = $localize`:@@demo.widgets.temperature.dialog.labelPlaceholder:e.g., Room Temp, CPU`;
 
   // State signals
-  readonly temperature = signal<number | null>(this.data.temperature ?? null);
-  readonly unit = signal<'C' | 'F' | 'K'>(this.data.unit ?? 'C');
-  readonly label = signal<string>(this.data.label ?? '');
-  readonly hasBackground = signal<boolean>(this.data.hasBackground ?? true);
+  readonly temperature = signal<number | null>(this.data.instanceState.temperature ?? null);
+  readonly unit = signal<'C' | 'F' | 'K'>(this.data.instanceState.unit ?? 'C');
+  readonly label = signal<string>(this.data.instanceState.label ?? '');
+  readonly hasBackground = signal<boolean>(this.data.instanceState.hasBackground ?? true);
+  readonly useSharedUnit = signal<boolean>(this.data.instanceState.useSharedUnit ?? false);
 
   // Store original values for comparison
-  private readonly originalTemperature = this.data.temperature ?? null;
-  private readonly originalUnit = this.data.unit ?? 'C';
-  private readonly originalLabel = this.data.label ?? '';
-  private readonly originalHasBackground = this.data.hasBackground ?? true;
+  private readonly originalTemperature = this.data.instanceState.temperature ?? null;
+  private readonly originalUnit = this.data.instanceState.unit ?? 'C';
+  private readonly originalLabel = this.data.instanceState.label ?? '';
+  private readonly originalHasBackground = this.data.instanceState.hasBackground ?? true;
+  private readonly originalUseSharedUnit = this.data.instanceState.useSharedUnit ?? false;
+
+  // Computed property for displaying shared unit
+  readonly sharedUnitDisplay = computed(() => {
+    const unit = this.data.sharedStateProvider.config().unit;
+    switch (unit) {
+      case 'C':
+        return 'Celsius (°C)';
+      case 'F':
+        return 'Fahrenheit (°F)';
+      case 'K':
+        return 'Kelvin (K)';
+    }
+  });
 
   // Computed change detection
   readonly hasChanged = computed(
@@ -189,7 +257,8 @@ export class TemperatureStateDialogComponent {
       this.temperature() !== this.originalTemperature ||
       this.unit() !== this.originalUnit ||
       this.label() !== this.originalLabel ||
-      this.hasBackground() !== this.originalHasBackground
+      this.hasBackground() !== this.originalHasBackground ||
+      this.useSharedUnit() !== this.originalUseSharedUnit
   );
 
   onTemperatureChange(value: string | number | null): void {
@@ -207,12 +276,23 @@ export class TemperatureStateDialogComponent {
     this.dialogRef.close();
   }
 
+  openSharedStateDialog(): void {
+    this.dialog.open(TemperatureSharedStateDialogComponent, {
+      data: this.data.sharedStateProvider,
+      width: '400px',
+      maxWidth: '90vw',
+      disableClose: false,
+      autoFocus: false,
+    });
+  }
+
   save(): void {
     this.dialogRef.close({
       temperature: this.temperature(),
       unit: this.unit(),
       label: this.label(),
       hasBackground: this.hasBackground(),
+      useSharedUnit: this.useSharedUnit(),
     } as TemperatureWidgetState);
   }
 }

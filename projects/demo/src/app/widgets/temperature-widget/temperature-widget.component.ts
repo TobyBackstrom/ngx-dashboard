@@ -12,12 +12,14 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { svgIcon } from './temperature-widget.metadata';
 import { TemperatureStateDialogComponent } from './temperature-state-dialog.component';
+import { TemperatureSharedState } from './temperature-shared-state.service';
 
 export interface TemperatureWidgetState {
   temperature: number | null;
   unit: 'C' | 'F' | 'K';
   label?: string;
   hasBackground?: boolean;
+  useSharedUnit?: boolean;
 }
 
 @Component({
@@ -38,6 +40,7 @@ export class TemperatureWidgetComponent implements Widget {
 
   readonly #sanitizer = inject(DomSanitizer);
   readonly #dialog = inject(MatDialog);
+  readonly #sharedState = inject(TemperatureSharedState);
 
   readonly safeSvgIcon = this.#sanitizer.bypassSecurityTrustHtml(svgIcon);
 
@@ -46,6 +49,7 @@ export class TemperatureWidgetComponent implements Widget {
     unit: 'C',
     label: '',
     hasBackground: true,
+    useSharedUnit: false,
   });
 
   // Template string for ResponsiveText sizing (widest possible temperature format)
@@ -54,10 +58,17 @@ export class TemperatureWidgetComponent implements Widget {
   // Computed property to check if temperature is set
   readonly hasTemperature = computed(() => this.state().temperature !== null);
 
+  // Computed property for the effective unit (shared or instance)
+  readonly effectiveUnit = computed(() => {
+    return this.state().useSharedUnit
+      ? this.#sharedState.config().unit
+      : this.state().unit;
+  });
+
   // Computed property for formatted temperature value (converted from Celsius to selected unit)
   readonly temperatureValue = computed(() => {
     const tempCelsius = this.state().temperature;
-    const unit = this.state().unit;
+    const unit = this.effectiveUnit();
 
     if (tempCelsius === null) {
       return '';
@@ -76,7 +87,7 @@ export class TemperatureWidgetComponent implements Widget {
 
   // Computed property for unit symbol
   readonly unitSymbol = computed(() => {
-    return `°${this.state().unit}`;
+    return `°${this.effectiveUnit()}`;
   });
 
   /**
@@ -108,7 +119,10 @@ export class TemperatureWidgetComponent implements Widget {
 
   dashboardEditState(): void {
     const dialogRef = this.#dialog.open(TemperatureStateDialogComponent, {
-      data: this.state(),
+      data: {
+        instanceState: this.state(),
+        sharedStateProvider: this.#sharedState,
+      },
       width: '400px',
       maxWidth: '90vw',
       disableClose: false,

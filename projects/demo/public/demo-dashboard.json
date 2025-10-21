@@ -6,8 +6,8 @@
   "gutterSize": "0.5em",
   "cells": [
     {
-      "row": 7,
-      "col": 4,
+      "row": 6,
+      "col": 15,
       "rowSpan": 1,
       "colSpan": 1,
       "flat": true,
@@ -19,8 +19,8 @@
       }
     },
     {
-      "row": 7,
-      "col": 1,
+      "row": 5,
+      "col": 15,
       "rowSpan": 1,
       "colSpan": 1,
       "flat": true,
@@ -47,32 +47,6 @@
         "responsive": true,
         "minFontSize": 8,
         "maxFontSize": 64
-      }
-    },
-    {
-      "row": 7,
-      "col": 3,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "flat": true,
-      "widgetTypeid": "@ngx-dashboard/arrow-widget",
-      "widgetState": {
-        "direction": "down",
-        "opacity": 0.3,
-        "hasBackground": false
-      }
-    },
-    {
-      "row": 7,
-      "col": 2,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "flat": true,
-      "widgetTypeid": "@ngx-dashboard/arrow-widget",
-      "widgetState": {
-        "direction": "up",
-        "opacity": 0.3,
-        "hasBackground": false
       }
     },
     {
@@ -325,8 +299,8 @@
       }
     },
     {
-      "row": 4,
-      "col": 16,
+      "row": 2,
+      "col": 9,
       "rowSpan": 1,
       "colSpan": 1,
       "widgetTypeid": "@ngx-dashboard/label-widget",
@@ -343,8 +317,8 @@
       }
     },
     {
-      "row": 5,
-      "col": 15,
+      "row": 4,
+      "col": 16,
       "rowSpan": 1,
       "colSpan": 1,
       "widgetTypeid": "@ngx-dashboard/radial-gauge-widget",
@@ -358,7 +332,7 @@
     },
     {
       "row": 6,
-      "col": 15,
+      "col": 16,
       "rowSpan": 1,
       "colSpan": 1,
       "widgetTypeid": "@demo/sparkline-widget",
@@ -370,7 +344,7 @@
       }
     },
     {
-      "row": 6,
+      "row": 7,
       "col": 16,
       "rowSpan": 1,
       "colSpan": 1,
@@ -417,18 +391,6 @@
         "showLabel": false,
         "datasource": "none",
         "updateInterval": 1
-      }
-    },
-    {
-      "row": 7,
-      "col": 16,
-      "rowSpan": 1,
-      "colSpan": 1,
-      "widgetTypeid": "@ngx-dashboard/arrow-widget",
-      "widgetState": {
-        "direction": "up",
-        "opacity": 0.3,
-        "hasBackground": true
       }
     },
     {
@@ -498,7 +460,8 @@
         "temperature": 25,
         "unit": "C",
         "label": "Server Room",
-        "hasBackground": true
+        "hasBackground": true,
+        "useSharedUnit": false
       }
     },
     {
@@ -511,8 +474,70 @@
         "temperature": 22,
         "unit": "K",
         "label": "Inference Cave",
-        "hasBackground": true
+        "hasBackground": true,
+        "useSharedUnit": false
+      }
+    },
+    {
+      "row": 7,
+      "col": 1,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@demo/temperature-widget",
+      "widgetState": {
+        "temperature": 20,
+        "unit": "C",
+        "label": "Shared State 1",
+        "hasBackground": true,
+        "useSharedUnit": true
+      }
+    },
+    {
+      "row": 7,
+      "col": 2,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@demo/temperature-widget",
+      "widgetState": {
+        "temperature": 22,
+        "unit": "C",
+        "label": "Shared State 2",
+        "hasBackground": true,
+        "useSharedUnit": true
+      }
+    },
+    {
+      "row": 7,
+      "col": 3,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@demo/temperature-widget",
+      "widgetState": {
+        "temperature": 23,
+        "unit": "C",
+        "label": "Shared State 3",
+        "hasBackground": true,
+        "useSharedUnit": true
+      }
+    },
+    {
+      "row": 7,
+      "col": 4,
+      "rowSpan": 1,
+      "colSpan": 1,
+      "widgetTypeid": "@demo/temperature-widget",
+      "widgetState": {
+        "temperature": 24,
+        "unit": "C",
+        "label": "Shared State 4",
+        "hasBackground": true,
+        "useSharedUnit": true
       }
     }
-  ]
+  ],
+  "sharedStates": {
+    "@demo/temperature-widget": {
+      "unit": "F"
+    }
+  }
 }
