@@ -50,4 +50,3 @@ Thumbs.db
 # Auto-generated files
 projects/ngx-dashboard/src/lib/version.ts
 projects/ngx-dashboard-widgets/src/lib/version.ts
-RELEASE_NOTES.md
