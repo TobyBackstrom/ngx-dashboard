@@ -6,6 +6,7 @@
     "start": "ng serve",
     "prebuild": "node scripts/generate-versions.js",
     "build": "ng build ngx-dashboard && ng build ngx-dashboard-widgets && ng build demo",
+    "prebuild:ci": "node scripts/generate-versions.js",
     "build:ci": "ng build ngx-dashboard && ng build ngx-dashboard-widgets && ng build demo",
     "prebuild:ngx-dashboard": "node scripts/generate-versions.js",
     "build:ngx-dashboard": "ng build ngx-dashboard",
