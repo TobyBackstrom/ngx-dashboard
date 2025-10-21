@@ -176,3 +176,22 @@ body.dark-mode {
   flex-shrink: 0;
   margin-left: 12px;
 }
+
+/* Version info display */
+.version-info {
+  position: absolute;
+  bottom: 16px;
+  left: 32px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: -1;
+  user-select: none;
+
+  /* Hide on small screens */
+  @media (max-width: 600px) {
+    display: none;
+  }
+}

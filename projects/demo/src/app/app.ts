@@ -5,6 +5,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRadioModule } from '@angular/material/radio';
+import { NGX_DASHBOARD_VERSION } from '@dragonworks/ngx-dashboard';
+import { NGX_DASHBOARD_WIDGETS_VERSION } from '@dragonworks/ngx-dashboard-widgets';
 import { ThemeService, type ThemePalette } from './services';
 
 @Component({
@@ -26,7 +28,11 @@ export class App {
   themeService = inject(ThemeService);
   private router = inject(Router);
 
-  protected title = $localize`:@@demo.app.title:Dashboard Demo and Component Tests`;
+  protected title = $localize`:@@demo.app.title:Dashboard Demo`;
+
+  // Library versions
+  protected readonly dashboardVersion = NGX_DASHBOARD_VERSION;
+  protected readonly widgetsVersion = NGX_DASHBOARD_WIDGETS_VERSION;
 
   /**
    * Get theme toggle aria label
