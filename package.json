@@ -35,6 +35,9 @@
     ]
   },
   "private": true,
+  "overrides": {
+    "vite": "7.1.11"
+  },
   "dependencies": {
     "@angular/cdk": "^20.2.0",
     "@angular/common": "^20.2.1",
