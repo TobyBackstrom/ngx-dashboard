@@ -487,6 +487,32 @@
         "maxFontSize": 64,
         "templateString": "template string"
       }
+    },
+    {
+      "row": 7,
+      "col": 5,
+      "rowSpan": 1,
+      "colSpan": 2,
+      "widgetTypeid": "@demo/temperature-widget",
+      "widgetState": {
+        "temperature": 25,
+        "unit": "C",
+        "label": "Server Room",
+        "hasBackground": true
+      }
+    },
+    {
+      "row": 7,
+      "col": 7,
+      "rowSpan": 1,
+      "colSpan": 2,
+      "widgetTypeid": "@demo/temperature-widget",
+      "widgetState": {
+        "temperature": 22,
+        "unit": "K",
+        "label": "Inference Cave",
+        "hasBackground": true
+      }
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Demo Application i18n Translation Keys
 
-This document lists all the translation keys used in the demo application. The demo app demonstrates comprehensive i18n support with 275 translation keys.
+This document lists all the translation keys used in the demo application. The demo app demonstrates comprehensive i18n support with 288 translation keys.
 
 ## Setup Requirements
 
@@ -187,7 +187,7 @@ To use i18n features with the demo application:
 - `@@demo.radialGaugeDemo.descriptionBars` - "Bars"
 - `@@demo.radialGaugeDemo.descriptionGBUsed` - "GB Used"
 
-### Custom Widgets (Demo App) - 44 keys
+### Custom Widgets (Demo App) - 57 keys
 
 #### Realtime Gauge Widget (21 keys)
 - `@@demo.widgets.realtimeGauge.name` - "Realtime Gauge"
@@ -256,6 +256,22 @@ To use i18n features with the demo application:
 - `@@demo.widgets.sparkline.dialog.fps60` - "60 FPS (High Refresh)"
 - `@@demo.widgets.sparkline.dialog.responsiveLineColors` - "Responsive line colors"
 - `@@demo.widgets.sparkline.dialog.showBackground` - "Show background"
+
+#### Temperature Widget (13 keys)
+- `@@demo.widgets.temperature.name` - "Temperature"
+- `@@demo.widgets.temperature.description` - "Display a temperature value"
+- `@@demo.widgets.temperature.dialog.title` - "Temperature Settings"
+- `@@demo.widgets.temperature.dialog.temperatureValue` - "Temperature Value (°C)"
+- `@@demo.widgets.temperature.dialog.temperatureValuePlaceholder` - "Enter temperature"
+- `@@demo.widgets.temperature.dialog.temperatureHint` - "Value stored in Celsius and converted for display"
+- `@@demo.widgets.temperature.dialog.unit` - "Temperature Unit"
+- `@@demo.widgets.temperature.dialog.unitCelsius` - "Celsius (°C)"
+- `@@demo.widgets.temperature.dialog.unitFahrenheit` - "Fahrenheit (°F)"
+- `@@demo.widgets.temperature.dialog.unitKelvin` - "Kelvin (K)"
+- `@@demo.widgets.temperature.dialog.label` - "Label (optional)"
+- `@@demo.widgets.temperature.dialog.labelPlaceholder` - "e.g., Room Temp, CPU"
+- `@@demo.widgets.temperature.dialog.background` - "Background"
+- `@@demo.widgets.temperature.dialog.backgroundDescription` - "Adds a background behind the temperature"
 
 ### Common Actions (3 keys)
 - `@@demo.common.cancel` - "Cancel"

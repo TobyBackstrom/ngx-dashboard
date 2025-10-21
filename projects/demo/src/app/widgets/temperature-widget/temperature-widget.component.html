@@ -1,0 +1,26 @@
+<!-- temperature-widget.component.html -->
+<div class="temperature-wrapper" [class.has-background]="state().hasBackground">
+  @if (!hasTemperature()) {
+  <!-- Show placeholder icon when no temperature is set -->
+  <div class="svg-placeholder" [innerHTML]="safeSvgIcon"></div>
+  } @else {
+  <!-- Show temperature value with optional label -->
+  <div class="temperature-display">
+    @if (state().label) {
+    <div class="label">{{ state().label }}</div>
+    }
+    <div class="value-container">
+      <span
+        libResponsiveText
+        [minFontSize]="6"
+        [maxFontSize]="120"
+        [lineHeight]="1"
+        [templateString]="templateString"
+      >
+        {{ temperatureValue() }}
+      </span>
+    </div>
+    <div class="unit">{{ unitSymbol() }}</div>
+  </div>
+  }
+</div>

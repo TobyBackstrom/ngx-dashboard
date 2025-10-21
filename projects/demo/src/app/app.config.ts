@@ -21,6 +21,7 @@ import {
 import { SparklineWidgetComponent } from './widgets/sparkline-widget/sparkline-widget.component';
 import { SparkbarWidgetComponent } from './widgets/sparkbar-widget/sparkbar-widget.component';
 import { RealtimeGaugeWidgetComponent } from './widgets/realtime-gauge-widget/realtime-gauge-widget.component';
+import { TemperatureWidgetComponent } from './widgets/temperature-widget/temperature-widget.component';
 
 import { routes } from './app.routes';
 
@@ -44,6 +45,7 @@ export const appConfig: ApplicationConfig = {
       dashboardService.registerWidgetType(RealtimeGaugeWidgetComponent);
       dashboardService.registerWidgetType(SparklineWidgetComponent);
       dashboardService.registerWidgetType(SparkbarWidgetComponent);
+      dashboardService.registerWidgetType(TemperatureWidgetComponent);
     }),
   ],
 };
