@@ -2,6 +2,9 @@
  * Public API Surface of ngx-dashboard
  */
 
+// Library version
+export { NGX_DASHBOARD_VERSION } from './lib/version';
+
 // Main dashboard components
 export { DashboardComponent } from './lib/dashboard/dashboard.component';
 export { WidgetListComponent } from './lib/widget-list/widget-list.component';

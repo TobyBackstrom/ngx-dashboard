@@ -2,6 +2,9 @@
  * Public API Surface of ngx-dashboard-widgets
  */
 
+// Library version
+export { NGX_DASHBOARD_WIDGETS_VERSION } from './lib/version';
+
 // Widget Components
 export { ArrowWidgetComponent } from './lib/widgets/arrow-widget/arrow-widget.component';
 export { LabelWidgetComponent } from './lib/widgets/label-widget/label-widget.component';

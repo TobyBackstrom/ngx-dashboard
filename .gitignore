@@ -46,3 +46,7 @@ docs/sessions
 # System files
 .DS_Store
 Thumbs.db
+
+# Auto-generated files
+projects/ngx-dashboard/src/lib/version.ts
+projects/ngx-dashboard-widgets/src/lib/version.ts
