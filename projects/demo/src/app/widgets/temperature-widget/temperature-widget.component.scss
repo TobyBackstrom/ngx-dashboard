@@ -51,7 +51,6 @@
   justify-items: center;
   width: 100%;
   height: 100%;
-  padding: min(4cqh, 4cqw);
   box-sizing: border-box;
   gap: 0;
 }
@@ -64,17 +63,16 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  font-size: clamp(0.7rem, 4cqw, 1.2rem);
-  font-weight: 500;
-  text-align: center;
   color: var(--mat-sys-on-surface-variant, #6c757d);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 
   // Keep muted for supporting text (medium emphasis)
   .has-background & {
     color: var(--mat-sys-on-surface-variant, #6c757d);
+  }
+
+  span {
+    font-weight: 500;
+    text-align: center;
   }
 }
 
@@ -87,7 +85,6 @@
   width: 100%;
   height: 100%;
   color: var(--mat-sys-on-surface-variant, #6c757d);
-  font-weight: 700;
 
   // High emphasis for hero content (maximum contrast)
   .has-background & {
@@ -95,6 +92,7 @@
   }
 
   span {
+    font-weight: 700;
     text-align: center;
   }
 }
@@ -107,14 +105,16 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  font-size: clamp(0.8rem, 5cqw, 1.5rem);
-  font-weight: 500;
-  text-align: center;
   color: var(--mat-sys-on-surface-variant, #6c757d);
 
   // Keep muted for supporting text (medium emphasis)
   .has-background & {
     color: var(--mat-sys-on-surface-variant, #6c757d);
+  }
+
+  span {
+    font-weight: 500;
+    text-align: center;
   }
 }
 

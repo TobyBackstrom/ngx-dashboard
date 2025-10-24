@@ -8,7 +8,7 @@
   <div class="temperature-display">
     @if (state().label) {
     <div class="label">
-      <span libResponsiveText [minFontSize]="6" [maxFontSize]="120"
+      <span libResponsiveText [minFontSize]="4" [maxFontSize]="120"
         >{{ state().label }}
       </span>
     </div>
@@ -16,7 +16,7 @@
     <div class="value-container">
       <span
         libResponsiveText
-        [minFontSize]="6"
+        [minFontSize]="4"
         [maxFontSize]="120"
         [templateString]="templateString"
       >
@@ -24,11 +24,7 @@
       </span>
     </div>
     <div class="unit">
-      <span
-        libResponsiveText
-        [minFontSize]="6"
-        [maxFontSize]="120"
-        [templateString]="templateString"
+      <span libResponsiveText [minFontSize]="4" [maxFontSize]="120"
         >{{ unitSymbol() }}
       </span>
     </div>
