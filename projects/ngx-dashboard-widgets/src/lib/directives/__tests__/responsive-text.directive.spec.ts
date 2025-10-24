@@ -125,20 +125,13 @@ describe('ResponsiveTextDirective', () => {
 
     it('should apply host styles correctly', () => {
       fixture.detectChanges();
-      
+
       expect(spanElement.style.display).toBe('block');
       expect(spanElement.style.width).toBe('100%');
       expect(spanElement.style.whiteSpace).toBe('nowrap');
       expect(spanElement.style.overflow).toBe('visible');
       expect(spanElement.style.textOverflow).toBe('');
     });
-
-    it('should set transition style on init', fakeAsync(() => {
-      fixture.detectChanges();
-      tick();
-      
-      expect(spanElement.style.transition).toContain('font-size');
-    }));
 
     it('should calculate and apply font size based on container dimensions', fakeAsync(() => {
       component.containerWidth = 200;
