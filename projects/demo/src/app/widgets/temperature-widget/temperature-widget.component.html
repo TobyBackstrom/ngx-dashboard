@@ -7,20 +7,31 @@
   <!-- Show temperature value with optional label -->
   <div class="temperature-display">
     @if (state().label) {
-    <div class="label">{{ state().label }}</div>
+    <div class="label">
+      <span libResponsiveText [minFontSize]="6" [maxFontSize]="120"
+        >{{ state().label }}
+      </span>
+    </div>
     }
     <div class="value-container">
       <span
         libResponsiveText
         [minFontSize]="6"
         [maxFontSize]="120"
-        [lineHeight]="1"
         [templateString]="templateString"
       >
         {{ temperatureValue() }}
       </span>
     </div>
-    <div class="unit">{{ unitSymbol() }}</div>
+    <div class="unit">
+      <span
+        libResponsiveText
+        [minFontSize]="6"
+        [maxFontSize]="120"
+        [templateString]="templateString"
+        >{{ unitSymbol() }}
+      </span>
+    </div>
   </div>
   }
 </div>

@@ -14,8 +14,6 @@
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  transition: background-color var(--mat-sys-motion-duration-medium2)
-    var(--mat-sys-motion-easing-standard);
 
   // Add background color when enabled
   &.has-background {
@@ -29,7 +27,6 @@
   width: min(80cqw, 80cqh);
   aspect-ratio: 1 / 1;
   opacity: 0.3;
-  transition: opacity 0.3s ease, color 0.2s ease;
   color: var(--mat-sys-on-surface-variant, #6c757d);
 
   // Different color when parent has background
@@ -71,7 +68,6 @@
   font-weight: 500;
   text-align: center;
   color: var(--mat-sys-on-surface-variant, #6c757d);
-  transition: color 0.2s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -91,7 +87,6 @@
   width: 100%;
   height: 100%;
   color: var(--mat-sys-on-surface-variant, #6c757d);
-  transition: color 0.2s ease;
   font-weight: 700;
 
   // High emphasis for hero content (maximum contrast)
@@ -116,7 +111,6 @@
   font-weight: 500;
   text-align: center;
   color: var(--mat-sys-on-surface-variant, #6c757d);
-  transition: color 0.2s ease;
 
   // Keep muted for supporting text (medium emphasis)
   .has-background & {

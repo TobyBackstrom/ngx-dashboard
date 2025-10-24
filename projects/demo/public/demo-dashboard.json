@@ -459,7 +459,7 @@
       "widgetState": {
         "temperature": 25,
         "unit": "C",
-        "label": "Server Room",
+        "label": "Token Storage",
         "hasBackground": true,
         "useSharedUnit": false
       }

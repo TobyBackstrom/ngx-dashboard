@@ -111,10 +111,6 @@ export class ResponsiveTextDirective implements AfterViewInit {
   ngAfterViewInit() {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    // Set initial styles
-    const span = this.el.nativeElement;
-    span.style.transition = 'font-size 0.1s ease-out';
-
     // Mark as initialized for the effect to start watching
     this.isViewInitialized = true;
 
