@@ -1,83 +1,100 @@
 <mat-toolbar class="toolbar">
   <!-- Left side navigation -->
-  <button mat-button [matMenuTriggerFor]="navigationMenu">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <mat-menu #navigationMenu="matMenu">
-    <button mat-menu-item (click)="navigateToDashboard()">
-      <mat-icon>dashboard</mat-icon>
-      <span i18n="@@demo.navigation.dashboard">Dashboard</span>
+  <div class="toolbar-left">
+    <button mat-button [matMenuTriggerFor]="navigationMenu">
+      <mat-icon>menu</mat-icon>
     </button>
-    <button mat-menu-item (click)="navigateToRadialGaugeDemo()">
-      <mat-icon>speed</mat-icon>
-      <span i18n="@@demo.navigation.radialGaugeDemo">Radial Gauge Demo</span>
-    </button>
-    <button mat-menu-item (click)="navigateToColors()">
-      <mat-icon>palette</mat-icon>
-      <span i18n="@@demo.navigation.colors">Colors Overview</span>
-    </button>
-  </mat-menu>
-
-  <!-- Center spacer -->
-  <span class="spacer"></span>
+    <mat-menu #navigationMenu="matMenu">
+      <button mat-menu-item (click)="navigateToDashboard()">
+        <mat-icon>dashboard</mat-icon>
+        <span i18n="@@demo.navigation.dashboard">Dashboard</span>
+      </button>
+      <button mat-menu-item (click)="navigateToRadialGaugeDemo()">
+        <mat-icon>speed</mat-icon>
+        <span i18n="@@demo.navigation.radialGaugeDemo">Radial Gauge Demo</span>
+      </button>
+      <button mat-menu-item (click)="navigateToColors()">
+        <mat-icon>palette</mat-icon>
+        <span i18n="@@demo.navigation.colors">Colors Overview</span>
+      </button>
+    </mat-menu>
+  </div>
 
   <!-- Centered title -->
-  <span class="title">{{ title }}</span>
-
-  <!-- Right spacer -->
-  <span class="spacer"></span>
+  <div class="toolbar-center">
+    <span class="title">{{ title }}</span>
+  </div>
 
   <!-- Right side controls -->
-  <!-- Theme selector -->
-  <button
-    mat-icon-button
-    class="theme-selector"
-    [matMenuTriggerFor]="themeMenu"
-    [attr.aria-label]="getThemeSelectorAriaLabel()"
-  >
-    <mat-icon>format_color_fill</mat-icon>
-  </button>
-  <mat-menu #themeMenu="matMenu">
-    <mat-radio-group
-      [value]="themeService.theme()"
-      (change)="setTheme($event.value)"
-      class="theme-radio-group"
+  <div class="toolbar-right">
+    <!-- GitHub link -->
+    <a
+      mat-icon-button
+      class="github-link"
+      href="https://github.com/TobyBackstrom/ngx-dashboard"
+      target="_blank"
+      rel="noopener noreferrer"
+      [attr.aria-label]="getGitHubLinkAriaLabel()"
     >
-      @for (themeConfig of themeService.availableThemes(); track
-      themeConfig.key) {
-      <div
-        class="theme-option-row"
-        (click)="setTheme(themeConfig.key)"
-        (keyup.enter)="setTheme(themeConfig.key)"
-        (keyup.space)="setTheme(themeConfig.key)"
-        tabindex="0"
-        role="button"
-        [attr.aria-label]="getThemeOptionAriaLabel(themeConfig.displayName)"
-      >
-        <mat-radio-button [value]="themeConfig.key" class="theme-option">
-          {{ themeConfig.displayName }}
-        </mat-radio-button>
-        <div
-          class="color-swatch"
-          [style.background-color]="'var(' + themeConfig.cssVariable + ')'"
-          [style.border]="'1px solid var(' + themeConfig.cssVariable + ')'"
-          [style.border]="'1px solid black'"
-        ></div>
-      </div>
-      }
-    </mat-radio-group>
-  </mat-menu>
+      <img
+        src="/github-mark.svg"
+        alt="GitHub"
+        [style.filter]="themeService.isDarkMode() ? 'invert(1)' : 'none'"
+      />
+    </a>
 
-  <button
-    mat-icon-button
-    class="theme-toggle"
-    (click)="toggleDarkMode()"
-    [attr.aria-label]="getThemeToggleAriaLabel()"
-  >
-    <mat-icon>{{
-      themeService.isDarkMode() ? "dark_mode" : "light_mode"
-    }}</mat-icon>
-  </button>
+    <!-- Theme selector -->
+    <button
+      mat-icon-button
+      class="theme-selector"
+      [matMenuTriggerFor]="themeMenu"
+      [attr.aria-label]="getThemeSelectorAriaLabel()"
+    >
+      <mat-icon>format_color_fill</mat-icon>
+    </button>
+    <mat-menu #themeMenu="matMenu">
+      <mat-radio-group
+        [value]="themeService.theme()"
+        (change)="setTheme($event.value)"
+        class="theme-radio-group"
+      >
+        @for (themeConfig of themeService.availableThemes(); track
+        themeConfig.key) {
+        <div
+          class="theme-option-row"
+          (click)="setTheme(themeConfig.key)"
+          (keyup.enter)="setTheme(themeConfig.key)"
+          (keyup.space)="setTheme(themeConfig.key)"
+          tabindex="0"
+          role="button"
+          [attr.aria-label]="getThemeOptionAriaLabel(themeConfig.displayName)"
+        >
+          <mat-radio-button [value]="themeConfig.key" class="theme-option">
+            {{ themeConfig.displayName }}
+          </mat-radio-button>
+          <div
+            class="color-swatch"
+            [style.background-color]="'var(' + themeConfig.cssVariable + ')'"
+            [style.border]="'1px solid var(' + themeConfig.cssVariable + ')'"
+            [style.border]="'1px solid black'"
+          ></div>
+        </div>
+        }
+      </mat-radio-group>
+    </mat-menu>
+
+    <!-- Dark/Light mode toggle -->
+    <button
+      mat-icon-button
+      class="theme-toggle"
+      (click)="toggleDarkMode()"
+      [attr.aria-label]="getThemeToggleAriaLabel()"
+    >
+      <mat-icon>{{
+        themeService.isDarkMode() ? "dark_mode" : "light_mode"
+      }}</mat-icon>
+    </button>
+  </div>
 </mat-toolbar>
 
 <div class="main-content">

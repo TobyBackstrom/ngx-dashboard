@@ -58,6 +58,13 @@ export class App {
   }
 
   /**
+   * Get GitHub link aria label
+   */
+  getGitHubLinkAriaLabel(): string {
+    return $localize`:@@demo.github.viewOnGitHub:View source code on GitHub`;
+  }
+
+  /**
    * Navigate to colors overview page
    */
   navigateToColors(): void {
