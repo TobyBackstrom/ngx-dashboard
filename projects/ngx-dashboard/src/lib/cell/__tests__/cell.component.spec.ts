@@ -37,6 +37,32 @@ class TestWidgetComponent implements Widget {
   }
 }
 
+// Mock test widget with shared state support
+@Component({
+  selector: 'lib-test-widget-with-shared',
+  template: '<div>Test Widget with Shared State</div>',
+  standalone: true,
+})
+class TestWidgetWithSharedComponent implements Widget {
+  private state = signal<unknown>({ value: 'test' });
+
+  dashboardGetState(): unknown {
+    return this.state();
+  }
+
+  dashboardSetState(state: unknown): void {
+    this.state.set(state);
+  }
+
+  dashboardEditState(): void {
+    // Mock edit state method
+  }
+
+  dashboardEditSharedState(): void {
+    // Mock edit shared state method
+  }
+}
+
 describe('CellComponent - User Scenarios', () => {
   let component: CellComponent;
   let fixture: ComponentFixture<CellComponent>;
@@ -72,7 +98,7 @@ describe('CellComponent - User Scenarios', () => {
     mockRenderer = jasmine.createSpyObj('Renderer2', ['listen']);
 
     await TestBed.configureTestingModule({
-      imports: [CellComponent, TestWidgetComponent],
+      imports: [CellComponent, TestWidgetComponent, TestWidgetWithSharedComponent],
       providers: [
         DashboardStore,
         { provide: DashboardService, useValue: mockDashboardService },
@@ -207,6 +233,79 @@ describe('CellComponent - User Scenarios', () => {
       await fixture.whenStable();
 
       expect(component.canEdit()).toBe(false);
+    });
+  });
+
+  describe('Shared State Editing Workflow', () => {
+    beforeEach(() => {
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
+      fixture.componentRef.setInput('row', 1);
+      fixture.componentRef.setInput('column', 1);
+      fixture.componentRef.setInput('isEditMode', true);
+      fixture.detectChanges();
+      spyOn(component.edit, 'emit');
+    });
+
+    it('should report if widget can edit shared state', async () => {
+      // Create widget with shared state support
+      const factoryWithShared = {
+        ...mockWidgetFactory,
+        createInstance: jasmine
+          .createSpy('createInstance')
+          .and.callFake((container: ViewContainerRef, state?: unknown) => {
+            const componentRef = container.createComponent(TestWidgetWithSharedComponent);
+            if (state) {
+              componentRef.instance.dashboardSetState(state);
+            }
+            return componentRef;
+          }),
+      };
+
+      fixture.componentRef.setInput('widgetFactory', factoryWithShared);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(component.canEditSharedState()).toBe(true);
+    });
+
+    it('should report false for widgets without shared state editing capability', async () => {
+      // Default TestWidgetComponent doesn't have dashboardEditSharedState
+      await fixture.whenStable();
+      expect(component.canEditSharedState()).toBe(false);
+    });
+
+    it('should call widget shared state editor when method exists', async () => {
+      // Create a mock component ref with spy
+      const mockWidgetInstance = {
+        dashboardGetState: jasmine.createSpy('dashboardGetState'),
+        dashboardSetState: jasmine.createSpy('dashboardSetState'),
+        dashboardEditState: jasmine.createSpy('dashboardEditState'),
+        dashboardEditSharedState: jasmine.createSpy('dashboardEditSharedState'),
+      };
+
+      const mockComponentRef = {
+        instance: mockWidgetInstance,
+        destroy: jasmine.createSpy('destroy'),
+      };
+
+      // Create widget factory that returns our mock component ref
+      const factoryWithShared = {
+        ...mockWidgetFactory,
+        createInstance: jasmine
+          .createSpy('createInstance')
+          .and.returnValue(mockComponentRef as any),
+      };
+
+      fixture.componentRef.setInput('widgetFactory', factoryWithShared);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // User invokes shared state editing
+      component.onEditSharedState();
+
+      // Widget's shared state editor should be called
+      expect(mockWidgetInstance.dashboardEditSharedState).toHaveBeenCalled();
     });
   });
 
