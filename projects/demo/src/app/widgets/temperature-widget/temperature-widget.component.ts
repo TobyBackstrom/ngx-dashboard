@@ -12,6 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { svgIcon } from './temperature-widget.metadata';
 import { TemperatureStateDialogComponent } from './temperature-state-dialog.component';
+import { TemperatureSharedStateDialogComponent } from './temperature-shared-state-dialog.component';
 import { TemperatureSharedState } from './temperature-shared-state.service';
 
 export interface TemperatureWidgetState {
@@ -133,6 +134,16 @@ export class TemperatureWidgetComponent implements Widget {
       if (result) {
         this.state.set(result);
       }
+    });
+  }
+
+  dashboardEditSharedState(): void {
+    this.#dialog.open(TemperatureSharedStateDialogComponent, {
+      data: this.#sharedState,
+      width: '400px',
+      maxWidth: '90vw',
+      disableClose: false,
+      autoFocus: false,
     });
   }
 }

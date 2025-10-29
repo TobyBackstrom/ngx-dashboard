@@ -243,6 +243,18 @@ export class CellComponent {
         action: () => this.onEdit(),
         disabled: !this.canEdit(),
       },
+    ];
+
+    // Add shared state entry if widget implements the method
+    if (this.canEditSharedState()) {
+      items.push({
+        label: $localize`:@@ngx.dashboard.cell.menu.editShared:Edit Shared State`,
+        icon: 'edit_document',
+        action: () => this.onEditSharedState(),
+      });
+    }
+
+    items.push(
       {
         label: $localize`:@@ngx.dashboard.cell.menu.settings:Settings`,
         icon: 'settings',
@@ -253,8 +265,8 @@ export class CellComponent {
         label: $localize`:@@ngx.dashboard.cell.menu.delete:Delete`,
         icon: 'delete',
         action: () => this.onDelete(),
-      },
-    ];
+      }
+    );
 
     // Position menu at exact mouse coordinates
     this.#contextMenuService.show(event.clientX, event.clientY, items);
@@ -267,12 +279,22 @@ export class CellComponent {
     return false;
   }
 
+  canEditSharedState(): boolean {
+    return !!this.#widgetRef?.instance?.dashboardEditSharedState;
+  }
+
   onEdit(): void {
     this.edit.emit(this.widgetId());
 
     // Call the widget's edit dialog method if it exists
     if (this.#widgetRef?.instance?.dashboardEditState) {
       this.#widgetRef.instance.dashboardEditState();
+    }
+  }
+
+  onEditSharedState(): void {
+    if (this.#widgetRef?.instance?.dashboardEditSharedState) {
+      this.#widgetRef.instance.dashboardEditSharedState();
     }
   }
 

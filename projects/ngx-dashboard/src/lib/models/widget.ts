@@ -5,6 +5,7 @@ export interface Widget {
   dashboardGetState?(): unknown;
   dashboardSetState?(state?: unknown): void;
   dashboardEditState?(): void;
+  dashboardEditSharedState?(): void;
 }
 
 export interface WidgetMetadata {

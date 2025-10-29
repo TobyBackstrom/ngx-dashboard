@@ -5,7 +5,6 @@ import {
   MAT_DIALOG_DATA,
   MatDialogRef,
   MatDialogModule,
-  MatDialog,
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { TemperatureWidgetState } from './temperature-widget.component';
@@ -14,7 +13,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TemperatureSharedState } from './temperature-shared-state.service';
-import { TemperatureSharedStateDialogComponent } from './temperature-shared-state-dialog.component';
 
 export interface TemperatureDialogData {
   instanceState: TemperatureWidgetState;
@@ -157,15 +155,7 @@ export interface TemperatureDialogData {
       </div>
     </mat-dialog-content>
 
-    <mat-dialog-actions align="start">
-      <button
-        mat-button
-        (click)="openSharedStateDialog()"
-        i18n="@@demo.widgets.temperature.dialog.editSharedState"
-      >
-        Edit shared state…
-      </button>
-      <div style="flex: 1"></div>
+    <mat-dialog-actions align="end">
       <button
         mat-button
         (click)="onCancel()"
@@ -218,7 +208,6 @@ export interface TemperatureDialogData {
 export class TemperatureStateDialogComponent {
   private readonly data = inject<TemperatureDialogData>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<TemperatureStateDialogComponent>);
-  private readonly dialog = inject(MatDialog);
 
   // Placeholders for i18n extraction
   readonly temperaturePlaceholder = $localize`:@@demo.widgets.temperature.dialog.temperatureValuePlaceholder:Enter temperature`;
@@ -274,16 +263,6 @@ export class TemperatureStateDialogComponent {
 
   onCancel(): void {
     this.dialogRef.close();
-  }
-
-  openSharedStateDialog(): void {
-    this.dialog.open(TemperatureSharedStateDialogComponent, {
-      data: this.data.sharedStateProvider,
-      width: '400px',
-      maxWidth: '90vw',
-      disableClose: false,
-      autoFocus: false,
-    });
   }
 
   save(): void {
