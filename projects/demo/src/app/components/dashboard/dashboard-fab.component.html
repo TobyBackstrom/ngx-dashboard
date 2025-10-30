@@ -1,5 +1,8 @@
 <!-- Speed Dial Container -->
-<div class="speed-dial-container" [style.right.px]="isWidgetListCollapsed() ? 20 : 24">
+<div
+  class="speed-dial-container"
+  [style.right.px]="isWidgetListCollapsed() ? 20 : 24"
+>
   <!-- Speed Dial Actions (appear when open) -->
   @if (isSpeedDialOpen()) {
   <div class="speed-dial-actions">
@@ -74,7 +77,7 @@
       <mat-icon>delete</mat-icon>
     </button>
 
-    <!-- Area Selection (only available in view mode) -->
+    <!-- Zoom to Area Selection (only available in view mode) -->
     @if (!editMode()) {
     <button
       mat-mini-fab
@@ -84,7 +87,7 @@
       matTooltipPosition="left"
       [color]="selectMode() ? 'accent' : undefined"
     >
-      <mat-icon>{{ selectMode() ? "close" : "select_all" }}</mat-icon>
+      <mat-icon>{{ selectMode() ? "close" : "zoom_in" }}</mat-icon>
     </button>
     }
 
@@ -126,5 +129,6 @@
   tabindex="0"
   role="button"
   aria-label="Close speed dial menu"
-  i18n-aria-label="@@demo.dashboard.closeSpeedDialMenu"></div>
+  i18n-aria-label="@@demo.dashboard.closeSpeedDialMenu"
+></div>
 }

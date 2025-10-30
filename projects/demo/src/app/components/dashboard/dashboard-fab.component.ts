@@ -92,8 +92,8 @@ export class DashboardFabComponent {
    */
   getSelectModeTooltip(): string {
     return this.selectMode()
-      ? $localize`:@@demo.dashboard.cancelSelect:Cancel Select`
-      : $localize`:@@demo.dashboard.selectArea:Select Area`;
+      ? $localize`:@@demo.dashboard.cancelSelect:Cancel Zoom`
+      : $localize`:@@demo.dashboard.selectArea:Zoom to Area`;
   }
 
   /**
