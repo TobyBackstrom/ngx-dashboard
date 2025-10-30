@@ -1,3 +1,42 @@
+# v20.3.2 Release Notes
+
+## ngx-dashboard (Core Library)
+
+### Features
+
+- **Widget Shared State Context Menu**
+  - Added optional `dashboardEditSharedState()` method to Widget interface
+  - CellComponent conditionally displays "Edit Shared State" menu item when widget implements method
+  - Maintains separation of concerns (UI in components, data in services)
+  - Fully backward compatible with no breaking changes
+
+## ngx-dashboard-widgets (Widget Library)
+
+## Demo Application
+
+### Features
+
+- **GitHub Repository Link**
+
+  - Added repository link to toolbar using CSS Grid layout
+  - Reactive dark mode support via style binding
+  - i18n and accessibility support
+
+- **Temperature Widget Shared State Integration**
+  - Direct shared state editing via context menu
+  - Removed nested dialog pattern from instance settings
+
+### Refactoring
+
+- Zoom functionality now uses zoom icon instead of previous icon
+- Adjusted Temperature Widget font sizes and styles for improved readability
+
+## Documentation
+
+- Updated README to clarify dashboard viewer and editor sections
+- Added new screenshots (`dashboard-editor.png`, `dashboard-viewer.png`)
+- Removed old screenshot (`dashboard.png`)
+
 # v20.3.1 Release Notes
 
 ## ngx-dashboard (Core Library)

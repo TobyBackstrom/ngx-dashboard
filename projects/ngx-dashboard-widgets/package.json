@@ -1,12 +1,12 @@
 {
   "name": "@dragonworks/ngx-dashboard-widgets",
-  "version": "20.3.1",
+  "version": "20.3.2",
   "description": "Widget collection for ngx-dashboard with Material Design 3 compliance including arrow, label, clock widgets and responsive text directive",
   "peerDependencies": {
     "@angular/common": "^20.2.0",
     "@angular/core": "^20.2.0",
     "@angular/localize": "^20.2.0",
-    "@dragonworks/ngx-dashboard": "^20.3.1"
+    "@dragonworks/ngx-dashboard": "^20.3.2"
   },
   "dependencies": {
     "tslib": "^2.3.0"
