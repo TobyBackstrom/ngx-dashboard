@@ -18,7 +18,18 @@
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
 </p>
 
-Modern Angular workspace for building drag-and-drop grid dashboards with resizable cells and customizable widgets. Built with Angular 20+ standalone components, NgRx Signals state management, and Material Design 3 design system compliance.
+Modern Angular libraries for building drag-and-drop grid dashboards with resizable cells and customizable widgets. Built with Angular 20+ standalone components, NgRx Signals state management, and Material Design 3 design system compliance.
+
+**ngx-dashboard** provides drop-in dashboard functionality for Angular applications. Add interactive grid-based dashboards to existing apps or build dedicated dashboard experiences from scratch. The library handles multiple dashboards within a single application, supports programmatic creation and serialization for persistent storage, and includes a built-in editor for end-user dashboard customization.
+
+Opinionated with flexibility:
+
+- **Fixed grid resolution**: Dashboards use a fixed row/column grid (e.g., 8×16) where individual cells resize responsively but the grid structure remains constant. For different orientations, create separate dashboard configurations (16×8 for landscape, 8×16 for portrait).
+- **Customization**: The library follows Material Design 3 patterns and includes standard Angular i18n support, while allowing customization through MD3 design tokens and dependency injection providers for dialogs, menus, and persistence strategies.
+
+**ngx-dashboard-widgets** provides example widgets to illustrate concepts. Any Angular component can become a dashboard widget by implementing a simple interface and registering with the dashboard service. Widgets must be fully responsive and handle all cell sizes gracefully.
+
+The **demo application** showcases the libraries in action with practical examples. It demonstrates dashboard management with FAB controls, drag-and-drop widget installation, real-time theme switching, custom widget implementations (Sparkline, Temperature), and both localStorage and file-based persistence strategies.
 
 🎯 **[Live Demo](https://dragonworks.dev/ngx-dashboard/)** - Try the interactive demo application
 
