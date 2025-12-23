@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ViewContainerRef, Renderer2 } from '@angular/core';
 import { CellComponent } from '../cell.component';
 import { DashboardStore } from '../../store/dashboard-store';
@@ -374,21 +374,14 @@ describe('CellComponent - User Scenarios', () => {
       };
     });
 
-    it('should complete drag and drop workflow', () => {
+    it('should complete drag and drop workflow', fakeAsync(() => {
       spyOn(component.dragStart, 'emit');
       spyOn(component.dragEnd, 'emit');
-
-      // Mock requestAnimationFrame to execute immediately
-      spyOn(window, 'requestAnimationFrame').and.callFake((callback: FrameRequestCallback) => {
-        callback(0);
-        return 0;
-      });
 
       // User starts drag
       component.onDragStart(mockDragEvent as DragEvent);
 
-      // Drag should start with correct data
-      expect(component.isDragging()).toBe(true);
+      // Drag data should be emitted immediately
       expect(component.dragStart.emit).toHaveBeenCalledWith({
         kind: 'cell',
         content: {
@@ -401,13 +394,19 @@ describe('CellComponent - User Scenarios', () => {
         },
       });
 
+      // isDragging is set via requestAnimationFrame - tick to execute it
+      tick(16);
+
+      // Now dragging state should be true
+      expect(component.isDragging()).toBe(true);
+
       // User ends drag
       component.onDragEnd();
 
       // Drag should end properly
       expect(component.isDragging()).toBe(false);
       expect(component.dragEnd.emit).toHaveBeenCalled();
-    });
+    }));
 
     it('should handle invalid drag event', () => {
       spyOn(component.dragStart, 'emit');
