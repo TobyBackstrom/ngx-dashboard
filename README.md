@@ -6,10 +6,10 @@
   <a href="https://github.com/TobyBackstrom/ngx-dashboard/actions/workflows/ci.yml">
     <img src="https://github.com/TobyBackstrom/ngx-dashboard/actions/workflows/ci.yml/badge.svg" alt="CI Pipeline">
   </a>
-  <!-- Typescript version -->
-  <img src="https://img.shields.io/badge/TypeScript-5.8-blue.svg?logo=typescript" alt="TypeScript 5.8">
   <!-- Angular Version -->
-  <img src="https://img.shields.io/badge/Angular-v20-3178c6.svg?logo=angular" alt="Angular 20">
+  <img src="https://img.shields.io/badge/Angular-21-DD0031.svg?logo=angular" alt="Angular 21">
+  <!-- Typescript version -->
+  <img src="https://img.shields.io/badge/TypeScript-5.9-3178c6.svg?logo=typescript" alt="TypeScript 5.9">
   <!-- License -->
   <a href="https://github.com/TobyBackstrom/ngx-dashboard/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
@@ -18,7 +18,9 @@
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
 </p>
 
-Modern Angular libraries for building drag-and-drop grid dashboards with resizable cells and customizable widgets. Built with Angular 20+ standalone components, NgRx Signals state management, and Material Design 3 design system compliance.
+🎯 **[Live Demo](https://dragonworks.dev/ngx-dashboard/)** - Try the interactive demo application
+
+Modern Angular libraries for building drag-and-drop grid dashboards with resizable cells and customizable widgets. Built with Angular 21+ standalone components, NgRx Signals state management, and Material Design 3 design system compliance.
 
 **ngx-dashboard** provides drop-in dashboard functionality for Angular applications. Add interactive grid-based dashboards to existing apps or build dedicated dashboard experiences from scratch. The library handles multiple dashboards within a single application, supports programmatic creation and serialization for persistent storage, and includes a built-in editor for end-user dashboard customization.
 
@@ -30,8 +32,6 @@ Opinionated with flexibility:
 **ngx-dashboard-widgets** provides example widgets to illustrate concepts. Any Angular component can become a dashboard widget by implementing a simple interface and registering with the dashboard service. Widgets must be fully responsive and handle all cell sizes gracefully.
 
 The **demo application** showcases the libraries in action with practical examples. It demonstrates dashboard management with FAB controls, drag-and-drop widget installation, real-time theme switching, custom widget implementations (Sparkline, Temperature), and both localStorage and file-based persistence strategies.
-
-🎯 **[Live Demo](https://dragonworks.dev/ngx-dashboard/)** - Try the interactive demo application
 
 <br>
 Dashboard viewer:
@@ -96,8 +96,8 @@ The libraries maintain major version parity with Angular. While major versions a
 
 For example:
 
-- Angular 20.x.x → ngx-dashboard 20.y.z
 - Angular 21.x.x → ngx-dashboard 21.y.z
+- Angular 22.x.x → ngx-dashboard 22.y.z
 
 This ensures compatibility with your Angular version while allowing independent feature releases and bug fixes.
 
@@ -132,7 +132,7 @@ export const appConfig: ApplicationConfig = {
 ### Prerequisites
 
 - Node.js 18+
-- Angular 20+
+- Angular 21+
 - npm or yarn
 
 ### Setup
