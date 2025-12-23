@@ -13,7 +13,7 @@ import {
   Renderer2,
   DestroyRef,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { CellComponent } from '../cell/cell.component';
 import { DashboardStore } from '../store/dashboard-store';
 import { GridSelection } from '../models/grid-selection';
@@ -21,7 +21,7 @@ import { GridSelection } from '../models/grid-selection';
 @Component({
   selector: 'ngx-dashboard-viewer',
   standalone: true,
-  imports: [CellComponent, CommonModule],
+  imports: [CellComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dashboard-viewer.component.html',
   styleUrl: './dashboard-viewer.component.scss',

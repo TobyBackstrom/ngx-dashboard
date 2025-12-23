@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -17,15 +17,14 @@ import { RadialGaugeWidgetState } from './radial-gauge-widget.component';
   selector: 'lib-radial-gauge-state-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatSlideToggleModule,
     MatRadioModule,
-    FormsModule,
-  ],
+    FormsModule
+],
   template: `
     <h2
       mat-dialog-title

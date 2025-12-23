@@ -1,5 +1,5 @@
 import { Component, inject, DestroyRef, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from '@angular/material/slider';
@@ -18,7 +18,6 @@ import {
   selector: 'app-radial-gauge-demo',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatCardModule,
     MatSliderModule,
@@ -28,8 +27,8 @@ import {
     MatIconModule,
     MatSlideToggleModule,
     MatTooltipModule,
-    RadialGaugeComponent,
-  ],
+    RadialGaugeComponent
+],
   templateUrl: './radial-gauge-demo.component.html',
   styleUrl: './radial-gauge-demo.component.scss',
 })

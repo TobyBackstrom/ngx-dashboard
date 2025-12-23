@@ -1,5 +1,5 @@
 // dashboard-editor.component.ts
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -26,11 +26,10 @@ import { DashboardStore } from '../store/dashboard-store';
   standalone: true,
   imports: [
     CellComponent,
-    CommonModule,
     DropZoneComponent,
     CellContextMenuComponent,
-    EmptyCellContextMenuComponent,
-  ],
+    EmptyCellContextMenuComponent
+],
   providers: [
     CellContextMenuService,
   ],

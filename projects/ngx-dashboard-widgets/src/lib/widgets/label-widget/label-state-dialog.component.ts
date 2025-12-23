@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
@@ -18,7 +18,6 @@ import { LabelWidgetState } from './label-widget.component';
   selector: 'lib-label-state-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatDialogModule,
     MatButtonModule,
@@ -26,8 +25,8 @@ import { LabelWidgetState } from './label-widget.component';
     MatInputModule,
     MatSelectModule,
     MatSliderModule,
-    MatSlideToggleModule, // Add this import
-  ],
+    MatSlideToggleModule
+],
   template: `
     <h2 mat-dialog-title i18n="@@ngx.dashboard.widgets.label.dialog.title">
       Label Settings

@@ -12,7 +12,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { from, map, of } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -114,7 +114,7 @@ export interface RadialGaugeSegment {
 @Component({
   selector: 'ngx-radial-gauge',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './radial-gauge.component.html',
   styleUrl: './radial-gauge.component.scss',

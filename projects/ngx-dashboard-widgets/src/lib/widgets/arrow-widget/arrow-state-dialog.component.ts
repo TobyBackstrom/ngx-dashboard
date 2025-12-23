@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
@@ -17,15 +17,14 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   selector: 'lib-arrow-state-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
     MatSliderModule,
-    MatSlideToggleModule,
-  ],
+    MatSlideToggleModule
+],
   template: `
     <h2 mat-dialog-title i18n="@@ngx.dashboard.widgets.arrow.dialog.title">
       Arrow Settings

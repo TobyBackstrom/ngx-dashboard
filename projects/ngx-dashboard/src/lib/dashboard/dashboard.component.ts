@@ -3,7 +3,7 @@
 // A performant, modular, and fully reactive Angular dashboard container that orchestrates between
 // editing and viewing modes — with clean component separation and no external dependencies.
 
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -30,7 +30,7 @@ import { CellIdUtils, GridSelection, SelectionFilterOptions } from '../models';
 @Component({
   selector: 'ngx-dashboard',
   standalone: true,
-  imports: [CommonModule, DashboardViewerComponent, DashboardEditorComponent],
+  imports: [DashboardViewerComponent, DashboardEditorComponent],
   providers: [DashboardStore, DashboardViewportService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dashboard.component.html',
