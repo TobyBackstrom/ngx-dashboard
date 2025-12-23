@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -14,12 +14,11 @@ import { TemperatureSharedState } from './temperature-shared-state.service';
   selector: 'demo-temperature-shared-state-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatSelectModule,
-  ],
+    MatSelectModule
+],
   template: `
     <h2 mat-dialog-title i18n="@@demo.widgets.temperature.sharedDialog.title">
       Shared Temperature Settings

@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
@@ -23,15 +23,14 @@ export interface TemperatureDialogData {
   selector: 'demo-temperature-state-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
-    MatSlideToggleModule,
-  ],
+    MatSlideToggleModule
+],
   template: `
     <h2 mat-dialog-title i18n="@@demo.widgets.temperature.dialog.title">
       Temperature Settings

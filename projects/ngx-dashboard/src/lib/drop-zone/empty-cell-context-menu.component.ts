@@ -12,7 +12,7 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
+
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {
   EmptyCellContextMenuService,
@@ -35,9 +35,8 @@ import {
     MatMenuModule,
     MatIconModule,
     MatDividerModule,
-    MatButtonModule,
-    CommonModule,
-  ],
+    MatButtonModule
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <!-- Hidden trigger for menu positioned at exact mouse coordinates

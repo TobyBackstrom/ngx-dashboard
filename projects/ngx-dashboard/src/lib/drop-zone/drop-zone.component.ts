@@ -8,7 +8,7 @@ import {
   computed,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { DashboardStore } from '../store/dashboard-store';
 import { DragData } from '../models';
 import { EMPTY_CELL_CONTEXT_PROVIDER } from '../providers/empty-cell-context';
@@ -17,7 +17,7 @@ import { DashboardService } from '../services/dashboard.service';
 @Component({
   selector: 'lib-drop-zone',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './drop-zone.component.html',
   styleUrl: './drop-zone.component.scss',

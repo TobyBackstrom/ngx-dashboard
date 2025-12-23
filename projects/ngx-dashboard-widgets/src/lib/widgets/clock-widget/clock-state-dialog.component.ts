@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
@@ -15,13 +15,12 @@ import { ClockWidgetState } from './clock-widget.component';
   selector: 'lib-clock-state-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatDialogModule,
     MatButtonModule,
     MatRadioModule,
-    MatSlideToggleModule,
-  ],
+    MatSlideToggleModule
+],
   template: `
     <h2 mat-dialog-title i18n="@@ngx.dashboard.widgets.clock.dialog.title">
       Clock Settings

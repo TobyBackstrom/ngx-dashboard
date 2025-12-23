@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -16,14 +16,13 @@ import { SparkbarWidgetState } from './sparkbar-widget.component';
   selector: 'demo-sparkbar-state-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatSlideToggleModule,
     MatSelectModule,
     MatFormFieldModule,
-    FormsModule,
-  ],
+    FormsModule
+],
   template: `
     <h2 mat-dialog-title i18n="@@demo.widgets.sparkbar.dialog.title">Sparkbar Settings</h2>
     <mat-dialog-content>

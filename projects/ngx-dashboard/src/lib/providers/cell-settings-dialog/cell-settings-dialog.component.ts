@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
@@ -14,12 +14,11 @@ import { CellDisplayData } from '../../models/cell-dialog';
   selector: 'lib-cell-settings-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatDialogModule,
     MatButtonModule,
-    MatRadioModule,
-  ],
+    MatRadioModule
+],
   template: `
     <h2 mat-dialog-title i18n="@@ngx.dashboard.cell.settings.title">
       Cell Display Settings

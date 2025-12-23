@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import {
   MatDialogModule,
@@ -18,7 +18,6 @@ import { RealtimeGaugeWidgetState } from './realtime-gauge-widget.component';
   selector: 'demo-realtime-gauge-state-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatDialogModule,
     MatButtonModule,
@@ -26,8 +25,8 @@ import { RealtimeGaugeWidgetState } from './realtime-gauge-widget.component';
     MatInputModule,
     MatSlideToggleModule,
     MatRadioModule,
-    MatSliderModule,
-  ],
+    MatSliderModule
+],
   template: `
     <h2 mat-dialog-title i18n="@@demo.widgets.realtimeGauge.dialog.title">Realtime Gauge Settings</h2>
     <mat-dialog-content>

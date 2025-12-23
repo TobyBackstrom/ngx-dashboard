@@ -20,7 +20,7 @@ import {
 // - Context menu uses template event binding (element-specific)
 // - Resize uses conditional document listeners (only when actively resizing)
 // - Eliminates N*mousemove performance issue with @HostListener approach
-import { CommonModule } from '@angular/common';
+
 import {
   CellId,
   CellIdUtils,
@@ -40,7 +40,7 @@ import {
 @Component({
   selector: 'lib-cell',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './cell.component.html',
   styleUrl: './cell.component.scss',
