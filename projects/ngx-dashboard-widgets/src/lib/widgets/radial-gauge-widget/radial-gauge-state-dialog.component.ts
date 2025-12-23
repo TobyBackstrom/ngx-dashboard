@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import {
   MAT_DIALOG_DATA,
@@ -15,7 +15,7 @@ import { RadialGaugeWidgetState } from './radial-gauge-widget.component';
 
 @Component({
   selector: 'lib-radial-gauge-state-dialog',
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatDialogModule,
     MatButtonModule,

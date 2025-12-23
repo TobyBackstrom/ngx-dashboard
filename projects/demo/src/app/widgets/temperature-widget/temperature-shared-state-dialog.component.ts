@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 
 import {
   MAT_DIALOG_DATA,
@@ -12,7 +12,7 @@ import { TemperatureSharedState } from './temperature-shared-state.service';
 
 @Component({
   selector: 'demo-temperature-shared-state-dialog',
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatDialogModule,
     MatButtonModule,

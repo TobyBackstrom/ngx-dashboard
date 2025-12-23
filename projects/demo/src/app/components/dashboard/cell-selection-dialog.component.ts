@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -9,7 +9,7 @@ import { GridSelection } from '@dragonworks/ngx-dashboard';
 
 @Component({
   selector: 'app-cell-selection-dialog',
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatDialogModule, MatButtonModule],
   template: `
     <mat-dialog-actions align="end">

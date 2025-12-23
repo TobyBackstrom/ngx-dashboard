@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import {
   MAT_DIALOG_DATA,
@@ -14,7 +14,7 @@ import { SparkbarWidgetState } from './sparkbar-widget.component';
 
 @Component({
   selector: 'demo-sparkbar-state-dialog',
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatDialogModule,
     MatButtonModule,

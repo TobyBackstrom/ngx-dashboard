@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -16,7 +16,7 @@ import { RealtimeGaugeWidgetState } from './realtime-gauge-widget.component';
 
 @Component({
   selector: 'demo-realtime-gauge-state-dialog',
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     MatDialogModule,

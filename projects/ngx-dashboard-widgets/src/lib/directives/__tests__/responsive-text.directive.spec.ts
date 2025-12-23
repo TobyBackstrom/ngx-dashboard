@@ -877,17 +877,20 @@ describe('ResponsiveTextDirective', () => {
 
     it('should handle getComputedStyle failures', fakeAsync(() => {
       spyOn(window, 'getComputedStyle').and.throwError('Style access error');
-      
+
       // The directive may throw due to unhandled getComputedStyle failure
       // Just verify it doesn't crash the test environment completely
+      let errorThrown = false;
       try {
         fixture.detectChanges();
         tick();
         flush();
-      } catch (error) {
+      } catch {
         // Expected to potentially throw due to getComputedStyle error
-        expect(error).toBeDefined();
+        errorThrown = true;
       }
+      // Either we caught an error, or the directive handled it gracefully
+      expect(errorThrown || spanElement).toBeTruthy();
     }));
 
     it('should handle DOM manipulation during processing', fakeAsync(() => {

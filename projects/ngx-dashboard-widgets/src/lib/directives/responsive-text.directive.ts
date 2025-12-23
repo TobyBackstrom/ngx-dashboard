@@ -6,10 +6,10 @@ import {
   numberAttribute,
   booleanAttribute,
   input,
-  AfterViewInit,
+  afterNextRender,
   effect,
+  PLATFORM_ID,
 } from '@angular/core';
-import { NgZone, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 /**
@@ -24,7 +24,6 @@ import { isPlatformBrowser } from '@angular/common';
  */
 @Directive({
   selector: '[libResponsiveText]',
-  standalone: true,
   host: {
     '[style.display]': '"block"',
     '[style.width]': '"100%"',
@@ -32,7 +31,7 @@ import { isPlatformBrowser } from '@angular/common';
     '[style.overflow]': '"visible"',
   },
 })
-export class ResponsiveTextDirective implements AfterViewInit {
+export class ResponsiveTextDirective {
   /* ───────────────────────── Inputs with transforms ─────────────── */
   /** Minimum font-size in pixels (accessibility floor) */
   minFontSize = input(8, { transform: numberAttribute });
@@ -57,19 +56,18 @@ export class ResponsiveTextDirective implements AfterViewInit {
 
   /* ───────────────────────── Private state ───────────────────────── */
   private readonly el = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly zone = inject(NgZone);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
   // Canvas context - lazy initialization
-  private _ctx?: CanvasRenderingContext2D;
-  private get ctx(): CanvasRenderingContext2D {
-    if (!this._ctx) {
+  private _ctx?: CanvasRenderingContext2D | null;
+  private get ctx(): CanvasRenderingContext2D | null {
+    if (this._ctx === undefined) {
       const canvas = document.createElement('canvas');
       this._ctx = canvas.getContext('2d', {
         willReadFrequently: true,
         alpha: false,
-      })!;
+      });
     }
     return this._ctx;
   }
@@ -84,12 +82,24 @@ export class ResponsiveTextDirective implements AfterViewInit {
   private lastMaxW = 0;
   private lastMaxH = 0;
   private lastFontSize = 0;
-  private isViewInitialized = false;
+  private isRendered = false;
 
   constructor() {
     // Set up cleanup on component destruction using modern DestroyRef
     this.destroyRef.onDestroy(() => {
       this.cleanup();
+    });
+
+    // Initialize after first render (replaces ngAfterViewInit for zoneless)
+    afterNextRender(() => {
+      if (!isPlatformBrowser(this.platformId)) return;
+
+      this.isRendered = true;
+      this.fit();
+      this.observeResize();
+      if (this.observeMutations()) {
+        this.observeText();
+      }
     });
 
     // Watch for input changes and trigger refit
@@ -99,27 +109,9 @@ export class ResponsiveTextDirective implements AfterViewInit {
       this.minFontSize();
       this.maxFontSize();
 
-      // Only trigger refit if directive is initialized and view is ready
-      if (this.isViewInitialized && isPlatformBrowser(this.platformId)) {
-        this.zone.runOutsideAngular(() => {
-          this.requestFit();
-        });
-      }
-    });
-  }
-
-  ngAfterViewInit() {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    // Mark as initialized for the effect to start watching
-    this.isViewInitialized = true;
-
-    // All observer callbacks run outside Angular's zone
-    this.zone.runOutsideAngular(() => {
-      this.fit();
-      this.observeResize();
-      if (this.observeMutations()) {
-        this.observeText();
+      // Only trigger refit if directive is rendered
+      if (this.isRendered && isPlatformBrowser(this.platformId)) {
+        this.requestFit();
       }
     });
   }
@@ -247,6 +239,10 @@ export class ResponsiveTextDirective implements AfterViewInit {
   ): number {
     if (maxW <= 0 || maxH <= 0) return this.minFontSize();
 
+    // Fallback if canvas context unavailable
+    const ctx = this.ctx;
+    if (!ctx) return this.minFontSize();
+
     const computedStyle = getComputedStyle(this.el.nativeElement);
     const fontFamily = computedStyle.fontFamily || 'sans-serif';
     const fontWeight = computedStyle.fontWeight || '400';
@@ -257,9 +253,9 @@ export class ResponsiveTextDirective implements AfterViewInit {
 
     while (hi - lo > precision) {
       const mid = (hi + lo) / 2;
-      this.ctx.font = `${fontWeight} ${mid}px ${fontFamily}`;
+      ctx.font = `${fontWeight} ${mid}px ${fontFamily}`;
 
-      const metrics = this.ctx.measureText(text);
+      const metrics = ctx.measureText(text);
       const width = metrics.width;
 
       // Calculate height based on available metrics

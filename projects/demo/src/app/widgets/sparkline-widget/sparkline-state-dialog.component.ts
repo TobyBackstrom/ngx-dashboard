@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import {
   MAT_DIALOG_DATA,
@@ -14,7 +14,7 @@ import { SparklineWidgetState } from './sparkline-widget.component';
 
 @Component({
   selector: 'demo-sparkline-state-dialog',
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatDialogModule,
     MatButtonModule,
