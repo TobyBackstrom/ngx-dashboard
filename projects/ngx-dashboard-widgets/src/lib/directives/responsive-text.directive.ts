@@ -9,6 +9,7 @@ import {
   afterNextRender,
   effect,
   PLATFORM_ID,
+  NgZone,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -58,6 +59,7 @@ export class ResponsiveTextDirective {
   private readonly el = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly zone = inject(NgZone, { optional: true });
 
   // Canvas context - lazy initialization
   private _ctx?: CanvasRenderingContext2D | null;
@@ -84,6 +86,15 @@ export class ResponsiveTextDirective {
   private lastFontSize = 0;
   private isRendered = false;
 
+  /** Run callback outside Angular zone if zone.js is present */
+  private runOutsideAngular(fn: () => void): void {
+    if (this.zone) {
+      this.zone.runOutsideAngular(fn);
+    } else {
+      fn();
+    }
+  }
+
   constructor() {
     // Set up cleanup on component destruction using modern DestroyRef
     this.destroyRef.onDestroy(() => {
@@ -95,11 +106,13 @@ export class ResponsiveTextDirective {
       if (!isPlatformBrowser(this.platformId)) return;
 
       this.isRendered = true;
-      this.fit();
-      this.observeResize();
-      if (this.observeMutations()) {
-        this.observeText();
-      }
+      this.runOutsideAngular(() => {
+        this.fit();
+        this.observeResize();
+        if (this.observeMutations()) {
+          this.observeText();
+        }
+      });
     });
 
     // Watch for input changes and trigger refit
@@ -111,7 +124,7 @@ export class ResponsiveTextDirective {
 
       // Only trigger refit if directive is rendered
       if (this.isRendered && isPlatformBrowser(this.platformId)) {
-        this.requestFit();
+        this.runOutsideAngular(() => this.requestFit());
       }
     });
   }
