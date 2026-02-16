@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Widget, WidgetMetadata } from '../../models';
+import { Widget, WidgetMetadata, UNKNOWN_WIDGET_TYPEID } from '../../models';
 
 export interface UnknownWidgetState {
   originalWidgetTypeid: string;
@@ -45,7 +45,7 @@ export interface UnknownWidgetState {
 })
 export class UnknownWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {
-    widgetTypeid: '__internal/unknown-widget',
+    widgetTypeid: UNKNOWN_WIDGET_TYPEID,
     name: $localize`:@@ngx.dashboard.unknown.widget.name:Unknown Widget`,
     description: $localize`:@@ngx.dashboard.unknown.widget.description:Fallback widget for unknown widget types`,
     svgIcon:

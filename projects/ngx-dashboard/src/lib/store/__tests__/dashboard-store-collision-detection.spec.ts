@@ -8,7 +8,7 @@ describe('DashboardStore - Collision Detection', () => {
   let dashboardService: jasmine.SpyObj<DashboardService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
+    const spy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates', 'widgetTypes']);
     
     TestBed.configureTestingModule({
       providers: [

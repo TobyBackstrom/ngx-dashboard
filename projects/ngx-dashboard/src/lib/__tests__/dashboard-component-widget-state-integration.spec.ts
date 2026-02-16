@@ -87,6 +87,7 @@ describe('DashboardComponent - Widget State Integration', () => {
       'getAllFactories',
       'collectSharedStates',
       'restoreSharedStates',
+      'widgetTypes',
     ]);
 
     await TestBed.configureTestingModule({

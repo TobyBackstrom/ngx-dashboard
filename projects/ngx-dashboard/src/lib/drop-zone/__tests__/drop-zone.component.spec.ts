@@ -35,7 +35,7 @@ describe('DropZoneComponent - Focused Regression Tests', () => {
   };
 
   beforeEach(async () => {
-    const spy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
+    const spy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates', 'widgetTypes']);
 
     await TestBed.configureTestingModule({
       imports: [DropZoneComponent],
@@ -528,7 +528,7 @@ describe('DropZoneComponent - Context Menu with Custom Provider', () => {
   let mockProvider: jasmine.SpyObj<any>;
 
   beforeEach(async () => {
-    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
+    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates', 'widgetTypes']);
     mockProvider = jasmine.createSpyObj('EmptyCellContextProvider', ['handleEmptyCellContext']);
 
     await TestBed.configureTestingModule({

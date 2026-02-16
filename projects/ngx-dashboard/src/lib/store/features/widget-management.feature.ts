@@ -5,14 +5,16 @@ import {
   withComputed,
   patchState,
 } from '@ngrx/signals';
-import { computed } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import {
   CellIdUtils,
   CellData,
+  UNKNOWN_WIDGET_TYPEID,
   WidgetFactory,
   WidgetId,
   WidgetIdUtils,
 } from '../../models';
+import { DashboardService } from '../../services/dashboard.service';
 
 export interface WidgetManagementState {
   widgetsById: Record<string, CellData>;
@@ -26,10 +28,44 @@ export const withWidgetManagement = () =>
   signalStoreFeature(
     withState<WidgetManagementState>(initialWidgetManagementState),
 
-    // Computed cells array - lazy evaluation, automatic memoization
-    withComputed((store) => ({
-      cells: computed(() => Object.values(store.widgetsById())),
-    })),
+    // Computed cells array with self-healing for late-registered widget types.
+    // When loadDashboard() runs before all widget types are registered, unresolved
+    // cells get an unknown fallback factory. This computed transparently re-resolves
+    // them when new types register, so templates see real widgets replace placeholders.
+    withComputed((store) => {
+      const dashboardService = inject(DashboardService);
+
+      return {
+        cells: computed(() => {
+          const widgets = Object.values(store.widgetsById());
+
+          const hasUnresolved = widgets.some(
+            (cell) => cell.widgetFactory.widgetTypeid === UNKNOWN_WIDGET_TYPEID
+          );
+
+          // Fast path: skip widgetTypes() dependency when all widgets are resolved.
+          // This is safe because registerWidgetType() prevents re-registration of
+          // existing types, so once healed, a widget's factory cannot change.
+          if (!hasUnresolved) return widgets;
+
+          // Establishes reactive dependency on registration changes
+          dashboardService.widgetTypes();
+
+          return widgets.map((cell) => {
+            if (
+              cell.widgetFactory.widgetTypeid === UNKNOWN_WIDGET_TYPEID &&
+              cell.widgetTypeid
+            ) {
+              const resolvedFactory = dashboardService.getFactory(cell.widgetTypeid);
+              if (resolvedFactory.widgetTypeid !== UNKNOWN_WIDGET_TYPEID) {
+                return { ...cell, widgetFactory: resolvedFactory };
+              }
+            }
+            return cell;
+          });
+        }),
+      };
+    }),
 
     withMethods((store) => ({
       addWidget(cell: CellData) {
@@ -77,6 +113,7 @@ export const withWidgetManagement = () =>
           col,
           rowSpan: 1,
           colSpan: 1,
+          widgetTypeid: widgetFactory.widgetTypeid,
           widgetFactory,
           widgetState,
         };

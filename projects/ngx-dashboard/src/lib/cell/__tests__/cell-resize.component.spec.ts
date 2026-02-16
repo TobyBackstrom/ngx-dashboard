@@ -51,6 +51,7 @@ describe('CellComponent - Resize Functionality', () => {
   beforeEach(async () => {
     mockDashboardService = jasmine.createSpyObj('DashboardService', [
       'getFactory',
+      'widgetTypes',
     ]);
 
     mockContextMenuService = jasmine.createSpyObj('CellContextMenuService', [

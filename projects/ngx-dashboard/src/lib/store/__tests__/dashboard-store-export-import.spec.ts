@@ -8,6 +8,7 @@ import {
   WidgetFactory,
   DashboardDataDto,
   GridSelection,
+  UNKNOWN_WIDGET_TYPEID,
 } from '../../models';
 
 describe('DashboardStore - Export/Import Functionality', () => {
@@ -20,6 +21,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       'getFactory',
       'collectSharedStates',
       'restoreSharedStates',
+      'widgetTypes',
     ]);
 
     TestBed.configureTestingModule({
@@ -242,7 +244,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
     it('should create fallback widgets for unknown widget types', () => {
       const consoleSpy = spyOn(console, 'warn');
       const fallbackFactory = {
-        widgetTypeid: '__internal/unknown-widget',
+        widgetTypeid: UNKNOWN_WIDGET_TYPEID,
         createInstance: jasmine.createSpy(),
       } as unknown as WidgetFactory;
 
@@ -300,7 +302,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
     it('should load mixed valid and invalid widgets', () => {
       const consoleSpy = spyOn(console, 'warn');
       const fallbackFactory = {
-        widgetTypeid: '__internal/unknown-widget',
+        widgetTypeid: UNKNOWN_WIDGET_TYPEID,
         createInstance: jasmine.createSpy(),
       } as unknown as WidgetFactory;
 
@@ -408,7 +410,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
 
     beforeEach(() => {
       unknownWidgetFactory = {
-        widgetTypeid: '__internal/unknown-widget',
+        widgetTypeid: UNKNOWN_WIDGET_TYPEID,
         name: 'Unknown Widget',
         description: 'Fallback widget',
         svgIcon: '<svg></svg>',
@@ -1272,7 +1274,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
       store.setGridConfig({ rows: 8, columns: 12 });
 
       const unknownWidgetFactory: WidgetFactory = {
-        widgetTypeid: '__internal/unknown-widget',
+        widgetTypeid: UNKNOWN_WIDGET_TYPEID,
         createInstance: jasmine.createSpy(),
       } as unknown as WidgetFactory;
 
@@ -1513,7 +1515,7 @@ describe('DashboardStore - Export/Import Functionality', () => {
     beforeEach(() => {
       store.setGridConfig({ rows: 12, columns: 16 });
       unknownWidgetFactory = {
-        widgetTypeid: '__internal/unknown-widget',
+        widgetTypeid: UNKNOWN_WIDGET_TYPEID,
         name: 'Unknown Widget',
         description: 'Fallback widget',
         svgIcon: '<svg></svg>',

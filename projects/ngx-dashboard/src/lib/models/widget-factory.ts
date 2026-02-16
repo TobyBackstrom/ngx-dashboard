@@ -5,6 +5,9 @@ import {
   WidgetComponentClass,
 } from './widget';
 
+/** Sentinel widget type ID for unresolved/unknown widget types */
+export const UNKNOWN_WIDGET_TYPEID = '__internal/unknown-widget';
+
 export interface WidgetFactory<
   T extends Widget = Widget
 > {

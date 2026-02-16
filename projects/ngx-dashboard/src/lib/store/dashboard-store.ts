@@ -16,6 +16,7 @@ import {
   CellData,
   DragData,
   DashboardDataDto,
+  UNKNOWN_WIDGET_TYPEID,
   WidgetIdUtils,
   GridSelection,
   SelectionFilterOptions,
@@ -24,6 +25,11 @@ import { withGridConfig } from './features/grid-config.feature';
 import { withWidgetManagement } from './features/widget-management.feature';
 import { withDragDrop } from './features/drag-drop.feature';
 import { withResize, ResizePreviewUtils } from './features/resize.feature';
+
+/** Returns the intended widget type ID, falling back to the factory's type ID */
+function effectiveWidgetTypeid(cell: CellData): string {
+  return cell.widgetTypeid ?? cell.widgetFactory.widgetTypeid;
+}
 
 interface DashboardState {
   dashboardId: string;
@@ -157,10 +163,9 @@ export const DashboardStore = signalStore(
       const activeWidgetTypes = new Set(
         widgetsToExport
           .filter(
-            (cell) =>
-              cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget'
+            (cell) => effectiveWidgetTypeid(cell) !== UNKNOWN_WIDGET_TYPEID
           )
-          .map((cell) => cell.widgetFactory.widgetTypeid)
+          .map((cell) => effectiveWidgetTypeid(cell))
       );
 
       // Collect shared states from DashboardService
@@ -179,8 +184,7 @@ export const DashboardStore = signalStore(
         gutterSize: store.gutterSize(),
         cells: widgetsToExport
           .filter(
-            (cell) =>
-              cell.widgetFactory.widgetTypeid !== '__internal/unknown-widget'
+            (cell) => effectiveWidgetTypeid(cell) !== UNKNOWN_WIDGET_TYPEID
           )
           .map((cell) => {
             const cellIdString = CellIdUtils.toString(cell.cellId);
@@ -196,7 +200,7 @@ export const DashboardStore = signalStore(
               rowSpan: cell.rowSpan,
               colSpan: cell.colSpan,
               flat: cell.flat,
-              widgetTypeid: cell.widgetFactory.widgetTypeid,
+              widgetTypeid: effectiveWidgetTypeid(cell),
               widgetState:
                 currentState !== undefined ? currentState : cell.widgetState,
             };
@@ -229,6 +233,7 @@ export const DashboardStore = signalStore(
           rowSpan: cellData.rowSpan,
           colSpan: cellData.colSpan,
           flat: cellData.flat,
+          widgetTypeid: cellData.widgetTypeid,
           widgetFactory: factory,
           widgetState: cellData.widgetState,
         };

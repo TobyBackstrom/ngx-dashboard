@@ -9,7 +9,7 @@ describe('DashboardStore - Resize Operations', () => {
   let mockWidgetFactory: WidgetFactory;
 
   beforeEach(() => {
-    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
+    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates', 'widgetTypes']);
     
     TestBed.configureTestingModule({
       providers: [

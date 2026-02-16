@@ -9,7 +9,7 @@ describe('DashboardStore - Widget Management', () => {
   let mockDashboardService: jasmine.SpyObj<DashboardService>;
 
   beforeEach(() => {
-    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
+    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates', 'widgetTypes']);
     
     TestBed.configureTestingModule({
       providers: [

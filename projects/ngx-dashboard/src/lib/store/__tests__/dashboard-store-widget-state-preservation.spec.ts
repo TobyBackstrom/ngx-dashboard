@@ -53,7 +53,7 @@ describe('DashboardStore - Widget State Preservation Tests', () => {
   let testWidgetComponent: TestWidgetComponent;
 
   beforeEach(() => {
-    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
+    const dashboardServiceSpy = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates', 'widgetTypes']);
     
     TestBed.configureTestingModule({
       providers: [

@@ -92,7 +92,7 @@ describe('CellComponent - User Scenarios', () => {
   };
 
   beforeEach(async () => {
-    mockDashboardService = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
+    mockDashboardService = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates', 'widgetTypes']);
     mockContextMenuService = jasmine.createSpyObj('CellContextMenuService', ['show']);
     mockDialogProvider = jasmine.createSpyObj('CellSettingsDialogProvider', ['openCellSettings']);
     mockRenderer = jasmine.createSpyObj('Renderer2', ['listen']);
@@ -596,7 +596,7 @@ describe('CellComponent - Without Context Menu Service', () => {
   };
 
   beforeEach(async () => {
-    mockDashboardService = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates']);
+    mockDashboardService = jasmine.createSpyObj('DashboardService', ['getFactory', 'collectSharedStates', 'restoreSharedStates', 'widgetTypes']);
     mockDialogProvider = jasmine.createSpyObj('CellSettingsDialogProvider', ['openCellSettings']);
     mockRenderer = jasmine.createSpyObj('Renderer2', ['listen']);
 

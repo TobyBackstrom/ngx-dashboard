@@ -23,6 +23,7 @@ describe('DashboardStore - Shared State Functionality', () => {
       'getFactory',
       'collectSharedStates',
       'restoreSharedStates',
+      'widgetTypes',
     ]);
 
     TestBed.configureTestingModule({
