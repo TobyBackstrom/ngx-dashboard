@@ -15,6 +15,7 @@ export class DashboardService {
   readonly #widgetTypes = signal<WidgetComponentClass[]>([]);
   readonly #widgetFactoryMap = new Map<string, WidgetFactory>();
   readonly #sharedStateProviders = new Map<string, WidgetSharedStateProvider>();
+  readonly #pendingSharedStates = new Map<string, unknown>();
   readonly #unknownWidgetFactory = createFactoryFromComponent(UnknownWidgetComponent);
   readonly widgetTypes = this.#widgetTypes.asReadonly(); // make the widget list available as a readonly signal
 
@@ -44,6 +45,14 @@ export class DashboardService {
     if (sharedStateProvider) {
       const provider = this.#resolveProvider(sharedStateProvider);
       this.#sharedStateProviders.set(widgetTypeid, provider);
+
+      // Drain any buffered shared state from a prior loadDashboard that ran
+      // before this widget type was registered (e.g. lazy-loaded modules).
+      if (this.#pendingSharedStates.has(widgetTypeid)) {
+        const registered = this.#sharedStateProviders.get(widgetTypeid)!;
+        registered.setSharedState(this.#pendingSharedStates.get(widgetTypeid));
+        this.#pendingSharedStates.delete(widgetTypeid);
+      }
     }
 
     this.#widgetTypes.set([...this.#widgetTypes(), widget]);
@@ -128,6 +137,11 @@ export class DashboardService {
       const provider = this.#sharedStateProviders.get(widgetTypeid);
       if (provider) {
         provider.setSharedState(state);
+        this.#pendingSharedStates.delete(widgetTypeid);
+      } else {
+        // Buffer for a widget type that hasn't been registered yet. Replaces
+        // any prior buffered value so a second loadDashboard wins.
+        this.#pendingSharedStates.set(widgetTypeid, state);
       }
     }
   }
