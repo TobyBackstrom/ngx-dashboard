@@ -727,4 +727,97 @@ describe('DashboardComponent - Widget State Integration', () => {
       expect(menuService.lastSelectedWidgetTypeId()).toBeNull();
     });
   });
+
+  describe('loadDashboard() persistence', () => {
+    it('should preserve imperative loadDashboard() across dashboardData re-emissions', async () => {
+      // Regression: the dashboardData effect used to re-run on every input
+      // emission, silently overwriting any prior imperative loadDashboard()
+      // call. The #isInitialized guard prevents subsequent emissions from
+      // clobbering the manual load.
+      const initialData: DashboardDataDto = {
+        version: '1.1.0',
+        dashboardId: '7',
+        rows: 8,
+        columns: 16,
+        gutterSize: '0.5em',
+        cells: [],
+      };
+
+      const importedData: DashboardDataDto = {
+        version: '1.1.0',
+        dashboardId: '3',
+        rows: 7,
+        columns: 16,
+        gutterSize: '0.5em',
+        cells: [
+          {
+            row: 1,
+            col: 1,
+            rowSpan: 1,
+            colSpan: 1,
+            widgetTypeid: 'test-widget',
+            widgetState: { value: 'imported', counter: 42, modified: false },
+          },
+        ],
+      };
+
+      fixture.componentRef.setInput('dashboardData', initialData);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Imperative import — consumers call this after the user picks a file.
+      component.loadDashboard(importedData);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Simulate an upstream re-emission (e.g. a toSignal() backed by an
+      // HTTP observable producing another value after the manual load).
+      fixture.componentRef.setInput('dashboardData', { ...initialData });
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const exported = component.exportDashboard();
+      // dashboardId stays pinned to the mount-time value — the incoming
+      // id is treated as informational metadata, not an identity change.
+      expect(exported.dashboardId).toBe('7');
+      // But the imported layout and cells must win.
+      expect(exported.rows).toBe(7);
+      expect(exported.cells).toHaveSize(1);
+      expect(exported.cells[0].widgetTypeid).toBe('test-widget');
+    });
+
+    it('should preserve dashboardId across imperative loadDashboard() calls', async () => {
+      // Option C: the store's dashboardId is set once on initial mount and
+      // ignored on subsequent loadDashboard() calls. This keeps bridge
+      // registration stable when importing a file from another dashboard.
+      const initialData: DashboardDataDto = {
+        version: '1.1.0',
+        dashboardId: 'dashboard-a',
+        rows: 5,
+        columns: 5,
+        gutterSize: '1em',
+        cells: [],
+      };
+
+      fixture.componentRef.setInput('dashboardData', initialData);
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      component.loadDashboard({
+        version: '1.1.0',
+        dashboardId: 'dashboard-b',
+        rows: 4,
+        columns: 4,
+        gutterSize: '1em',
+        cells: [],
+      });
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const exported = component.exportDashboard();
+      expect(exported.dashboardId).toBe('dashboard-a');
+      expect(exported.rows).toBe(4);
+      expect(exported.columns).toBe(4);
+    });
+  });
 });

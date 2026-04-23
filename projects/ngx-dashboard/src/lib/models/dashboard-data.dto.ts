@@ -8,7 +8,14 @@ export interface DashboardDataDto {
   /** Version for future compatibility and migration support */
   version: string;
 
-  /** Unique dashboard identifier managed by the client */
+  /**
+   * Unique dashboard identifier managed by the client.
+   * Set once when a dashboard is first mounted via `[dashboardData]`.
+   * On subsequent imperative `loadDashboard()` calls this field is treated
+   * as informational metadata (i.e. where the file came from) — the store's
+   * existing id is preserved so that bridge registration stays stable and
+   * Export→Import across dashboards works without rewriting the id.
+   */
   dashboardId: string;
 
   /** Grid dimensions */

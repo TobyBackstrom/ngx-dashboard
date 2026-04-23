@@ -241,8 +241,14 @@ export const DashboardStore = signalStore(
         widgetsById[WidgetIdUtils.toString(widgetId)] = cell;
       });
 
+      // Adopt the incoming dashboardId only on the initial load (when the
+      // store's id is still empty). On subsequent imperative imports the
+      // existing id is preserved so that bridge registration stays stable
+      // and Export→Import across dashboards "just works" without requiring
+      // consumers to rewrite the id in the file.
+      const currentId = store.dashboardId();
       patchState(store, {
-        dashboardId: data.dashboardId,
+        ...(currentId ? {} : { dashboardId: data.dashboardId }),
         rows: data.rows,
         columns: data.columns,
         gutterSize: data.gutterSize,

@@ -83,10 +83,12 @@ export class DashboardComponent implements OnChanges {
       this.#bridge.unregisterDashboard(this.#store);
     });
 
-    // Initialize from dashboardData
+    // Initialize from dashboardData. Only applies the first emission so that
+    // subsequent re-emissions (e.g. from toSignal() on an HTTP observable)
+    // don't silently overwrite an imperative loadDashboard() call.
     effect(() => {
       const data = this.dashboardData();
-      if (data) {
+      if (data && !this.#isInitialized) {
         this.#store.loadDashboard(data);
         // Register with bridge service after dashboard ID is set
         this.#bridge.updateDashboardRegistration(this.#store);
