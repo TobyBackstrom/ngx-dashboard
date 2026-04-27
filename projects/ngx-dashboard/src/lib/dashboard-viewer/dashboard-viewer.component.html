@@ -21,7 +21,7 @@
 
 <!-- Selection overlay grid - mirror of main grid for cell selection -->
 @if (enableSelection()) {
-  <div class="selection-overlay-grid">
+  <div class="selection-overlay-grid" [class.armed]="armed()">
     @for (row of rowNumbers(); track row) {
       @for (col of colNumbers(); track col) {
         <div
@@ -30,8 +30,9 @@
           [class.selecting]="isSelecting()"
           [style.grid-row]="row"
           [style.grid-column]="col"
-          (mousedown)="onGhostCellMouseDown($event, row, col)"
-          (mouseenter)="onGhostCellMouseEnter(row, col)"
+          [attr.data-row]="row"
+          [attr.data-col]="col"
+          (pointerdown)="onGhostCellPointerDown($event, row, col)"
         ></div>
       }
     }

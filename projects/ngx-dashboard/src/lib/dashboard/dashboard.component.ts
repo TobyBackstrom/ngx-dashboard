@@ -25,7 +25,12 @@ import { DashboardBridgeService } from '../services/dashboard-bridge.service';
 import { DashboardViewportService } from '../services/dashboard-viewport.service';
 import { EmptyCellContextMenuService } from '../services/empty-cell-context-menu.service';
 import { ReservedSpace } from '../models/reserved-space';
-import { CellIdUtils, GridSelection, SelectionFilterOptions } from '../models';
+import {
+  CellIdUtils,
+  GridSelection,
+  SelectionFilterOptions,
+  SelectionModifier,
+} from '../models';
 
 @Component({
   selector: 'ngx-dashboard',
@@ -61,6 +66,8 @@ export class DashboardComponent implements OnChanges {
   editMode = input<boolean>(false);
   reservedSpace = input<ReservedSpace>();
   enableSelection = input<boolean>(false);
+  selectionModifier = input<SelectionModifier | null>(null);
+  dragThreshold = input<number>(4);
 
   // Component outputs
   selectionComplete = output<GridSelection>();

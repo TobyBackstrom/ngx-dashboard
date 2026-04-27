@@ -190,103 +190,102 @@ describe('DashboardViewerComponent - Integration Tests', () => {
   });
 
   describe('Selection Overlay Grid', () => {
+    /**
+     * Construct a PointerEvent with sensible defaults. Karma/Chrome supports
+     * the PointerEvent constructor. `pointerType` defaults to 'mouse' and
+     * `button` to 0 so the primary-button branch is exercised by default.
+     */
+    function pointerEvent(
+      type: string,
+      overrides: PointerEventInit = {}
+    ): PointerEvent {
+      return new PointerEvent(type, {
+        pointerId: 1,
+        pointerType: 'mouse',
+        button: 0,
+        clientX: 0,
+        clientY: 0,
+        ...overrides,
+      });
+    }
+
+    /**
+     * Simulate dragging by directly updating selectionCurrent. The
+     * elementFromPoint path is exercised in dedicated tests below; for
+     * tests that just want to verify start→drag→end behavior, this is the
+     * cleanest approach and avoids brittle DOM positioning setup.
+     */
+    function simulateDragTo(row: number, col: number): void {
+      component.selectionCurrent.set({ row, col });
+    }
+
     beforeEach(() => {
-      // Enable selection for these tests
       fixture.componentRef.setInput('enableSelection', true);
+      // Default dragThreshold to 0 in this block so legacy click-emits-1x1
+      // semantics are preserved across tests that aren't specifically
+      // exercising threshold behavior.
+      fixture.componentRef.setInput('dragThreshold', 0);
       fixture.detectChanges();
     });
 
     it('should emit GridSelection when selection completes', () => {
-      // SCENARIO: User drags to select cells, selection completes on mouse up
-
       const emittedSelections: GridSelection[] = [];
       component.selectionComplete.subscribe((selection: GridSelection) => {
         emittedSelections.push(selection);
       });
 
-      // Action: Start selection at (2, 3)
-      const startEvent = new MouseEvent('mousedown', { button: 0 });
-      component.onGhostCellMouseDown(startEvent, 2, 3);
+      component.onGhostCellPointerDown(pointerEvent('pointerdown'), 2, 3);
+      simulateDragTo(4, 6);
+      document.dispatchEvent(pointerEvent('pointerup'));
 
-      // Action: Drag to (4, 6)
-      component.onGhostCellMouseEnter(4, 6);
-
-      // Action: Complete selection
-      const mouseUpEvent = new MouseEvent('mouseup');
-      document.dispatchEvent(mouseUpEvent);
-
-      // Verify: GridSelection emitted with correct normalized coordinates
       expect(emittedSelections.length).toBe(1);
       expect(emittedSelections[0]).toEqual({
         topLeft: { row: 2, col: 3 },
-        bottomRight: { row: 4, col: 6 }
+        bottomRight: { row: 4, col: 6 },
       });
     });
 
     it('should normalize coordinates regardless of drag direction', () => {
-      // SCENARIO: User drags in reverse direction (bottom-right to top-left)
-
       const emittedSelections: GridSelection[] = [];
       component.selectionComplete.subscribe((selection: GridSelection) => {
         emittedSelections.push(selection);
       });
 
-      // Action: Start at bottom-right (5, 8)
-      const startEvent = new MouseEvent('mousedown', { button: 0 });
-      component.onGhostCellMouseDown(startEvent, 5, 8);
+      component.onGhostCellPointerDown(pointerEvent('pointerdown'), 5, 8);
+      simulateDragTo(2, 3);
+      document.dispatchEvent(pointerEvent('pointerup'));
 
-      // Action: Drag to top-left (2, 3)
-      component.onGhostCellMouseEnter(2, 3);
-
-      // Action: Complete selection
-      const mouseUpEvent = new MouseEvent('mouseup');
-      document.dispatchEvent(mouseUpEvent);
-
-      // Verify: Coordinates are normalized (topLeft is min, bottomRight is max)
       expect(emittedSelections.length).toBe(1);
       expect(emittedSelections[0]).toEqual({
         topLeft: { row: 2, col: 3 },
-        bottomRight: { row: 5, col: 8 }
+        bottomRight: { row: 5, col: 8 },
       });
     });
 
-    it('should handle single-cell selection (click without drag)', () => {
-      // SCENARIO: User clicks a single cell without dragging
-
+    it('should emit a 1x1 selection on click when dragThreshold is 0 (legacy behavior)', () => {
+      // Legacy guard: with dragThreshold=0, every pointerup emits, including
+      // stationary clicks. Consumers that opted into the old behavior rely on
+      // this.
       const emittedSelections: GridSelection[] = [];
       component.selectionComplete.subscribe((selection: GridSelection) => {
         emittedSelections.push(selection);
       });
 
-      // Action: Click cell (3, 4) - start and end at same position
-      const startEvent = new MouseEvent('mousedown', { button: 0 });
-      component.onGhostCellMouseDown(startEvent, 3, 4);
+      component.onGhostCellPointerDown(pointerEvent('pointerdown'), 3, 4);
+      // No drag — same position.
+      document.dispatchEvent(pointerEvent('pointerup'));
 
-      // No drag - selectionCurrent stays at same position
-
-      // Action: Complete selection
-      const mouseUpEvent = new MouseEvent('mouseup');
-      document.dispatchEvent(mouseUpEvent);
-
-      // Verify: Single cell selection emitted
       expect(emittedSelections.length).toBe(1);
       expect(emittedSelections[0]).toEqual({
         topLeft: { row: 3, col: 4 },
-        bottomRight: { row: 3, col: 4 }
+        bottomRight: { row: 3, col: 4 },
       });
     });
 
     it('should clean up document listeners on component destroy', () => {
-      // SCENARIO: Component destroyed while selection active - prevent memory leaks
-
-      // Action: Start selection
-      const startEvent = new MouseEvent('mousedown', { button: 0 });
-      component.onGhostCellMouseDown(startEvent, 1, 1);
-
-      // Verify: Selection is active
+      component.onGhostCellPointerDown(pointerEvent('pointerdown'), 1, 1);
       expect(component.isSelecting()).toBe(true);
 
-      // Spy on document event removal (via renderer's listen cleanup)
       let listenersCleaned = false;
       const originalDestroy = fixture.destroy.bind(fixture);
       fixture.destroy = () => {
@@ -294,17 +293,11 @@ describe('DashboardViewerComponent - Integration Tests', () => {
         listenersCleaned = true;
       };
 
-      // Action: Destroy component
       fixture.destroy();
-
-      // Verify: Cleanup occurred (listeners should be removed via DestroyRef)
       expect(listenersCleaned).toBe(true);
     });
 
     it('should not trigger selection when enableSelection is false', () => {
-      // SCENARIO: Selection feature disabled, mouse events should not trigger selection
-
-      // Setup: Disable selection
       fixture.componentRef.setInput('enableSelection', false);
       fixture.detectChanges();
 
@@ -313,53 +306,325 @@ describe('DashboardViewerComponent - Integration Tests', () => {
         emittedSelections.push(selection);
       });
 
-      // Action: Attempt to start selection
-      const startEvent = new MouseEvent('mousedown', { button: 0 });
-      component.onGhostCellMouseDown(startEvent, 2, 3);
-
-      // Verify: Selection did not start
+      component.onGhostCellPointerDown(pointerEvent('pointerdown'), 2, 3);
       expect(component.isSelecting()).toBe(false);
 
-      // Action: Complete "selection"
-      const mouseUpEvent = new MouseEvent('mouseup');
-      document.dispatchEvent(mouseUpEvent);
-
-      // Verify: No selection emitted
+      document.dispatchEvent(pointerEvent('pointerup'));
       expect(emittedSelections.length).toBe(0);
     });
 
-    it('should only respond to left mouse button', () => {
-      // SCENARIO: User right-clicks or middle-clicks - should not trigger selection
-
+    it('should only respond to primary button on mouse pointer', () => {
       const emittedSelections: GridSelection[] = [];
       component.selectionComplete.subscribe((selection: GridSelection) => {
         emittedSelections.push(selection);
       });
 
-      // Action: Right-click (button 2)
-      const rightClickEvent = new MouseEvent('mousedown', { button: 2 });
-      component.onGhostCellMouseDown(rightClickEvent, 2, 3);
-
-      // Verify: Selection did not start
+      component.onGhostCellPointerDown(
+        pointerEvent('pointerdown', { button: 2 }),
+        2,
+        3
+      );
       expect(component.isSelecting()).toBe(false);
 
-      // Action: Middle-click (button 1)
-      const middleClickEvent = new MouseEvent('mousedown', { button: 1 });
-      component.onGhostCellMouseDown(middleClickEvent, 2, 3);
-
-      // Verify: Selection still did not start
+      component.onGhostCellPointerDown(
+        pointerEvent('pointerdown', { button: 1 }),
+        2,
+        3
+      );
       expect(component.isSelecting()).toBe(false);
 
-      // Action: Left-click (button 0) - should work
-      const leftClickEvent = new MouseEvent('mousedown', { button: 0 });
-      component.onGhostCellMouseDown(leftClickEvent, 2, 3);
-
-      // Verify: Selection started
+      component.onGhostCellPointerDown(pointerEvent('pointerdown'), 2, 3);
       expect(component.isSelecting()).toBe(true);
 
-      // Cleanup
-      const mouseUpEvent = new MouseEvent('mouseup');
-      document.dispatchEvent(mouseUpEvent);
+      document.dispatchEvent(pointerEvent('pointerup'));
+    });
+
+    it('should accept touch and pen pointers regardless of button value', () => {
+      // For touch and pen, `button === 0` is the spec for the primary
+      // contact, but the test guards that we don't accidentally apply the
+      // mouse-only button check to other pointer types.
+      component.onGhostCellPointerDown(
+        pointerEvent('pointerdown', { pointerType: 'touch' }),
+        2,
+        3
+      );
+      expect(component.isSelecting()).toBe(true);
+      document.dispatchEvent(pointerEvent('pointerup'));
+
+      component.onGhostCellPointerDown(
+        pointerEvent('pointerdown', { pointerType: 'pen' }),
+        4,
+        5
+      );
+      expect(component.isSelecting()).toBe(true);
+      document.dispatchEvent(pointerEvent('pointerup'));
+    });
+
+    describe('selectionModifier', () => {
+      it('should not start selection when modifier is required but not held', () => {
+        fixture.componentRef.setInput('selectionModifier', 'shift');
+        fixture.detectChanges();
+
+        const emittedSelections: GridSelection[] = [];
+        component.selectionComplete.subscribe((selection: GridSelection) => {
+          emittedSelections.push(selection);
+        });
+
+        component.onGhostCellPointerDown(pointerEvent('pointerdown'), 2, 3);
+        expect(component.isSelecting()).toBe(false);
+
+        document.dispatchEvent(pointerEvent('pointerup'));
+        expect(emittedSelections.length).toBe(0);
+      });
+
+      it('should start selection when modifier is held', () => {
+        fixture.componentRef.setInput('selectionModifier', 'shift');
+        fixture.detectChanges();
+
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift' }));
+
+        component.onGhostCellPointerDown(pointerEvent('pointerdown'), 2, 3);
+        expect(component.isSelecting()).toBe(true);
+
+        document.dispatchEvent(pointerEvent('pointerup'));
+        document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Shift' }));
+      });
+
+      it('should keep drag alive when modifier is released mid-drag (latch)', () => {
+        fixture.componentRef.setInput('selectionModifier', 'shift');
+        fixture.detectChanges();
+
+        const emittedSelections: GridSelection[] = [];
+        component.selectionComplete.subscribe((selection: GridSelection) => {
+          emittedSelections.push(selection);
+        });
+
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift' }));
+        component.onGhostCellPointerDown(pointerEvent('pointerdown'), 2, 3);
+        expect(component.isSelecting()).toBe(true);
+
+        // Modifier released while drag in progress
+        document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Shift' }));
+        simulateDragTo(4, 6);
+        // Drag should still be live because the latch holds it.
+        expect(component.isSelecting()).toBe(true);
+
+        document.dispatchEvent(pointerEvent('pointerup'));
+        expect(emittedSelections.length).toBe(1);
+        expect(emittedSelections[0]).toEqual({
+          topLeft: { row: 2, col: 3 },
+          bottomRight: { row: 4, col: 6 },
+        });
+      });
+
+      it('should reset modifier-held state on window blur', () => {
+        fixture.componentRef.setInput('selectionModifier', 'shift');
+        fixture.detectChanges();
+
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift' }));
+
+        // First mousedown should succeed (modifier held)
+        component.onGhostCellPointerDown(pointerEvent('pointerdown'), 1, 1);
+        expect(component.isSelecting()).toBe(true);
+        document.dispatchEvent(pointerEvent('pointerup'));
+
+        // Window blur — modifier flag should reset even though no keyup fires
+        window.dispatchEvent(new Event('blur'));
+
+        // Next mousedown without re-pressing Shift should NOT start a selection
+        component.onGhostCellPointerDown(pointerEvent('pointerdown'), 2, 3);
+        expect(component.isSelecting()).toBe(false);
+      });
+
+      it('should respect ctrl modifier when configured', () => {
+        fixture.componentRef.setInput('selectionModifier', 'ctrl');
+        fixture.detectChanges();
+
+        // Shift held should NOT arm ctrl-gated selection
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift' }));
+        component.onGhostCellPointerDown(pointerEvent('pointerdown'), 1, 1);
+        expect(component.isSelecting()).toBe(false);
+        document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Shift' }));
+
+        // Ctrl held should arm
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Control' }));
+        component.onGhostCellPointerDown(pointerEvent('pointerdown'), 2, 2);
+        expect(component.isSelecting()).toBe(true);
+        document.dispatchEvent(pointerEvent('pointerup'));
+        document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Control' }));
+      });
+
+      it('should ignore unrelated keys while modifier is held', () => {
+        fixture.componentRef.setInput('selectionModifier', 'shift');
+        fixture.detectChanges();
+
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift' }));
+        // Press and release an unrelated key — must not flip modifier-held off
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+        document.dispatchEvent(new KeyboardEvent('keyup', { key: 'a' }));
+
+        component.onGhostCellPointerDown(pointerEvent('pointerdown'), 1, 1);
+        expect(component.isSelecting()).toBe(true);
+        document.dispatchEvent(pointerEvent('pointerup'));
+        document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Shift' }));
+      });
+    });
+
+    describe('dragThreshold', () => {
+      beforeEach(() => {
+        // Use the proposed default of 4 px for these tests
+        fixture.componentRef.setInput('dragThreshold', 4);
+        fixture.detectChanges();
+      });
+
+      it('should suppress emission when pointer does not move (default 4 px)', () => {
+        const emittedSelections: GridSelection[] = [];
+        component.selectionComplete.subscribe((selection: GridSelection) => {
+          emittedSelections.push(selection);
+        });
+
+        component.onGhostCellPointerDown(
+          pointerEvent('pointerdown', { clientX: 100, clientY: 100 }),
+          3,
+          4
+        );
+        document.dispatchEvent(
+          pointerEvent('pointerup', { clientX: 100, clientY: 100 })
+        );
+
+        expect(emittedSelections.length).toBe(0);
+      });
+
+      it('should suppress emission for sub-threshold drag', () => {
+        const emittedSelections: GridSelection[] = [];
+        component.selectionComplete.subscribe((selection: GridSelection) => {
+          emittedSelections.push(selection);
+        });
+
+        component.onGhostCellPointerDown(
+          pointerEvent('pointerdown', { clientX: 100, clientY: 100 }),
+          3,
+          4
+        );
+        // Move 3 px (below 4 px threshold)
+        document.dispatchEvent(
+          pointerEvent('pointerup', { clientX: 102, clientY: 102 })
+        );
+
+        expect(emittedSelections.length).toBe(0);
+      });
+
+      it('should emit when drag distance meets threshold', () => {
+        const emittedSelections: GridSelection[] = [];
+        component.selectionComplete.subscribe((selection: GridSelection) => {
+          emittedSelections.push(selection);
+        });
+
+        component.onGhostCellPointerDown(
+          pointerEvent('pointerdown', { clientX: 100, clientY: 100 }),
+          3,
+          4
+        );
+        simulateDragTo(5, 6);
+        // Move 5 px (>= 4 px threshold)
+        document.dispatchEvent(
+          pointerEvent('pointerup', { clientX: 100, clientY: 105 })
+        );
+
+        expect(emittedSelections.length).toBe(1);
+        expect(emittedSelections[0]).toEqual({
+          topLeft: { row: 3, col: 4 },
+          bottomRight: { row: 5, col: 6 },
+        });
+      });
+
+      it('should respect a custom threshold value', () => {
+        fixture.componentRef.setInput('dragThreshold', 20);
+        fixture.detectChanges();
+
+        const emittedSelections: GridSelection[] = [];
+        component.selectionComplete.subscribe((selection: GridSelection) => {
+          emittedSelections.push(selection);
+        });
+
+        component.onGhostCellPointerDown(
+          pointerEvent('pointerdown', { clientX: 0, clientY: 0 }),
+          1,
+          1
+        );
+        // 10 px drag — below custom threshold of 20
+        document.dispatchEvent(
+          pointerEvent('pointerup', { clientX: 10, clientY: 0 })
+        );
+
+        expect(emittedSelections.length).toBe(0);
+      });
+    });
+
+    describe('PointerEvent integration', () => {
+      it('should track cells via elementFromPoint during drag', () => {
+        const emittedSelections: GridSelection[] = [];
+        component.selectionComplete.subscribe((selection: GridSelection) => {
+          emittedSelections.push(selection);
+        });
+
+        // Synthesize a "ghost cell" element so elementFromPoint can return it.
+        // The component reads `data-row` / `data-col` to resolve the cell.
+        const fakeCell = document.createElement('div');
+        fakeCell.classList.add('selection-ghost-cell');
+        fakeCell.dataset['row'] = '7';
+        fakeCell.dataset['col'] = '5';
+
+        const elementFromPointSpy = spyOn(
+          document,
+          'elementFromPoint'
+        ).and.returnValue(fakeCell);
+
+        component.onGhostCellPointerDown(
+          pointerEvent('pointerdown', { clientX: 50, clientY: 50 }),
+          1,
+          1
+        );
+
+        // Simulate a pointermove event — the listener should call
+        // elementFromPoint and update selectionCurrent based on the result.
+        document.dispatchEvent(
+          pointerEvent('pointermove', { clientX: 200, clientY: 200 })
+        );
+
+        expect(elementFromPointSpy).toHaveBeenCalledWith(200, 200);
+        expect(component.selectionCurrent()).toEqual({ row: 7, col: 5 });
+
+        document.dispatchEvent(
+          pointerEvent('pointerup', { clientX: 200, clientY: 200 })
+        );
+
+        expect(emittedSelections.length).toBe(1);
+        expect(emittedSelections[0]).toEqual({
+          topLeft: { row: 1, col: 1 },
+          bottomRight: { row: 7, col: 5 },
+        });
+      });
+
+      it('should call setPointerCapture on the pointerdown target when supported', () => {
+        const captureTarget = document.createElement('div');
+        const captureSpy = jasmine.createSpy('setPointerCapture');
+        // Synthesize the capture API on a synthetic target
+        (
+          captureTarget as unknown as {
+            setPointerCapture: (id: number) => void;
+          }
+        ).setPointerCapture = captureSpy;
+
+        const event = pointerEvent('pointerdown', { pointerId: 42 });
+        Object.defineProperty(event, 'target', { value: captureTarget });
+
+        component.onGhostCellPointerDown(event, 1, 1);
+
+        expect(captureSpy).toHaveBeenCalledWith(42);
+
+        document.dispatchEvent(pointerEvent('pointerup'));
+      });
     });
   });
 });

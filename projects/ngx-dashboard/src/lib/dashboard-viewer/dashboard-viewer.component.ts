@@ -17,6 +17,26 @@ import {
 import { CellComponent } from '../cell/cell.component';
 import { DashboardStore } from '../store/dashboard-store';
 import { GridSelection } from '../models/grid-selection';
+import { SelectionModifier } from '../models/selection-modifier';
+
+/**
+ * Map a SelectionModifier value to the corresponding KeyboardEvent.key value.
+ * Used to detect modifier hold/release without reading the boolean
+ * `*Key` flags, which are unreliable when distinguishing the modifier
+ * keypress itself from other keys pressed while the modifier is held.
+ */
+function modifierKeyName(modifier: SelectionModifier): string {
+  switch (modifier) {
+    case 'shift':
+      return 'Shift';
+    case 'ctrl':
+      return 'Control';
+    case 'alt':
+      return 'Alt';
+    case 'meta':
+      return 'Meta';
+  }
+}
 
 @Component({
   selector: 'ngx-dashboard-viewer',
@@ -47,6 +67,16 @@ export class DashboardViewerComponent {
 
   // Selection feature
   enableSelection = input<boolean>(false);
+  selectionModifier = input<SelectionModifier | null>(null);
+  /**
+   * Minimum pointer movement (in CSS pixels) between pointerdown and
+   * pointerup required to emit `selectionComplete`. Below the threshold,
+   * the gesture is treated as a click and no event is emitted.
+   *
+   * Default 4 — matches OS-native click-vs-drag thresholds. Set to 0 to
+   * preserve the legacy behavior where every pointerup emits.
+   */
+  dragThreshold = input<number>(4);
   selectionComplete = output<GridSelection>();
 
   // store signals - read-only
@@ -56,6 +86,23 @@ export class DashboardViewerComponent {
   isSelecting = signal(false);
   selectionStart = signal<{ row: number; col: number } | null>(null);
   selectionCurrent = signal<{ row: number; col: number } | null>(null);
+
+  // Modifier-key gating state for selectionModifier
+  readonly #modifierHeld = signal(false);
+  readonly #dragInProgress = signal(false);
+
+  /**
+   * Whether the selection overlay is currently interactive (intercepts
+   * pointer events). Always false when `enableSelection` is false.
+   * When `selectionModifier` is null, true whenever selection is enabled
+   * (legacy behavior). Otherwise, true only while the configured modifier
+   * is held or a drag started under the modifier is in progress.
+   */
+  protected readonly armed = computed(() => {
+    if (!this.enableSelection()) return false;
+    if (this.selectionModifier() === null) return true;
+    return this.#modifierHeld() || this.#dragInProgress();
+  });
 
   // Computed selection bounds (normalized)
   selectionBounds = computed(() => {
@@ -79,9 +126,12 @@ export class DashboardViewerComponent {
     Array.from({ length: this.columns() }, (_, i) => i + 1)
   );
 
-  // Document-level event listeners (cleanup needed)
-  #mouseMoveListener?: () => void;
-  #mouseUpListener?: () => void;
+  // Document-level pointer listeners (cleanup needed)
+  #pointerMoveListener?: () => void;
+  #pointerUpListener?: () => void;
+
+  // Pointer position at the start of a drag, for dragThreshold checks
+  readonly #pointerDownPos = signal<{ x: number; y: number } | null>(null);
 
   constructor() {
     // Sync grid configuration with store when inputs change
@@ -100,6 +150,52 @@ export class DashboardViewerComponent {
         this.selectionCurrent.set(null);
         this.isSelecting.set(false);
       }
+    });
+
+    // Modifier-key tracking. Only registers document/window listeners when a
+    // modifier is configured, so dashboards using the default (null) pay no
+    // global keystroke cost. Cleans up listeners and resets state on
+    // modifier change or component teardown.
+    effect((onCleanup) => {
+      const modifier = this.selectionModifier();
+      if (modifier === null) {
+        this.#modifierHeld.set(false);
+        return;
+      }
+
+      const keyName = modifierKeyName(modifier);
+
+      const offKeyDown = this.#renderer.listen(
+        'document',
+        'keydown',
+        (event: KeyboardEvent) => {
+          if (event.key === keyName) {
+            this.#modifierHeld.set(true);
+          }
+        }
+      );
+
+      const offKeyUp = this.#renderer.listen(
+        'document',
+        'keyup',
+        (event: KeyboardEvent) => {
+          if (event.key === keyName) {
+            this.#modifierHeld.set(false);
+          }
+        }
+      );
+
+      // Cover focus-loss cases where keyup may never fire (Alt-Tab, etc.)
+      const offBlur = this.#renderer.listen('window', 'blur', () => {
+        this.#modifierHeld.set(false);
+      });
+
+      onCleanup(() => {
+        offKeyDown();
+        offKeyUp();
+        offBlur();
+        this.#modifierHeld.set(false);
+      });
     });
   }
 
@@ -121,11 +217,18 @@ export class DashboardViewerComponent {
   }
 
   /**
-   * Handle mouse down on ghost cell to start selection
+   * Handle pointer down on a ghost cell to start a selection.
+   *
+   * Uses PointerEvent so mouse / touch / pen all work uniformly. Calls
+   * `setPointerCapture` defensively — if the event target doesn't support
+   * it (e.g. synthetic test events), we fall back to relying on document
+   * listeners, which receive bubbled pointer events either way.
    */
-  onGhostCellMouseDown(event: MouseEvent, row: number, col: number) {
-    if (!this.enableSelection()) return;
-    if (event.button !== 0) return; // Only left button
+  onGhostCellPointerDown(event: PointerEvent, row: number, col: number) {
+    if (!this.armed()) return;
+    // Mouse: only respond to the primary (left) button. Touch and pen
+    // events report `button === 0` for the primary contact already.
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
 
     event.preventDefault();
     event.stopPropagation();
@@ -133,16 +236,35 @@ export class DashboardViewerComponent {
     this.isSelecting.set(true);
     this.selectionStart.set({ row, col });
     this.selectionCurrent.set({ row, col });
+    this.#dragInProgress.set(true);
+    this.#pointerDownPos.set({ x: event.clientX, y: event.clientY });
 
-    // Add document-level listeners for drag
-    this.#mouseMoveListener = this.#renderer.listen(
+    const target = event.target;
+    if (
+      target instanceof Element &&
+      typeof target.setPointerCapture === 'function'
+    ) {
+      try {
+        target.setPointerCapture(event.pointerId);
+      } catch {
+        // Browser may reject capture for invalid pointer ids (e.g. some
+        // synthetic test events). Document-level listeners cover us.
+      }
+    }
+
+    // Add document-level listeners for drag tracking. Pointer capture
+    // routes events to the originator element first, but they still bubble
+    // up to document, so document listeners reliably see every move/up.
+    this.#pointerMoveListener = this.#renderer.listen(
       'document',
-      'mousemove',
-      () => this.onDocumentMouseMove()
+      'pointermove',
+      (e: PointerEvent) => this.onDocumentPointerMove(e)
     );
 
-    this.#mouseUpListener = this.#renderer.listen('document', 'mouseup', () =>
-      this.onDocumentMouseUp()
+    this.#pointerUpListener = this.#renderer.listen(
+      'document',
+      'pointerup',
+      (e: PointerEvent) => this.onDocumentPointerUp(e)
     );
 
     // Register cleanup
@@ -152,57 +274,71 @@ export class DashboardViewerComponent {
   }
 
   /**
-   * Handle mouse enter on ghost cell during selection
+   * Track the pointer across cell boundaries during a drag.
+   *
+   * Replaces the old per-cell `mouseenter` handler. Necessary because
+   * pointer capture and (on touch) coalesced events make boundary
+   * crossings unreliable when relying on per-element enter events.
    */
-  onGhostCellMouseEnter(row: number, col: number) {
+  private onDocumentPointerMove(event: PointerEvent) {
     if (!this.isSelecting()) return;
-    this.selectionCurrent.set({ row, col });
+
+    const el = document.elementFromPoint(event.clientX, event.clientY);
+    const cell = el?.closest<HTMLElement>('.selection-ghost-cell');
+    if (!cell) return;
+
+    const row = Number(cell.dataset['row']);
+    const col = Number(cell.dataset['col']);
+    if (Number.isFinite(row) && Number.isFinite(col)) {
+      this.selectionCurrent.set({ row, col });
+    }
   }
 
   /**
-   * Handle document mouse move during selection
+   * Complete a selection on pointerup. Emits `selectionComplete` only when
+   * total pointer movement meets `dragThreshold` — sub-threshold gestures
+   * are treated as clicks and discarded.
    */
-  private onDocumentMouseMove() {
-    if (!this.isSelecting()) return;
-    // The actual selection update is handled by onGhostCellMouseEnter
-    // This just ensures we capture the event
-  }
-
-  /**
-   * Handle document mouse up to complete selection
-   */
-  private onDocumentMouseUp() {
+  private onDocumentPointerUp(event: PointerEvent) {
     if (!this.isSelecting()) return;
 
     this.isSelecting.set(false);
 
-    // Emit selection event
-    const bounds = this.selectionBounds();
-    if (bounds) {
-      this.selectionComplete.emit({
-        topLeft: { row: bounds.startRow, col: bounds.startCol },
-        bottomRight: { row: bounds.endRow, col: bounds.endCol },
-      });
+    const start = this.#pointerDownPos();
+    const moved =
+      start === null ||
+      Math.hypot(event.clientX - start.x, event.clientY - start.y) >=
+        this.dragThreshold();
+
+    if (moved) {
+      const bounds = this.selectionBounds();
+      if (bounds) {
+        this.selectionComplete.emit({
+          topLeft: { row: bounds.startRow, col: bounds.startCol },
+          bottomRight: { row: bounds.endRow, col: bounds.endCol },
+        });
+      }
     }
 
-    // Clean up listeners
+    this.#pointerDownPos.set(null);
+    this.#dragInProgress.set(false);
     this.cleanupListeners();
 
-    // Don't clear selection - let the parent control when to clear
-    // Selection remains visible until enableSelection becomes false
+    // Don't clear selection - let the parent control when to clear.
+    // Selection remains visible until enableSelection becomes false.
   }
 
   /**
    * Clean up document-level event listeners
    */
   private cleanupListeners() {
-    if (this.#mouseMoveListener) {
-      this.#mouseMoveListener();
-      this.#mouseMoveListener = undefined;
+    if (this.#pointerMoveListener) {
+      this.#pointerMoveListener();
+      this.#pointerMoveListener = undefined;
     }
-    if (this.#mouseUpListener) {
-      this.#mouseUpListener();
-      this.#mouseUpListener = undefined;
+    if (this.#pointerUpListener) {
+      this.#pointerUpListener();
+      this.#pointerUpListener = undefined;
     }
   }
 }

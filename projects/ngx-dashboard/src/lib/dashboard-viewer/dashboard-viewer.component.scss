@@ -50,7 +50,13 @@
   pointer-events: none;
 }
 
-/* Selection overlay - mirror grid for cell selection */
+/* Selection overlay - mirror grid for cell selection
+ *
+ * Always mounted when `enableSelection` is true. Whether the overlay
+ * intercepts pointer events is controlled by the `.armed` class, which is
+ * always present in legacy mode (selectionModifier === null) and only
+ * present while the configured modifier is held / a drag is in progress.
+ */
 .selection-overlay-grid {
   position: absolute;
   top: 0;
@@ -65,27 +71,35 @@
   grid-template-columns: repeat(var(--columns), var(--cell-size));
   grid-template-rows: repeat(var(--rows), var(--cell-size));
 
-  z-index: 5; // Above cells to block all interactions
-  pointer-events: auto; // Block all mouse events from reaching cells below
+  z-index: 5; // Above cells; only intercepts events when .armed
+  pointer-events: none; // Default: transparent so widget cells receive events
   user-select: none; // Prevent text selection during drag
+
+  &.armed {
+    pointer-events: auto; // Active: block events from reaching cells below
+  }
 }
 
 .selection-ghost-cell {
-  cursor: crosshair;
   transition: background-color 0.1s ease, border-radius 0.1s ease;
   border-radius: 2px;
+
+  // Selected cells render their tint regardless of armed state, so the
+  // post-selection visual persists until enableSelection flips off.
+  &.selected {
+    background-color: var(--mat-sys-primary);
+    opacity: 0.25;
+    border-radius: 4px;
+  }
+}
+
+.selection-overlay-grid.armed .selection-ghost-cell {
+  cursor: crosshair;
 
   // Hover effect when not selecting
   &:hover:not(.selecting) {
     background-color: var(--mat-sys-primary);
     opacity: 0.08;
-  }
-
-  // Active selection state
-  &.selected {
-    background-color: var(--mat-sys-primary);
-    opacity: 0.25;
-    border-radius: 4px;
   }
 
   // Cursor during active selection

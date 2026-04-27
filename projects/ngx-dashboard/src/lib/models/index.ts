@@ -9,6 +9,7 @@ export * from './drag-data';
 export * from './grid-selection';
 export * from './reserved-space';
 export * from './selection-filter-options';
+export * from './selection-modifier';
 export * from './widget';
 export * from './widget-factory';
 export * from './widget-shared-state-provider';

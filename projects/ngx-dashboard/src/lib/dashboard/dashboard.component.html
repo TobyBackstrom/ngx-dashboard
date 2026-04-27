@@ -14,6 +14,8 @@
     [columns]="store.columns()"
     [gutterSize]="store.gutterSize()"
     [enableSelection]="enableSelection()"
+    [selectionModifier]="selectionModifier()"
+    [dragThreshold]="dragThreshold()"
     (selectionComplete)="selectionComplete.emit($event)"
   ></ngx-dashboard-viewer>
   }
