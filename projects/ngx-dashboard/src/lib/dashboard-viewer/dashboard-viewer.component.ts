@@ -20,23 +20,16 @@ import { GridSelection } from '../models/grid-selection';
 import { SelectionModifier } from '../models/selection-modifier';
 
 /**
- * Map a SelectionModifier value to the corresponding KeyboardEvent.key value.
- * Used to detect modifier hold/release without reading the boolean
- * `*Key` flags, which are unreliable when distinguishing the modifier
- * keypress itself from other keys pressed while the modifier is held.
+ * Map SelectionModifier values to KeyboardEvent.key values. Compared against
+ * `event.key` directly (rather than the boolean `*Key` flags) so unrelated
+ * keypresses while a modifier is held don't flip the modifier-held state.
  */
-function modifierKeyName(modifier: SelectionModifier): string {
-  switch (modifier) {
-    case 'shift':
-      return 'Shift';
-    case 'ctrl':
-      return 'Control';
-    case 'alt':
-      return 'Alt';
-    case 'meta':
-      return 'Meta';
-  }
-}
+const MODIFIER_KEY: Record<SelectionModifier, string> = {
+  shift: 'Shift',
+  ctrl: 'Control',
+  alt: 'Alt',
+  meta: 'Meta',
+};
 
 @Component({
   selector: 'ngx-dashboard-viewer',
@@ -89,19 +82,19 @@ export class DashboardViewerComponent {
 
   // Modifier-key gating state for selectionModifier
   readonly #modifierHeld = signal(false);
-  readonly #dragInProgress = signal(false);
 
   /**
    * Whether the selection overlay is currently interactive (intercepts
    * pointer events). Always false when `enableSelection` is false.
    * When `selectionModifier` is null, true whenever selection is enabled
    * (legacy behavior). Otherwise, true only while the configured modifier
-   * is held or a drag started under the modifier is in progress.
+   * is held or a drag is in progress (which keeps the overlay armed
+   * across mid-drag modifier release).
    */
   protected readonly armed = computed(() => {
     if (!this.enableSelection()) return false;
     if (this.selectionModifier() === null) return true;
-    return this.#modifierHeld() || this.#dragInProgress();
+    return this.#modifierHeld() || this.isSelecting();
   });
 
   // Computed selection bounds (normalized)
@@ -163,7 +156,7 @@ export class DashboardViewerComponent {
         return;
       }
 
-      const keyName = modifierKeyName(modifier);
+      const keyName = MODIFIER_KEY[modifier];
 
       const offKeyDown = this.#renderer.listen(
         'document',
@@ -217,17 +210,11 @@ export class DashboardViewerComponent {
   }
 
   /**
-   * Handle pointer down on a ghost cell to start a selection.
-   *
-   * Uses PointerEvent so mouse / touch / pen all work uniformly. Calls
-   * `setPointerCapture` defensively — if the event target doesn't support
-   * it (e.g. synthetic test events), we fall back to relying on document
-   * listeners, which receive bubbled pointer events either way.
+   * Handle pointer down on a ghost cell to start a selection. Uses
+   * PointerEvent so mouse / touch / pen all work uniformly.
    */
   onGhostCellPointerDown(event: PointerEvent, row: number, col: number) {
     if (!this.armed()) return;
-    // Mouse: only respond to the primary (left) button. Touch and pen
-    // events report `button === 0` for the primary contact already.
     if (event.pointerType === 'mouse' && event.button !== 0) return;
 
     event.preventDefault();
@@ -236,7 +223,6 @@ export class DashboardViewerComponent {
     this.isSelecting.set(true);
     this.selectionStart.set({ row, col });
     this.selectionCurrent.set({ row, col });
-    this.#dragInProgress.set(true);
     this.#pointerDownPos.set({ x: event.clientX, y: event.clientY });
 
     const target = event.target;
@@ -247,14 +233,11 @@ export class DashboardViewerComponent {
       try {
         target.setPointerCapture(event.pointerId);
       } catch {
-        // Browser may reject capture for invalid pointer ids (e.g. some
-        // synthetic test events). Document-level listeners cover us.
+        // Capture may be rejected for synthetic / invalid pointer ids;
+        // document-level listeners still receive bubbled events.
       }
     }
 
-    // Add document-level listeners for drag tracking. Pointer capture
-    // routes events to the originator element first, but they still bubble
-    // up to document, so document listeners reliably see every move/up.
     this.#pointerMoveListener = this.#renderer.listen(
       'document',
       'pointermove',
@@ -267,7 +250,6 @@ export class DashboardViewerComponent {
       (e: PointerEvent) => this.onDocumentPointerUp(e)
     );
 
-    // Register cleanup
     this.#destroyRef.onDestroy(() => {
       this.cleanupListeners();
     });
@@ -289,9 +271,15 @@ export class DashboardViewerComponent {
 
     const row = Number(cell.dataset['row']);
     const col = Number(cell.dataset['col']);
-    if (Number.isFinite(row) && Number.isFinite(col)) {
-      this.selectionCurrent.set({ row, col });
-    }
+    if (!Number.isFinite(row) || !Number.isFinite(col)) return;
+
+    // Skip updates while still inside the same cell — otherwise pointermove
+    // (60–120 Hz) would re-emit a fresh object reference every frame and
+    // trigger downstream rerenders across the whole overlay grid.
+    const cur = this.selectionCurrent();
+    if (cur && cur.row === row && cur.col === col) return;
+
+    this.selectionCurrent.set({ row, col });
   }
 
   /**
@@ -321,7 +309,6 @@ export class DashboardViewerComponent {
     }
 
     this.#pointerDownPos.set(null);
-    this.#dragInProgress.set(false);
     this.cleanupListeners();
 
     // Don't clear selection - let the parent control when to clear.
