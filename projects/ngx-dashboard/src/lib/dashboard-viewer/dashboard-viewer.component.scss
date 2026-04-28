@@ -81,14 +81,21 @@
 }
 
 .selection-ghost-cell {
+  // Alpha is folded into background-color via color-mix so a single
+  // property animates on enter/leave. Animating opacity separately
+  // desyncs from the background-color transition and produces a
+  // brief full-saturation flash on cells that leave the rectangle.
   transition: background-color 0.1s ease, border-radius 0.1s ease;
   border-radius: 2px;
 
   // Selected cells render their tint regardless of armed state, so the
   // post-selection visual persists until enableSelection flips off.
   &.selected {
-    background-color: var(--mat-sys-primary);
-    opacity: 0.25;
+    background-color: color-mix(
+      in srgb,
+      var(--mat-sys-primary) 25%,
+      transparent
+    );
     border-radius: 4px;
   }
 }
@@ -98,8 +105,11 @@
 
   // Hover effect when not selecting
   &:hover:not(.selecting) {
-    background-color: var(--mat-sys-primary);
-    opacity: 0.08;
+    background-color: color-mix(
+      in srgb,
+      var(--mat-sys-primary) 8%,
+      transparent
+    );
   }
 
   // Cursor during active selection

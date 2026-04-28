@@ -139,9 +139,7 @@ export class DashboardViewerComponent {
     // Clear selection when selection mode is disabled
     effect(() => {
       if (!this.enableSelection()) {
-        this.selectionStart.set(null);
-        this.selectionCurrent.set(null);
-        this.isSelecting.set(false);
+        this.clearSelection();
       }
     });
 
@@ -313,6 +311,18 @@ export class DashboardViewerComponent {
 
     // Don't clear selection - let the parent control when to clear.
     // Selection remains visible until enableSelection becomes false.
+  }
+
+  /**
+   * Drop the visible selection rectangle. After `selectionComplete` emits,
+   * the viewer leaves `selectionStart`/`selectionCurrent` set so consumers
+   * can render a confirm UX with the rectangle still visible. Call this
+   * once that UX is done. No-op if no selection is active.
+   */
+  clearSelection(): void {
+    this.selectionStart.set(null);
+    this.selectionCurrent.set(null);
+    this.isSelecting.set(false);
   }
 
   /**

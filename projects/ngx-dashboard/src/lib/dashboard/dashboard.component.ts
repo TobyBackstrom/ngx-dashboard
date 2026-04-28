@@ -204,6 +204,14 @@ export class DashboardComponent implements OnChanges {
   }
 
   /**
+   * Forwards to the active viewer. No-op in edit mode.
+   * See `DashboardViewerComponent.clearSelection()`.
+   */
+  clearSelection(): void {
+    this.dashboardViewer()?.clearSelection();
+  }
+
+  /**
    * Preserve widget states before switching modes by collecting live states
    * from the currently active component and updating the store.
    */

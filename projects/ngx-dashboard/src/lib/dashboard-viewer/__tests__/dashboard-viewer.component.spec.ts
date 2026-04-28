@@ -626,5 +626,66 @@ describe('DashboardViewerComponent - Integration Tests', () => {
         document.dispatchEvent(pointerEvent('pointerup'));
       });
     });
+
+    describe('clearSelection()', () => {
+      it('should drop the visible rectangle after a completed selection', () => {
+        component.onGhostCellPointerDown(pointerEvent('pointerdown'), 2, 3);
+        simulateDragTo(4, 6);
+        document.dispatchEvent(pointerEvent('pointerup'));
+
+        expect(component.selectionStart()).not.toBeNull();
+        expect(component.selectionCurrent()).not.toBeNull();
+        expect(component.selectionBounds()).not.toBeNull();
+
+        component.clearSelection();
+
+        expect(component.selectionStart()).toBeNull();
+        expect(component.selectionCurrent()).toBeNull();
+        expect(component.isSelecting()).toBe(false);
+        expect(component.selectionBounds()).toBeNull();
+      });
+
+      it('should be a no-op when no selection is active', () => {
+        expect(() => component.clearSelection()).not.toThrow();
+        expect(component.selectionStart()).toBeNull();
+        expect(component.selectionCurrent()).toBeNull();
+        expect(component.isSelecting()).toBe(false);
+      });
+
+      it('should not re-emit selectionComplete', () => {
+        const emittedSelections: GridSelection[] = [];
+        component.selectionComplete.subscribe((selection: GridSelection) => {
+          emittedSelections.push(selection);
+        });
+
+        component.onGhostCellPointerDown(pointerEvent('pointerdown'), 1, 1);
+        simulateDragTo(2, 2);
+        document.dispatchEvent(pointerEvent('pointerup'));
+
+        expect(emittedSelections.length).toBe(1);
+
+        component.clearSelection();
+
+        expect(emittedSelections.length).toBe(1);
+      });
+
+      it('should cancel an in-flight drag', () => {
+        const emittedSelections: GridSelection[] = [];
+        component.selectionComplete.subscribe((selection: GridSelection) => {
+          emittedSelections.push(selection);
+        });
+
+        component.onGhostCellPointerDown(pointerEvent('pointerdown'), 2, 3);
+        simulateDragTo(4, 6);
+        expect(component.isSelecting()).toBe(true);
+
+        component.clearSelection();
+
+        expect(component.isSelecting()).toBe(false);
+        expect(component.selectionStart()).toBeNull();
+        expect(component.selectionCurrent()).toBeNull();
+        expect(emittedSelections.length).toBe(0);
+      });
+    });
   });
 });
