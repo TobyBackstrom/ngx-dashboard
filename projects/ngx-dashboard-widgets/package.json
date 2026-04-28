@@ -1,6 +1,6 @@
 {
   "name": "@dragonworks/ngx-dashboard-widgets",
-  "version": "21.2.1",
+  "version": "21.2.2",
   "description": "Widget collection for ngx-dashboard with Material Design 3 compliance including arrow, label, clock widgets and responsive text directive",
   "publishConfig": {
     "access": "public"
