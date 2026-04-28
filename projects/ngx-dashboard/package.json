@@ -2,6 +2,9 @@
   "name": "@dragonworks/ngx-dashboard",
   "version": "21.2.1",
   "description": "Angular library for building drag-and-drop grid dashboards with resizable cells and customizable widgets",
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
