@@ -42,6 +42,7 @@
     ]
   },
   "private": true,
+  "//overrides": "TEMPORARY @ngrx/signals shim: held at 21.x under Angular 22 because no @ngrx/signals v22 had shipped (its peer pins @angular/core ^21). The @ngrx/signals override below redirects that peer to the root Angular version so install resolves without --legacy-peer-deps. WHEN UPGRADING NGRX to an Angular-22-compatible release: bump @ngrx/signals and DELETE its overrides entry. See NgRx issue #5158.",
   "overrides": {
     "vite": "^7.3.2",
     "esbuild": "^0.28.1",
