@@ -1,5 +1,11 @@
 // radial-gauge-widget.component.ts
-import { Component, inject, signal, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  computed,
+} from '@angular/core';
 import { Widget, WidgetMetadata } from '@dragonworks/ngx-dashboard';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -20,6 +26,7 @@ export interface RadialGaugeWidgetState {
   imports: [RadialGaugeComponent],
   templateUrl: './radial-gauge-widget.component.html',
   styleUrl: './radial-gauge-widget.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadialGaugeWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {

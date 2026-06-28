@@ -1,4 +1,4 @@
-import { Component, DebugElement } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ResponsiveTextDirective } from '../responsive-text.directive';
@@ -24,7 +24,14 @@ import { ResponsiveTextDirective } from '../responsive-text.directive';
       box-sizing: border-box;
     }
   `],
-  imports: [ResponsiveTextDirective]
+  imports: [ResponsiveTextDirective],
+  // Test harness: it mutates plain (non-signal) fields and relies on
+  // fixture.detectChanges() re-evaluating its bindings so input changes reach the
+  // directive. Angular v22 made OnPush the default, which skips that re-evaluation,
+  // so this host keeps the pre-v22 eager strategy. Production consumers bind via
+  // signals and remain OnPush, so the rule is intentionally suppressed here only.
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestComponent {
   containerWidth = 200;

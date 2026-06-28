@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [24.x]
 
     steps:
       - uses: actions/checkout@v5
@@ -34,11 +34,11 @@ jobs:
       - name: Build all projects
         run: npm run build:ci
 
-      - name: Test ngx-dashboard (331 tests)
+      - name: Test ngx-dashboard (495 tests)
         run: |
           timeout 300 npx ng test ngx-dashboard --no-watch --browsers=ChromeHeadless --code-coverage
 
-      - name: Test ngx-dashboard-widgets (86 tests)
+      - name: Test ngx-dashboard-widgets (143 tests)
         run: |
           timeout 300 npx ng test ngx-dashboard-widgets --no-watch --browsers=ChromeHeadless --code-coverage
 

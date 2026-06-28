@@ -1,5 +1,10 @@
 // clock-widget.component.ts
-import { Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { Widget, WidgetMetadata } from '@dragonworks/ngx-dashboard';
 import { svgIcon } from './clock-widget.metadata';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -21,6 +26,7 @@ export interface ClockWidgetState {
   imports: [DigitalClockComponent, AnalogClockComponent],
   templateUrl: './clock-widget.component.html',
   styleUrl: './clock-widget.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClockWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {

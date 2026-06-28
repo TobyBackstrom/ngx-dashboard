@@ -1,5 +1,11 @@
 // arrow-widget.component.ts
-import { Component, inject, signal, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  computed,
+} from '@angular/core';
 import { Widget, WidgetMetadata } from '@dragonworks/ngx-dashboard';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,6 +23,7 @@ export interface ArrowWidgetState {
   imports: [],
   templateUrl: './arrow-widget.component.html',
   styleUrl: './arrow-widget.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArrowWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {

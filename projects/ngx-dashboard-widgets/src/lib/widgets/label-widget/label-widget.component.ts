@@ -1,5 +1,11 @@
 // label-widget.component.ts
-import { Component, inject, signal, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  computed,
+} from '@angular/core';
 import { Widget, WidgetMetadata } from '@dragonworks/ngx-dashboard';
 import { svgIcon } from './label-widget.metadata';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -27,6 +33,7 @@ export interface LabelWidgetState {
   imports: [ResponsiveTextDirective],
   templateUrl: './label-widget.component.html',
   styleUrl: './label-widget.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LabelWidgetComponent implements Widget {
   static metadata: WidgetMetadata = {

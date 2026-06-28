@@ -1,4 +1,10 @@
-import { Component, inject, DestroyRef, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  DestroyRef,
+  signal,
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -31,6 +37,7 @@ import {
 ],
   templateUrl: './radial-gauge-demo.component.html',
   styleUrl: './radial-gauge-demo.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadialGaugeDemoComponent {
   private readonly destroyRef = inject(DestroyRef);
