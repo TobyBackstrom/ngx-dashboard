@@ -1,4 +1,4 @@
-import { Component, DebugElement } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ResponsiveTextDirective } from '../responsive-text.directive';
@@ -24,7 +24,11 @@ import { ResponsiveTextDirective } from '../responsive-text.directive';
       box-sizing: border-box;
     }
   `],
-  imports: [ResponsiveTextDirective]
+  imports: [ResponsiveTextDirective],
+  // This host mutates plain (non-signal) fields and relies on fixture.detectChanges()
+  // re-evaluating its bindings. Angular v22 made OnPush the default, which skips that
+  // re-evaluation; keep the pre-v22 eager strategy so input changes propagate to the directive.
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestComponent {
   containerWidth = 200;
