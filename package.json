@@ -44,6 +44,10 @@
     "esbuild": "^0.28.1",
     "@angular/build": {
       "undici": "^7.28.0"
+    },
+    "@ngrx/signals": {
+      "@angular/common": "$@angular/common",
+      "@angular/core": "$@angular/core"
     }
   },
   "dependencies": {
