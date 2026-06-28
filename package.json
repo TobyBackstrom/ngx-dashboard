@@ -40,7 +40,11 @@
   },
   "private": true,
   "overrides": {
-    "vite": "^7.3.2"
+    "vite": "^7.3.2",
+    "esbuild": "^0.28.1",
+    "@angular/build": {
+      "undici": "^7.28.0"
+    }
   },
   "dependencies": {
     "@angular/cdk": "^21.2.14",
