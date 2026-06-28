@@ -25,9 +25,12 @@ import { ResponsiveTextDirective } from '../responsive-text.directive';
     }
   `],
   imports: [ResponsiveTextDirective],
-  // This host mutates plain (non-signal) fields and relies on fixture.detectChanges()
-  // re-evaluating its bindings. Angular v22 made OnPush the default, which skips that
-  // re-evaluation; keep the pre-v22 eager strategy so input changes propagate to the directive.
+  // Test harness: it mutates plain (non-signal) fields and relies on
+  // fixture.detectChanges() re-evaluating its bindings so input changes reach the
+  // directive. Angular v22 made OnPush the default, which skips that re-evaluation,
+  // so this host keeps the pre-v22 eager strategy. Production consumers bind via
+  // signals and remain OnPush, so the rule is intentionally suppressed here only.
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestComponent {
