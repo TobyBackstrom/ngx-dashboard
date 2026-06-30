@@ -155,6 +155,11 @@ export class DashboardEditorComponent {
     effect(() => {
       this.#store.setEditMode(true);
     });
+
+    // Drop any in-progress resize preview if the editor is torn down mid-drag
+    // (e.g. editMode toggled off): the store outlives this component, so a
+    // stale preview would otherwise render a phantom grid on the next mount.
+    this.#destroyRef.onDestroy(() => this.#store.clearGridResizePreview());
   }
 
   #observeGridSize(): void {

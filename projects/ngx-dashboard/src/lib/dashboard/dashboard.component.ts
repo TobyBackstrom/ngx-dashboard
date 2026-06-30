@@ -216,8 +216,14 @@ export class DashboardComponent implements OnChanges {
    * floored.
    */
   setGridSize(rows: number, columns: number): GridResizeResult {
+    const beforeRows = this.#store.rows();
+    const beforeColumns = this.#store.columns();
     const result = this.#store.setGridSize(rows, columns);
-    this.gridResized.emit(result);
+    // Only signal a resize when the committed size actually changed, matching
+    // the handle-drag path (store.endGridResize).
+    if (result.rows !== beforeRows || result.columns !== beforeColumns) {
+      this.gridResized.emit(result);
+    }
     return result;
   }
 

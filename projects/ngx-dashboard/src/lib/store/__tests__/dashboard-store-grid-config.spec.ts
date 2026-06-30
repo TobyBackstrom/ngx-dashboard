@@ -141,35 +141,15 @@ describe('DashboardStore - Grid Configuration', () => {
       expect(store.columns()).toBe(5);
       expect(result).toEqual({ rows: 1, columns: 5, clamped: false });
     });
-  });
 
-  describe('growGrid', () => {
-    it('should apply a positive delta relative to the current size', () => {
-      // Starts at 8 x 16.
-      const result = store.growGrid(2, -3);
+    it('should sanitize non-finite requests instead of committing NaN', () => {
+      const result = store.setGridSize(NaN, Infinity);
 
-      expect(store.rows()).toBe(10);
-      expect(store.columns()).toBe(13);
-      expect(result).toEqual({ rows: 10, columns: 13, clamped: false });
-    });
-
-    it('should clamp a shrinking delta to the content floor', () => {
-      placeWidget(6, 10); // furthest widget origin
-
-      // Shrink request lands below the occupied extent on both axes.
-      const result = store.growGrid(-5, -8);
-
-      expect(store.rows()).toBe(6);
-      expect(store.columns()).toBe(10);
-      expect(result.clamped).toBe(true);
-    });
-
-    it('should be a no-op for a zero delta', () => {
-      const result = store.growGrid(0, 0);
-
-      expect(store.rows()).toBe(8);
-      expect(store.columns()).toBe(16);
-      expect(result).toEqual({ rows: 8, columns: 16, clamped: false });
+      // Non-finite -> 1, then clamped to content (empty dashboard floor = 1).
+      expect(store.rows()).toBe(1);
+      expect(store.columns()).toBe(1);
+      expect(Number.isFinite(result.rows)).toBe(true);
+      expect(Number.isFinite(result.columns)).toBe(true);
     });
   });
 
@@ -233,6 +213,27 @@ describe('DashboardStore - Grid Configuration', () => {
       expect(store.rows()).toBe(8);
       expect(store.columns()).toBe(16);
       expect(store.gridResizePreview()).toBeNull();
+    });
+
+    it('should return null when clamp-to-content leaves the size unchanged', () => {
+      placeWidget(8, 16); // pins the content floor at the current size
+
+      // Non-zero shrink delta, but it clamps straight back to 8 x 16.
+      const result = store.endGridResize(-2, -3);
+
+      expect(result).toBeNull();
+      expect(store.rows()).toBe(8);
+      expect(store.columns()).toBe(16);
+    });
+
+    it('should clamp a relative shrink to the content floor', () => {
+      placeWidget(6, 10);
+
+      const result = store.endGridResize(-5, -8);
+
+      expect(result).toEqual({ rows: 6, columns: 10, clamped: true });
+      expect(store.rows()).toBe(6);
+      expect(store.columns()).toBe(10);
     });
   });
 

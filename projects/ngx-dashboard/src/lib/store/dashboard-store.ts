@@ -281,22 +281,13 @@ export const DashboardStore = signalStore(
     },
   })),
 
-  // Relative grid resize. Split into its own block so it can call the
-  // absolute setGridSize defined above (siblings in one withMethods block
-  // aren't visible to each other). Keeps the base-read and clamp together in
-  // the store rather than having callers compute the absolute target.
-  withMethods((store) => ({
-    growGrid(deltaRows: number, deltaColumns: number): GridResizeResult {
-      return store.setGridSize(
-        store.rows() + deltaRows,
-        store.columns() + deltaColumns
-      );
-    },
-  })),
-
   // End a grid resize gesture atomically (mirrors withResize._endResize):
   // clear the live preview, no-op on a zero delta, otherwise commit the
-  // relative resize. Separate block so it can call growGrid above.
+  // relative resize. Returns null (no committed change) when the delta is zero
+  // or clamp-to-content leaves the size unchanged, so callers don't signal a
+  // resize that did nothing. Split into its own block so it can call the
+  // absolute setGridSize above (siblings in one withMethods block aren't
+  // visible to each other).
   withMethods((store) => ({
     endGridResize(
       deltaRows: number,
@@ -304,7 +295,17 @@ export const DashboardStore = signalStore(
     ): GridResizeResult | null {
       store.clearGridResizePreview();
       if (deltaRows === 0 && deltaColumns === 0) return null;
-      return store.growGrid(deltaRows, deltaColumns);
+
+      const beforeRows = store.rows();
+      const beforeColumns = store.columns();
+      const result = store.setGridSize(
+        beforeRows + deltaRows,
+        beforeColumns + deltaColumns
+      );
+      if (result.rows === beforeRows && result.columns === beforeColumns) {
+        return null;
+      }
+      return result;
     },
   })),
 
