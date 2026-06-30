@@ -9,7 +9,10 @@ import {
 import { DashboardService } from '../services/dashboard.service';
 import { inject, computed } from '@angular/core';
 import { calculateCollisionInfo } from './features/utils/collision.utils';
-import { applySelectionFilter } from './features/utils/export.utils';
+import {
+  applySelectionFilter,
+  calculateMinimalBoundingBox,
+} from './features/utils/export.utils';
 import {
   CellId,
   CellIdUtils,
@@ -19,6 +22,7 @@ import {
   UNKNOWN_WIDGET_TYPEID,
   WidgetIdUtils,
   GridSelection,
+  GridResizeResult,
   SelectionFilterOptions,
 } from '../models';
 import { withGridConfig } from './features/grid-config.feature';
@@ -126,6 +130,34 @@ export const DashboardStore = signalStore(
           }
         },
       });
+    },
+
+    // GRID RESIZE (change row/column counts on a populated dashboard)
+    // Clamp-to-content policy: a requested size that would push a widget out
+    // of bounds is snapped up to the smallest size that still contains every
+    // widget's full footprint, so shrinking never orphans a widget.
+    setGridSize(rows: number, columns: number): GridResizeResult {
+      // The bounding box's max edges are the smallest grid that still contains
+      // every widget's full footprint, so they are the shrink floor (a widget
+      // at col 14 spanning 3 columns needs at least 16 columns). null = empty.
+      const bounds = calculateMinimalBoundingBox(store.cells());
+      const minRows = bounds?.maxRow ?? 1;
+      const minColumns = bounds?.maxCol ?? 1;
+
+      const requestedRows = Math.max(1, Math.floor(rows));
+      const requestedColumns = Math.max(1, Math.floor(columns));
+
+      const nextRows = Math.max(minRows, requestedRows);
+      const nextColumns = Math.max(minColumns, requestedColumns);
+
+      store.setGridConfig({ rows: nextRows, columns: nextColumns });
+
+      return {
+        rows: nextRows,
+        columns: nextColumns,
+        clamped:
+          nextRows !== requestedRows || nextColumns !== requestedColumns,
+      };
     },
 
     // EXPORT/IMPORT METHODS (need access to multiple features)

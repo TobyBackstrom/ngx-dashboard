@@ -27,6 +27,7 @@ import { EmptyCellContextMenuService } from '../services/empty-cell-context-menu
 import { ReservedSpace } from '../models/reserved-space';
 import {
   CellIdUtils,
+  GridResizeResult,
   GridSelection,
   SelectionFilterOptions,
   SelectionModifier,
@@ -71,6 +72,7 @@ export class DashboardComponent implements OnChanges {
 
   // Component outputs
   selectionComplete = output<GridSelection>();
+  gridResized = output<GridResizeResult>();
 
   // Store signals - shared by both child components
   cells = this.#store.cells;
@@ -201,6 +203,22 @@ export class DashboardComponent implements OnChanges {
 
   clearDashboard(): void {
     this.#store.clearDashboard();
+  }
+
+  /**
+   * Resize the dashboard grid to the given row/column counts.
+   *
+   * Uses a clamp-to-content policy: a size that would push an existing widget
+   * out of bounds is snapped up to the smallest size that still contains every
+   * widget, so shrinking never orphans a widget. The applied size (which may
+   * differ from the request when clamped) is returned and emitted via
+   * `gridResized`. Values below 1 are treated as 1; fractional values are
+   * floored.
+   */
+  setGridSize(rows: number, columns: number): GridResizeResult {
+    const result = this.#store.setGridSize(rows, columns);
+    this.gridResized.emit(result);
+    return result;
   }
 
   /**

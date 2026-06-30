@@ -11,6 +11,7 @@ export { WidgetListComponent } from './lib/widget-list/widget-list.component';
 
 // Dashboard viewer types (for selection feature)
 export type { GridSelection } from './lib/models/grid-selection';
+export type { GridResizeResult } from './lib/models/grid-resize-result';
 export type { SelectionFilterOptions } from './lib/models/selection-filter-options';
 export type { SelectionModifier } from './lib/models/selection-modifier';
 
