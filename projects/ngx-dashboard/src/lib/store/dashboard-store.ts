@@ -10,6 +10,7 @@ import { DashboardService } from '../services/dashboard.service';
 import { inject, computed } from '@angular/core';
 import { calculateCollisionInfo } from './features/utils/collision.utils';
 import { applySelectionFilter } from './features/utils/export.utils';
+import { clampGridSize } from './features/utils/grid-resize.utils';
 import {
   CellId,
   CellIdUtils,
@@ -19,12 +20,14 @@ import {
   UNKNOWN_WIDGET_TYPEID,
   WidgetIdUtils,
   GridSelection,
+  GridResizeResult,
   SelectionFilterOptions,
 } from '../models';
 import { withGridConfig } from './features/grid-config.feature';
 import { withWidgetManagement } from './features/widget-management.feature';
 import { withDragDrop } from './features/drag-drop.feature';
 import { withResize, ResizePreviewUtils } from './features/resize.feature';
+import { withGridResize } from './features/grid-resize.feature';
 
 /** Returns the intended widget type ID, falling back to the factory's type ID */
 function effectiveWidgetTypeid(cell: CellData): string {
@@ -47,10 +50,20 @@ export const DashboardStore = signalStore(
   withGridConfig(),
   withWidgetManagement(),
   withResize(),
+  withGridResize(),
   withDragDrop(),
 
   // Cross-feature computed properties (need access to multiple features)
   withComputed((store) => ({
+    // Effective grid size: the live resize preview when a handle drag is in
+    // progress, otherwise the committed size. Consumed wherever the rendered
+    // grid size matters (editor template, outer frame, viewport letterboxing)
+    // so they all reflow together during a drag.
+    effectiveRows: computed(() => store.gridResizePreview()?.rows ?? store.rows()),
+    effectiveColumns: computed(
+      () => store.gridResizePreview()?.columns ?? store.columns()
+    ),
+
     // Invalid zones (collision detection)
     invalidHighlightMap: computed(() => {
       const collisionInfo = calculateCollisionInfo(
@@ -125,6 +138,26 @@ export const DashboardStore = signalStore(
             store.updateWidgetSpan(widget.widgetId, rowSpan, colSpan);
           }
         },
+      });
+    },
+
+    // GRID RESIZE (change row/column counts on a populated dashboard)
+    // Clamp-to-content policy: a requested size that would push a widget out
+    // of bounds is snapped up to the smallest size that still contains every
+    // widget's full footprint, so shrinking never orphans a widget.
+    setGridSize(rows: number, columns: number): GridResizeResult {
+      const result = clampGridSize(rows, columns, store.cells());
+      store.setGridConfig({ rows: result.rows, columns: result.columns });
+      return result;
+    },
+
+    // Preview a relative grid resize during a handle drag (no commit). Stores
+    // the clamped target in gridResizePreview so the editor can live-reflow.
+    previewGridResize(deltaRows: number, deltaColumns: number) {
+      store._previewGridResize(deltaRows, deltaColumns, {
+        rows: store.rows(),
+        columns: store.columns(),
+        cells: store.cells(),
       });
     },
 
@@ -254,6 +287,34 @@ export const DashboardStore = signalStore(
         gutterSize: data.gutterSize,
         widgetsById,
       });
+    },
+  })),
+
+  // End a grid resize gesture atomically (mirrors withResize._endResize):
+  // clear the live preview, no-op on a zero delta, otherwise commit the
+  // relative resize. Returns null (no committed change) when the delta is zero
+  // or clamp-to-content leaves the size unchanged, so callers don't signal a
+  // resize that did nothing. Split into its own block so it can call the
+  // absolute setGridSize above (siblings in one withMethods block aren't
+  // visible to each other).
+  withMethods((store) => ({
+    endGridResize(
+      deltaRows: number,
+      deltaColumns: number
+    ): GridResizeResult | null {
+      store.clearGridResizePreview();
+      if (deltaRows === 0 && deltaColumns === 0) return null;
+
+      const beforeRows = store.rows();
+      const beforeColumns = store.columns();
+      const result = store.setGridSize(
+        beforeRows + deltaRows,
+        beforeColumns + deltaColumns
+      );
+      if (result.rows === beforeRows && result.columns === beforeColumns) {
+        return null;
+      }
+      return result;
     },
   })),
 

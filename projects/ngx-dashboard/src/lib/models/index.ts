@@ -7,6 +7,7 @@ export * from './dashboard-data.dto';
 export * from './dashboard-data.utils';
 export * from './drag-data';
 export * from './grid-selection';
+export * from './grid-resize-result';
 export * from './reserved-space';
 export * from './selection-filter-options';
 export * from './selection-modifier';

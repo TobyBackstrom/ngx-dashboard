@@ -34,6 +34,10 @@ export const withDragDrop = () =>
   signalStoreFeature(
     withState<DragDropState>(initialDragDropState),
     withComputed((store) => ({
+      // True while any widget drag is in progress. Shared by components that
+      // need to suppress conflicting affordances during a drag.
+      isDragActive: computed(() => !!store.dragData()),
+
       // Highlighted zones during drag
       highlightedZones: computed(() =>
         calculateHighlightedZones(store.dragData(), store.hoveredDropZone()),

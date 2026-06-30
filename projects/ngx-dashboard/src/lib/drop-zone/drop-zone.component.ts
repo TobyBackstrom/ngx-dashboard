@@ -32,6 +32,7 @@ export class DropZoneComponent {
   highlight = input(false);
   highlightInvalid = input(false);
   highlightResize = input(false);
+  highlightPreview = input(false);
   editMode = input(false);
 
   // Outputs

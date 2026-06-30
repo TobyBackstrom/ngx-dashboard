@@ -18,7 +18,7 @@
     </unit>
     <unit id="demo.app.title">
       <segment>
-        <source>Dashboard Demo and Component Tests</source>
+        <source>Dashboard Demo</source>
       </segment>
     </unit>
     <unit id="demo.theme.switchToLight">
@@ -71,6 +71,16 @@
         <source>Color preview for <ph id="0" equiv="INTERPOLATION" disp="colorName"/></source>
       </segment>
     </unit>
+    <unit id="demo.dashboard.exitedZoom">
+      <segment>
+        <source>Returned to full dashboard</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.exitZoomEsc">
+      <segment>
+        <source>Exit Zoom (ESC)</source>
+      </segment>
+    </unit>
     <unit id="demo.dashboard.exportToFile">
       <segment>
         <source>Export to File</source>
@@ -86,6 +96,16 @@
         <source>Save to Browser</source>
       </segment>
     </unit>
+    <unit id="demo.dashboard.selectArea">
+      <segment>
+        <source>Zoom to Area</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.selectionModeInstructions">
+      <segment>
+        <source>Drag to select area • Press ESC to cancel</source>
+      </segment>
+    </unit>
     <unit id="demo.dashboard.loadFromBrowser">
       <segment>
         <source>Load from Browser</source>
@@ -94,6 +114,16 @@
     <unit id="demo.dashboard.resetToDefault">
       <segment>
         <source>Reset to Default</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.cancelSelect">
+      <segment>
+        <source>Cancel Zoom</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.cancelSelectionEsc">
+      <segment>
+        <source>Cancel Selection (ESC)</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.clearDashboard">
@@ -109,6 +139,26 @@
     <unit id="demo.dashboard.switchToViewMode">
       <segment>
         <source>Switch to View Mode</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.widgetsTitle">
+      <segment>
+        <source>Widgets</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.zoomModeActive">
+      <segment>
+        <source>Zoom Mode Active</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.zoomToSelection">
+      <segment>
+        <source>Zoom to Selection</source>
+      </segment>
+    </unit>
+    <unit id="demo.github.viewOnGitHub">
+      <segment>
+        <source>View source code on GitHub</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.switchToEditMode">
@@ -901,6 +951,111 @@
         <source>Sparkline</source>
       </segment>
     </unit>
+    <unit id="demo.widgets.temperature.description">
+      <segment>
+        <source>Display a temperature value</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.background">
+      <segment>
+        <source> Background </source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.backgroundDescription">
+      <segment>
+        <source>Adds a background behind the temperature</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.label">
+      <segment>
+        <source>Label (optional)</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.labelPlaceholder">
+      <segment>
+        <source><ph id="0" equiv="INTERPOLATION" disp="{{ labelPlaceholder }}"/></source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.sharedUnit">
+      <segment>
+        <source>Shared Unit</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.sharedUnitHint">
+      <segment>
+        <source>This unit is shared across all temperature widgets</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.temperatureHint">
+      <segment>
+        <source>Value stored in Celsius and converted for display</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.temperatureValue">
+      <segment>
+        <source>Temperature Value (°C)</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.temperatureValuePlaceholder">
+      <segment>
+        <source><ph id="0" equiv="INTERPOLATION" disp="{{ temperaturePlaceholder }}"/></source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.title">
+      <segment>
+        <source> Temperature Settings </source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.unit">
+      <segment>
+        <source>Temperature Unit</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.unitCelsius">
+      <segment>
+        <source>Celsius (°C)</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.unitFahrenheit">
+      <segment>
+        <source>Fahrenheit (°F)</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.unitKelvin">
+      <segment>
+        <source>Kelvin (K)</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.useSharedUnit">
+      <segment>
+        <source> Use shared unit </source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.dialog.useSharedUnitDescription">
+      <segment>
+        <source>Use the same unit across all temperature widgets</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.name">
+      <segment>
+        <source>Temperature</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.sharedDialog.defaultUnit">
+      <segment>
+        <source>Default Temperature Unit</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.sharedDialog.description">
+      <segment>
+        <source> These settings apply to all temperature widgets that use shared unit. </source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.temperature.sharedDialog.title">
+      <segment>
+        <source> Shared Temperature Settings </source>
+      </segment>
+    </unit>
     <unit id="demo.widgets.sparkline.description">
       <segment>
         <source>A sparkline graph</source>
@@ -959,6 +1114,16 @@
     <unit id="ngx.dashboard.common.save">
       <segment>
         <source> Save </source>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.editor.gridResize.dimensions">
+      <segment>
+        <source> <ph id="0" equiv="INTERPOLATION"/> × <ph id="1" equiv="INTERPOLATION_1"/> </source>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.emptyCellMenu.noWidgets">
+      <segment>
+        <source>No widgets available</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.name">
@@ -1264,6 +1429,11 @@
     <unit id="ngx.dashboard.cell.menu.edit">
       <segment>
         <source>Edit Widget</source>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.cell.menu.editShared">
+      <segment>
+        <source>Edit Shared State</source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.cell.menu.settings">

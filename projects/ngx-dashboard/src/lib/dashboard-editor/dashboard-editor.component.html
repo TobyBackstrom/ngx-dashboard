@@ -15,6 +15,7 @@
       [highlightResize]="
         resizePreviewMap().has(createCellId(position.row, position.col))
       "
+      [highlightPreview]="isPreviewAdded(position.row, position.col)"
       [editMode]="true"
       (dragEnter)="onDragEnter($event)"
       (dragExit)="onDragExit()"
@@ -23,6 +24,31 @@
     ></lib-drop-zone>
     }
   </div>
+
+  <!-- Grid resize handles (right edge, bottom edge, bottom-right corner).
+       Hidden during a widget drag to avoid conflicting gestures. -->
+  @if (!isDragActive()) {
+  @for (axis of resizeAxes; track axis) {
+  <lib-grid-resize-handle
+    [axis]="axis"
+    [cellWidth]="cellDimensions().width"
+    [cellHeight]="cellDimensions().height"
+    (resizeMove)="onGridResizeMove($event)"
+    (resizeEnd)="onGridResizeEnd($event)"
+  ></lib-grid-resize-handle>
+  }
+  }
+
+  <!-- Live size badge shown while a resize handle is being dragged. -->
+  @if (gridResizePreview(); as preview) {
+  <div
+    class="grid-resize-badge"
+    [class.grid-resize-badge--clamped]="preview.clamped"
+    i18n="@@ngx.dashboard.editor.gridResize.dimensions"
+  >
+    {{ preview.columns }} × {{ preview.rows }}
+  </div>
+  }
 
   <!-- Top grid with interactive cells -->
   <div class="grid" id="top-grid">

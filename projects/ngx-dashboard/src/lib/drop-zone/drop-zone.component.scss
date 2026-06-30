@@ -40,6 +40,13 @@
   outline: 1px solid rgba(33, 150, 243, 0.6);
 }
 
+// Tracks being added by an in-progress grid resize preview
+.drop-zone--preview {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 18%, transparent);
+  outline: 1px dashed
+    color-mix(in srgb, var(--mat-sys-primary) 50%, transparent);
+}
+
 // Edit mode cell numbers - centered in cell
 .edit-mode-cell-number {
   // Text styling

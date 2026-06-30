@@ -118,7 +118,7 @@ export class CellComponent {
       : false;
   });
 
-  isDragActive = computed(() => !!this.#store.dragData());
+  isDragActive = this.#store.isDragActive;
 
   resizeData = this.#store.resizeData;
   gridCellDimensions = this.#store.gridCellDimensions;

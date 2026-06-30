@@ -27,6 +27,7 @@ import { EmptyCellContextMenuService } from '../services/empty-cell-context-menu
 import { ReservedSpace } from '../models/reserved-space';
 import {
   CellIdUtils,
+  GridResizeResult,
   GridSelection,
   SelectionFilterOptions,
   SelectionModifier,
@@ -41,10 +42,10 @@ import {
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   host: {
-    '[style.--rows]': 'store.rows()',
-    '[style.--columns]': 'store.columns()',
+    '[style.--rows]': 'store.effectiveRows()',
+    '[style.--columns]': 'store.effectiveColumns()',
     '[style.--gutter-size]': 'store.gutterSize()',
-    '[style.--gutters]': 'store.columns() + 1',
+    '[style.--gutters]': 'store.effectiveColumns() + 1',
     '[class.is-edit-mode]': 'editMode()',
     '[style.max-width.px]': 'viewport.constraints().maxWidth',
     '[style.max-height.px]': 'viewport.constraints().maxHeight',
@@ -71,6 +72,7 @@ export class DashboardComponent implements OnChanges {
 
   // Component outputs
   selectionComplete = output<GridSelection>();
+  gridResized = output<GridResizeResult>();
 
   // Store signals - shared by both child components
   cells = this.#store.cells;
@@ -201,6 +203,28 @@ export class DashboardComponent implements OnChanges {
 
   clearDashboard(): void {
     this.#store.clearDashboard();
+  }
+
+  /**
+   * Resize the dashboard grid to the given row/column counts.
+   *
+   * Uses a clamp-to-content policy: a size that would push an existing widget
+   * out of bounds is snapped up to the smallest size that still contains every
+   * widget, so shrinking never orphans a widget. The applied size (which may
+   * differ from the request when clamped) is returned and emitted via
+   * `gridResized`. Values below 1 are treated as 1; fractional values are
+   * floored.
+   */
+  setGridSize(rows: number, columns: number): GridResizeResult {
+    const beforeRows = this.#store.rows();
+    const beforeColumns = this.#store.columns();
+    const result = this.#store.setGridSize(rows, columns);
+    // Only signal a resize when the committed size actually changed, matching
+    // the handle-drag path (store.endGridResize).
+    if (result.rows !== beforeRows || result.columns !== beforeColumns) {
+      this.gridResized.emit(result);
+    }
+    return result;
   }
 
   /**

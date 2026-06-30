@@ -1,4 +1,5 @@
 // cell.component.sccs
+@use "../styles/resize-cursors";
 
 :host {
   display: block;
@@ -191,14 +192,5 @@
   }
 }
 
-// Global cursor classes for resize operations
-// These are applied to document.body to ensure cursor shows everywhere during resize
-:root {
-  .cursor-col-resize {
-    cursor: col-resize !important;
-  }
-
-  .cursor-row-resize {
-    cursor: row-resize !important;
-  }
-}
+// Global body cursor classes for resize operations live in the shared
+// styles/_resize-cursors.scss partial (@use'd above).
