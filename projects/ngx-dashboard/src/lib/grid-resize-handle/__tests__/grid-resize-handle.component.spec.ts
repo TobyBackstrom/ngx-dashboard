@@ -33,14 +33,21 @@ describe('GridResizeHandleComponent', () => {
 
   function pointerDown(x: number, y: number): void {
     host.dispatchEvent(
-      new MouseEvent('mousedown', { clientX: x, clientY: y, bubbles: true })
+      new PointerEvent('pointerdown', {
+        clientX: x,
+        clientY: y,
+        pointerId: 1,
+        bubbles: true,
+      })
     );
   }
   function pointerMove(x: number, y: number): void {
-    document.dispatchEvent(new MouseEvent('mousemove', { clientX: x, clientY: y }));
+    document.dispatchEvent(
+      new PointerEvent('pointermove', { clientX: x, clientY: y, pointerId: 1 })
+    );
   }
   function pointerUp(): void {
-    document.dispatchEvent(new MouseEvent('mouseup'));
+    document.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
   }
   function drag(fromX: number, fromY: number, toX: number, toY: number): void {
     pointerDown(fromX, fromY);
@@ -77,6 +84,33 @@ describe('GridResizeHandleComponent', () => {
     expect(lastDelta).toEqual({ deltaColumns: 3, deltaRows: -2 });
   });
 
+  it('rounds half-cell drags symmetrically inward and outward', () => {
+    // Outward half-cell => +1.
+    setup('horizontal', 50, 40);
+    drag(100, 100, 125, 100);
+    expect(lastDelta).toEqual({ deltaColumns: 1, deltaRows: 0 });
+
+    // Inward half-cell => -1 (plain Math.round(-0.5) would give 0).
+    setup('horizontal', 50, 40);
+    drag(100, 100, 75, 100);
+    expect(lastDelta).toEqual({ deltaColumns: -1, deltaRows: 0 });
+  });
+
+  it('uses the cell size captured at gesture start, not the live (shrinking) size', () => {
+    setup('horizontal', 50, 40);
+    pointerDown(100, 100);
+
+    // The editor's live reflow shrinks the cell size mid-drag...
+    fixture.componentRef.setInput('cellWidth', 25);
+    fixture.detectChanges();
+
+    // ...but the divisor stays the 50px snapshot => 100/50 = 2, not 100/25 = 4.
+    pointerMove(200, 100);
+    expect(moveDeltas.at(-1)).toEqual({ deltaColumns: 2, deltaRows: 0 });
+
+    pointerUp();
+  });
+
   it('emits resizeMove only when the rounded track delta changes', () => {
     setup('horizontal', 50, 40);
     pointerDown(100, 100);
@@ -107,6 +141,29 @@ describe('GridResizeHandleComponent', () => {
     setup('horizontal', 0, 0);
     drag(100, 100, 400, 400);
     expect(lastDelta).toEqual({ deltaColumns: 0, deltaRows: 0 });
+  });
+
+  it('aborts with a zero delta (no commit) on pointercancel', () => {
+    setup('both', 50, 40);
+    pointerDown(200, 200);
+    pointerMove(360, 120); // would commit {3, -2} on a normal release
+    expect(moveDeltas.length).toBeGreaterThan(0);
+
+    document.dispatchEvent(new PointerEvent('pointercancel', { pointerId: 1 }));
+
+    expect(lastDelta).toEqual({ deltaColumns: 0, deltaRows: 0 });
+    expect(endCount).toBe(1);
+  });
+
+  it('aborts with a zero delta on window blur (pointer up lost outside window)', () => {
+    setup('both', 50, 40);
+    pointerDown(200, 200);
+    pointerMove(360, 120);
+
+    window.dispatchEvent(new Event('blur'));
+
+    expect(lastDelta).toEqual({ deltaColumns: 0, deltaRows: 0 });
+    expect(endCount).toBe(1);
   });
 
   it('removes document listeners after the gesture ends', () => {

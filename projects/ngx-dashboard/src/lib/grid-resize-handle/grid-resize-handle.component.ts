@@ -1,9 +1,9 @@
 // grid-resize-handle.component.ts
 //
 // A small, self-contained drag handle for resizing the dashboard grid's
-// row/column counts from the editor. It mirrors the cell resize gesture
-// (mousedown -> document listeners via Renderer2 -> delta in track counts)
-// but reports a whole-grid delta rather than a per-widget span change.
+// row/column counts from the editor. Uses PointerEvents (with pointer capture)
+// so mouse, touch and pen all work uniformly, and reports a whole-grid delta
+// in track counts rather than a per-widget span change.
 //
 // The handle is intentionally store-agnostic: it converts pointer movement
 // into track-count deltas using the cell footprint passed in, and emits them.
@@ -13,6 +13,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ElementRef,
   inject,
   input,
   output,
@@ -29,6 +30,15 @@ export interface GridResizeDelta {
   deltaRows: number;
 }
 
+/**
+ * Round half away from zero so inward and outward half-cell drags behave
+ * symmetrically. `Math.round` rounds 0.5 to 1 but -0.5 to 0, which makes a
+ * half-cell shrink "stick" while a half-cell grow responds.
+ */
+function symmetricRound(value: number): number {
+  return Math.sign(value) * Math.round(Math.abs(value));
+}
+
 @Component({
   selector: 'lib-grid-resize-handle',
   standalone: true,
@@ -39,7 +49,7 @@ export interface GridResizeDelta {
   host: {
     '[class]': "'axis-' + axis()",
     '[class.is-active]': 'isActive()',
-    '(mousedown)': 'onResizeStart($event)',
+    '(pointerdown)': 'onResizeStart($event)',
   },
 })
 export class GridResizeHandleComponent {
@@ -52,6 +62,7 @@ export class GridResizeHandleComponent {
   resizeMove = output<GridResizeDelta>();
   resizeEnd = output<GridResizeDelta>();
 
+  readonly #host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly #renderer = inject(Renderer2);
   readonly #destroyRef = inject(DestroyRef);
 
@@ -59,52 +70,85 @@ export class GridResizeHandleComponent {
 
   #startX = 0;
   #startY = 0;
+  // Cell footprint snapshot taken at gesture start. Reading the live signal
+  // would feed back on itself: the editor's live preview shrinks cells as
+  // columns are added, which would shrink this px->track divisor mid-drag and
+  // make the grid overshoot.
+  #cellWidth = 0;
+  #cellHeight = 0;
+  #pointerId: number | null = null;
   #delta: GridResizeDelta = { deltaColumns: 0, deltaRows: 0 };
   #cleanup?: () => void;
 
   constructor() {
-    // Defensive: drop document listeners if the handle is torn down mid-drag.
+    // Defensive: drop listeners / capture if the handle is torn down mid-drag.
     this.#destroyRef.onDestroy(() => this.#stop());
   }
 
-  onResizeStart(event: MouseEvent): void {
+  onResizeStart(event: PointerEvent): void {
     event.preventDefault();
     event.stopPropagation();
 
     this.#startX = event.clientX;
     this.#startY = event.clientY;
+    this.#cellWidth = this.cellWidth();
+    this.#cellHeight = this.cellHeight();
     this.#delta = { deltaColumns: 0, deltaRows: 0 };
     this.isActive.set(true);
 
-    // Document-level listeners only exist while actively dragging this handle.
+    // Capture so the gesture keeps receiving events even if the pointer leaves
+    // the thin handle strip; tolerate environments without capture support.
+    const host = this.#host.nativeElement;
+    if (host.setPointerCapture) {
+      try {
+        host.setPointerCapture(event.pointerId);
+        this.#pointerId = event.pointerId;
+      } catch {
+        this.#pointerId = null;
+      }
+    }
+
+    // Document/window listeners only exist while actively dragging this handle.
     const unlistenMove = this.#renderer.listen(
       'document',
-      'mousemove',
+      'pointermove',
       this.#onMove
     );
-    const unlistenUp = this.#renderer.listen('document', 'mouseup', this.#onUp);
+    const unlistenUp = this.#renderer.listen(
+      'document',
+      'pointerup',
+      this.#onUp
+    );
+    const unlistenCancel = this.#renderer.listen(
+      'document',
+      'pointercancel',
+      this.#onAbort
+    );
+    // A pointerup that lands outside the window never fires; window blur is the
+    // backstop that aborts a gesture the browser has otherwise abandoned.
+    const unlistenBlur = this.#renderer.listen('window', 'blur', this.#onAbort);
     this.#cleanup = () => {
       unlistenMove();
       unlistenUp();
+      unlistenCancel();
+      unlistenBlur();
     };
 
     this.#renderer.addClass(document.body, this.#cursorClass());
   }
 
   // Arrow fields keep `this` bound when used as Renderer2 listener callbacks.
-  readonly #onMove = (event: MouseEvent): void => {
+  readonly #onMove = (event: PointerEvent): void => {
     const axis = this.axis();
-    const width = this.cellWidth();
-    const height = this.cellHeight();
 
     const next: GridResizeDelta = {
       deltaColumns:
-        axis !== 'vertical' && width > 0
-          ? Math.round((event.clientX - this.#startX) / width)
+        axis !== 'vertical' && this.#cellWidth > 0
+          ? symmetricRound((event.clientX - this.#startX) / this.#cellWidth)
           : 0,
       deltaRows:
-        axis !== 'horizontal' && height > 0
-          ? Math.round((event.clientY - this.#startY) / height)
+        axis !== 'horizontal' && this.#cellHeight > 0
+          ? symmetricRound((event.clientY - this.#startY) / this.#cellHeight)
           : 0,
     };
 
@@ -121,15 +165,33 @@ export class GridResizeHandleComponent {
     this.resizeMove.emit(next);
   };
 
-  readonly #onUp = (): void => {
-    const delta = this.#delta;
+  readonly #onUp = (): void => this.#finish(this.#delta);
+
+  // Abort (pointercancel / window blur): discard the in-progress delta so the
+  // editor clears the preview without committing a half-finished gesture.
+  readonly #onAbort = (): void =>
+    this.#finish({ deltaColumns: 0, deltaRows: 0 });
+
+  #finish(delta: GridResizeDelta): void {
+    if (!this.isActive()) return;
     this.#stop();
     this.resizeEnd.emit(delta);
-  };
+  }
 
   #stop(): void {
     this.isActive.set(false);
     this.#renderer.removeClass(document.body, this.#cursorClass());
+
+    const host = this.#host.nativeElement;
+    if (this.#pointerId !== null && host.releasePointerCapture) {
+      try {
+        host.releasePointerCapture(this.#pointerId);
+      } catch {
+        // Capture may already be gone (e.g. pointercancel released it).
+      }
+    }
+    this.#pointerId = null;
+
     this.#cleanup?.();
     this.#cleanup = undefined;
   }
