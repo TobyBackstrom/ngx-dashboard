@@ -24,6 +24,29 @@
     }
   </div>
 
+  <!-- Grid resize handles (right edge, bottom edge, bottom-right corner).
+       Hidden during a widget drag to avoid conflicting gestures. -->
+  @if (!isDragActive()) {
+  <lib-grid-resize-handle
+    axis="horizontal"
+    [cellWidth]="cellDimensions().width"
+    [cellHeight]="cellDimensions().height"
+    (resizeEnd)="onGridResizeEnd($event)"
+  ></lib-grid-resize-handle>
+  <lib-grid-resize-handle
+    axis="vertical"
+    [cellWidth]="cellDimensions().width"
+    [cellHeight]="cellDimensions().height"
+    (resizeEnd)="onGridResizeEnd($event)"
+  ></lib-grid-resize-handle>
+  <lib-grid-resize-handle
+    axis="both"
+    [cellWidth]="cellDimensions().width"
+    [cellHeight]="cellDimensions().height"
+    (resizeEnd)="onGridResizeEnd($event)"
+  ></lib-grid-resize-handle>
+  }
+
   <!-- Top grid with interactive cells -->
   <div class="grid" id="top-grid">
     @for (cell of cells(); track cell.widgetId) {

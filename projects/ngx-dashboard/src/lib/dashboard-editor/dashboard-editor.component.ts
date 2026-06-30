@@ -9,6 +9,7 @@ import {
   ElementRef,
   inject,
   input,
+  output,
   viewChild,
   viewChildren,
   afterNextRender,
@@ -18,7 +19,18 @@ import { CellContextMenuComponent } from '../cell/cell-context-menu.component';
 import { CellContextMenuService } from '../cell/cell-context-menu.service';
 import { DropZoneComponent } from '../drop-zone/drop-zone.component';
 import { EmptyCellContextMenuComponent } from '../drop-zone/empty-cell-context-menu.component';
-import { CellId, CellIdUtils, WidgetId, DragData, CellData } from '../models';
+import {
+  GridResizeHandleComponent,
+  GridResizeDelta,
+} from '../grid-resize-handle/grid-resize-handle.component';
+import {
+  CellId,
+  CellIdUtils,
+  WidgetId,
+  DragData,
+  CellData,
+  GridResizeResult,
+} from '../models';
 import { DashboardStore } from '../store/dashboard-store';
 
 @Component({
@@ -28,7 +40,8 @@ import { DashboardStore } from '../store/dashboard-store';
     CellComponent,
     DropZoneComponent,
     CellContextMenuComponent,
-    EmptyCellContextMenuComponent
+    EmptyCellContextMenuComponent,
+    GridResizeHandleComponent
 ],
   providers: [
     CellContextMenuService,
@@ -58,6 +71,9 @@ export class DashboardEditorComponent {
   gutterSize = input<string>('1em');
   gutters = computed(() => this.columns() + 1);
 
+  // Emitted when a grid resize handle commits a new size (after clamp-to-content).
+  gridResized = output<GridResizeResult>();
+
   // store signals
   cells = this.#store.cells;
   highlightedZones = this.#store.highlightedZones;
@@ -65,6 +81,11 @@ export class DashboardEditorComponent {
   invalidHighlightMap = this.#store.invalidHighlightMap;
   hoveredDropZone = this.#store.hoveredDropZone;
   resizePreviewMap = this.#store.resizePreviewMap;
+  cellDimensions = this.#store.gridCellDimensions;
+
+  // Hide grid resize handles while a widget drag is in progress to avoid
+  // conflicting gestures.
+  isDragActive = computed(() => !!this.#store.dragData());
 
   // Generate all possible cell positions for the grid
   dropzonePositions = computed(() => {
@@ -188,5 +209,17 @@ export class DashboardEditorComponent {
   onDragDrop(event: { data: DragData; target: { row: number; col: number } }) {
     this.#store.handleDrop(event.data, event.target);
     // Note: Store handles all validation and error handling internally
+  }
+
+  // Commit a grid resize gesture: add the track-count delta to the current
+  // dimensions. The store clamps to content (shrink can't orphan widgets).
+  onGridResizeEnd(delta: GridResizeDelta): void {
+    if (delta.deltaColumns === 0 && delta.deltaRows === 0) return;
+
+    const result = this.#store.setGridSize(
+      this.#store.rows() + delta.deltaRows,
+      this.#store.columns() + delta.deltaColumns
+    );
+    this.gridResized.emit(result);
   }
 }

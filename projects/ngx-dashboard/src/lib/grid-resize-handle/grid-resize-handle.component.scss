@@ -1,0 +1,82 @@
+/* grid-resize-handle.component.scss */
+
+/*
+ * The handle lives in the grid's outer gutter (the grid already pads its
+ * content by `--gutter-size`, so the outermost cells are inset). Sitting in
+ * that gutter keeps the handle off widget content without reserving a fixed
+ * band that would break the square-cell aspect math.
+ */
+:host {
+  position: absolute;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.3;
+  transition: opacity 0.15s ease;
+  touch-action: none;
+}
+
+:host(.axis-horizontal) {
+  cursor: col-resize;
+  top: 0;
+  right: 0;
+  width: 14px;
+  height: 100%;
+}
+
+:host(.axis-vertical) {
+  cursor: row-resize;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 14px;
+}
+
+:host(.axis-both) {
+  cursor: nwse-resize;
+  right: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  z-index: 26; /* corner sits above the edge strips where they overlap */
+}
+
+:host(:hover),
+:host(.is-active) {
+  opacity: 1;
+}
+
+.grip-line {
+  background-color: var(--mat-sys-outline-variant);
+  border-radius: 2px;
+}
+
+:host(.axis-horizontal) .grip-line {
+  width: 4px;
+  height: 48px;
+  max-height: 60%;
+}
+
+:host(.axis-vertical) .grip-line {
+  width: 48px;
+  max-width: 60%;
+  height: 4px;
+}
+
+:host(.axis-both) .grip-line {
+  width: 10px;
+  height: 10px;
+  border-bottom-right-radius: 4px;
+}
+
+:host(:hover) .grip-line,
+:host(.is-active) .grip-line {
+  background-color: var(--mat-sys-primary);
+}
+
+/* Global cursor while dragging the corner handle (col/row variants are
+   already defined by the cell resize handle). Applied to document.body. */
+:root .cursor-nwse-resize {
+  cursor: nwse-resize !important;
+}
