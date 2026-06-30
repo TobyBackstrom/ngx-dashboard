@@ -21,6 +21,7 @@ import { DropZoneComponent } from '../drop-zone/drop-zone.component';
 import { EmptyCellContextMenuComponent } from '../drop-zone/empty-cell-context-menu.component';
 import {
   GridResizeHandleComponent,
+  GridResizeAxis,
   GridResizeDelta,
 } from '../grid-resize-handle/grid-resize-handle.component';
 import {
@@ -85,7 +86,14 @@ export class DashboardEditorComponent {
 
   // Hide grid resize handles while a widget drag is in progress to avoid
   // conflicting gestures.
-  isDragActive = computed(() => !!this.#store.dragData());
+  isDragActive = this.#store.isDragActive;
+
+  // Axes rendered as grid resize handles (right edge, bottom edge, corner).
+  protected readonly resizeAxes: GridResizeAxis[] = [
+    'horizontal',
+    'vertical',
+    'both',
+  ];
 
   // Generate all possible cell positions for the grid
   dropzonePositions = computed(() => {
@@ -211,15 +219,13 @@ export class DashboardEditorComponent {
     // Note: Store handles all validation and error handling internally
   }
 
-  // Commit a grid resize gesture: add the track-count delta to the current
-  // dimensions. The store clamps to content (shrink can't orphan widgets).
+  // Commit a grid resize gesture by the track-count delta. The store reads the
+  // current size as the base and clamps to content (shrink can't orphan widgets).
   onGridResizeEnd(delta: GridResizeDelta): void {
     if (delta.deltaColumns === 0 && delta.deltaRows === 0) return;
 
-    const result = this.#store.setGridSize(
-      this.#store.rows() + delta.deltaRows,
-      this.#store.columns() + delta.deltaColumns
+    this.gridResized.emit(
+      this.#store.growGrid(delta.deltaRows, delta.deltaColumns)
     );
-    this.gridResized.emit(result);
   }
 }

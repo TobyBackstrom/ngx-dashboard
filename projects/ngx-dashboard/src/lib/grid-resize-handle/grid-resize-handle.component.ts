@@ -37,9 +37,7 @@ export interface GridResizeDelta {
   templateUrl: './grid-resize-handle.component.html',
   styleUrl: './grid-resize-handle.component.scss',
   host: {
-    '[class.axis-horizontal]': "axis() === 'horizontal'",
-    '[class.axis-vertical]': "axis() === 'vertical'",
-    '[class.axis-both]': "axis() === 'both'",
+    '[class]': "'axis-' + axis()",
     '[class.is-active]': 'isActive()',
     '(mousedown)': 'onResizeStart($event)',
   },

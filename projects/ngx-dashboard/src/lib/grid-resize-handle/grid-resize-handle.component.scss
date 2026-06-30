@@ -75,8 +75,15 @@
   background-color: var(--mat-sys-primary);
 }
 
-/* Global cursor while dragging the corner handle (col/row variants are
-   already defined by the cell resize handle). Applied to document.body. */
+/* Global body cursors applied (via Renderer2) for the duration of a handle
+   drag. Defined here so the handle is self-contained and does not depend on
+   another component's stylesheet for the classes it sets on document.body. */
+:root .cursor-col-resize {
+  cursor: col-resize !important;
+}
+:root .cursor-row-resize {
+  cursor: row-resize !important;
+}
 :root .cursor-nwse-resize {
   cursor: nwse-resize !important;
 }

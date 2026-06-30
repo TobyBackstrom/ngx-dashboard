@@ -289,6 +289,19 @@ export const DashboardStore = signalStore(
     },
   })),
 
+  // Relative grid resize. Split into its own block so it can call the
+  // absolute setGridSize defined above (siblings in one withMethods block
+  // aren't visible to each other). Keeps the base-read and clamp together in
+  // the store rather than having callers compute the absolute target.
+  withMethods((store) => ({
+    growGrid(deltaRows: number, deltaColumns: number): GridResizeResult {
+      return store.setGridSize(
+        store.rows() + deltaRows,
+        store.columns() + deltaColumns
+      );
+    },
+  })),
+
   // Cross-feature computed properties that depend on resize + widget data (using utility functions)
   withComputed((store) => ({
     // Compute preview cells during resize using utility function
