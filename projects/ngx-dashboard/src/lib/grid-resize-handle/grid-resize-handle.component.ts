@@ -97,15 +97,13 @@ export class GridResizeHandleComponent {
     this.isActive.set(true);
 
     // Capture so the gesture keeps receiving events even if the pointer leaves
-    // the thin handle strip; tolerate environments without capture support.
-    const host = this.#host.nativeElement;
-    if (host.setPointerCapture) {
-      try {
-        host.setPointerCapture(event.pointerId);
-        this.#pointerId = event.pointerId;
-      } catch {
-        this.#pointerId = null;
-      }
+    // the thin handle strip. try/catch tolerates environments without capture
+    // support (TypeError) and synthetic test events with no active pointer.
+    try {
+      this.#host.nativeElement.setPointerCapture(event.pointerId);
+      this.#pointerId = event.pointerId;
+    } catch {
+      // No capture; the document listeners still drive the gesture.
     }
 
     // Document/window listeners only exist while actively dragging this handle.
@@ -182,10 +180,9 @@ export class GridResizeHandleComponent {
     this.isActive.set(false);
     this.#renderer.removeClass(document.body, this.#cursorClass());
 
-    const host = this.#host.nativeElement;
-    if (this.#pointerId !== null && host.releasePointerCapture) {
+    if (this.#pointerId !== null) {
       try {
-        host.releasePointerCapture(this.#pointerId);
+        this.#host.nativeElement.releasePointerCapture(this.#pointerId);
       } catch {
         // Capture may already be gone (e.g. pointercancel released it).
       }
