@@ -49,7 +49,6 @@ export class GridResizeHandleComponent {
   cellWidth = input.required<number>();
   cellHeight = input.required<number>();
 
-  resizeStart = output<void>();
   resizeMove = output<GridResizeDelta>();
   resizeEnd = output<GridResizeDelta>();
 
@@ -76,7 +75,6 @@ export class GridResizeHandleComponent {
     this.#startY = event.clientY;
     this.#delta = { deltaColumns: 0, deltaRows: 0 };
     this.isActive.set(true);
-    this.resizeStart.emit();
 
     // Document-level listeners only exist while actively dragging this handle.
     const unlistenMove = this.#renderer.listen(

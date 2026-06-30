@@ -212,6 +212,30 @@ describe('DashboardStore - Grid Configuration', () => {
     });
   });
 
+  describe('endGridResize', () => {
+    it('should commit a non-zero delta and clear any active preview', () => {
+      store.previewGridResize(2, 3);
+
+      const result = store.endGridResize(2, 3);
+
+      expect(result).toEqual({ rows: 10, columns: 19, clamped: false });
+      expect(store.rows()).toBe(10);
+      expect(store.columns()).toBe(19);
+      expect(store.gridResizePreview()).toBeNull();
+    });
+
+    it('should return null and clear the preview for a zero delta', () => {
+      store.previewGridResize(0, 0);
+
+      const result = store.endGridResize(0, 0);
+
+      expect(result).toBeNull();
+      expect(store.rows()).toBe(8);
+      expect(store.columns()).toBe(16);
+      expect(store.gridResizePreview()).toBeNull();
+    });
+  });
+
   describe('setGridCellDimensions', () => {
     it('should update grid cell dimensions', () => {
       store.setGridCellDimensions(100, 50);

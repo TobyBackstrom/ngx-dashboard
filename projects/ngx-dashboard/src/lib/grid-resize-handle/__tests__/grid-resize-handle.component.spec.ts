@@ -10,7 +10,6 @@ describe('GridResizeHandleComponent', () => {
   let host: HTMLElement;
   let lastDelta: GridResizeDelta | undefined;
   let moveDeltas: GridResizeDelta[];
-  let startCount: number;
   let endCount: number;
 
   function setup(axis: GridResizeAxis, cellWidth = 50, cellHeight = 40): void {
@@ -21,9 +20,7 @@ describe('GridResizeHandleComponent', () => {
 
     lastDelta = undefined;
     moveDeltas = [];
-    startCount = 0;
     endCount = 0;
-    fixture.componentInstance.resizeStart.subscribe(() => startCount++);
     fixture.componentInstance.resizeMove.subscribe((d) => moveDeltas.push(d));
     fixture.componentInstance.resizeEnd.subscribe((d) => {
       lastDelta = d;
@@ -58,13 +55,6 @@ describe('GridResizeHandleComponent', () => {
   });
 
   afterEach(() => fixture?.destroy());
-
-  it('emits resizeStart on mousedown', () => {
-    setup('both');
-    pointerDown(100, 100);
-    expect(startCount).toBe(1);
-    pointerUp();
-  });
 
   it('horizontal handle reports a column delta and zero rows', () => {
     setup('horizontal', 50, 40);

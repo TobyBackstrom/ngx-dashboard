@@ -294,6 +294,20 @@ export const DashboardStore = signalStore(
     },
   })),
 
+  // End a grid resize gesture atomically (mirrors withResize._endResize):
+  // clear the live preview, no-op on a zero delta, otherwise commit the
+  // relative resize. Separate block so it can call growGrid above.
+  withMethods((store) => ({
+    endGridResize(
+      deltaRows: number,
+      deltaColumns: number
+    ): GridResizeResult | null {
+      store.clearGridResizePreview();
+      if (deltaRows === 0 && deltaColumns === 0) return null;
+      return store.growGrid(deltaRows, deltaColumns);
+    },
+  })),
+
   // Cross-feature computed properties that depend on resize + widget data (using utility functions)
   withComputed((store) => ({
     // Compute preview cells during resize using utility function

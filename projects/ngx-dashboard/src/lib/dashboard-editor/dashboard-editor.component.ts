@@ -54,7 +54,7 @@ import { DashboardStore } from '../store/dashboard-store';
     '[style.--rows]': 'effectiveRows()',
     '[style.--columns]': 'effectiveColumns()',
     '[style.--gutter-size]': 'gutterSize()',
-    '[style.--gutters]': 'gutters()',
+    '[style.--gutters]': 'effectiveColumns() + 1',
     '[class.is-edit-mode]': 'true', // Always in edit mode
   },
 })
@@ -91,7 +91,6 @@ export class DashboardEditorComponent {
   effectiveColumns = computed(
     () => this.gridResizePreview()?.columns ?? this.columns()
   );
-  gutters = computed(() => this.effectiveColumns() + 1);
 
   // Hide grid resize handles while a widget drag is in progress to avoid
   // conflicting gestures.
@@ -246,15 +245,13 @@ export class DashboardEditorComponent {
     this.#store.previewGridResize(delta.deltaRows, delta.deltaColumns);
   }
 
-  // Commit a grid resize gesture by the track-count delta. Always clears the
-  // preview first; the store reads the current size as the base and clamps to
-  // content (shrink can't orphan widgets).
+  // Commit a grid resize gesture. The store clears the preview, no-ops on a
+  // zero delta, and otherwise commits the clamped relative resize.
   onGridResizeEnd(delta: GridResizeDelta): void {
-    this.#store.clearGridResizePreview();
-    if (delta.deltaColumns === 0 && delta.deltaRows === 0) return;
-
-    this.gridResized.emit(
-      this.#store.growGrid(delta.deltaRows, delta.deltaColumns)
+    const result = this.#store.endGridResize(
+      delta.deltaRows,
+      delta.deltaColumns
     );
+    if (result) this.gridResized.emit(result);
   }
 }

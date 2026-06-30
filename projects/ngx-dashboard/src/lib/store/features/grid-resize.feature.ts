@@ -21,8 +21,9 @@ export const withGridResize = () =>
     withState<GridResizeState>(initialGridResizeState),
     withMethods((store) => ({
       // Needs cross-feature dependencies (current size + cells for the floor),
-      // injected by the store wrapper. Skips the patch when nothing changed so
-      // sub-cell pointer movement doesn't trigger redundant grid re-renders.
+      // injected by the store wrapper. Skips the patch when the clamped result
+      // is unchanged — e.g. dragging further past the content floor yields new
+      // raw deltas but the same clamped preview — avoiding redundant re-renders.
       _previewGridResize(
         deltaRows: number,
         deltaColumns: number,
