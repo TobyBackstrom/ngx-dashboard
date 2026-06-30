@@ -4,6 +4,7 @@
   [class.drop-zone--highlight]="highlight() && !highlightInvalid()"
   [class.drop-zone--invalid]="highlightInvalid()"
   [class.drop-zone--resize]="highlightResize()"
+  [class.drop-zone--preview]="highlightPreview()"
   [style.grid-row]="row()"
   [style.grid-column]="col()"
   (dragenter)="onDragEnter($event)"

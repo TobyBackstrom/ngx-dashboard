@@ -85,3 +85,28 @@
   pointer-events: none; /* don’t block drop zones while lifted */
   opacity: 0.5;
 }
+
+/* ── Grid resize preview badge ───────────────────────────────────── */
+.grid-resize-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  pointer-events: none;
+
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+
+  /* When the requested shrink was clamped to the content floor, signal that
+     the grid can't get any smaller in that direction. */
+  &--clamped {
+    background-color: var(--mat-sys-error);
+    color: var(--mat-sys-on-error);
+  }
+}

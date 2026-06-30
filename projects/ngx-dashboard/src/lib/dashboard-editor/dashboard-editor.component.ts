@@ -51,8 +51,8 @@ import { DashboardStore } from '../store/dashboard-store';
   templateUrl: './dashboard-editor.component.html',
   styleUrl: './dashboard-editor.component.scss',
   host: {
-    '[style.--rows]': 'rows()',
-    '[style.--columns]': 'columns()',
+    '[style.--rows]': 'effectiveRows()',
+    '[style.--columns]': 'effectiveColumns()',
     '[style.--gutter-size]': 'gutterSize()',
     '[style.--gutters]': 'gutters()',
     '[class.is-edit-mode]': 'true', // Always in edit mode
@@ -70,7 +70,6 @@ export class DashboardEditorComponent {
   rows = input.required<number>();
   columns = input.required<number>();
   gutterSize = input<string>('1em');
-  gutters = computed(() => this.columns() + 1);
 
   // Emitted when a grid resize handle commits a new size (after clamp-to-content).
   gridResized = output<GridResizeResult>();
@@ -83,6 +82,16 @@ export class DashboardEditorComponent {
   hoveredDropZone = this.#store.hoveredDropZone;
   resizePreviewMap = this.#store.resizePreviewMap;
   cellDimensions = this.#store.gridCellDimensions;
+  gridResizePreview = this.#store.gridResizePreview;
+
+  // Effective grid size = the live drag preview when one is active, otherwise
+  // the committed size. Drives the grid template, aspect-ratio and drop zones
+  // so the editor reflows under the handle without committing.
+  effectiveRows = computed(() => this.gridResizePreview()?.rows ?? this.rows());
+  effectiveColumns = computed(
+    () => this.gridResizePreview()?.columns ?? this.columns()
+  );
+  gutters = computed(() => this.effectiveColumns() + 1);
 
   // Hide grid resize handles while a widget drag is in progress to avoid
   // conflicting gestures.
@@ -95,21 +104,33 @@ export class DashboardEditorComponent {
     'both',
   ];
 
-  // Generate all possible cell positions for the grid
+  // Generate all possible cell positions for the grid (using the effective
+  // size so the drop-zone grid grows/shrinks with the live resize preview).
   dropzonePositions = computed(() => {
+    const rows = this.effectiveRows();
+    const columns = this.effectiveColumns();
     const positions = [];
-    for (let row = 1; row <= this.rows(); row++) {
-      for (let col = 1; col <= this.columns(); col++) {
+    for (let row = 1; row <= rows; row++) {
+      for (let col = 1; col <= columns; col++) {
         positions.push({
           row,
           col,
           id: `dropzone-${row}-${col}`,
-          index: (row - 1) * this.columns() + col,
+          index: (row - 1) * columns + col,
         });
       }
     }
     return positions;
   });
+
+  // True for drop zones in the about-to-be-added region during a grow preview,
+  // so the template can tint the tracks the resize is adding.
+  isPreviewAdded(row: number, col: number): boolean {
+    return (
+      this.gridResizePreview() !== null &&
+      (row > this.rows() || col > this.columns())
+    );
+  }
 
   // Helper method for template
   createCellId(row: number, col: number): CellId {
@@ -219,9 +240,17 @@ export class DashboardEditorComponent {
     // Note: Store handles all validation and error handling internally
   }
 
-  // Commit a grid resize gesture by the track-count delta. The store reads the
-  // current size as the base and clamps to content (shrink can't orphan widgets).
+  // Live preview while dragging a handle: the store reflows the grid to the
+  // clamped target size without committing.
+  onGridResizeMove(delta: GridResizeDelta): void {
+    this.#store.previewGridResize(delta.deltaRows, delta.deltaColumns);
+  }
+
+  // Commit a grid resize gesture by the track-count delta. Always clears the
+  // preview first; the store reads the current size as the base and clamps to
+  // content (shrink can't orphan widgets).
   onGridResizeEnd(delta: GridResizeDelta): void {
+    this.#store.clearGridResizePreview();
     if (delta.deltaColumns === 0 && delta.deltaRows === 0) return;
 
     this.gridResized.emit(

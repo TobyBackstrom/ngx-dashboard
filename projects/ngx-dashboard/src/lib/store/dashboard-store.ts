@@ -9,10 +9,8 @@ import {
 import { DashboardService } from '../services/dashboard.service';
 import { inject, computed } from '@angular/core';
 import { calculateCollisionInfo } from './features/utils/collision.utils';
-import {
-  applySelectionFilter,
-  calculateMinimalBoundingBox,
-} from './features/utils/export.utils';
+import { applySelectionFilter } from './features/utils/export.utils';
+import { clampGridSize } from './features/utils/grid-resize.utils';
 import {
   CellId,
   CellIdUtils,
@@ -29,6 +27,7 @@ import { withGridConfig } from './features/grid-config.feature';
 import { withWidgetManagement } from './features/widget-management.feature';
 import { withDragDrop } from './features/drag-drop.feature';
 import { withResize, ResizePreviewUtils } from './features/resize.feature';
+import { withGridResize } from './features/grid-resize.feature';
 
 /** Returns the intended widget type ID, falling back to the factory's type ID */
 function effectiveWidgetTypeid(cell: CellData): string {
@@ -51,6 +50,7 @@ export const DashboardStore = signalStore(
   withGridConfig(),
   withWidgetManagement(),
   withResize(),
+  withGridResize(),
   withDragDrop(),
 
   // Cross-feature computed properties (need access to multiple features)
@@ -137,27 +137,19 @@ export const DashboardStore = signalStore(
     // of bounds is snapped up to the smallest size that still contains every
     // widget's full footprint, so shrinking never orphans a widget.
     setGridSize(rows: number, columns: number): GridResizeResult {
-      // The bounding box's max edges are the smallest grid that still contains
-      // every widget's full footprint, so they are the shrink floor (a widget
-      // at col 14 spanning 3 columns needs at least 16 columns). null = empty.
-      const bounds = calculateMinimalBoundingBox(store.cells());
-      const minRows = bounds?.maxRow ?? 1;
-      const minColumns = bounds?.maxCol ?? 1;
+      const result = clampGridSize(rows, columns, store.cells());
+      store.setGridConfig({ rows: result.rows, columns: result.columns });
+      return result;
+    },
 
-      const requestedRows = Math.max(1, Math.floor(rows));
-      const requestedColumns = Math.max(1, Math.floor(columns));
-
-      const nextRows = Math.max(minRows, requestedRows);
-      const nextColumns = Math.max(minColumns, requestedColumns);
-
-      store.setGridConfig({ rows: nextRows, columns: nextColumns });
-
-      return {
-        rows: nextRows,
-        columns: nextColumns,
-        clamped:
-          nextRows !== requestedRows || nextColumns !== requestedColumns,
-      };
+    // Preview a relative grid resize during a handle drag (no commit). Stores
+    // the clamped target in gridResizePreview so the editor can live-reflow.
+    previewGridResize(deltaRows: number, deltaColumns: number) {
+      store._previewGridResize(deltaRows, deltaColumns, {
+        rows: store.rows(),
+        columns: store.columns(),
+        cells: store.cells(),
+      });
     },
 
     // EXPORT/IMPORT METHODS (need access to multiple features)

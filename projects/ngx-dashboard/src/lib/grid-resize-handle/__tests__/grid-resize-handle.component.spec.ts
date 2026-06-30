@@ -9,6 +9,7 @@ describe('GridResizeHandleComponent', () => {
   let fixture: ComponentFixture<GridResizeHandleComponent>;
   let host: HTMLElement;
   let lastDelta: GridResizeDelta | undefined;
+  let moveDeltas: GridResizeDelta[];
   let startCount: number;
   let endCount: number;
 
@@ -19,9 +20,11 @@ describe('GridResizeHandleComponent', () => {
     fixture.componentRef.setInput('cellHeight', cellHeight);
 
     lastDelta = undefined;
+    moveDeltas = [];
     startCount = 0;
     endCount = 0;
     fixture.componentInstance.resizeStart.subscribe(() => startCount++);
+    fixture.componentInstance.resizeMove.subscribe((d) => moveDeltas.push(d));
     fixture.componentInstance.resizeEnd.subscribe((d) => {
       lastDelta = d;
       endCount++;
@@ -82,6 +85,26 @@ describe('GridResizeHandleComponent', () => {
     // dx=+160 => round(3.2)=3 cols; dy=-80 => round(-2)= -2 rows.
     drag(200, 200, 360, 120);
     expect(lastDelta).toEqual({ deltaColumns: 3, deltaRows: -2 });
+  });
+
+  it('emits resizeMove only when the rounded track delta changes', () => {
+    setup('horizontal', 50, 40);
+    pointerDown(100, 100);
+
+    pointerMove(120, 100); // +20px => round(0.4)=0, no change from start
+    expect(moveDeltas.length).toBe(0);
+
+    pointerMove(180, 100); // +80px => round(1.6)=2 columns
+    pointerMove(185, 100); // +85px => round(1.7)=2 columns, unchanged
+    expect(moveDeltas).toEqual([{ deltaColumns: 2, deltaRows: 0 }]);
+
+    pointerMove(230, 100); // +130px => round(2.6)=3 columns
+    expect(moveDeltas).toEqual([
+      { deltaColumns: 2, deltaRows: 0 },
+      { deltaColumns: 3, deltaRows: 0 },
+    ]);
+
+    pointerUp();
   });
 
   it('emits a zero delta when the pointer does not move (no-op click)', () => {

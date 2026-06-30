@@ -50,6 +50,7 @@ export class GridResizeHandleComponent {
   cellHeight = input.required<number>();
 
   resizeStart = output<void>();
+  resizeMove = output<GridResizeDelta>();
   resizeEnd = output<GridResizeDelta>();
 
   readonly #renderer = inject(Renderer2);
@@ -98,7 +99,7 @@ export class GridResizeHandleComponent {
     const width = this.cellWidth();
     const height = this.cellHeight();
 
-    this.#delta = {
+    const next: GridResizeDelta = {
       deltaColumns:
         axis !== 'vertical' && width > 0
           ? Math.round((event.clientX - this.#startX) / width)
@@ -108,6 +109,18 @@ export class GridResizeHandleComponent {
           ? Math.round((event.clientY - this.#startY) / height)
           : 0,
     };
+
+    // Only emit when the rounded track delta actually changes, so sub-cell
+    // pointer movement doesn't spam the live preview.
+    if (
+      next.deltaColumns === this.#delta.deltaColumns &&
+      next.deltaRows === this.#delta.deltaRows
+    ) {
+      return;
+    }
+
+    this.#delta = next;
+    this.resizeMove.emit(next);
   };
 
   readonly #onUp = (): void => {

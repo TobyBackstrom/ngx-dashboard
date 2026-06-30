@@ -173,6 +173,45 @@ describe('DashboardStore - Grid Configuration', () => {
     });
   });
 
+  describe('grid resize preview', () => {
+    it('should start with no preview', () => {
+      expect(store.gridResizePreview()).toBeNull();
+    });
+
+    it('should store a clamped preview without committing the size', () => {
+      store.previewGridResize(3, 4);
+
+      // Preview reflects the would-be size; committed size is untouched.
+      expect(store.gridResizePreview()).toEqual({
+        rows: 11,
+        columns: 20,
+        clamped: false,
+      });
+      expect(store.rows()).toBe(8);
+      expect(store.columns()).toBe(16);
+    });
+
+    it('should clamp a shrinking preview to the content floor', () => {
+      placeWidget(6, 10);
+
+      store.previewGridResize(-5, -8);
+
+      expect(store.gridResizePreview()).toEqual({
+        rows: 6,
+        columns: 10,
+        clamped: true,
+      });
+    });
+
+    it('should clear the preview', () => {
+      store.previewGridResize(2, 2);
+      expect(store.gridResizePreview()).not.toBeNull();
+
+      store.clearGridResizePreview();
+      expect(store.gridResizePreview()).toBeNull();
+    });
+  });
+
   describe('setGridCellDimensions', () => {
     it('should update grid cell dimensions', () => {
       store.setGridCellDimensions(100, 50);
