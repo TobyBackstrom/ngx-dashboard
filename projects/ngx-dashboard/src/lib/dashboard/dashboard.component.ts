@@ -42,10 +42,10 @@ import {
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   host: {
-    '[style.--rows]': 'store.rows()',
-    '[style.--columns]': 'store.columns()',
+    '[style.--rows]': 'store.effectiveRows()',
+    '[style.--columns]': 'store.effectiveColumns()',
     '[style.--gutter-size]': 'store.gutterSize()',
-    '[style.--gutters]': 'store.columns() + 1',
+    '[style.--gutters]': 'store.effectiveColumns() + 1',
     '[class.is-edit-mode]': 'editMode()',
     '[style.max-width.px]': 'viewport.constraints().maxWidth',
     '[style.max-height.px]': 'viewport.constraints().maxHeight',

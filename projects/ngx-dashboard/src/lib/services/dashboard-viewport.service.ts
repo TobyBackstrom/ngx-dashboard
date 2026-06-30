@@ -102,10 +102,11 @@ export class DashboardViewportService {
    */
   readonly constraints = computed((): DashboardConstraints => {
     const availableSize = this.availableSpace();
-    
-    // Get grid configuration from our component's store
-    const rows = this.store.rows();
-    const columns = this.store.columns();
+
+    // Use the effective (preview-aware) size so the letterboxed frame reflows
+    // to fit during a grid-resize drag instead of overflowing/scrolling.
+    const rows = this.store.effectiveRows();
+    const columns = this.store.effectiveColumns();
     
     if (rows === 0 || columns === 0) {
       return {

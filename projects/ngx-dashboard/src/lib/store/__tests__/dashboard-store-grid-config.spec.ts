@@ -190,6 +190,19 @@ describe('DashboardStore - Grid Configuration', () => {
       store.clearGridResizePreview();
       expect(store.gridResizePreview()).toBeNull();
     });
+
+    it('should expose effective dimensions that follow the preview', () => {
+      expect(store.effectiveRows()).toBe(8);
+      expect(store.effectiveColumns()).toBe(16);
+
+      store.previewGridResize(2, 3);
+      expect(store.effectiveRows()).toBe(10);
+      expect(store.effectiveColumns()).toBe(19);
+
+      store.clearGridResizePreview();
+      expect(store.effectiveRows()).toBe(8);
+      expect(store.effectiveColumns()).toBe(16);
+    });
   });
 
   describe('endGridResize', () => {

@@ -55,6 +55,15 @@ export const DashboardStore = signalStore(
 
   // Cross-feature computed properties (need access to multiple features)
   withComputed((store) => ({
+    // Effective grid size: the live resize preview when a handle drag is in
+    // progress, otherwise the committed size. Consumed wherever the rendered
+    // grid size matters (editor template, outer frame, viewport letterboxing)
+    // so they all reflow together during a drag.
+    effectiveRows: computed(() => store.gridResizePreview()?.rows ?? store.rows()),
+    effectiveColumns: computed(
+      () => store.gridResizePreview()?.columns ?? store.columns()
+    ),
+
     // Invalid zones (collision detection)
     invalidHighlightMap: computed(() => {
       const collisionInfo = calculateCollisionInfo(

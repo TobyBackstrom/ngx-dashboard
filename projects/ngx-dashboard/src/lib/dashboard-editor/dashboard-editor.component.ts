@@ -84,13 +84,12 @@ export class DashboardEditorComponent {
   cellDimensions = this.#store.gridCellDimensions;
   gridResizePreview = this.#store.gridResizePreview;
 
-  // Effective grid size = the live drag preview when one is active, otherwise
-  // the committed size. Drives the grid template, aspect-ratio and drop zones
-  // so the editor reflows under the handle without committing.
-  effectiveRows = computed(() => this.gridResizePreview()?.rows ?? this.rows());
-  effectiveColumns = computed(
-    () => this.gridResizePreview()?.columns ?? this.columns()
-  );
+  // Effective grid size (live preview when dragging, else committed) — shared
+  // from the store so the editor grid, the outer frame and the viewport
+  // letterboxing all reflow together. Drives the grid template, aspect-ratio
+  // and drop zones so the editor reflows under the handle without committing.
+  effectiveRows = this.#store.effectiveRows;
+  effectiveColumns = this.#store.effectiveColumns;
 
   // Hide grid resize handles while a widget drag is in progress to avoid
   // conflicting gestures.
