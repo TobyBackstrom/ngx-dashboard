@@ -40,6 +40,7 @@ export class SparkbarWidgetComponent implements Widget {
     name: $localize`:@@demo.widgets.sparkbar.name:Sparkbar`,
     description: $localize`:@@demo.widgets.sparkbar.description:A sparkbar graph`,
     svgIcon,
+    group: $localize`:@@demo.widgets.group.charts:Charts`,
   };
 
   readonly #sanitizer = inject(DomSanitizer);

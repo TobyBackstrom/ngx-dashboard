@@ -37,6 +37,7 @@ export class TemperatureWidgetComponent implements Widget {
     name: $localize`:@@demo.widgets.temperature.name:Temperature`,
     description: $localize`:@@demo.widgets.temperature.description:Display a temperature value`,
     svgIcon,
+    group: $localize`:@@demo.widgets.group.sensors:Sensors`,
   };
 
   readonly #sanitizer = inject(DomSanitizer);

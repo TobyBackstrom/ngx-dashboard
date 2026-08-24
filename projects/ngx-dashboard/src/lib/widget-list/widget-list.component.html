@@ -7,11 +7,35 @@
 >
   @for (group of widgetGroups(); track group.label ?? '') {
   <div class="widget-group" role="group" [attr.aria-label]="group.label">
-    @if (group.label) {
-    <div class="widget-group-label" [class.collapsed]="collapsed()">
-      <span class="widget-group-label-text">{{ group.label }}</span>
-    </div>
-    } @for (widget of group.widgets; track widget.widgetTypeid) {
+    @if (group.label; as groupLabel) { @if (collapsed()) {
+    <!-- Icon-only rail: no room for the heading, so it degrades to a divider
+         and the group cannot be toggled. -->
+    <div class="widget-group-divider" aria-hidden="true"></div>
+    } @else {
+    <button
+      type="button"
+      class="widget-group-label"
+      [attr.aria-expanded]="isGroupExpanded(groupLabel)"
+      (click)="toggleGroup(groupLabel)"
+    >
+      <svg
+        class="widget-group-chevron"
+        [class.collapsed]="!isGroupExpanded(groupLabel)"
+        viewBox="0 -960 960 960"
+        aria-hidden="true"
+      >
+        <path fill="currentColor" d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
+      </svg>
+      <span class="widget-group-label-text">{{ groupLabel }}</span>
+    </button>
+    } } @else if ($index > 0) {
+    <!-- Ungrouped widgets trail the labelled groups; without this they read as
+         part of the group above. -->
+    <div class="widget-group-divider" aria-hidden="true"></div>
+    }
+
+    @if (collapsed() || isGroupExpanded(group.label)) { @for (widget of
+    group.widgets; track widget.widgetTypeid) {
     <div
       class="widget-list-item"
       [class.active]="activeWidget() === widget.widgetTypeid"
@@ -36,7 +60,7 @@
         <small>{{ widget.description }}</small>
       </div>
     </div>
-    }
+    } }
   </div>
   }
 </div>

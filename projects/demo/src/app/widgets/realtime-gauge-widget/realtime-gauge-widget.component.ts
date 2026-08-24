@@ -47,6 +47,7 @@ export class RealtimeGaugeWidgetComponent implements Widget {
     name: $localize`:@@demo.widgets.realtimeGauge.name:Realtime Gauge`,
     description: $localize`:@@demo.widgets.realtimeGauge.description:Gauge with real-time data updates`,
     svgIcon,
+    group: $localize`:@@demo.widgets.group.sensors:Sensors`,
   };
 
   readonly #dialog = inject(MatDialog);
