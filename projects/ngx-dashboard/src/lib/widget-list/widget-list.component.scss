@@ -19,6 +19,45 @@
   }
 }
 
+// Groups inherit the list's own column layout and gap, so a grouped list has
+// the same rhythm as a flat one.
+.widget-group {
+  display: flex;
+  flex-direction: column;
+  gap: inherit;
+}
+
+.widget-group-label {
+  display: flex;
+  align-items: center;
+  color: var(--mat-sys-on-surface-variant, #5f5f5f);
+  font-size: clamp(0.6875rem, 1.8vw, 0.75rem);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  .widget-group-label-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // Collapsed (icon-only) rail: there is no room for the text, so the heading
+  // degrades to a divider that still separates the groups visually.
+  &.collapsed {
+    justify-content: center;
+    border-top: 1px solid var(--mat-sys-outline-variant, #c7c7c7);
+
+    .widget-group-label-text {
+      display: none;
+    }
+  }
+}
+
+.widget-group:first-child .widget-group-label.collapsed {
+  border-top: none;
+}
+
 .widget-list-item {
   display: flex;
   align-items: start;

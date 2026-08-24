@@ -5,26 +5,38 @@
   i18n-aria-label="@@ngx.dashboard.widget.list.available"
   aria-label="Available widgets"
 >
-  @for (widget of widgets(); track widget.widgetTypeid) {
-  <div
-    class="widget-list-item"
-    [class.active]="activeWidget() === widget.widgetTypeid"
-    draggable="true"
-    (dragstart)="onDragStart($event, widget)"
-    (dragend)="onDragEnd()"
-    role="listitem"
-    [attr.aria-grabbed]="activeWidget() === widget.widgetTypeid"
-    [attr.aria-label]="getWidgetAriaLabel(widget)"
-    [matTooltip]="widget.description"
-    [matTooltipDisabled]="!collapsed()"
-    matTooltipPosition="right"
-    tabindex="0"
-  >
-    <div class="icon" [innerHTML]="widget.safeSvgIcon" aria-hidden="true"></div>
-    <div class="content">
-      <strong>{{ widget.name }}</strong>
-      <small>{{ widget.description }}</small>
+  @for (group of widgetGroups(); track group.label ?? '') {
+  <div class="widget-group" role="group" [attr.aria-label]="group.label">
+    @if (group.label) {
+    <div class="widget-group-label" [class.collapsed]="collapsed()">
+      <span class="widget-group-label-text">{{ group.label }}</span>
     </div>
+    } @for (widget of group.widgets; track widget.widgetTypeid) {
+    <div
+      class="widget-list-item"
+      [class.active]="activeWidget() === widget.widgetTypeid"
+      draggable="true"
+      (dragstart)="onDragStart($event, widget)"
+      (dragend)="onDragEnd()"
+      role="listitem"
+      [attr.aria-grabbed]="activeWidget() === widget.widgetTypeid"
+      [attr.aria-label]="getWidgetAriaLabel(widget)"
+      [matTooltip]="widget.description"
+      [matTooltipDisabled]="!collapsed()"
+      matTooltipPosition="right"
+      tabindex="0"
+    >
+      <div
+        class="icon"
+        [innerHTML]="widget.safeSvgIcon"
+        aria-hidden="true"
+      ></div>
+      <div class="content">
+        <strong>{{ widget.name }}</strong>
+        <small>{{ widget.description }}</small>
+      </div>
+    </div>
+    }
   </div>
   }
 </div>
