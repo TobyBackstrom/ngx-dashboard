@@ -8,20 +8,38 @@ import {
   input,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { DragData, WidgetMetadata } from '../models';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DashboardService } from '../services/dashboard.service';
 import { DashboardBridgeService } from '../services/dashboard-bridge.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
 
 interface WidgetDisplayItem extends WidgetMetadata {
   safeSvgIcon?: SafeHtml;
 }
 
+/**
+ * A rendered section of the widget list. `label` is undefined for the trailing
+ * section holding widgets that declare no `WidgetMetadata.group`; that section
+ * is rendered without a heading.
+ */
+interface WidgetListGroup {
+  label?: string;
+  widgets: WidgetDisplayItem[];
+}
+
 @Component({
   selector: 'ngx-dashboard-widget-list',
   standalone: true,
-  imports: [MatTooltipModule],
+  imports: [
+    NgTemplateOutlet,
+    MatTooltipModule,
+    MatExpansionModule,
+    MatDividerModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './widget-list.component.html',
   styleUrl: './widget-list.component.scss',
@@ -35,6 +53,13 @@ export class WidgetListComponent {
   // Input to track collapsed state for tooltip display
   collapsed = input<boolean>(false);
 
+  /**
+   * Labels of the groups the user has collapsed. Groups start expanded, and the
+   * state is per component instance (not persisted) — the list is a transient
+   * editing surface.
+   */
+  readonly #collapsedGroups = signal<ReadonlySet<string>>(new Set<string>());
+
   activeWidget = signal<string | null>(null);
 
   // Get grid cell dimensions from bridge service (uses first available dashboard)
@@ -46,6 +71,74 @@ export class WidgetListComponent {
       safeSvgIcon: this.#sanitizer.bypassSecurityTrustHtml(w.metadata.svgIcon),
     }))
   );
+
+  /**
+   * Widgets bucketed by `WidgetMetadata.group`. Groups keep the order in which
+   * they were first seen in the registration order, widgets keep their
+   * registration order within a group, and ungrouped widgets trail the labelled
+   * groups in a single unlabelled section. With no widget declaring a group the
+   * result is one unlabelled section, i.e. a flat list with no heading.
+   */
+  widgetGroups = computed<WidgetListGroup[]>(() => {
+    const labelled: WidgetListGroup[] = [];
+    const byLabel = new Map<string, WidgetListGroup>();
+    const ungrouped: WidgetDisplayItem[] = [];
+
+    for (const widget of this.widgets()) {
+      const label = widget.group?.trim();
+
+      if (!label) {
+        ungrouped.push(widget);
+        continue;
+      }
+
+      let group = byLabel.get(label);
+      if (!group) {
+        group = { label, widgets: [] };
+        byLabel.set(label, group);
+        labelled.push(group);
+      }
+      group.widgets.push(widget);
+    }
+
+    return ungrouped.length > 0
+      ? [...labelled, { widgets: ungrouped }]
+      : labelled;
+  });
+
+  /**
+   * Whether a group's widgets are shown. Ungrouped widgets have no heading to
+   * toggle, so they are always shown.
+   */
+  isGroupExpanded(label?: string): boolean {
+    return !label || !this.#collapsedGroups().has(label);
+  }
+
+  /** Toggles a group open/closed. No-op for the unlabelled group. */
+  toggleGroup(label?: string): void {
+    if (!label) return;
+    this.setGroupExpanded(label, !this.isGroupExpanded(label));
+  }
+
+  /**
+   * Records a group's expanded state. Idempotent, so it is safe to drive from
+   * the expansion panel's `opened`/`closed` outputs.
+   */
+  setGroupExpanded(label: string | undefined, expanded: boolean): void {
+    if (!label) return;
+
+    this.#collapsedGroups.update((collapsed) => {
+      if (collapsed.has(label) === !expanded) return collapsed;
+
+      const next = new Set(collapsed);
+      if (expanded) {
+        next.delete(label);
+      } else {
+        next.add(label);
+      }
+      return next;
+    });
+  }
 
   onDragStart(event: DragEvent, widget: WidgetDisplayItem) {
     if (!event.dataTransfer) return;

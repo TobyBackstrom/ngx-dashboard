@@ -7,7 +7,11 @@
   - `dashboardGetState()` - retrieves current widget state
   - `dashboardSetState(state)` - sets widget state
   - `dashboardEditState()` - opens widget configuration dialog
-- `WidgetMetadata` with unique `widgetTypeid`, name, description, and SVG icon
+- `WidgetMetadata` with unique `widgetTypeid`, name, description, SVG icon, and an
+  optional `group` heading used by the widget list. Grouped widgets render inside a
+  collapsible `mat-expansion-panel`; ungrouped widgets trail them behind a divider.
+  In the icon-only rail there is no room for headings, so sections are separated by
+  dividers only and cannot be collapsed.
 - `WidgetComponentClass<T>` extends Angular's `Type<T>` with static `metadata` property
 
 ### 2. DashboardService (`services/dashboard.service.ts`)

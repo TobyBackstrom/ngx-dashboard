@@ -907,6 +907,18 @@
         <target>Realtime Gauge</target>
       </segment>
     </unit>
+    <unit id="demo.widgets.group.charts">
+      <segment state="initial">
+        <source>Charts</source>
+        <target>Charts</target>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.group.sensors">
+      <segment state="initial">
+        <source>Sensors</source>
+        <target>Sensors</target>
+      </segment>
+    </unit>
     <unit id="demo.widgets.realtimeGauge.description">
       <segment state="initial">
         <source>Gauge with real-time data updates</source>
@@ -1311,8 +1323,8 @@
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.opacity">
       <segment state="initial">
-        <source> Opacity: <ph id="0" equiv="INTERPOLATION"/>% </source>
-        <target> Opacity: <ph id="0" equiv="INTERPOLATION"/>% </target>
+        <source> Opacity: <ph id="0" equiv="INTERPOLATION" disp="{{ formatOpacity(opacity()) }}"/>% </source>
+        <target> Opacity: <ph id="0" equiv="INTERPOLATION" disp="{{ formatOpacity(opacity()) }}"/>% </target>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.background">
@@ -1527,8 +1539,8 @@
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.opacity">
       <segment state="initial">
-        <source> Opacity: <ph id="0" equiv="INTERPOLATION"/>% </source>
-        <target> Opacity: <ph id="0" equiv="INTERPOLATION"/>% </target>
+        <source> Opacity: <ph id="0" equiv="INTERPOLATION" disp="{{ formatOpacity(opacity()) }}"/>% </source>
+        <target> Opacity: <ph id="0" equiv="INTERPOLATION" disp="{{ formatOpacity(opacity()) }}"/>% </target>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.background">
