@@ -18,6 +18,16 @@ interface WidgetDisplayItem extends WidgetMetadata {
   safeSvgIcon?: SafeHtml;
 }
 
+/**
+ * A rendered section of the widget list. `label` is undefined for the trailing
+ * section holding widgets that declare no `WidgetMetadata.group`; that section
+ * is rendered without a heading.
+ */
+interface WidgetListGroup {
+  label?: string;
+  widgets: WidgetDisplayItem[];
+}
+
 @Component({
   selector: 'ngx-dashboard-widget-list',
   standalone: true,
@@ -46,6 +56,40 @@ export class WidgetListComponent {
       safeSvgIcon: this.#sanitizer.bypassSecurityTrustHtml(w.metadata.svgIcon),
     }))
   );
+
+  /**
+   * Widgets bucketed by `WidgetMetadata.group`. Groups keep the order in which
+   * they were first seen in the registration order, widgets keep their
+   * registration order within a group, and ungrouped widgets trail the labelled
+   * groups in a single unlabelled section. With no widget declaring a group the
+   * result is one unlabelled section, i.e. the previous flat rendering.
+   */
+  widgetGroups = computed<WidgetListGroup[]>(() => {
+    const labelled: WidgetListGroup[] = [];
+    const byLabel = new Map<string, WidgetListGroup>();
+    const ungrouped: WidgetDisplayItem[] = [];
+
+    for (const widget of this.widgets()) {
+      const label = widget.group?.trim();
+
+      if (!label) {
+        ungrouped.push(widget);
+        continue;
+      }
+
+      let group = byLabel.get(label);
+      if (!group) {
+        group = { label, widgets: [] };
+        byLabel.set(label, group);
+        labelled.push(group);
+      }
+      group.widgets.push(widget);
+    }
+
+    return ungrouped.length > 0
+      ? [...labelled, { widgets: ungrouped }]
+      : labelled;
+  });
 
   onDragStart(event: DragEvent, widget: WidgetDisplayItem) {
     if (!event.dataTransfer) return;

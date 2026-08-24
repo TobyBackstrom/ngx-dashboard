@@ -504,6 +504,7 @@ export class MyWidgetComponent implements Widget {
     name: 'My Custom Widget',          // Display name in widget list
     description: 'A sample custom widget with counter functionality',
     svgIcon,                          // Widget icon for widget list
+    group: 'Custom',                  // Optional widget list heading
   };
 
   private readonly sanitizer = inject(DomSanitizer);
