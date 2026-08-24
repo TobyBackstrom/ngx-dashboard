@@ -45,6 +45,13 @@ export class WidgetListComponent {
   // Input to track collapsed state for tooltip display
   collapsed = input<boolean>(false);
 
+  /**
+   * Labels of the groups the user has collapsed. Groups start expanded, and the
+   * state is per component instance (not persisted) — the list is a transient
+   * editing surface.
+   */
+  readonly #collapsedGroups = signal<ReadonlySet<string>>(new Set<string>());
+
   activeWidget = signal<string | null>(null);
 
   // Get grid cell dimensions from bridge service (uses first available dashboard)
@@ -90,6 +97,27 @@ export class WidgetListComponent {
       ? [...labelled, { widgets: ungrouped }]
       : labelled;
   });
+
+  /**
+   * Whether a group's widgets are shown. Ungrouped widgets have no heading to
+   * toggle, so they are always shown.
+   */
+  isGroupExpanded(label?: string): boolean {
+    return !label || !this.#collapsedGroups().has(label);
+  }
+
+  /** Toggles a group open/closed. No-op for the unlabelled group. */
+  toggleGroup(label?: string): void {
+    if (!label) return;
+
+    this.#collapsedGroups.update((collapsed) => {
+      const next = new Set(collapsed);
+      if (!next.delete(label)) {
+        next.add(label);
+      }
+      return next;
+    });
+  }
 
   onDragStart(event: DragEvent, widget: WidgetDisplayItem) {
     if (!event.dataTransfer) return;
