@@ -25,6 +25,21 @@ function makeWidget(
   return TestWidgetComponent as WidgetComponentClass;
 }
 
+/**
+ * Widgets a user can actually see and drag. A collapsed expansion panel keeps
+ * its content in the DOM but marks the wrapper `inert`, so a plain
+ * `querySelectorAll` would also count hidden widgets.
+ */
+function visibleItems(
+  fixture: ComponentFixture<WidgetListComponent>
+): HTMLElement[] {
+  return (
+    Array.from(
+      fixture.nativeElement.querySelectorAll('.widget-list-item')
+    ) as HTMLElement[]
+  ).filter((el) => !el.closest('[inert]'));
+}
+
 describe('WidgetListComponent grouping', () => {
   let component: WidgetListComponent;
   let fixture: ComponentFixture<WidgetListComponent>;
@@ -148,9 +163,34 @@ describe('WidgetListComponent grouping', () => {
       expect(headings.length).toBe(2);
       expect(headings[0].getAttribute('aria-expanded')).toBe('false');
       expect(headings[1].getAttribute('aria-expanded')).toBe('true');
+      // The expansion panel keeps collapsed content in the DOM, but inert.
+      const visible = visibleItems(fixture);
+      expect(visible.length).toBe(1);
       expect(
-        fixture.nativeElement.querySelectorAll('.widget-list-item').length
-      ).toBe(1);
+        visible[0].closest('[role="list"]')?.getAttribute('aria-label')
+      ).toBe('Layout');
+    });
+
+    it('reflects a header click in the collapsed set', () => {
+      dashboardService.registerWidgetType(
+        makeWidget('@test/a', 'A', 'Metrics')
+      );
+      fixture.detectChanges();
+
+      const heading = fixture.nativeElement.querySelector(
+        '.widget-group-label'
+      ) as HTMLElement;
+      heading.click();
+      fixture.detectChanges();
+
+      expect(component.isGroupExpanded('Metrics')).toBe(false);
+      expect(visibleItems(fixture).length).toBe(0);
+
+      heading.click();
+      fixture.detectChanges();
+
+      expect(component.isGroupExpanded('Metrics')).toBe(true);
+      expect(visibleItems(fixture).length).toBe(1);
     });
 
     it('keeps widgets visible while the rail is icon-only', () => {
@@ -164,16 +204,28 @@ describe('WidgetListComponent grouping', () => {
       fixture.detectChanges();
 
       // There is no heading to toggle in the icon-only rail, so widgets stay
-      // visible and the heading is replaced by a divider.
-      expect(
-        fixture.nativeElement.querySelectorAll('.widget-list-item').length
-      ).toBe(1);
+      // visible even though the group is marked collapsed.
+      expect(component.isGroupExpanded('Metrics')).toBe(false);
+      expect(visibleItems(fixture).length).toBe(1);
       expect(
         fixture.nativeElement.querySelectorAll('.widget-group-label').length
       ).toBe(0);
-      expect(
-        fixture.nativeElement.querySelectorAll('.widget-group-divider').length
-      ).toBe(1);
+    });
+
+    it('restores the collapsed state when the rail expands again', () => {
+      dashboardService.registerWidgetType(
+        makeWidget('@test/a', 'A', 'Metrics')
+      );
+      fixture.detectChanges();
+
+      component.toggleGroup('Metrics');
+      fixture.componentRef.setInput('collapsed', true);
+      fixture.detectChanges();
+      fixture.componentRef.setInput('collapsed', false);
+      fixture.detectChanges();
+
+      expect(component.isGroupExpanded('Metrics')).toBe(false);
+      expect(visibleItems(fixture).length).toBe(0);
     });
   });
 
@@ -207,6 +259,21 @@ describe('WidgetListComponent grouping', () => {
       ).toBe(1);
     });
 
+    it('separates sections with dividers in the icon-only rail', () => {
+      dashboardService.registerWidgetType(
+        makeWidget('@test/a', 'A', 'Metrics')
+      );
+      dashboardService.registerWidgetType(makeWidget('@test/b', 'B', 'Layout'));
+      fixture.componentRef.setInput('collapsed', true);
+      fixture.detectChanges();
+
+      // No headings in the rail, so a divider is the only cue between sections
+      // — one between the two, none above the first.
+      expect(
+        fixture.nativeElement.querySelectorAll('.widget-group-divider').length
+      ).toBe(1);
+    });
+
     it('omits the divider when every widget is ungrouped', () => {
       dashboardService.registerWidgetType(makeWidget('@test/a', 'A'));
       fixture.detectChanges();
@@ -214,6 +281,64 @@ describe('WidgetListComponent grouping', () => {
       expect(
         fixture.nativeElement.querySelectorAll('.widget-group-divider').length
       ).toBe(0);
+    });
+  });
+
+  describe('accessibility', () => {
+    it('renders one named list per section, each owning listitems', () => {
+      dashboardService.registerWidgetType(
+        makeWidget('@test/a', 'A', 'Metrics')
+      );
+      dashboardService.registerWidgetType(makeWidget('@test/b', 'B'));
+      fixture.detectChanges();
+
+      const lists = Array.from(
+        fixture.nativeElement.querySelectorAll('[role="list"]')
+      ) as HTMLElement[];
+
+      expect(lists.length).toBe(2);
+      expect(lists[0].getAttribute('aria-label')).toBe('Metrics');
+      expect(lists[1].hasAttribute('aria-label')).toBe(false);
+      for (const list of lists) {
+        expect(list.querySelectorAll('[role="listitem"]').length).toBe(1);
+      }
+    });
+
+    it('points the heading at the region it expands', () => {
+      dashboardService.registerWidgetType(
+        makeWidget('@test/a', 'A', 'Metrics')
+      );
+      fixture.detectChanges();
+
+      const heading = fixture.nativeElement.querySelector(
+        '.widget-group-label'
+      ) as HTMLElement;
+      const region = fixture.nativeElement.querySelector(
+        '[role="region"]'
+      ) as HTMLElement;
+
+      expect(region.id).toBeTruthy();
+      expect(heading.getAttribute('aria-controls')).toBe(region.id);
+      expect(region.getAttribute('aria-labelledby')).toBe(heading.id);
+      expect(region.querySelector('[role="list"]')).toBeTruthy();
+    });
+
+    it('makes a collapsed section inert', () => {
+      dashboardService.registerWidgetType(
+        makeWidget('@test/a', 'A', 'Metrics')
+      );
+      fixture.detectChanges();
+
+      component.toggleGroup('Metrics');
+      fixture.detectChanges();
+
+      const item = fixture.nativeElement.querySelector(
+        '.widget-list-item'
+      ) as HTMLElement;
+
+      // Still in the DOM, but not focusable, draggable or exposed to AT.
+      expect(item).toBeTruthy();
+      expect(item.closest('[inert]')).toBeTruthy();
     });
   });
 });
