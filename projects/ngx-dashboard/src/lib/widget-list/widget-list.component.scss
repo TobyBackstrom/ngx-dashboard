@@ -73,13 +73,19 @@
   }
 }
 
-// Stand-in for the heading when the rail is collapsed to icons only.
+// Separates groups where no heading does it: before the trailing ungrouped
+// widgets, and between groups in the icon-only rail. Deliberately stronger than
+// a hairline `outline-variant` rule — it is the only cue that the widgets below
+// are not part of the group above.
 .widget-group-divider {
-  border-top: 1px solid var(--mat-sys-outline-variant, #c7c7c7);
+  height: 2px;
+  margin: var(--mat-sys-spacing-2, 8px) 0;
+  border-radius: 1px;
+  background-color: var(--mat-sys-outline, #757575);
 }
 
 .widget-group:first-child .widget-group-divider {
-  border-top: none;
+  display: none;
 }
 
 .widget-list-item {
