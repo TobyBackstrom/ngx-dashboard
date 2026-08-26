@@ -335,13 +335,23 @@ export class DashboardPageComponent {
   class="widget-list"
   [collapsed]="isWidgetListCollapsed()"
   [enableSearchBox]="true"
+  [enableGutterSlider]="true"
 ></ngx-dashboard-widget-list>
 ```
 
 | Input | Default | Description |
 | --- | --- | --- |
-| `collapsed` | `false` | Renders the list as an icon-only rail. Names, descriptions and the search box are hidden; each widget keeps a tooltip. |
+| `collapsed` | `false` | Renders the list as an icon-only rail. Names, descriptions, the search box and the gutter slider are hidden; each widget keeps a tooltip. |
 | `enableSearchBox` | `false` | Shows a free-text filter above the list, matching widget name, description and widget type id (case insensitive) |
+| `enableGutterSlider` | `false` | Docks a slider to the list's bottom-left corner that drives the dashboard's gutter size |
+
+The gutter slider floats over the list and sticks to its bottom-left corner, so
+it stays reachable however long the list runs. It applies to the first
+registered dashboard — the same one widgets are dragged onto — and writes
+through on every input, so the grid reflows under the thumb. It keeps the unit
+the dashboard already uses (`px` 0–48, `em`/`rem` 0–3); a gutter authored in any
+other unit (`%`, `calc()`) falls back to the `0.5em` default. The slider is
+hidden until a dashboard registers, and in the icon-only rail.
 
 Widgets are grouped by their optional `WidgetMetadata.group`; grouped sections
 can be collapsed, and ungrouped widgets are listed last. While a filter is

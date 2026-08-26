@@ -79,6 +79,25 @@ export class DashboardBridgeService {
   });
   
   /**
+   * Gutter size of the first available dashboard, or null when none is
+   * registered. Same "first available dashboard" convention as `startDrag`, so
+   * a widget list reads the gutter of the dashboard it drops onto.
+   */
+  readonly gutterSize = computed(() => {
+    const [first] = Array.from(this.dashboards().values());
+    return first ? first.store.gutterSize() : null;
+  });
+
+  /**
+   * Set the gutter size on the first available dashboard. No-op when none is
+   * registered. Counterpart to `gutterSize`.
+   */
+  setGutterSize(gutterSize: string): void {
+    const [first] = Array.from(this.dashboards().values());
+    first?.store.setGridConfig({ gutterSize });
+  }
+
+  /**
    * Start drag operation on the first available dashboard
    * (Widget lists need some dashboard to coordinate with during drag)
    */
