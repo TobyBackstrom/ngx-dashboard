@@ -2,13 +2,19 @@
 :host {
   background-color: var(--mat-sys-surface-container, #f5f5f5);
   container-type: inline-size;
+
+  // Column layout so the list can claim the host's full height; without it the
+  // docked slider has no bottom to sit against on a short list.
+  display: flex;
+  flex-direction: column;
 }
 
 .widget-list {
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: var(--mat-sys-spacing-2, 8px);
-  
+
   // Responsive spacing based on container width
   @container (max-width: 200px) {
     gap: var(--mat-sys-spacing-1, 4px);
@@ -37,6 +43,72 @@
     opacity: 0.7;
     margin-inline: var(--mat-sys-spacing-2, 8px) var(--mat-sys-spacing-1, 4px);
   }
+}
+
+// Holds the control in the list's bottom-left corner. `margin-top: auto` drops
+// it there on a short list; `position: sticky` keeps it there on a long one, so
+// it never scrolls out of reach.
+//
+// Full width rather than shrink-to-fit, and painted in the list's own surface:
+// the control alone would let widget cards scroll through the space beside it.
+// The width is the list's content box, which is also where the cards are, so
+// nothing shows past either edge. `bottom: 0` rather than an inset keeps cards
+// from peeking through underneath it too.
+.gutter-dock {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  margin-top: auto;
+
+  display: flex;
+  justify-content: flex-start;
+
+  background-color: var(--mat-sys-surface-container, #f5f5f5);
+  // Vertical padding is the clearance: it keeps the card scrolling underneath
+  // from touching the control, and keeps the last card clear of it at rest.
+  padding-block: var(--mat-sys-spacing-2, 8px);
+}
+
+// Elevated on the container-high surface so it separates from both the list
+// background and the widget cards sliding under the dock.
+.gutter-control {
+  display: flex;
+  align-items: center;
+  gap: var(--mat-sys-spacing-2, 8px);
+  padding-inline: var(--mat-sys-spacing-3, 12px);
+
+  background-color: var(--mat-sys-surface-container-high, #ececec);
+  border-radius: var(--mat-sys-corner-full, 999px);
+  box-shadow: var(--mat-sys-elevation-level2, 0 2px 4px rgba(0, 0, 0, 0.1));
+
+  .gutter-control-icon {
+    flex-shrink: 0;
+    color: var(--mat-sys-on-surface-variant, #5f5f5f);
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Material sizes a slider to fill its container, which here would be the pill's
+// intrinsic width — a circular argument. A fixed track keeps the pill compact
+// and leaves the readout room.
+.gutter-slider {
+  flex: 0 0 auto;
+  width: 104px;
+  min-width: 0;
+  --mat-slider-value-indicator-opacity: 0;
+}
+
+// Fixed width in digit units, so dragging the thumb doesn't jitter the pill as
+// the readout gains and loses characters.
+.gutter-value {
+  flex: 0 0 auto;
+  min-width: 5ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(0.6875rem, 1.8vw, 0.75rem);
+  color: var(--mat-sys-on-surface-variant, #5f5f5f);
 }
 
 .widget-search-empty {

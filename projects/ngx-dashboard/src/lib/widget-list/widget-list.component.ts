@@ -20,6 +20,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSliderModule } from '@angular/material/slider';
+import {
+  formatGutterSize,
+  GUTTER_UNITS,
+  parseGutterSize,
+} from './gutter-size';
 
 interface WidgetDisplayItem extends WidgetMetadata {
   safeSvgIcon?: SafeHtml;
@@ -47,6 +53,7 @@ interface WidgetListGroup {
     MatInputModule,
     MatIconModule,
     MatButtonModule,
+    MatSliderModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './widget-list.component.html',
@@ -61,6 +68,12 @@ export class WidgetListComponent {
   // Input to track collapsed state for tooltip display
   collapsed = input<boolean>(false);
   enableSearchBox = input<boolean>(false);
+
+  /**
+   * Shows a slider docked to the list's bottom-left corner that drives the
+   * dashboard's gutter size live.
+   */
+  enableGutterSlider = input<boolean>(false);
 
   /**
    * Labels of the groups the user has collapsed. Groups start expanded, and the
@@ -90,6 +103,32 @@ export class WidgetListComponent {
   readonly showSearchBox = computed(
     () => this.enableSearchBox() && !this.collapsed()
   );
+
+  /**
+   * Whether the gutter slider is rendered. Like the search box it needs more
+   * room than the icon-only rail has. It also needs a dashboard to drive: the
+   * bridge has nothing to write to until one registers.
+   */
+  readonly showGutterSlider = computed(
+    () =>
+      this.enableGutterSlider() &&
+      !this.collapsed() &&
+      this.#bridge.hasDashboards()
+  );
+
+  /**
+   * The dashboard's gutter, split for the slider. Derived from the store rather
+   * than held locally, so the slider tracks a gutter changed elsewhere (an
+   * import, say) instead of drifting from it.
+   */
+  readonly gutter = computed(() => parseGutterSize(this.#bridge.gutterSize()));
+
+  /** Slider bounds follow the unit the dashboard already authored its gutter in. */
+  readonly gutterMax = computed(() => GUTTER_UNITS[this.gutter().unit].max);
+  readonly gutterStep = computed(() => GUTTER_UNITS[this.gutter().unit].step);
+
+  /** The gutter as CSS, for the slider's readout. */
+  readonly gutterLabel = computed(() => formatGutterSize(this.gutter()));
 
   // Get grid cell dimensions from bridge service (uses first available dashboard)
   gridCellDimensions = this.#bridge.availableDimensions;
@@ -197,6 +236,19 @@ export class WidgetListComponent {
 
   onSearchInput(value: string): void {
     this.searchTerm.set(value);
+  }
+
+  /**
+   * Writes the slider's value straight through to the dashboard — a gutter is a
+   * visual measure, so it is set by watching the grid reflow, not by committing
+   * a number chosen blind. The unit is the dashboard's own; only the magnitude
+   * is the slider's to change.
+   */
+  onGutterInput(value: number): void {
+    if (Number.isNaN(value)) return;
+    this.#bridge.setGutterSize(
+      formatGutterSize({ value, unit: this.gutter().unit })
+    );
   }
 
   onDragStart(event: DragEvent, widget: WidgetDisplayItem) {

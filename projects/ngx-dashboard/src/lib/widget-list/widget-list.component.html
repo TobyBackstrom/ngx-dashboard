@@ -91,6 +91,40 @@
     } }
   </mat-accordion>
   }
+
+  <!-- Docked to the list's bottom-left corner and sticky, so it stays put
+       however long the list runs. Writes straight through to the dashboard:
+       the grid reflows under the thumb, which is the whole point of a slider
+       here rather than a number in a dialog. -->
+  @if (showGutterSlider()) {
+  <div class="gutter-dock">
+    <div class="gutter-control">
+      <mat-icon
+        class="gutter-control-icon"
+        aria-hidden="true"
+        i18n-matTooltip="@@ngx.dashboard.widget.list.gutter.tooltip"
+        matTooltip="Gutter size between dashboard cells"
+        matTooltipPosition="above"
+        >grid_view</mat-icon
+      >
+      <mat-slider
+        class="gutter-slider"
+        [min]="0"
+        [max]="gutterMax()"
+        [step]="gutterStep()"
+      >
+        <input
+          matSliderThumb
+          [value]="gutter().value"
+          (input)="onGutterInput($any($event.target).valueAsNumber)"
+          i18n-aria-label="@@ngx.dashboard.widget.list.gutter.ariaLabel"
+          aria-label="Gutter size between dashboard cells"
+        />
+      </mat-slider>
+      <span class="gutter-value">{{ gutterLabel() }}</span>
+    </div>
+  </div>
+  }
 </div>
 
 <!-- One list per section, so every rendered list owns listitem children even

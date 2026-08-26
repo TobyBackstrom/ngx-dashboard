@@ -1813,6 +1813,18 @@
         <target>Available widgets</target>
       </segment>
     </unit>
+    <unit id="ngx.dashboard.widget.list.gutter.ariaLabel">
+      <segment state="initial">
+        <source>Gutter size between dashboard cells</source>
+        <target>Gutter size between dashboard cells</target>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.gutter.tooltip">
+      <segment state="initial">
+        <source>Gutter size between dashboard cells</source>
+        <target>Gutter size between dashboard cells</target>
+      </segment>
+    </unit>
     <unit id="ngx.dashboard.widget.list.item.ariaLabel">
       <segment state="initial">
         <source><ph id="0" equiv="PH" disp="widget.name"/> widget: <ph id="1" equiv="PH_1" disp="widget.description"/></source>
