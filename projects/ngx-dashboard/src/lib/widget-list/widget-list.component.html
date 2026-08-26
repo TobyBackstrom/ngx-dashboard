@@ -5,6 +5,49 @@
   i18n-aria-label="@@ngx.dashboard.widget.list.available"
   aria-label="Available widgets"
 >
+  <!-- No room for a text field in the icon-only rail; the filter stays applied
+       while collapsed so expanding restores what the user searched for. -->
+  @if (showSearchBox()) {
+  <!-- Filled appearance, like every other field in a Material app; an outlined
+       one would read as a foreign control inside the surface. -->
+  <mat-form-field class="widget-search" subscriptSizing="dynamic">
+    <mat-icon matPrefix class="widget-search-icon">search</mat-icon>
+    <!-- A placeholder, not a `mat-label`: Material hides the filled field's
+         label from density -2 down, and hosts commonly run the form fields
+         denser than the default. -->
+    <input
+      matInput
+      type="text"
+      autocomplete="off"
+      [value]="searchTerm()"
+      (input)="onSearchInput($any($event.target).value)"
+      i18n-placeholder="@@ngx.dashboard.widget.list.search.placeholder"
+      placeholder="Search widgets"
+      i18n-aria-label="@@ngx.dashboard.widget.list.search.ariaLabel"
+      aria-label="Search widgets by name, description or type"
+    />
+    @if (isFiltering()) {
+    <button
+      matSuffix
+      mat-icon-button
+      type="button"
+      class="widget-search-clear"
+      (click)="clearSearch()"
+      i18n-aria-label="@@ngx.dashboard.widget.list.search.clear"
+      aria-label="Clear widget search"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+    }
+  </mat-form-field>
+  }
+
+  @if (isFiltering() && widgetGroups().length === 0) {
+  <p class="widget-search-empty" i18n="@@ngx.dashboard.widget.list.search.empty">
+    No matching widgets
+  </p>
+  }
+
   @if (collapsed()) {
   <!-- Icon-only rail: no room for headings, so the sections degrade to
        dividers and cannot be collapsed. -->

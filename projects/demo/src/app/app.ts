@@ -4,7 +4,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import { MatRadioModule } from '@angular/material/radio';
 import { NGX_DASHBOARD_VERSION } from '@dragonworks/ngx-dashboard';
 import { NGX_DASHBOARD_WIDGETS_VERSION } from '@dragonworks/ngx-dashboard-widgets';
 import { ThemeService, type ThemePalette } from './services';
@@ -18,7 +17,6 @@ import { ThemeService, type ThemePalette } from './services';
     MatToolbarModule,
     MatMenuModule,
     MatIconModule,
-    MatRadioModule,
   ],
   providers: [],
   templateUrl: './app.html',
@@ -42,6 +40,13 @@ export class App {
     return this.themeService.isDarkMode()
       ? $localize`:@@demo.theme.switchToLight:Switch to light theme`
       : $localize`:@@demo.theme.switchToDark:Switch to dark theme`;
+  }
+
+  /**
+   * Get navigation menu aria label
+   */
+  getNavigationMenuAriaLabel(): string {
+    return $localize`:@@demo.navigation.menuAriaLabel:Open navigation menu`;
   }
 
   /**

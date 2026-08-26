@@ -16,6 +16,10 @@ import { DashboardBridgeService } from '../services/dashboard-bridge.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 interface WidgetDisplayItem extends WidgetMetadata {
   safeSvgIcon?: SafeHtml;
@@ -39,6 +43,10 @@ interface WidgetListGroup {
     MatTooltipModule,
     MatExpansionModule,
     MatDividerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './widget-list.component.html',
@@ -52,6 +60,7 @@ export class WidgetListComponent {
 
   // Input to track collapsed state for tooltip display
   collapsed = input<boolean>(false);
+  enableSearchBox = input<boolean>(false);
 
   /**
    * Labels of the groups the user has collapsed. Groups start expanded, and the
@@ -62,15 +71,52 @@ export class WidgetListComponent {
 
   activeWidget = signal<string | null>(null);
 
+  /**
+   * Free-text filter over the list. Empty (or whitespace only) means no
+   * filtering. Kept per component instance, like the collapsed group state.
+   */
+  readonly searchTerm = signal('');
+
+  readonly #normalizedSearchTerm = computed(() =>
+    this.enableSearchBox() ? this.searchTerm().trim().toLowerCase() : ''
+  );
+
+  /** Whether a filter is currently narrowing the list. */
+  readonly isFiltering = computed(
+    () => this.#normalizedSearchTerm().length > 0
+  );
+
+  /** Whether the search box is rendered: the icon-only rail has no room. */
+  readonly showSearchBox = computed(
+    () => this.enableSearchBox() && !this.collapsed()
+  );
+
   // Get grid cell dimensions from bridge service (uses first available dashboard)
   gridCellDimensions = this.#bridge.availableDimensions;
 
-  widgets = computed(() =>
+  readonly #allWidgets = computed(() =>
     this.#service.widgetTypes().map((w) => ({
       ...w.metadata,
       safeSvgIcon: this.#sanitizer.bypassSecurityTrustHtml(w.metadata.svgIcon),
     }))
   );
+
+  /**
+   * The widgets the list renders: every registered widget, or those matching
+   * `searchTerm`. A widget matches when the term is contained in its name,
+   * description or widget type id — the type id so a user who knows what they
+   * registered can search by it directly. Matching is case insensitive.
+   */
+  widgets = computed(() => {
+    const term = this.#normalizedSearchTerm();
+    if (!term) return this.#allWidgets();
+
+    return this.#allWidgets().filter((widget) =>
+      [widget.name, widget.description, widget.widgetTypeid].some((field) =>
+        field?.toLowerCase().includes(term)
+      )
+    );
+  });
 
   /**
    * Widgets bucketed by `WidgetMetadata.group`. Groups keep the order in which
@@ -111,6 +157,8 @@ export class WidgetListComponent {
    * toggle, so they are always shown.
    */
   isGroupExpanded(label?: string): boolean {
+    // While filtering, a collapsed group would hide its own matches.
+    if (this.isFiltering()) return true;
     return !label || !this.#collapsedGroups().has(label);
   }
 
@@ -125,7 +173,9 @@ export class WidgetListComponent {
    * the expansion panel's `opened`/`closed` outputs.
    */
   setGroupExpanded(label: string | undefined, expanded: boolean): void {
-    if (!label) return;
+    // Filtering force-expands every group, so the panels' own open/close
+    // outputs would otherwise overwrite what the user collapsed before.
+    if (!label || this.isFiltering()) return;
 
     this.#collapsedGroups.update((collapsed) => {
       if (collapsed.has(label) === !expanded) return collapsed;
@@ -138,6 +188,15 @@ export class WidgetListComponent {
       }
       return next;
     });
+  }
+
+  /** Clears the filter, restoring the full list. */
+  clearSearch(): void {
+    this.searchTerm.set('');
+  }
+
+  onSearchInput(value: string): void {
+    this.searchTerm.set(value);
   }
 
   onDragStart(event: DragEvent, widget: WidgetDisplayItem) {
