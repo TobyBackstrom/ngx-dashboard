@@ -34,14 +34,18 @@
       i18n-matTooltip="@@demo.dashboard.toggleWidgetListHeader"
       matTooltipPosition="left"
     >
-      <mat-icon class="widgets-icon">dashboard</mat-icon>
       @if (!isWidgetListCollapsed()) {
+      <mat-icon class="widgets-icon">dashboard</mat-icon>
       <span class="widgets-title" i18n="@@demo.dashboard.widgetsTitle">Widgets</span>
       }
+      <mat-icon class="toggle-icon">{{
+        isWidgetListCollapsed() ? 'chevron_left' : 'chevron_right'
+      }}</mat-icon>
     </div>
     <ngx-dashboard-widget-list
       class="widget-list"
       [collapsed]="isWidgetListCollapsed()"
+      [enableSearchBox]="true"
     ></ngx-dashboard-widget-list>
   </div>
   }

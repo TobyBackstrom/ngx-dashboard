@@ -328,6 +328,25 @@ export class DashboardPageComponent {
 </div>
 ```
 
+### Widget List Options
+
+```html
+<ngx-dashboard-widget-list
+  class="widget-list"
+  [collapsed]="isWidgetListCollapsed()"
+  [enableSearchBox]="true"
+></ngx-dashboard-widget-list>
+```
+
+| Input | Default | Description |
+| --- | --- | --- |
+| `collapsed` | `false` | Renders the list as an icon-only rail. Names, descriptions and the search box are hidden; each widget keeps a tooltip. |
+| `enableSearchBox` | `false` | Shows a free-text filter above the list, matching widget name, description and widget type id (case insensitive) |
+
+Widgets are grouped by their optional `WidgetMetadata.group`; grouped sections
+can be collapsed, and ungrouped widgets are listed last. While a filter is
+active every group stays expanded so matches are never hidden.
+
 ## Widget Registration
 
 ### Built-in Widgets

@@ -52,7 +52,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 16px 16px 8px;
+    padding: 12px 12px 12px 16px;
     border-bottom: 1px solid var(--mat-sys-outline-variant);
     transition: all 300ms var(--mat-sys-motion-easing-standard);
     cursor: pointer;
@@ -66,12 +66,9 @@
         transparent
       );
 
-      .widgets-icon {
-        color: var(--mat-sys-primary);
-        transform: scale(1.1);
-      }
-
-      .widgets-title {
+      .widgets-icon,
+      .widgets-title,
+      .toggle-icon {
         color: var(--mat-sys-primary);
       }
     }
@@ -89,11 +86,20 @@
       );
     }
 
-    .widgets-icon {
+    .widgets-icon,
+    .toggle-icon {
       color: var(--mat-sys-on-surface-variant);
-      transition: all 200ms ease;
+      transition: color 200ms ease;
     }
 
+    .toggle-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+    }
+
+    // Pushes the chevron to the panel edge it collapses toward.
     .widgets-title {
       flex: 1;
       font-size: var(--mat-sys-title-small-size);
@@ -110,11 +116,7 @@
 
     .widget-list-header {
       justify-content: center;
-      padding: 16px 8px 8px;
-
-      .widgets-icon {
-        transform: scale(1.1);
-      }
+      padding: 12px 8px;
     }
 
     .widget-list {
