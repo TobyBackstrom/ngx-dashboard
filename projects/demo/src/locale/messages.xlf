@@ -6,6 +6,11 @@
         <source>Dashboard</source>
       </segment>
     </unit>
+    <unit id="demo.navigation.menuAriaLabel">
+      <segment>
+        <source>Open navigation menu</source>
+      </segment>
+    </unit>
     <unit id="demo.navigation.radialGaugeDemo">
       <segment>
         <source>Radial Gauge Demo</source>
@@ -1103,7 +1108,7 @@
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.opacity">
       <segment>
-        <source> Opacity: <ph id="0" equiv="INTERPOLATION" disp="{{ formatOpacity(opacity()) }}"/>% </source>
+        <source> Opacity: <ph id="0" equiv="INTERPOLATION"/>% </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.arrow.dialog.background">
@@ -1283,7 +1288,7 @@
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.opacity">
       <segment>
-        <source> Opacity: <ph id="0" equiv="INTERPOLATION" disp="{{ formatOpacity(opacity()) }}"/>% </source>
+        <source> Opacity: <ph id="0" equiv="INTERPOLATION"/>% </source>
       </segment>
     </unit>
     <unit id="ngx.dashboard.widgets.label.dialog.background">
@@ -1509,6 +1514,26 @@
     <unit id="ngx.dashboard.widget.list.item.ariaLabel">
       <segment>
         <source><ph id="0" equiv="PH" disp="widget.name"/> widget: <ph id="1" equiv="PH_1" disp="widget.description"/></source>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.ariaLabel">
+      <segment>
+        <source>Search widgets by name, description or type</source>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.clear">
+      <segment>
+        <source>Clear widget search</source>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.empty">
+      <segment>
+        <source> No matching widgets </source>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.placeholder">
+      <segment>
+        <source>Search widgets</source>
       </segment>
     </unit>
   </file>
