@@ -432,6 +432,33 @@ describe('CellComponent - Resize Functionality', () => {
       expect(corner).toBeNull();
     });
 
+    it('should keep the corner handle hit area inside the cell, on top of the edge handles', () => {
+      // Regression: the handle used to hang outside the cell like the edge
+      // handles do, but `.cell` clips overflow, leaving a few unhittable
+      // pixels. Probe the real corner pixel and assert the corner handle -- not
+      // the right/bottom edge handle -- is what the pointer would land on.
+      fixture.componentRef.setInput('isEditMode', true);
+      const host: HTMLElement = fixture.nativeElement;
+      host.style.width = '200px';
+      host.style.height = '120px';
+      fixture.detectChanges();
+
+      const cell: HTMLElement = host.querySelector('.cell')!;
+      const cellRect = cell.getBoundingClientRect();
+      const corner: HTMLElement = host.querySelector('.resize-handle--corner')!;
+      const cornerRect = corner.getBoundingClientRect();
+
+      expect(cornerRect.width).toBeGreaterThan(0);
+      expect(cornerRect.right).toBeLessThanOrEqual(Math.ceil(cellRect.right));
+      expect(cornerRect.bottom).toBeLessThanOrEqual(Math.ceil(cellRect.bottom));
+
+      const hit = document.elementFromPoint(
+        cellRect.right - 4,
+        cellRect.bottom - 4
+      );
+      expect(hit === corner || corner.contains(hit)).toBe(true);
+    });
+
     it('should start a both-axis resize on corner mousedown', () => {
       // The suite stubs Renderer2.listen; template event bindings go through
       // the same renderer, so restore it before the handle is rendered.
