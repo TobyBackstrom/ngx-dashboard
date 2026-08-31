@@ -30,6 +30,8 @@ import {
   WidgetId,
   DragData,
   CellData,
+  CellResizeDirection,
+  CellResizeDelta,
   GridResizeResult,
 } from '../models';
 import { DashboardStore } from '../store/dashboard-store';
@@ -225,13 +227,13 @@ export class DashboardEditorComponent {
   // Handle resize events from cell component
   onCellResizeStart = (event: {
     cellId: CellId;
-    direction: 'horizontal' | 'vertical';
+    direction: CellResizeDirection;
   }) => this.#store.startResize(event.cellId);
 
   onCellResizeMove = (event: {
     cellId: CellId;
-    direction: 'horizontal' | 'vertical';
-    delta: number;
+    direction: CellResizeDirection;
+    delta: CellResizeDelta;
   }) => this.#store.updateResizePreview(event.direction, event.delta);
 
   onCellResizeEnd = (event: { cellId: CellId; apply: boolean }) =>

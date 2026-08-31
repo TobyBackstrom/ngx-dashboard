@@ -4,7 +4,13 @@ import {
   withState,
   patchState,
 } from '@ngrx/signals';
-import { CellId, CellIdUtils, CellData } from '../../models';
+import {
+  CellId,
+  CellIdUtils,
+  CellData,
+  CellResizeDirection,
+  CellResizeDelta,
+} from '../../models';
 import { calculateResizePreview, type ResizeData } from './utils/resize.utils';
 
 export interface ResizeState {
@@ -78,8 +84,8 @@ export const withResize = () =>
       },
 
       _updateResizePreview(
-        direction: 'horizontal' | 'vertical',
-        delta: number,
+        direction: CellResizeDirection,
+        delta: CellResizeDelta,
         dependencies: {
           cells: CellData[];
           rows: number;

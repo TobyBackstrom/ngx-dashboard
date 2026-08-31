@@ -15,6 +15,8 @@ import {
   CellId,
   CellIdUtils,
   CellData,
+  CellResizeDirection,
+  CellResizeDelta,
   DragData,
   DashboardDataDto,
   UNKNOWN_WIDGET_TYPEID,
@@ -115,7 +117,7 @@ export const DashboardStore = signalStore(
       });
     },
 
-    updateResizePreview(direction: 'horizontal' | 'vertical', delta: number) {
+    updateResizePreview(direction: CellResizeDirection, delta: CellResizeDelta) {
       store._updateResizePreview(direction, delta, {
         cells: store.cells(),
         rows: store.rows(),

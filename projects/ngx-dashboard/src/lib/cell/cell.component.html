@@ -26,6 +26,14 @@
   >
     <div class="resize-handle-line"></div>
   </div>
+  <!-- Bottom-right corner handle: resizes columns and rows together.
+       Sits above the edge handles so the shared corner area grows both ways. -->
+  <div
+    class="resize-handle resize-handle--corner"
+    (mousedown)="onResizeStart($event, 'both')"
+  >
+    <div class="resize-handle-grip"></div>
+  </div>
   }
 </div>
 

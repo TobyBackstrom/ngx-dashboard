@@ -28,6 +28,8 @@ import {
   DragData,
   WidgetFactory,
   Widget,
+  CellResizeDirection,
+  CellResizeDelta,
 } from '../models';
 import { DashboardStore } from '../store/dashboard-store';
 import { CellDisplayData } from '../models';
@@ -36,6 +38,23 @@ import {
   CellContextMenuService,
   CellContextMenuItem,
 } from './cell-context-menu.service';
+
+/** Body cursor class used for the duration of a resize gesture. */
+function resizeCursorClass(direction: CellResizeDirection): string {
+  switch (direction) {
+    case 'horizontal':
+      return 'cursor-col-resize';
+    case 'vertical':
+      return 'cursor-row-resize';
+    default:
+      return 'cursor-nwse-resize';
+  }
+}
+
+/** Convert a pixel drag distance into whole grid tracks. */
+function spanDelta(distance: number, cellSize: number): number {
+  return Math.round(distance / cellSize);
+}
 
 @Component({
   selector: 'lib-cell',
@@ -74,12 +93,12 @@ export class CellComponent {
   settings = output<{ id: WidgetId; flat: boolean }>();
   resizeStart = output<{
     cellId: CellId;
-    direction: 'horizontal' | 'vertical';
+    direction: CellResizeDirection;
   }>();
   resizeMove = output<{
     cellId: CellId;
-    direction: 'horizontal' | 'vertical';
-    delta: number;
+    direction: CellResizeDirection;
+    delta: CellResizeDelta;
   }>();
   resizeEnd = output<{ cellId: CellId; apply: boolean }>();
 
@@ -122,7 +141,7 @@ export class CellComponent {
 
   resizeData = this.#store.resizeData;
   gridCellDimensions = this.#store.gridCellDimensions;
-  private resizeDirection = signal<'horizontal' | 'vertical' | null>(null);
+  private resizeDirection = signal<CellResizeDirection | null>(null);
   private resizeStartPos = signal({ x: 0, y: 0 });
 
   constructor() {
@@ -329,7 +348,7 @@ export class CellComponent {
    * Performance: Only THIS cell creates document listeners when actively resizing
    * RxJS-free: Uses Renderer2 for dynamic listener management
    */
-  onResizeStart(event: MouseEvent, direction: 'horizontal' | 'vertical'): void {
+  onResizeStart(event: MouseEvent, direction: CellResizeDirection): void {
     event.preventDefault();
     event.stopPropagation();
 
@@ -340,9 +359,7 @@ export class CellComponent {
     // Setup document listeners only when actively resizing
     this.setupDocumentListeners();
 
-    const cursorClass =
-      direction === 'horizontal' ? 'cursor-col-resize' : 'cursor-row-resize';
-    this.#renderer.addClass(document.body, cursorClass);
+    this.#renderer.addClass(document.body, resizeCursorClass(direction));
   }
 
   /**
@@ -357,23 +374,23 @@ export class CellComponent {
     const startPos = this.resizeStartPos();
     const cellSize = this.gridCellDimensions();
 
-    if (direction === 'horizontal') {
-      const deltaX = event.clientX - startPos.x;
-      const deltaSpan = Math.round(deltaX / cellSize.width);
-      this.resizeMove.emit({
-        cellId: this.cellId(),
-        direction,
-        delta: deltaSpan,
-      });
-    } else {
-      const deltaY = event.clientY - startPos.y;
-      const deltaSpan = Math.round(deltaY / cellSize.height);
-      this.resizeMove.emit({
-        cellId: this.cellId(),
-        direction,
-        delta: deltaSpan,
-      });
-    }
+    // Edge handles report a single number for their own axis; the corner
+    // handle drives both at once, so it reports a per-axis delta instead.
+    const columns = spanDelta(event.clientX - startPos.x, cellSize.width);
+    const rows = spanDelta(event.clientY - startPos.y, cellSize.height);
+
+    const delta: CellResizeDelta =
+      direction === 'horizontal'
+        ? columns
+        : direction === 'vertical'
+        ? rows
+        : { columns, rows };
+
+    this.resizeMove.emit({
+      cellId: this.cellId(),
+      direction,
+      delta,
+    });
   }
 
   /**
@@ -382,8 +399,11 @@ export class CellComponent {
    * State cleanup: Resets resize direction to stop further event processing
    */
   private handleResizeEnd(): void {
+    // Remove every resize cursor class rather than just the active one, so a
+    // gesture can never leave the body cursor stuck if the direction changed.
     this.#renderer.removeClass(document.body, 'cursor-col-resize');
     this.#renderer.removeClass(document.body, 'cursor-row-resize');
+    this.#renderer.removeClass(document.body, 'cursor-nwse-resize');
 
     // Clean up document listeners immediately
     this.#cleanupDocumentListeners();
