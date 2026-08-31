@@ -1,4 +1,11 @@
-import { CellId, CellIdUtils, CellData } from '../../../models';
+import {
+  CellId,
+  CellIdUtils,
+  CellData,
+  CellResizeDirection,
+  CellResizeDelta,
+  normalizeCellResizeDelta,
+} from '../../../models';
 
 export function getMaxColSpan(
   cellId: CellId,
@@ -6,9 +13,17 @@ export function getMaxColSpan(
   col: number,
   cells: CellData[],
   columns: number,
+  /**
+   * How many rows the widget is assumed to occupy while widening. Defaults to
+   * its committed rowSpan; a corner resize passes the *preview* rowSpan so the
+   * two axes are checked against each other instead of against stale spans.
+   */
+  rowSpan?: number,
 ): number {
   const currentCell = cells.find((c) => CellIdUtils.equals(c.cellId, cellId));
   if (!currentCell) return 1;
+
+  const effectiveRowSpan = rowSpan ?? currentCell.rowSpan;
 
   // Start from current position and check each column until we hit a boundary or collision
   let maxSpan = 1;
@@ -17,7 +32,7 @@ export function getMaxColSpan(
     // Check if this column is free for all rows the widget spans
     let columnIsFree = true;
 
-    for (let testRow = row; testRow < row + currentCell.rowSpan; testRow++) {
+    for (let testRow = row; testRow < row + effectiveRowSpan; testRow++) {
       const occupied = cells.some((cell) => {
         if (CellIdUtils.equals(cell.cellId, cellId)) return false;
 
@@ -56,9 +71,16 @@ export function getMaxRowSpan(
   col: number,
   cells: CellData[],
   rows: number,
+  /**
+   * How many columns the widget is assumed to occupy while growing taller.
+   * Defaults to its committed colSpan; see `getMaxColSpan`'s `rowSpan`.
+   */
+  colSpan?: number,
 ): number {
   const currentCell = cells.find((c) => CellIdUtils.equals(c.cellId, cellId));
   if (!currentCell) return 1;
+
+  const effectiveColSpan = colSpan ?? currentCell.colSpan;
 
   // Start from current position and check each row until we hit a boundary or collision
   let maxSpan = 1;
@@ -67,7 +89,7 @@ export function getMaxRowSpan(
     // Check if this row is free for all columns the widget spans
     let rowIsFree = true;
 
-    for (let testCol = col; testCol < col + currentCell.colSpan; testCol++) {
+    for (let testCol = col; testCol < col + effectiveColSpan; testCol++) {
       const occupied = cells.some((cell) => {
         if (CellIdUtils.equals(cell.cellId, cellId)) return false;
 
@@ -110,8 +132,8 @@ export interface ResizeData {
 
 export function calculateResizePreview(
   resizeData: ResizeData,
-  direction: 'horizontal' | 'vertical',
-  delta: number,
+  direction: CellResizeDirection,
+  delta: CellResizeDelta,
   cells: CellData[],
   rows: number,
   columns: number,
@@ -121,45 +143,40 @@ export function calculateResizePreview(
   );
   if (!cell) return null;
 
-  if (direction === 'horizontal') {
-    // Calculate the desired span based on the delta
-    const desiredColSpan = Math.max(1, resizeData.originalColSpan + delta);
+  const deltaSpans = normalizeCellResizeDelta(direction, delta);
 
-    // Get the maximum allowed span
-    const maxColSpan = getMaxColSpan(
-      cell.cellId,
-      cell.row,
-      cell.col,
-      cells,
-      columns,
+  // Deltas are always measured from the span the gesture started with, so a
+  // drag back towards the origin undoes itself exactly. An axis this handle
+  // does not drive keeps whatever the gesture has already previewed.
+  const drivesColumns = direction !== 'vertical';
+  const drivesRows = direction !== 'horizontal';
+
+  let colSpan = drivesColumns
+    ? Math.max(1, resizeData.originalColSpan + deltaSpans.columns)
+    : resizeData.previewColSpan;
+  let rowSpan = drivesRows
+    ? Math.max(1, resizeData.originalRowSpan + deltaSpans.rows)
+    : resizeData.previewRowSpan;
+
+  // Clamp columns against the row extent the gesture is asking for, then rows
+  // against the columns actually granted. For the corner ('both') handle this
+  // ordering is what keeps the two axes honest: a widget may only widen into
+  // columns that are free for every row it is simultaneously growing into.
+  // Clamping in this order cannot yield an overlapping pair, because shrinking
+  // rows only ever relaxes the column limit.
+  if (drivesColumns) {
+    colSpan = Math.min(
+      colSpan,
+      getMaxColSpan(cell.cellId, cell.row, cell.col, cells, columns, rowSpan),
     );
-
-    // Clamp to the maximum
-    const newColSpan = Math.min(desiredColSpan, maxColSpan);
-
-    return {
-      rowSpan: resizeData.previewRowSpan,
-      colSpan: newColSpan,
-    };
-  } else {
-    // Calculate the desired span based on the delta
-    const desiredRowSpan = Math.max(1, resizeData.originalRowSpan + delta);
-
-    // Get the maximum allowed span
-    const maxRowSpan = getMaxRowSpan(
-      cell.cellId,
-      cell.row,
-      cell.col,
-      cells,
-      rows,
-    );
-
-    // Clamp to the maximum
-    const newRowSpan = Math.min(desiredRowSpan, maxRowSpan);
-
-    return {
-      rowSpan: newRowSpan,
-      colSpan: resizeData.previewColSpan,
-    };
   }
+
+  if (drivesRows) {
+    rowSpan = Math.min(
+      rowSpan,
+      getMaxRowSpan(cell.cellId, cell.row, cell.col, cells, rows, colSpan),
+    );
+  }
+
+  return { rowSpan, colSpan };
 }

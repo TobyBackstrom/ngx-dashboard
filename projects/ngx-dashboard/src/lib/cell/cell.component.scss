@@ -148,6 +148,27 @@
       }
     }
   }
+
+  // Bottom-right corner: resizes columns and rows in a single gesture. It
+  // overlaps the tail of both edge handles, so it needs the higher z-index to
+  // win the pointer in the shared area.
+  &--corner {
+    cursor: nwse-resize;
+    width: 16px;
+    height: 16px;
+    right: -8px;
+    bottom: -8px;
+    z-index: 21;
+    opacity: 0;
+
+    &:hover {
+      opacity: 1;
+
+      .resize-handle-grip {
+        border-color: var(--mat-sys-primary-container);
+      }
+    }
+  }
 }
 
 .resize-handle-line {
@@ -165,6 +186,20 @@
     height: 8px;
     border-radius: 2px;
   }
+}
+
+// The corner grip is drawn inside the cell's own corner: `.cell` clips
+// overflow, so the outer half of the 16px handle box is invisible and only the
+// inner 8px square can carry the visual.
+.resize-handle-grip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-right: 3px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+  border-bottom-right-radius: 2px;
 }
 
 .resize-preview {

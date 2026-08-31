@@ -226,6 +226,81 @@ describe('DashboardStore - Resize Operations', () => {
       });
     });
 
+    describe('corner (both-axis) resizing', () => {
+      it('should grow both spans in one gesture', () => {
+        store.updateResizePreview('both', { columns: 2, rows: 3 });
+
+        expect(store.resizeData()?.previewColSpan).toBe(4);
+        expect(store.resizeData()?.previewRowSpan).toBe(5);
+      });
+
+      it('should shrink both spans in one gesture', () => {
+        store.updateResizePreview('both', { columns: -1, rows: -1 });
+
+        expect(store.resizeData()?.previewColSpan).toBe(1);
+        expect(store.resizeData()?.previewRowSpan).toBe(1);
+      });
+
+      it('should apply mixed-sign deltas per axis', () => {
+        store.updateResizePreview('both', { columns: 2, rows: -1 });
+
+        expect(store.resizeData()?.previewColSpan).toBe(4);
+        expect(store.resizeData()?.previewRowSpan).toBe(1);
+      });
+
+      it('should not allow either span below 1', () => {
+        store.updateResizePreview('both', { columns: -9, rows: -9 });
+
+        expect(store.resizeData()?.previewColSpan).toBe(1);
+        expect(store.resizeData()?.previewRowSpan).toBe(1);
+      });
+
+      it('should respect grid boundaries on both axes', () => {
+        // Widget at (5,5) in a 16x16 grid: 12 tracks available each way.
+        store.updateResizePreview('both', { columns: 20, rows: 20 });
+
+        expect(store.resizeData()?.previewColSpan).toBe(12);
+        expect(store.resizeData()?.previewRowSpan).toBe(12);
+      });
+
+      it('should apply a plain number delta to both axes', () => {
+        store.updateResizePreview('both', 1);
+
+        expect(store.resizeData()?.previewColSpan).toBe(3);
+        expect(store.resizeData()?.previewRowSpan).toBe(3);
+      });
+
+      it('should measure each delta from the original spans, not the last preview', () => {
+        store.updateResizePreview('both', { columns: 3, rows: 3 });
+        store.updateResizePreview('both', { columns: 1, rows: 0 });
+
+        expect(store.resizeData()?.previewColSpan).toBe(3);
+        expect(store.resizeData()?.previewRowSpan).toBe(2);
+      });
+
+      it('should not widen into columns that are blocked by the rows it is also growing into', () => {
+        // Blocker sits diagonally at (7,7): free for the widget's current
+        // 2x2 footprint on either axis alone, but inside the 3x3 square a
+        // corner drag would otherwise claim.
+        store.addWidget({
+          widgetId: WidgetIdUtils.generate(),
+          cellId: CellIdUtils.create(7, 7),
+          row: 7,
+          col: 7,
+          rowSpan: 1,
+          colSpan: 1,
+          widgetFactory: mockWidgetFactory,
+          widgetState: {},
+        });
+
+        store.updateResizePreview('both', { columns: 1, rows: 1 });
+
+        // Columns stop before the blocked column; rows may still grow past it.
+        expect(store.resizeData()?.previewColSpan).toBe(2);
+        expect(store.resizeData()?.previewRowSpan).toBe(3);
+      });
+    });
+
     describe('collision detection during resize', () => {
       beforeEach(() => {
         // Add blocking widget at (5, 8) to (6, 9)
@@ -315,6 +390,17 @@ describe('DashboardStore - Resize Operations', () => {
     it('should apply resize changes when apply is true and preview differs', () => {
       store.updateResizePreview('horizontal', 2);
       store.updateResizePreview('vertical', 1);
+
+      store.endResize(true);
+
+      const updatedCell = GridQueryInternalUtils.getCellAt(store.cells(), 5, 5);
+      expect(updatedCell?.rowSpan).toBe(3);
+      expect(updatedCell?.colSpan).toBe(4);
+      expect(store.resizeData()).toBeNull();
+    });
+
+    it('should commit both spans from a single corner gesture', () => {
+      store.updateResizePreview('both', { columns: 2, rows: 1 });
 
       store.endResize(true);
 
