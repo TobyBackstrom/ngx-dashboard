@@ -149,15 +149,22 @@
     }
   }
 
-  // Bottom-right corner: resizes columns and rows in a single gesture. It
-  // overlaps the tail of both edge handles, so it needs the higher z-index to
-  // win the pointer in the shared area.
+  // Bottom-right corner: resizes columns and rows in a single gesture.
+  //
+  // Unlike the edge handles this sits fully *inside* the cell (right/bottom 0,
+  // no negative offset). `.cell` hides overflow and rounds its corners, so a
+  // handle hanging outside would be clipped down to a few unhittable pixels --
+  // and `.cell:hover` lifts the cell 2px, moving that sliver out from under the
+  // pointer. Staying inside keeps the whole 18px square clickable.
+  //
+  // It overlaps the tail of both edge handles, so the higher z-index is what
+  // makes the shared corner area resize diagonally instead of on one axis.
   &--corner {
     cursor: nwse-resize;
-    width: 16px;
-    height: 16px;
-    right: -8px;
-    bottom: -8px;
+    width: 18px;
+    height: 18px;
+    right: 0;
+    bottom: 0;
     z-index: 21;
     opacity: 0;
 
@@ -165,7 +172,7 @@
       opacity: 1;
 
       .resize-handle-grip {
-        border-color: var(--mat-sys-primary-container);
+        border-color: var(--mat-sys-primary);
       }
     }
   }
@@ -188,18 +195,17 @@
   }
 }
 
-// The corner grip is drawn inside the cell's own corner: `.cell` clips
-// overflow, so the outer half of the 16px handle box is invisible and only the
-// inner 8px square can carry the visual.
+// Corner grip: an inset chevron hugging the cell's rounded corner, so the
+// diagonal affordance reads differently from the edge handles' bars.
 .resize-handle-grip {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  border-right: 3px solid rgba(0, 0, 0, 0.1);
-  border-bottom: 3px solid rgba(0, 0, 0, 0.1);
-  border-bottom-right-radius: 2px;
+  right: 3px;
+  bottom: 3px;
+  width: 10px;
+  height: 10px;
+  border-right: 3px solid rgba(0, 0, 0, 0.25);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.25);
+  border-bottom-right-radius: 3px;
 }
 
 .resize-preview {
