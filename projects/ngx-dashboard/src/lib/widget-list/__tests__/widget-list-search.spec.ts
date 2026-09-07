@@ -51,6 +51,8 @@ describe('WidgetListComponent search', () => {
     dashboardService = TestBed.inject(DashboardService);
     fixture = TestBed.createComponent(WidgetListComponent);
     component = fixture.componentInstance;
+    // The search box is opt-in, and filtering is inert while it is off.
+    fixture.componentRef.setInput('enableSearchBox', true);
 
     dashboardService.registerWidgetType(
       makeWidget('@test/gauge', 'Radial Gauge', 'Shows a value on a dial')
