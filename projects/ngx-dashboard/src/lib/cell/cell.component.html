@@ -6,6 +6,17 @@
   (dragstart)="onDragStart($event)"
   (dragend)="onDragEnd()"
 >
+  <!-- Placed before `.content-area` so a screen reader names the widget's type
+       before reading the widget itself; it is positioned absolutely, so DOM
+       order costs nothing visually.
+
+       Not marked for translation: the name comes from `WidgetMetadata.name`,
+       which is host-supplied and already localized. The factory is guarded
+       because the input admits `undefined`, and an unnamed badge would render
+       as an empty coloured tab. -->
+  @if (showWidgetNames() && widgetFactory()?.name; as widgetName) {
+  <div class="widget-name-badge">{{ widgetName }}</div>
+  }
   <div class="content-area">
     <ng-template #container></ng-template>
   </div>

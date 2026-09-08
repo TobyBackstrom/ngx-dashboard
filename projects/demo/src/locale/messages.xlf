@@ -131,6 +131,11 @@
         <source>Grid Settings</source>
       </segment>
     </unit>
+    <unit id="demo.dashboard.hideWidgetNames">
+      <segment>
+        <source>Hide Widget Names</source>
+      </segment>
+    </unit>
     <unit id="demo.dashboard.importFromFile">
       <segment>
         <source>Import from File</source>
@@ -149,6 +154,11 @@
     <unit id="demo.dashboard.selectionModeInstructions">
       <segment>
         <source>Drag to select area • Press ESC to cancel</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.showWidgetNames">
+      <segment>
+        <source>Show Widget Names</source>
       </segment>
     </unit>
     <unit id="demo.dashboard.loadFromBrowser">

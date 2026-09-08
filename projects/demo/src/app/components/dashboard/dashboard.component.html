@@ -14,6 +14,7 @@
       [editMode]="editMode()"
       [reservedSpace]="dashboardReservedSpace()"
       [enableSelection]="selectMode()"
+      [showWidgetNames]="showWidgetNames()"
       (selectionComplete)="onSelectionComplete($event)"
     >
     </ngx-dashboard>
@@ -88,7 +89,9 @@
   [editMode]="editMode()"
   [selectMode]="selectMode()"
   [isWidgetListCollapsed]="isWidgetListCollapsed()"
+  [showWidgetNames]="showWidgetNames()"
   (editModeToggle)="onEditModeToggle()"
+  (widgetNamesToggle)="onWidgetNamesToggle()"
   (exportToFile)="onExportToFile()"
   (importFromFile)="onImportFromFile()"
   (saveToLocalStorage)="onSaveToLocalStorage()"

@@ -96,6 +96,20 @@ export class DashboardComponent implements OnChanges {
   maxRows = input<number>(DEFAULT_GRID_SIZE_LIMITS.maxRows);
   maxColumns = input<number>(DEFAULT_GRID_SIZE_LIMITS.maxColumns);
 
+  /**
+   * Show each widget's type name as a badge in its top-right corner.
+   *
+   * A reading aid for a crowded grid, where a wall of small tiles gives no
+   * clue what each one is. The library ships the badge but no control for it:
+   * the host owns that chrome, and commonly binds it to its own edit mode.
+   *
+   * The input is the only write path — deliberately no imperative setter, in
+   * line with every other view input here (`editMode`, `enableSelection`,
+   * `dragThreshold`, `selectionModifier`). A host holds the flag in its own
+   * signal and binds it.
+   */
+  showWidgetNames = input<boolean>(false);
+
   // Component outputs
   selectionComplete = output<GridSelection>();
   gridResized = output<GridResizeResult>();
@@ -164,38 +178,28 @@ export class DashboardComponent implements OnChanges {
     // gutter wins over the DTO's on the first flush: the input is the more
     // specific instruction. Later imperative loadDashboard() calls still win,
     // because an unchanged input never re-runs this.
-    effect(() => {
-      const gutterSize = this.gutterSize();
-      if (gutterSize === undefined) return;
-      untracked(() => {
-        this.#store.setGutterSize(gutterSize);
-      });
-    });
+    this.#seed(this.gutterSize, (gutterSize) =>
+      this.#store.setGutterSize(gutterSize)
+    );
 
     // Keep the resize ceiling in sync with the inputs. Covers both the typed
     // path and the drag handles, since both clamp through the same store.
-    effect(() => {
-      const limits = { maxRows: this.maxRows(), maxColumns: this.maxColumns() };
-      untracked(() => {
-        this.#store.setGridSizeLimits(limits);
-      });
-    });
+    this.#seed(
+      () => ({ maxRows: this.maxRows(), maxColumns: this.maxColumns() }),
+      (limits) => this.#store.setGridSizeLimits(limits)
+    );
 
     // Sync edit mode with store (without triggering state preservation)
-    effect(() => {
-      const editMode = this.editMode();
-      untracked(() => {
-        this.#store.setEditMode(editMode);
-      });
-    });
+    this.#seed(this.editMode, (editMode) => this.#store.setEditMode(editMode));
+
+    this.#seed(this.showWidgetNames, (showWidgetNames) =>
+      this.#store.setShowWidgetNames(showWidgetNames)
+    );
 
     // Sync reserved space input with viewport service
-    effect(() => {
-      const reserved = this.reservedSpace();
-      if (reserved) {
-        this.#viewport.setReservedSpace(reserved);
-      }
-    });
+    this.#seed(this.reservedSpace, (reserved) =>
+      this.#viewport.setReservedSpace(reserved)
+    );
 
     // Reset last widget selection when exiting edit mode
     effect(() => {
@@ -206,6 +210,31 @@ export class DashboardComponent implements OnChanges {
           this.#emptyCellMenuService.setLastSelection(null);
         });
       }
+    });
+  }
+
+  /**
+   * Push an input's value into the store (or a service) whenever it changes.
+   *
+   * The `untracked()` wrapper is the load-bearing part rather than a
+   * formality: the setters it calls read store state, so without it the
+   * effect would take a dependency on what it just wrote and re-trigger
+   * itself. Having one helper own that makes the discipline structural
+   * instead of something each new seeded input has to remember.
+   *
+   * An `undefined` value is skipped, so an input declared without a default
+   * expresses "no opinion" and never overwrites a value another writer — the
+   * loaded DTO, say — has already committed.
+   *
+   * Registration order is significant: these run in the order they are
+   * registered, after the `dashboardData` effect. Call it only from the
+   * constructor, where the injection context `effect()` needs is active.
+   */
+  #seed<T>(source: () => T, apply: (value: Exclude<T, undefined>) => void): void {
+    effect(() => {
+      const value = source();
+      if (value === undefined) return;
+      untracked(() => apply(value as Exclude<T, undefined>));
     });
   }
 

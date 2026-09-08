@@ -71,6 +71,7 @@ export class DashboardComponent {
   protected editMode = signal(false);
   protected selectMode = signal(false);
   protected isZoomed = signal(false);
+  protected showWidgetNames = signal(false);
   protected originalDashboard = signal<DashboardDataDto | null>(null);
   protected isWidgetListCollapsed = signal(true);
 
@@ -114,13 +115,20 @@ export class DashboardComponent {
 
   /**
    * Toggle edit mode
-   * Automatically disables selection mode when entering edit mode
+   * Automatically disables selection mode when entering edit mode, and the
+   * widget name badges when leaving it
    */
   onEditModeToggle(): void {
     this.editMode.update((mode) => !mode);
-    // Disable selection mode when entering edit mode
+
     if (this.editMode()) {
+      // Disable selection mode when entering edit mode
       this.selectMode.set(false);
+    } else {
+      // The badges are an aid for arranging widgets, so leaving edit mode
+      // returns the dashboard to how it is meant to be presented. They can
+      // still be switched back on from the FAB while viewing.
+      this.showWidgetNames.set(false);
     }
   }
 
@@ -289,6 +297,13 @@ export class DashboardComponent {
     const dashboard = this.dashboard();
     dashboard.setGridSize(config.rows, config.columns);
     dashboard.setGutterSize(config.gutterSize);
+  }
+
+  /**
+   * Toggle the widget type badges.
+   */
+  onWidgetNamesToggle(): void {
+    this.showWidgetNames.update((shown) => !shown);
   }
 
   /**

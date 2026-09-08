@@ -22,7 +22,8 @@ type DashboardAction =
   | 'clear'
   | 'reset'
   | 'select'
-  | 'gridSettings';
+  | 'gridSettings'
+  | 'widgetNames';
 
 @Component({
   selector: 'app-dashboard-fab',
@@ -45,11 +46,13 @@ export class DashboardFabComponent {
   resetToDefault = output<void>();
   selectToggle = output<void>();
   gridSettings = output<void>();
+  widgetNamesToggle = output<void>();
 
   // Edit mode and select mode inputs from parent
   editMode = input(false);
   selectMode = input(false);
   isWidgetListCollapsed = input(true);
+  showWidgetNames = input(false);
 
   /**
    * Command map for action handlers
@@ -65,6 +68,7 @@ export class DashboardFabComponent {
     reset: () => this.resetToDefault.emit(),
     select: () => this.selectToggle.emit(),
     gridSettings: () => this.gridSettings.emit(),
+    widgetNames: () => this.widgetNamesToggle.emit(),
   };
 
   /**
@@ -97,6 +101,15 @@ export class DashboardFabComponent {
     return this.selectMode()
       ? $localize`:@@demo.dashboard.cancelSelect:Cancel Zoom`
       : $localize`:@@demo.dashboard.selectArea:Zoom to Area`;
+  }
+
+  /**
+   * Get widget name badge toggle tooltip
+   */
+  getWidgetNamesTooltip(): string {
+    return this.showWidgetNames()
+      ? $localize`:@@demo.dashboard.hideWidgetNames:Hide Widget Names`
+      : $localize`:@@demo.dashboard.showWidgetNames:Show Widget Names`;
   }
 
   /**

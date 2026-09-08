@@ -105,6 +105,18 @@
     </button>
     }
 
+    <!-- Widget Name Badges (useful in both modes, so not gated on editMode) -->
+    <button
+      mat-mini-fab
+      class="speed-dial-action"
+      (click)="onAction('widgetNames')"
+      [matTooltip]="getWidgetNamesTooltip()"
+      matTooltipPosition="left"
+      [color]="showWidgetNames() ? 'accent' : undefined"
+    >
+      <mat-icon>{{ showWidgetNames() ? "label_off" : "label" }}</mat-icon>
+    </button>
+
     <!-- Edit/View Mode Toggle -->
     <button
       mat-mini-fab
