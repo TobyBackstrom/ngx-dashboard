@@ -109,6 +109,54 @@
         <target>Export to File</target>
       </segment>
     </unit>
+    <unit id="demo.dashboard.grid.columns">
+      <segment state="initial">
+        <source>Columns</source>
+        <target>Columns</target>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.gap">
+      <segment state="initial">
+        <source> Gap: <ph id="0" equiv="INTERPOLATION" disp="{{ gutterLabel() }}"/> </source>
+        <target> Gap: <ph id="0" equiv="INTERPOLATION" disp="{{ gutterLabel() }}"/> </target>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.gapAriaLabel">
+      <segment state="initial">
+        <source>Gap between grid cells</source>
+        <target>Gap between grid cells</target>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.gapCustom">
+      <segment state="initial">
+        <source>Custom (<ph id="0" equiv="value" disp="gutterSize"/>)</source>
+        <target>Custom (<ph id="0" equiv="value" disp="gutterSize"/>)</target>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.rows">
+      <segment state="initial">
+        <source>Rows</source>
+        <target>Rows</target>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.smallestFit">
+      <segment state="initial">
+        <source> Smallest fit <ph id="0" equiv="INTERPOLATION" disp="{{ minSize().columns }}"/> × <ph id="1" equiv="INTERPOLATION_1" disp="{{ minSize().rows }}"/> — set by the widgets already placed </source>
+        <target> Smallest fit <ph id="0" equiv="INTERPOLATION" disp="{{ minSize().columns }}"/> × <ph id="1" equiv="INTERPOLATION_1" disp="{{ minSize().rows }}"/> — set by the widgets already placed </target>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.title">
+      <segment state="initial">
+        <source>Grid settings</source>
+        <target>Grid settings</target>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.gridSettings">
+      <segment state="initial">
+        <source>Grid Settings</source>
+        <target>Grid Settings</target>
+      </segment>
+    </unit>
     <unit id="demo.dashboard.importFromFile">
       <segment state="initial">
         <source>Import from File</source>
@@ -893,6 +941,12 @@
       <segment state="initial">
         <source>Cancel</source>
         <target>Cancel</target>
+      </segment>
+    </unit>
+    <unit id="demo.common.ok">
+      <segment state="initial">
+        <source>OK</source>
+        <target>OK</target>
       </segment>
     </unit>
     <unit id="demo.common.save">

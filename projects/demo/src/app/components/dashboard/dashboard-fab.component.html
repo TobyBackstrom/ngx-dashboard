@@ -91,6 +91,20 @@
     </button>
     }
 
+    <!-- Grid Settings (edit mode only — geometry is an editing concern) -->
+    @if (editMode()) {
+    <button
+      mat-mini-fab
+      class="speed-dial-action"
+      (click)="onAction('gridSettings')"
+      matTooltip="Grid Settings"
+      i18n-matTooltip="@@demo.dashboard.gridSettings"
+      matTooltipPosition="left"
+    >
+      <mat-icon>grid_on</mat-icon>
+    </button>
+    }
+
     <!-- Edit/View Mode Toggle -->
     <button
       mat-mini-fab

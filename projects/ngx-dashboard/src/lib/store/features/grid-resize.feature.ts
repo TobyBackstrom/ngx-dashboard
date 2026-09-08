@@ -4,7 +4,7 @@ import {
   withState,
   patchState,
 } from '@ngrx/signals';
-import { CellData, GridResizeResult } from '../../models';
+import { CellData, GridResizeResult, GridSizeLimits } from '../../models';
 import { clampGridSize } from './utils/grid-resize.utils';
 
 export interface GridResizeState {
@@ -27,12 +27,18 @@ export const withGridResize = () =>
       _previewGridResize(
         deltaRows: number,
         deltaColumns: number,
-        dependencies: { rows: number; columns: number; cells: CellData[] }
+        dependencies: {
+          rows: number;
+          columns: number;
+          cells: CellData[];
+          limits: GridSizeLimits;
+        }
       ) {
         const preview = clampGridSize(
           dependencies.rows + deltaRows,
           dependencies.columns + deltaColumns,
-          dependencies.cells
+          dependencies.cells,
+          dependencies.limits
         );
 
         const current = store.gridResizePreview();

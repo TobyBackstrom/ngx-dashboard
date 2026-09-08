@@ -10,7 +10,10 @@ import { DashboardService } from '../services/dashboard.service';
 import { inject, computed } from '@angular/core';
 import { calculateCollisionInfo } from './features/utils/collision.utils';
 import { applySelectionFilter } from './features/utils/export.utils';
-import { clampGridSize } from './features/utils/grid-resize.utils';
+import {
+  clampGridSize,
+  minGridSizeFor,
+} from './features/utils/grid-resize.utils';
 import {
   CellId,
   CellIdUtils,
@@ -65,6 +68,21 @@ export const DashboardStore = signalStore(
     effectiveColumns: computed(
       () => store.gridResizePreview()?.columns ?? store.columns()
     ),
+
+    // Committed geometry as one object, for the public `gridConfig()` accessor
+    // and the `gridConfigChanged` output payload.
+    gridConfig: computed(() => ({
+      rows: store.rows(),
+      columns: store.columns(),
+      gutterSize: store.gutterSize(),
+    })),
+
+    // Smallest grid that still contains every widget's full footprint — the
+    // clamp-to-content floor. Exposed so a host can render the limit (and
+    // disable a decrement at it) instead of letting the user discover it by
+    // being snapped back. Shares minGridSizeFor with clampGridSize, so the
+    // limit shown and the limit enforced cannot drift.
+    minGridSize: computed(() => minGridSizeFor(store.cells())),
 
     // Invalid zones (collision detection)
     invalidHighlightMap: computed(() => {
@@ -148,7 +166,12 @@ export const DashboardStore = signalStore(
     // of bounds is snapped up to the smallest size that still contains every
     // widget's full footprint, so shrinking never orphans a widget.
     setGridSize(rows: number, columns: number): GridResizeResult {
-      const result = clampGridSize(rows, columns, store.cells());
+      const result = clampGridSize(
+        rows,
+        columns,
+        store.cells(),
+        store.gridSizeLimits()
+      );
       store.setGridConfig({ rows: result.rows, columns: result.columns });
       return result;
     },
@@ -160,6 +183,7 @@ export const DashboardStore = signalStore(
         rows: store.rows(),
         columns: store.columns(),
         cells: store.cells(),
+        limits: store.gridSizeLimits(),
       });
     },
 
@@ -284,10 +308,15 @@ export const DashboardStore = signalStore(
       const currentId = store.dashboardId();
       patchState(store, {
         ...(currentId ? {} : { dashboardId: data.dashboardId }),
+        widgetsById,
+      });
+      // Geometry goes through the store's single write path rather than a
+      // raw patch: a DTO can come from a hand-edited file, and an unusable
+      // gutter would otherwise reach --gutter-size and collapse the grid.
+      store.setGridConfig({
         rows: data.rows,
         columns: data.columns,
         gutterSize: data.gutterSize,
-        widgetsById,
       });
     },
   })),

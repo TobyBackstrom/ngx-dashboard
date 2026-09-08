@@ -21,7 +21,8 @@ type DashboardAction =
   | 'load'
   | 'clear'
   | 'reset'
-  | 'select';
+  | 'select'
+  | 'gridSettings';
 
 @Component({
   selector: 'app-dashboard-fab',
@@ -43,6 +44,7 @@ export class DashboardFabComponent {
   clearDashboard = output<void>();
   resetToDefault = output<void>();
   selectToggle = output<void>();
+  gridSettings = output<void>();
 
   // Edit mode and select mode inputs from parent
   editMode = input(false);
@@ -62,6 +64,7 @@ export class DashboardFabComponent {
     clear: () => this.clearDashboard.emit(),
     reset: () => this.resetToDefault.emit(),
     select: () => this.selectToggle.emit(),
+    gridSettings: () => this.gridSettings.emit(),
   };
 
   /**
