@@ -111,7 +111,12 @@
     cursor: col-resize;
     width: 16px;
     height: 100%;
-    right: -8px;
+    // Overhang only as far as the gutter allows. All cell hosts share
+    // `z-index: 1`, so an overhang that reached the next cell would be painted
+    // over by whichever comes later in DOM order -- re-creating the clipped
+    // hit area this handle placement exists to avoid, and swallowing clicks
+    // near the neighbour's edge.
+    right: calc(-1 * min(8px, var(--gutter-size, 8px)));
     top: 0;
     display: flex;
     align-items: center;
@@ -132,7 +137,7 @@
     cursor: row-resize;
     width: 100%;
     height: 16px;
-    bottom: -8px;
+    bottom: calc(-1 * min(8px, var(--gutter-size, 8px)));
     left: 0;
     display: flex;
     align-items: center;

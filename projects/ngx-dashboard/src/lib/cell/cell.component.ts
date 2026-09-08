@@ -53,6 +53,9 @@ import {
     '[style.grid-column]': 'gridColumnStyle()',
     '[class.is-dragging]': 'isDragging()',
     '[class.is-resizing]': 'isResizing()',
+    // On the host, not `.cell`: the resize handles are siblings of `.cell`, so
+    // a right-click on one would not bubble through it.
+    '(contextmenu)': 'onContextMenu($event)',
     '[class.drag-active]': 'isDragActive()',
     '[class.flat]': 'flat() === true',
   },

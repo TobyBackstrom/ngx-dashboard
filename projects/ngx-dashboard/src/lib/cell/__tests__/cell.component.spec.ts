@@ -454,6 +454,31 @@ describe('CellComponent - User Scenarios', () => {
       );
     });
 
+    // Regression: the resize handles are siblings of `.cell`, not children, so
+    // a binding on `.cell` never sees a right-click on one. Dispatching a real
+    // event is the point -- calling onContextMenu() directly cannot catch it.
+    it('should show context menu when user right-clicks a resize handle', () => {
+      const handle = fixture.nativeElement.querySelector(
+        '.resize-handle--corner'
+      ) as HTMLElement;
+      expect(handle).withContext('corner handle should render').toBeTruthy();
+
+      handle.dispatchEvent(
+        new MouseEvent('contextmenu', {
+          bubbles: true,
+          cancelable: true,
+          clientX: 100,
+          clientY: 200,
+        })
+      );
+
+      expect(mockContextMenuService.show).toHaveBeenCalledWith(
+        100,
+        200,
+        jasmine.any(Array)
+      );
+    });
+
     it('should not show context menu when not in edit mode', () => {
       fixture.componentRef.setInput('isEditMode', false);
       fixture.detectChanges();

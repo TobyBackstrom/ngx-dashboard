@@ -22,8 +22,8 @@ import {
 } from '@angular/core';
 import {
   CellResizeDirection,
+  pxToTracks,
   resizeCursorClass,
-  symmetricRound,
 } from '../models';
 
 /**
@@ -140,12 +140,12 @@ export class GridResizeHandleComponent {
 
     const next: GridResizeDelta = {
       deltaColumns:
-        axis !== 'vertical' && this.#cellWidth > 0
-          ? symmetricRound((event.clientX - this.#startX) / this.#cellWidth)
+        axis !== 'vertical'
+          ? pxToTracks(event.clientX - this.#startX, this.#cellWidth)
           : 0,
       deltaRows:
-        axis !== 'horizontal' && this.#cellHeight > 0
-          ? symmetricRound((event.clientY - this.#startY) / this.#cellHeight)
+        axis !== 'horizontal'
+          ? pxToTracks(event.clientY - this.#startY, this.#cellHeight)
           : 0,
     };
 

@@ -191,7 +191,10 @@ export class WidgetListComponent {
   /** Toggles a group open/closed. No-op for the unlabelled group. */
   toggleGroup(label?: string): void {
     if (!label) return;
-    this.setGroupExpanded(label, !this.isGroupExpanded(label));
+    // Read the user's own collapsed set rather than `isGroupExpanded()`, which
+    // reports every group as expanded while a filter is active -- inverting
+    // that would make this a one-way "collapse" for the whole filter.
+    this.setGroupExpanded(label, this.#collapsedGroups().has(label));
   }
 
   /**

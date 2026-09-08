@@ -29,8 +29,16 @@ export function symmetricRound(value: number): number {
   return Math.sign(value) * Math.round(Math.abs(value));
 }
 
-/** Convert a pixel drag distance into whole grid tracks. */
+/**
+ * Convert a pixel drag distance into whole grid tracks.
+ *
+ * Returns 0 for a non-positive or unknown cell size. The grid reports
+ * `{ width: 0, height: 0 }` until it has been measured, and dividing by that
+ * yields NaN, which propagates through the span clamp into `updateWidgetSpan`
+ * and would persist a NaN span into the widget and its exported DTO.
+ */
 export function pxToTracks(distance: number, cellSize: number): number {
+  if (!(cellSize > 0)) return 0;
   return symmetricRound(distance / cellSize);
 }
 
