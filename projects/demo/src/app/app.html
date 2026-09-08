@@ -74,11 +74,13 @@
             ? "radio_button_checked"
             : "radio_button_unchecked"
         }}</mat-icon>
-        <span class="theme-option-name">{{ themeConfig.displayName }}</span>
-        <span
-          class="color-swatch"
-          [style.background-color]="'var(' + themeConfig.cssVariable + ')'"
-        ></span>
+        <span class="theme-option-row">
+          <span class="theme-option-name">{{ themeConfig.displayName }}</span>
+          <span
+            class="color-swatch"
+            [style.background-color]="'var(' + themeConfig.cssVariable + ')'"
+          ></span>
+        </span>
       </button>
       }
     </mat-menu>
