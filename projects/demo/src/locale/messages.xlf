@@ -6,6 +6,11 @@
         <source>Dashboard</source>
       </segment>
     </unit>
+    <unit id="demo.navigation.menuAriaLabel">
+      <segment>
+        <source>Open navigation menu</source>
+      </segment>
+    </unit>
     <unit id="demo.navigation.radialGaugeDemo">
       <segment>
         <source>Radial Gauge Demo</source>
@@ -756,6 +761,16 @@
         <source>Realtime Gauge</source>
       </segment>
     </unit>
+    <unit id="demo.widgets.group.charts">
+      <segment>
+        <source>Charts</source>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.group.sensors">
+      <segment>
+        <source>Sensors</source>
+      </segment>
+    </unit>
     <unit id="demo.widgets.realtimeGauge.description">
       <segment>
         <source>Gauge with real-time data updates</source>
@@ -1499,6 +1514,26 @@
     <unit id="ngx.dashboard.widget.list.item.ariaLabel">
       <segment>
         <source><ph id="0" equiv="PH" disp="widget.name"/> widget: <ph id="1" equiv="PH_1" disp="widget.description"/></source>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.ariaLabel">
+      <segment>
+        <source>Search widgets by name, description or type</source>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.clear">
+      <segment>
+        <source>Clear widget search</source>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.empty">
+      <segment>
+        <source> No matching widgets </source>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.placeholder">
+      <segment>
+        <source>Search widgets</source>
       </segment>
     </unit>
   </file>

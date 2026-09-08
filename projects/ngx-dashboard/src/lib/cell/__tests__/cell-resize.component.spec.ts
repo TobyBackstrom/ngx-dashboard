@@ -277,6 +277,205 @@ describe('CellComponent - Resize Functionality', () => {
     });
   });
 
+  describe('Corner Resize - Both Axes', () => {
+    let mockMouseEvent: any; // Mock MouseEvent for testing
+
+    const move = (event: { clientX: number; clientY: number }) =>
+      (
+        component as unknown as {
+          handleResizeMove: (event: MouseEvent) => void;
+        }
+      ).handleResizeMove(event as unknown as MouseEvent);
+
+    beforeEach(() => {
+      store.setGridCellDimensions(100, 80);
+
+      mockMouseEvent = {
+        clientX: 150,
+        clientY: 200,
+        preventDefault: jasmine.createSpy('preventDefault'),
+        stopPropagation: jasmine.createSpy('stopPropagation'),
+      };
+    });
+
+    it('should emit resize start event with the both direction', () => {
+      spyOn(component.resizeStart, 'emit');
+
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'both');
+
+      expect(component.resizeStart.emit).toHaveBeenCalledWith({
+        cellId: mockCellId,
+        direction: 'both',
+      });
+    });
+
+    it('should add the diagonal cursor class', () => {
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'both');
+
+      expect(realRenderer.addClass).toHaveBeenCalledWith(
+        document.body,
+        'cursor-nwse-resize'
+      );
+    });
+
+    it('should emit a per-axis delta while dragging', () => {
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'both');
+      spyOn(component.resizeMove, 'emit');
+
+      // 200px right (2 cell widths), 160px down (2 cell heights)
+      move({ clientX: 350, clientY: 360 });
+
+      expect(component.resizeMove.emit).toHaveBeenCalledWith({
+        cellId: mockCellId,
+        direction: 'both',
+        delta: { columns: 2, rows: 2 },
+      });
+    });
+
+    it('should emit independent deltas per axis', () => {
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'both');
+      spyOn(component.resizeMove, 'emit');
+
+      // 300px right (3 cell widths), 80px up (-1 cell height)
+      move({ clientX: 450, clientY: 120 });
+
+      expect(component.resizeMove.emit).toHaveBeenCalledWith({
+        cellId: mockCellId,
+        direction: 'both',
+        delta: { columns: 3, rows: -1 },
+      });
+    });
+
+    it('should emit negative deltas on both axes when dragging inwards', () => {
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'both');
+      spyOn(component.resizeMove, 'emit');
+
+      move({ clientX: 50, clientY: 120 });
+
+      expect(component.resizeMove.emit).toHaveBeenCalledWith({
+        cellId: mockCellId,
+        direction: 'both',
+        delta: { columns: -1, rows: -1 },
+      });
+    });
+
+    it('should remove the diagonal cursor class on resize end', () => {
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'both');
+
+      (
+        component as unknown as { handleResizeEnd: () => void }
+      ).handleResizeEnd();
+
+      expect(realRenderer.removeClass).toHaveBeenCalledWith(
+        document.body,
+        'cursor-nwse-resize'
+      );
+    });
+
+    it('should handle a complete corner resize workflow', () => {
+      spyOn(component.resizeStart, 'emit');
+      spyOn(component.resizeMove, 'emit');
+      spyOn(component.resizeEnd, 'emit');
+
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'both');
+      move({ clientX: 250, clientY: 280 });
+      (
+        component as unknown as { handleResizeEnd: () => void }
+      ).handleResizeEnd();
+
+      expect(component.resizeStart.emit).toHaveBeenCalledWith({
+        cellId: mockCellId,
+        direction: 'both',
+      });
+      expect(component.resizeMove.emit).toHaveBeenCalledWith({
+        cellId: mockCellId,
+        direction: 'both',
+        delta: { columns: 1, rows: 1 },
+      });
+      expect(component.resizeEnd.emit).toHaveBeenCalledWith({
+        cellId: mockCellId,
+        apply: true,
+      });
+    });
+
+    it('should stop emitting move events once the gesture ended', () => {
+      component.onResizeStart(mockMouseEvent as unknown as MouseEvent, 'both');
+      (
+        component as unknown as { handleResizeEnd: () => void }
+      ).handleResizeEnd();
+
+      spyOn(component.resizeMove, 'emit');
+      move({ clientX: 350, clientY: 360 });
+
+      expect(component.resizeMove.emit).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Corner Handle - Template', () => {
+    it('should render the corner handle in edit mode', () => {
+      fixture.componentRef.setInput('isEditMode', true);
+      fixture.detectChanges();
+
+      const corner = fixture.nativeElement.querySelector(
+        '.resize-handle--corner'
+      );
+      expect(corner).toBeTruthy();
+    });
+
+    it('should not render the corner handle outside edit mode', () => {
+      fixture.componentRef.setInput('isEditMode', false);
+      fixture.detectChanges();
+
+      const corner = fixture.nativeElement.querySelector(
+        '.resize-handle--corner'
+      );
+      expect(corner).toBeNull();
+    });
+
+    it('should keep the corner handle hit area inside the cell, on top of the edge handles', () => {
+      // Regression: the handle used to hang outside the cell like the edge
+      // handles do, but `.cell` clips overflow, leaving a few unhittable
+      // pixels. Probe the real corner pixel and assert the corner handle -- not
+      // the right/bottom edge handle -- is what the pointer would land on.
+      fixture.componentRef.setInput('isEditMode', true);
+      const host: HTMLElement = fixture.nativeElement;
+      host.style.width = '200px';
+      host.style.height = '120px';
+      fixture.detectChanges();
+
+      const cell: HTMLElement = host.querySelector('.cell')!;
+      const cellRect = cell.getBoundingClientRect();
+      const corner: HTMLElement = host.querySelector('.resize-handle--corner')!;
+      const cornerRect = corner.getBoundingClientRect();
+
+      expect(cornerRect.width).toBeGreaterThan(0);
+      expect(cornerRect.right).toBeLessThanOrEqual(Math.ceil(cellRect.right));
+      expect(cornerRect.bottom).toBeLessThanOrEqual(Math.ceil(cellRect.bottom));
+
+      const hit = document.elementFromPoint(
+        cellRect.right - 4,
+        cellRect.bottom - 4
+      );
+      expect(hit === corner || corner.contains(hit)).toBe(true);
+    });
+
+    it('should start a both-axis resize on corner mousedown', () => {
+      // The suite stubs Renderer2.listen; template event bindings go through
+      // the same renderer, so restore it before the handle is rendered.
+      (realRenderer.listen as jasmine.Spy).and.callThrough();
+      fixture.componentRef.setInput('isEditMode', true);
+      fixture.detectChanges();
+
+      const startSpy = spyOn(component, 'onResizeStart');
+      const corner: HTMLElement = fixture.nativeElement.querySelector(
+        '.resize-handle--corner'
+      );
+      corner.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+
+      expect(startSpy).toHaveBeenCalledWith(jasmine.any(MouseEvent), 'both');
+    });
+  });
+
   describe('Store Integration - Public Behavior', () => {
     beforeEach(() => {
       store.setGridCellDimensions(100, 80);

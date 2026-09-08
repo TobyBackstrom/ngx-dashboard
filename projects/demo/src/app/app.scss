@@ -43,19 +43,6 @@
   white-space: nowrap;
 }
 
-/* Navigation menu button */
-button[matMenuTriggerFor="navigationMenu"] {
-  display: flex !important;
-  align-items: center;
-  gap: 4px;
-
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-  }
-}
-
 /* Theme selector button */
 .theme-selector {
   display: flex;
@@ -111,28 +98,6 @@ mat-icon {
   }
 }
 
-/* General menu trigger buttons */
-button[matMenuTriggerFor] {
-  display: flex !important;
-  align-items: center;
-  gap: 4px;
-
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
-}
-
-/* Button hover states */
-.toolbar button {
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: var(--mat-sys-surface-container-high);
-  }
-}
-
 /* Edit toggle button - fixed width to prevent title shifting */
 .edit-toggle {
   width: 100px;
@@ -162,63 +127,30 @@ body.dark-mode {
   }
 }
 
-/* Theme radio group - compact vertical layout with swatches */
-.theme-radio-group {
-  display: flex;
-  flex-direction: column;
-  padding: 4px 0;
-}
-
-.theme-option-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2px 12px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--mat-sys-surface-container-high);
+/* Theme picker rows: icon, name, then the palette swatch on the trailing edge */
+.theme-option {
+  .theme-option-name {
+    flex: 1;
   }
 
-  // Selected state styling
-  &:has(.theme-option.mat-mdc-radio-checked) {
-    background-color: var(--mat-sys-primary-container);
+  &[aria-checked="true"] {
+    color: var(--mat-sys-primary);
 
-    .theme-option {
-      color: var(--mat-sys-on-primary-container);
-
-      ::ng-deep .mdc-form-field label {
-        color: var(--mat-sys-on-primary-container);
-        font-weight: 500;
-      }
+    .mat-icon {
+      color: var(--mat-sys-primary);
     }
   }
 }
 
-.theme-option {
-  flex-grow: 1;
-
-  ::ng-deep .mdc-form-field {
-    padding: 4px 0;
-    margin: 0;
-  }
-
-  ::ng-deep .mdc-radio {
-    padding: 6px;
-  }
-
-  ::ng-deep .mdc-form-field label {
-    font-size: 14px;
-    color: var(--mat-sys-on-surface);
-  }
-}
-
 .color-swatch {
+  display: inline-block;
   width: 24px;
   height: 16px;
   border-radius: 4px;
   flex-shrink: 0;
   margin-left: 12px;
+  // Pale swatches would otherwise vanish into the menu surface.
+  border: 1px solid var(--mat-sys-outline-variant);
 }
 
 /* Version info display */

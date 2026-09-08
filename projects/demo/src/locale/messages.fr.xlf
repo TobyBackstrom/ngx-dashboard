@@ -7,6 +7,12 @@
         <target>Dashboard</target>
       </segment>
     </unit>
+    <unit id="demo.navigation.menuAriaLabel">
+      <segment state="initial">
+        <source>Open navigation menu</source>
+        <target>Open navigation menu</target>
+      </segment>
+    </unit>
     <unit id="demo.navigation.radialGaugeDemo">
       <segment state="initial">
         <source>Radial Gauge Demo</source>
@@ -907,6 +913,18 @@
         <target>Realtime Gauge</target>
       </segment>
     </unit>
+    <unit id="demo.widgets.group.charts">
+      <segment state="initial">
+        <source>Charts</source>
+        <target>Charts</target>
+      </segment>
+    </unit>
+    <unit id="demo.widgets.group.sensors">
+      <segment state="initial">
+        <source>Sensors</source>
+        <target>Sensors</target>
+      </segment>
+    </unit>
     <unit id="demo.widgets.realtimeGauge.description">
       <segment state="initial">
         <source>Gauge with real-time data updates</source>
@@ -1799,6 +1817,30 @@
       <segment state="initial">
         <source><ph id="0" equiv="PH" disp="widget.name"/> widget: <ph id="1" equiv="PH_1" disp="widget.description"/></source>
         <target><ph id="0" equiv="PH" disp="widget.name"/> widget: <ph id="1" equiv="PH_1" disp="widget.description"/></target>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.ariaLabel">
+      <segment state="initial">
+        <source>Search widgets by name, description or type</source>
+        <target>Search widgets by name, description or type</target>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.clear">
+      <segment state="initial">
+        <source>Clear widget search</source>
+        <target>Clear widget search</target>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.empty">
+      <segment state="initial">
+        <source> No matching widgets </source>
+        <target> No matching widgets </target>
+      </segment>
+    </unit>
+    <unit id="ngx.dashboard.widget.list.search.placeholder">
+      <segment state="initial">
+        <source>Search widgets</source>
+        <target>Search widgets</target>
       </segment>
     </unit>
   </file>

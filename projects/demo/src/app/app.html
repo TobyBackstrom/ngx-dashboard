@@ -1,7 +1,11 @@
 <mat-toolbar class="toolbar">
   <!-- Left side navigation -->
   <div class="toolbar-left">
-    <button mat-button [matMenuTriggerFor]="navigationMenu">
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="navigationMenu"
+      [attr.aria-label]="getNavigationMenuAriaLabel()"
+    >
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #navigationMenu="matMenu">
@@ -52,35 +56,31 @@
     >
       <mat-icon>format_color_fill</mat-icon>
     </button>
-    <mat-menu #themeMenu="matMenu">
-      <mat-radio-group
-        [value]="themeService.theme()"
-        (change)="setTheme($event.value)"
-        class="theme-radio-group"
+    <mat-menu #themeMenu="matMenu" class="theme-menu">
+      <!-- Menu items rather than radios in a bare div: they bring the menu's own
+           hover, focus and ripple surfaces, which hand-rolled rows lacked. -->
+      @for (themeConfig of themeService.availableThemes(); track
+      themeConfig.key) {
+      <button
+        mat-menu-item
+        role="menuitemradio"
+        class="theme-option"
+        (click)="setTheme(themeConfig.key)"
+        [attr.aria-checked]="themeService.theme() === themeConfig.key"
+        [attr.aria-label]="getThemeOptionAriaLabel(themeConfig.displayName)"
       >
-        @for (themeConfig of themeService.availableThemes(); track
-        themeConfig.key) {
-        <div
-          class="theme-option-row"
-          (click)="setTheme(themeConfig.key)"
-          (keyup.enter)="setTheme(themeConfig.key)"
-          (keyup.space)="setTheme(themeConfig.key)"
-          tabindex="0"
-          role="button"
-          [attr.aria-label]="getThemeOptionAriaLabel(themeConfig.displayName)"
-        >
-          <mat-radio-button [value]="themeConfig.key" class="theme-option">
-            {{ themeConfig.displayName }}
-          </mat-radio-button>
-          <div
-            class="color-swatch"
-            [style.background-color]="'var(' + themeConfig.cssVariable + ')'"
-            [style.border]="'1px solid var(' + themeConfig.cssVariable + ')'"
-            [style.border]="'1px solid black'"
-          ></div>
-        </div>
-        }
-      </mat-radio-group>
+        <mat-icon>{{
+          themeService.theme() === themeConfig.key
+            ? "radio_button_checked"
+            : "radio_button_unchecked"
+        }}</mat-icon>
+        <span class="theme-option-name">{{ themeConfig.displayName }}</span>
+        <span
+          class="color-swatch"
+          [style.background-color]="'var(' + themeConfig.cssVariable + ')'"
+        ></span>
+      </button>
+      }
     </mat-menu>
 
     <!-- Dark/Light mode toggle -->

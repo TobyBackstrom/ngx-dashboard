@@ -39,6 +39,7 @@ export class SparklineWidgetComponent implements Widget {
     name: $localize`:@@demo.widgets.sparkline.name:Sparkline`,
     description: $localize`:@@demo.widgets.sparkline.description:A sparkline graph`,
     svgIcon,
+    group: $localize`:@@demo.widgets.group.charts:Charts`,
   };
 
   readonly #sanitizer = inject(DomSanitizer);

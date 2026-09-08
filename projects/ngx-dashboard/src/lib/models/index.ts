@@ -3,6 +3,7 @@ export * from './widget-id';
 export * from './cell-data';
 export * from './cell-position';
 export * from './cell-dialog';
+export * from './cell-resize';
 export * from './dashboard-data.dto';
 export * from './dashboard-data.utils';
 export * from './drag-data';
