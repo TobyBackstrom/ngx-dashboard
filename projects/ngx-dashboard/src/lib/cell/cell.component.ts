@@ -52,6 +52,7 @@ import {
     '[style.grid-row]': 'gridRowStyle()',
     '[style.grid-column]': 'gridColumnStyle()',
     '[class.is-dragging]': 'isDragging()',
+    '[class.is-resizing]': 'isResizing()',
     '[class.drag-active]': 'isDragActive()',
     '[class.flat]': 'flat() === true',
   },

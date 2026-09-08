@@ -151,12 +151,6 @@
 
   // Bottom-right corner: resizes columns and rows in a single gesture.
   //
-  // Unlike the edge handles this sits fully *inside* the cell (right/bottom 0,
-  // no negative offset). `.cell` hides overflow and rounds its corners, so a
-  // handle hanging outside would be clipped down to a few unhittable pixels --
-  // and `.cell:hover` lifts the cell 2px, moving that sliver out from under the
-  // pointer. Staying inside keeps the whole 18px square clickable.
-  //
   // It overlaps the tail of both edge handles, so the higher z-index is what
   // makes the shared corner area resize diagonally instead of on one axis.
   &--corner {
@@ -229,8 +223,11 @@
   z-index: 30;
 }
 
-.cell.is-resizing {
+:host(.is-resizing) .cell {
   opacity: 0.6;
+}
+
+:host(.is-resizing) {
   .resize-handle {
     // Same tint the hover states use, so an in-progress resize follows the
     // app's palette instead of a fixed blue.

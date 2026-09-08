@@ -1,7 +1,6 @@
 <!-- cell.component.html -->
 <div
   class="cell"
-  [class.is-resizing]="isResizing()"
   [class.flat]="flat() === true"
   [draggable]="draggable()"
   (dragstart)="onDragStart($event)"
@@ -11,31 +10,37 @@
   <div class="content-area">
     <ng-template #container></ng-template>
   </div>
-  @if (isEditMode() && !isDragging()) {
-  <!-- Right resize handle -->
-  <div
-    class="resize-handle resize-handle--right"
-    (mousedown)="onResizeStart($event, 'horizontal')"
-  >
-    <div class="resize-handle-line"></div>
-  </div>
-  <!-- Bottom resize handle -->
-  <div
-    class="resize-handle resize-handle--bottom"
-    (mousedown)="onResizeStart($event, 'vertical')"
-  >
-    <div class="resize-handle-line"></div>
-  </div>
-  <!-- Bottom-right corner handle: resizes columns and rows together.
-       Sits above the edge handles so the shared corner area grows both ways. -->
-  <div
-    class="resize-handle resize-handle--corner"
-    (mousedown)="onResizeStart($event, 'both')"
-  >
-    <div class="resize-handle-grip"></div>
-  </div>
-  }
 </div>
+
+<!-- Handles are siblings of `.cell`, not children: `.cell` sets `overflow:
+     hidden` and lifts itself 2px on hover, which clips the handles' outward
+     overhang and drags what remains out from under the pointer. `:host` is
+     full-size, unclipped and untransformed, so negative offsets work as
+     declared and each handle keeps its whole hit area. -->
+@if (isEditMode() && !isDragging()) {
+<!-- Right resize handle -->
+<div
+  class="resize-handle resize-handle--right"
+  (mousedown)="onResizeStart($event, 'horizontal')"
+>
+  <div class="resize-handle-line"></div>
+</div>
+<!-- Bottom resize handle -->
+<div
+  class="resize-handle resize-handle--bottom"
+  (mousedown)="onResizeStart($event, 'vertical')"
+>
+  <div class="resize-handle-line"></div>
+</div>
+<!-- Bottom-right corner handle: resizes columns and rows together.
+     Sits above the edge handles so the shared corner area grows both ways. -->
+<div
+  class="resize-handle resize-handle--corner"
+  (mousedown)="onResizeStart($event, 'both')"
+>
+  <div class="resize-handle-grip"></div>
+</div>
+}
 
 @if (isResizing()) {
 <div class="resize-preview" i18n="@@ngx.dashboard.cell.resize.dimensions">
