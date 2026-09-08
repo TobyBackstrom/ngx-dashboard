@@ -13,6 +13,14 @@ export interface GridConfigState {
   /** Upper bound for any resize path — typed entry and handle drags alike. */
   gridSizeLimits: GridSizeLimits;
   isEditMode: boolean;
+  /**
+   * Whether each widget shows its type name as a corner badge.
+   *
+   * A host-driven view aid rather than dashboard data, so it is deliberately
+   * absent from `DashboardDataDto` — an exported dashboard does not carry
+   * whichever way the badges happened to be switched when it was saved.
+   */
+  showWidgetNames: boolean;
   gridCellDimensions: { width: number; height: number };
 }
 
@@ -22,6 +30,7 @@ const initialGridConfigState: GridConfigState = {
   gutterSize: '0.5em',
   gridSizeLimits: DEFAULT_GRID_SIZE_LIMITS,
   isEditMode: false,
+  showWidgetNames: false,
   gridCellDimensions: { width: 0, height: 0 },
 };
 
@@ -67,6 +76,11 @@ export const withGridConfig = () =>
 
       setEditMode(isEditMode: boolean) {
         patchState(store, { isEditMode });
+      },
+
+      /** Show or hide the widget type badge on every cell. */
+      setShowWidgetNames(showWidgetNames: boolean) {
+        patchState(store, { showWidgetNames });
       },
     })),
     withMethods((store) => ({

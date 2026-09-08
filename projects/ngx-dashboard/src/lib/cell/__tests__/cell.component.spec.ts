@@ -572,6 +572,60 @@ describe('CellComponent - User Scenarios', () => {
     });
   });
 
+  describe('Widget Name Badge', () => {
+    const badge = () =>
+      fixture.nativeElement.querySelector('.widget-name-badge');
+
+    beforeEach(() => {
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
+      fixture.componentRef.setInput('row', 1);
+      fixture.componentRef.setInput('column', 1);
+      fixture.componentRef.setInput('widgetFactory', mockWidgetFactory);
+      fixture.detectChanges();
+    });
+
+    it('should not show the badge by default', () => {
+      expect(badge()).toBeNull();
+    });
+
+    it('should show the widget type name when the host turns badges on', () => {
+      store.setShowWidgetNames(true);
+      fixture.detectChanges();
+
+      expect(badge()?.textContent?.trim()).toBe('Test Widget');
+    });
+
+    it('should remove the badge when the host turns badges off again', () => {
+      store.setShowWidgetNames(true);
+      fixture.detectChanges();
+      expect(badge()).not.toBeNull();
+
+      store.setShowWidgetNames(false);
+      fixture.detectChanges();
+
+      expect(badge()).toBeNull();
+    });
+
+    // The rest of this block runs at the input default of false, so edit mode
+    // is the state that still needs covering: the badge is not gated on it.
+    it('should show the badge in edit mode as well as view mode', () => {
+      store.setShowWidgetNames(true);
+      fixture.componentRef.setInput('isEditMode', true);
+      fixture.detectChanges();
+
+      expect(badge()).not.toBeNull();
+    });
+
+    it('should not show a badge for a cell with no resolved widget factory', () => {
+      fixture.componentRef.setInput('widgetFactory', undefined);
+      store.setShowWidgetNames(true);
+      fixture.detectChanges();
+
+      expect(badge()).toBeNull();
+    });
+  });
+
   describe('Error Handling', () => {
     beforeEach(() => {
       fixture.componentRef.setInput('widgetId', mockWidgetId);

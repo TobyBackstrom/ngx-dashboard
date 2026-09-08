@@ -95,6 +95,57 @@
 }
 
 ///
+/// Widget type badge
+///
+
+// A corner tab, flush against the cell's top and right edges rather than a
+// pill floating inside them. `.cell` hides overflow and rounds its corners, so
+// the tab's outer corner is clipped to the cell's own curve for free and it
+// reads as part of the tile's chrome instead of a notification pasted over the
+// widget. Only the inner corner is rounded here.
+//
+// `--mat-sys-secondary-container` rather than `--mat-sys-primary`: every widget
+// on the grid carries one of these at once, so they have to stay quiet, and
+// primary is already spoken for by the things that are actually interactive --
+// the resize handles, the drop highlights and the selection overlay.
+.widget-name-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  // Above `.content-area` (z-index 1). The resize handles (20/21) and the
+  // resize preview (30) are siblings of `.cell`, so they outrank this anyway.
+  z-index: 2;
+  // Mandatory rather than cosmetic: widgets own their own hover and click
+  // behaviour, and the right edge resize handle covers this corner in edit
+  // mode. It also rules out a `title` tooltip on a truncated name.
+  pointer-events: none;
+
+  // Leaves a sliver of the widget's own corner showing, so the tab reads as an
+  // overlay rather than as a header the widget drew for itself.
+  max-width: calc(100% - 6px);
+  padding: 2px 6px;
+  border-bottom-left-radius: var(--mat-sys-corner-small);
+
+  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+
+  // The shorthand token carries weight, size, line-height and family in one
+  // declaration; tracking is not part of the `font` shorthand, so it is set
+  // separately. No fallbacks anywhere here: a Material theme is a required
+  // peer, and the colours above have none either -- without a theme the badge
+  // is unreadable regardless of what the type declarations fall back to.
+  font: var(--mat-sys-label-small);
+  letter-spacing: var(--mat-sys-label-small-tracking);
+
+  // A 1x1 cell is only about 64px wide at the default 16-column geometry, so
+  // most names are cut. Truncating from the end keeps the head of the name,
+  // which is the half that distinguishes "Radial Gauge" from "Realtime Gauge".
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+///
 /// Resize stuff
 ///
 .resize-handle {

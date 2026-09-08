@@ -128,6 +128,13 @@ export class CellComponent {
 
   isDragActive = this.#store.isDragActive;
 
+  /**
+   * Read straight off the store rather than passed down: both the editor and
+   * the viewer would otherwise have to forward an input they make no decision
+   * about, and the cell already injects the store for `resizeData`.
+   */
+  protected readonly showWidgetNames = this.#store.showWidgetNames;
+
   resizeData = this.#store.resizeData;
   gridCellDimensions = this.#store.gridCellDimensions;
   /** Direction of the gesture in progress; null between gestures. */

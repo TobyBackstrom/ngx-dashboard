@@ -63,7 +63,7 @@ To use i18n features with the demo application:
 - `@@demo.colors.preview` - "Preview"
 - `@@demo.colors.colorPreview` - "Color preview for {colorName}"
 
-### Dashboard Actions (11 keys)
+### Dashboard Actions (13 keys)
 - `@@demo.dashboard.exportToFile` - "Export to File"
 - `@@demo.dashboard.importFromFile` - "Import from File"
 - `@@demo.dashboard.saveToBrowser` - "Save to Browser"
@@ -75,6 +75,8 @@ To use i18n features with the demo application:
 - `@@demo.dashboard.switchToEditMode` - "Switch to Edit Mode"
 - `@@demo.dashboard.closeMenu` - "Close menu"
 - `@@demo.dashboard.dashboardActions` - "Dashboard actions"
+- `@@demo.dashboard.showWidgetNames` - "Show Widget Names"
+- `@@demo.dashboard.hideWidgetNames` - "Hide Widget Names"
 
 ### Cell Selection Dialog (8 keys)
 - `@@demo.dashboard.cellSelection.dialog.title` - "Cell Selection"
