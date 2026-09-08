@@ -12,6 +12,14 @@ export { WidgetListComponent } from './lib/widget-list/widget-list.component';
 // Dashboard viewer types (for selection feature)
 export type { GridSelection } from './lib/models/grid-selection';
 export type { GridResizeResult } from './lib/models/grid-resize-result';
+
+// Grid geometry (rows, columns, gutter)
+export type { GridConfig, GridSizeLimits } from './lib/models/grid-config';
+export { DEFAULT_GRID_SIZE_LIMITS } from './lib/models/grid-config';
+export {
+  GUTTER_SIZE_PRESETS,
+  sanitizeGutterSize,
+} from './lib/models/gutter.utils';
 export type { SelectionFilterOptions } from './lib/models/selection-filter-options';
 export type { SelectionModifier } from './lib/models/selection-modifier';
 

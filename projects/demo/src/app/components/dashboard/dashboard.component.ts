@@ -21,6 +21,7 @@ import {
   createEmptyDashboard,
   ReservedSpace,
   DashboardDataDto,
+  GridConfig,
   GridSelection,
 } from '@dragonworks/ngx-dashboard';
 import {
@@ -29,6 +30,10 @@ import {
 } from '../../services';
 import { DashboardFabComponent } from './dashboard-fab.component';
 import { CellSelectionDialogComponent } from './cell-selection-dialog.component';
+import {
+  GridSettingsDialogComponent,
+  GridSettingsDialogData,
+} from './grid-settings-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -237,6 +242,53 @@ export class DashboardComponent {
       // Always reset select mode after dialog closes
       this.selectMode.set(false);
     });
+  }
+
+  /**
+   * Open the grid settings dialog.
+   *
+   * Edits apply to the dashboard as they are made, so the grid reflows while
+   * the dialog is open. Anything other than OK — Cancel, ESC, a backdrop
+   * click — restores the geometry captured when it opened.
+   */
+  onGridSettings(): void {
+    const dashboard = this.dashboard();
+    const original = dashboard.gridConfig();
+
+    const dialogRef = this.dialog.open<
+      GridSettingsDialogComponent,
+      GridSettingsDialogData,
+      boolean
+    >(GridSettingsDialogComponent, {
+      width: '400px',
+      maxWidth: '90vw',
+      autoFocus: false,
+      data: {
+        config: dashboard.gridConfig,
+        minSize: dashboard.minGridSize,
+        limits: dashboard.gridSizeLimits(),
+      },
+    });
+
+    const subscription = dialogRef.componentInstance.configChange.subscribe(
+      (config) => this.#applyGridConfig(config)
+    );
+
+    dialogRef.afterClosed().subscribe((accepted) => {
+      subscription.unsubscribe();
+      if (!accepted) {
+        // The captured values were valid when the dialog opened and no widget
+        // can have moved since, so restoring them is exact.
+        this.#applyGridConfig(original);
+      }
+    });
+  }
+
+  /** The dashboard clamps both requests and reports what it applied. */
+  #applyGridConfig(config: GridConfig): void {
+    const dashboard = this.dashboard();
+    dashboard.setGridSize(config.rows, config.columns);
+    dashboard.setGutterSize(config.gutterSize);
   }
 
   /**

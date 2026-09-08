@@ -250,6 +250,163 @@ describe('DashboardStore - Grid Configuration', () => {
     });
   });
 
+  describe('setGridConfig gutter validation', () => {
+    it('should keep the current gutter when the requested one is unusable', () => {
+      // An unchecked value reaches --gutter-size, which feeds a calc() with
+      // no fallback, and collapses the grid. See gutter.utils.ts.
+      store.setGridConfig({ gutterSize: '8' });
+      expect(store.gutterSize()).toBe('0.5em');
+    });
+
+    it('should still apply the size when the gutter is rejected', () => {
+      store.setGridConfig({ rows: 12, columns: 24, gutterSize: '50%' });
+      expect(store.rows()).toBe(12);
+      expect(store.columns()).toBe(24);
+      expect(store.gutterSize()).toBe('0.5em');
+    });
+  });
+
+  describe('setGutterSize', () => {
+    it('should apply a valid gutter and return it', () => {
+      expect(store.setGutterSize('1.5em')).toBe('1.5em');
+      expect(store.gutterSize()).toBe('1.5em');
+    });
+
+    it('should reject an invalid gutter and return the current one', () => {
+      expect(store.setGutterSize('nonsense')).toBe('0.5em');
+      expect(store.gutterSize()).toBe('0.5em');
+    });
+
+    it('should leave the grid size untouched', () => {
+      store.setGutterSize('1em');
+      expect(store.rows()).toBe(8);
+      expect(store.columns()).toBe(16);
+    });
+  });
+
+  describe('loadDashboard gutter validation', () => {
+    /** Minimal DTO; a dashboard file can be hand-edited, so it is untrusted. */
+    function dto(gutterSize: string) {
+      return {
+        version: '1.1.0',
+        dashboardId: 'test-dashboard',
+        rows: 10,
+        columns: 20,
+        gutterSize,
+        cells: [],
+      };
+    }
+
+    it('should apply a valid gutter from the DTO', () => {
+      store.loadDashboard(dto('1em'));
+      expect(store.gutterSize()).toBe('1em');
+    });
+
+    it('should fall back to the current gutter for a malformed DTO value', () => {
+      store.loadDashboard(dto('0,5em'));
+
+      expect(store.gutterSize()).toBe('0.5em');
+      // The rest of the import is unaffected.
+      expect(store.rows()).toBe(10);
+      expect(store.columns()).toBe(20);
+    });
+  });
+
+  describe('grid size limits', () => {
+    it('should default to 64 rows x 128 columns', () => {
+      expect(store.gridSizeLimits()).toEqual({ maxRows: 64, maxColumns: 128 });
+    });
+
+    it('should cap a request above the ceiling', () => {
+      const result = store.setGridSize(500, 900);
+
+      expect(result).toEqual({ rows: 64, columns: 128, clamped: true });
+      expect(store.rows()).toBe(64);
+      expect(store.columns()).toBe(128);
+    });
+
+    it('should honour a lowered ceiling', () => {
+      store.setGridSizeLimits({ maxRows: 10, maxColumns: 20 });
+
+      const result = store.setGridSize(50, 50);
+
+      expect(result).toEqual({ rows: 10, columns: 20, clamped: true });
+    });
+
+    it('should let the content floor outrank the ceiling', () => {
+      // Widgets already beyond the cap must not be pushed out of bounds.
+      placeWidget(30, 40);
+      store.setGridSizeLimits({ maxRows: 10, maxColumns: 20 });
+
+      const result = store.setGridSize(1, 1);
+
+      expect(result.rows).toBe(30);
+      expect(result.columns).toBe(40);
+    });
+
+    it('should cap the drag preview as well as the committed size', () => {
+      store.setGridSizeLimits({ maxRows: 10, maxColumns: 20 });
+
+      store.previewGridResize(100, 100);
+
+      expect(store.gridResizePreview()).toEqual({
+        rows: 10,
+        columns: 20,
+        clamped: true,
+      });
+    });
+  });
+
+  describe('minGridSize', () => {
+    it('should be 1 x 1 on an empty dashboard', () => {
+      expect(store.minGridSize()).toEqual({ rows: 1, columns: 1 });
+    });
+
+    it('should track the span-aware extent of placed widgets', () => {
+      placeWidget(7, 14, 2, 3);
+      expect(store.minGridSize()).toEqual({ rows: 8, columns: 16 });
+    });
+
+    it('should follow widget removal back down', () => {
+      placeWidget(6, 10);
+      expect(store.minGridSize()).toEqual({ rows: 6, columns: 10 });
+
+      const widgetId = store.cells()[0].widgetId;
+      store.removeWidget(widgetId);
+
+      expect(store.minGridSize()).toEqual({ rows: 1, columns: 1 });
+    });
+  });
+
+  describe('gridConfig', () => {
+    it('should expose the committed geometry as one object', () => {
+      expect(store.gridConfig()).toEqual({
+        rows: 8,
+        columns: 16,
+        gutterSize: '0.5em',
+      });
+    });
+
+    it('should follow size and gutter changes', () => {
+      store.setGridSize(12, 24);
+      store.setGutterSize('1em');
+
+      expect(store.gridConfig()).toEqual({
+        rows: 12,
+        columns: 24,
+        gutterSize: '1em',
+      });
+    });
+
+    it('should report the committed size, not an in-progress preview', () => {
+      store.previewGridResize(5, 5);
+
+      expect(store.gridConfig().rows).toBe(8);
+      expect(store.gridConfig().columns).toBe(16);
+      expect(store.effectiveRows()).toBe(13);
+    });
+  });
+
   describe('setGridCellDimensions', () => {
     it('should update grid cell dimensions', () => {
       store.setGridCellDimensions(100, 50);

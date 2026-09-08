@@ -27,6 +27,8 @@ import { EmptyCellContextMenuService } from '../services/empty-cell-context-menu
 import { ReservedSpace } from '../models/reserved-space';
 import {
   CellIdUtils,
+  DEFAULT_GRID_SIZE_LIMITS,
+  GridConfig,
   GridResizeResult,
   GridSelection,
   SelectionFilterOptions,
@@ -70,12 +72,65 @@ export class DashboardComponent implements OnChanges {
   selectionModifier = input<SelectionModifier | null>(null);
   dragThreshold = input<number>(4);
 
+  /**
+   * Optional CSS length for the gutter between cells (e.g. `'0.5em'`).
+   *
+   * A seed rather than a binding: it pushes into the store when the bound
+   * value changes, and the store remains the single source of truth. A
+   * statically bound value therefore does not fight a later
+   * `loadDashboard()` — the imported dashboard's gutter survives.
+   *
+   * Values that are not a `px`/`em`/`rem` length are ignored and the current
+   * gutter is kept.
+   */
+  gutterSize = input<string>();
+
+  /**
+   * Upper bound for any resize path, typed entry and handle drags alike.
+   *
+   * Every grid cell renders a drop zone component in the editor, so an
+   * unbounded typed size is a performance cliff a drag gesture can't reach.
+   * The content floor still outranks this cap: a dashboard loaded with more
+   * rows than `maxRows` keeps them rather than losing widgets.
+   */
+  maxRows = input<number>(DEFAULT_GRID_SIZE_LIMITS.maxRows);
+  maxColumns = input<number>(DEFAULT_GRID_SIZE_LIMITS.maxColumns);
+
   // Component outputs
   selectionComplete = output<GridSelection>();
   gridResized = output<GridResizeResult>();
 
+  /**
+   * Emits on any committed geometry change — size or gutter, handle-driven or
+   * programmatic. Does not fire for `loadDashboard()`, which the host
+   * initiated itself.
+   *
+   * Broader than `gridResized`, which covers size only but additionally
+   * reports whether the request was clamped.
+   *
+   * Note for autosave: every committed change emits, including the
+   * intermediate states of a host UI that applies as the user edits. Debounce,
+   * or persist on a settled signal, rather than writing on each emission.
+   */
+  gridConfigChanged = output<GridConfig>();
+
   // Store signals - shared by both child components
   cells = this.#store.cells;
+
+  /** Committed grid geometry (never the in-progress drag preview). */
+  readonly gridConfig = this.#store.gridConfig;
+
+  /**
+   * Smallest grid size that still contains every widget — the clamp-to-content
+   * floor. Read it to show the limit before a user runs into it.
+   */
+  readonly minGridSize = this.#store.minGridSize;
+
+  /**
+   * Ceiling currently in force, as set by `maxRows` / `maxColumns`. Read it to
+   * bound a host control without restating the defaults.
+   */
+  readonly gridSizeLimits = this.#store.gridSizeLimits;
 
   // ViewChild references for export/import functionality
   private dashboardEditor = viewChild(DashboardEditorComponent);
@@ -103,6 +158,27 @@ export class DashboardComponent implements OnChanges {
         this.#bridge.updateDashboardRegistration(this.#store);
         this.#isInitialized = true;
       }
+    });
+
+    // Registered after the dashboardData effect so that an explicitly bound
+    // gutter wins over the DTO's on the first flush: the input is the more
+    // specific instruction. Later imperative loadDashboard() calls still win,
+    // because an unchanged input never re-runs this.
+    effect(() => {
+      const gutterSize = this.gutterSize();
+      if (gutterSize === undefined) return;
+      untracked(() => {
+        this.#store.setGutterSize(gutterSize);
+      });
+    });
+
+    // Keep the resize ceiling in sync with the inputs. Covers both the typed
+    // path and the drag handles, since both clamp through the same store.
+    effect(() => {
+      const limits = { maxRows: this.maxRows(), maxColumns: this.maxColumns() };
+      untracked(() => {
+        this.#store.setGridSizeLimits(limits);
+      });
     });
 
     // Sync edit mode with store (without triggering state preservation)
@@ -222,9 +298,37 @@ export class DashboardComponent implements OnChanges {
     // Only signal a resize when the committed size actually changed, matching
     // the handle-drag path (store.endGridResize).
     if (result.rows !== beforeRows || result.columns !== beforeColumns) {
-      this.gridResized.emit(result);
+      this.#emitResize(result);
     }
     return result;
+  }
+
+  /**
+   * Set the gutter between grid cells.
+   *
+   * Accepts a `px`, `em` or `rem` length. An unusable value is rejected
+   * silently and the current gutter is kept — the returned string is the one
+   * actually applied, mirroring how `setGridSize()` reports the size actually
+   * applied.
+   */
+  setGutterSize(value: string): string {
+    const before = this.#store.gutterSize();
+    const applied = this.#store.setGutterSize(value);
+    if (applied !== before) {
+      this.gridConfigChanged.emit(this.#store.gridConfig());
+    }
+    return applied;
+  }
+
+  /** Commit of a grid-resize handle drag, forwarded from the editor. */
+  protected onEditorGridResized(result: GridResizeResult): void {
+    this.#emitResize(result);
+  }
+
+  /** A committed size change reaches both outputs; a gutter change only one. */
+  #emitResize(result: GridResizeResult): void {
+    this.gridResized.emit(result);
+    this.gridConfigChanged.emit(this.#store.gridConfig());
   }
 
   /**

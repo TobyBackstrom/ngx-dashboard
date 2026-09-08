@@ -91,6 +91,46 @@
         <source>Export to File</source>
       </segment>
     </unit>
+    <unit id="demo.dashboard.grid.columns">
+      <segment>
+        <source>Columns</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.gap">
+      <segment>
+        <source> Gap: <ph id="0" equiv="INTERPOLATION" disp="{{ gutterLabel() }}"/> </source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.gapAriaLabel">
+      <segment>
+        <source>Gap between grid cells</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.gapCustom">
+      <segment>
+        <source>Custom (<ph id="0" equiv="value" disp="gutterSize"/>)</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.rows">
+      <segment>
+        <source>Rows</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.smallestFit">
+      <segment>
+        <source> Smallest fit <ph id="0" equiv="INTERPOLATION" disp="{{ minSize().columns }}"/> × <ph id="1" equiv="INTERPOLATION_1" disp="{{ minSize().rows }}"/> — set by the widgets already placed </source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.grid.title">
+      <segment>
+        <source>Grid settings</source>
+      </segment>
+    </unit>
+    <unit id="demo.dashboard.gridSettings">
+      <segment>
+        <source>Grid Settings</source>
+      </segment>
+    </unit>
     <unit id="demo.dashboard.importFromFile">
       <segment>
         <source>Import from File</source>
@@ -744,6 +784,11 @@
     <unit id="demo.common.cancel">
       <segment>
         <source>Cancel</source>
+      </segment>
+    </unit>
+    <unit id="demo.common.ok">
+      <segment>
+        <source>OK</source>
       </segment>
     </unit>
     <unit id="demo.common.save">
