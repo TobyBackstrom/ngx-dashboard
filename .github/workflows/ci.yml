@@ -34,17 +34,25 @@ jobs:
       - name: Build all projects
         run: npm run build:ci
 
-      - name: Test ngx-dashboard (495 tests)
+      - name: Test ngx-dashboard
         run: |
           timeout 300 npx ng test ngx-dashboard --no-watch --browsers=ChromeHeadless --code-coverage
 
-      - name: Test ngx-dashboard-widgets (143 tests)
+      - name: Test ngx-dashboard-widgets
         run: |
           timeout 300 npx ng test ngx-dashboard-widgets --no-watch --browsers=ChromeHeadless --code-coverage
 
-      - name: Test demo (33 tests)
+      - name: Test demo
         run: |
           timeout 300 npx ng test demo --no-watch --browsers=ChromeHeadless --code-coverage
+
+      # The AOT path above never goes through Vite, so a broken dev server is
+      # invisible to every other check here -- as happened when a stale
+      # `overrides.vite` stopped Angular's linker running over prebundled deps
+      # and the app rendered nothing while all of the above stayed green.
+      - name: Smoke test the dev server
+        run: |
+          timeout 420 npm run smoke:dev-server
 
       # Gates on what consumers of the published libraries actually install.
       # Dev-only advisories are reported by the advisory step below instead of
