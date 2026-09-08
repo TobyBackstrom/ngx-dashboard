@@ -47,68 +47,92 @@
 }
 
 // Each section is its own list, inheriting the outer column layout and gap so a
-// grouped list keeps the same rhythm as a flat one.
-.widget-group {
-  display: flex;
-  flex-direction: column;
-  gap: inherit;
-}
-
-// The accordion is a layout-neutral wrapper: it keeps the list's own column
-// rhythm so panels line up with ungrouped widgets.
+// grouped list keeps the same rhythm as a flat one. The accordion is a
+// layout-neutral wrapper needing the same treatment, so panels line up with
+// ungrouped widgets.
+.widget-group,
 .widget-group-accordion {
   display: flex;
   flex-direction: column;
   gap: inherit;
 }
 
-// Strip the panel's card chrome — in a narrow sidebar it should read as a
-// section heading, not as an elevated surface.
+// The collapsible body. `inert` is both the a11y state and the collapse
+// trigger, so the two can never disagree.
+.widget-group-region {
+  display: flex;
+  flex-direction: column;
+  gap: inherit;
+
+  &[inert] {
+    display: none;
+  }
+}
+
+// A section heading in a narrow sidebar, not an elevated surface — so the
+// disclosure is a plain button rather than a panel stripped of its chrome.
 .widget-group-panel {
-  --mat-expansion-container-background-color: transparent;
-  --mat-expansion-container-shape: 0;
-  --mat-expansion-container-elevation-shadow: none;
-  --mat-expansion-header-collapsed-state-height: 32px;
-  --mat-expansion-header-expanded-state-height: 32px;
-  --mat-expansion-header-text-color: var(--mat-sys-on-surface-variant, #5f5f5f);
-  --mat-expansion-header-text-size: clamp(0.6875rem, 1.8vw, 0.75rem);
-  --mat-expansion-header-text-weight: 500;
-  --mat-expansion-header-text-tracking: 0.5px;
-  --mat-expansion-header-indicator-color: var(
-    --mat-sys-on-surface-variant,
-    #5f5f5f
-  );
-
-  // The sidebar already provides the outer padding, so the heading and the
-  // widgets below it stay aligned on the same edge.
-  ::ng-deep .mat-expansion-panel-body {
-    padding: 0;
-  }
-
-  // Material lays the chevron out as an inline `::after` whose rotated box
-  // overflows its own bounds, so the panel's `overflow: hidden` clips it. A
-  // centred box big enough for the rotation keeps it whole.
-  ::ng-deep .mat-expansion-indicator {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: inherit;
 }
 
-mat-expansion-panel-header.widget-group-label {
+.widget-group-label {
   // Only the trailing edge is padded: the label stays flush with the widgets
-  // below, while the chevron keeps clear of the panel edge.
+  // below, while the chevron keeps clear of the section edge.
   padding: 0 var(--mat-sys-spacing-1, 4px) 0 0;
+  height: 32px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--mat-sys-spacing-2, 8px);
+
+  // Reset the UA button box; this is a heading that happens to be pressable.
+  appearance: none;
+  border: 0;
+  background: none;
+  border-radius: var(--mat-sys-corner-extra-small, 4px);
+  cursor: pointer;
+  text-align: start;
+  font: inherit;
+  color: var(--mat-sys-on-surface-variant, #5f5f5f);
+  font-size: clamp(0.6875rem, 1.8vw, 0.75rem);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+
+  // MD3 state layers, matching the widget rows above.
+  &:hover:not(:disabled) {
+    background-color: color-mix(
+      in srgb,
+      var(--mat-sys-primary) 8%,
+      transparent
+    );
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -2px;
+  }
+
+  // Filtering force-expands every group, so there is nothing to toggle.
+  &:disabled {
+    cursor: default;
+  }
 }
 
-mat-panel-title.widget-group-title {
-  min-width: 0; // Allow the label to truncate instead of overflowing
-  margin-right: var(--mat-sys-spacing-2, 8px);
-  overflow: hidden;
+.widget-group-indicator {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  line-height: 16px;
+  margin-left: auto;
+  transition: transform var(--mat-sys-motion-duration-short4, 200ms)
+    var(--mat-sys-motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+
+  .widget-group-label[aria-expanded="true"] & {
+    transform: rotate(180deg);
+  }
 }
 
 .widget-group-label-text {

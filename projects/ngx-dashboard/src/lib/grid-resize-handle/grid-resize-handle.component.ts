@@ -20,23 +20,22 @@ import {
   Renderer2,
   signal,
 } from '@angular/core';
+import {
+  CellResizeDirection,
+  pxToTracks,
+  resizeCursorClass,
+} from '../models';
 
-/** Which axis (or both, for the corner handle) the handle resizes. */
-export type GridResizeAxis = 'horizontal' | 'vertical' | 'both';
+/**
+ * Which axis (or both, for the corner handle) the handle resizes. Alias of the
+ * shared resize vocabulary so the grid and cell gestures cannot drift apart.
+ */
+export type GridResizeAxis = CellResizeDirection;
 
 /** Track-count delta produced by a handle drag. Zero on the inactive axis. */
 export interface GridResizeDelta {
   deltaColumns: number;
   deltaRows: number;
-}
-
-/**
- * Round half away from zero so inward and outward half-cell drags behave
- * symmetrically. `Math.round` rounds 0.5 to 1 but -0.5 to 0, which makes a
- * half-cell shrink "stick" while a half-cell grow responds.
- */
-function symmetricRound(value: number): number {
-  return Math.sign(value) * Math.round(Math.abs(value));
 }
 
 @Component({
@@ -132,7 +131,7 @@ export class GridResizeHandleComponent {
       unlistenBlur();
     };
 
-    this.#renderer.addClass(document.body, this.#cursorClass());
+    this.#renderer.addClass(document.body, resizeCursorClass(this.axis()));
   }
 
   // Arrow fields keep `this` bound when used as Renderer2 listener callbacks.
@@ -141,12 +140,12 @@ export class GridResizeHandleComponent {
 
     const next: GridResizeDelta = {
       deltaColumns:
-        axis !== 'vertical' && this.#cellWidth > 0
-          ? symmetricRound((event.clientX - this.#startX) / this.#cellWidth)
+        axis !== 'vertical'
+          ? pxToTracks(event.clientX - this.#startX, this.#cellWidth)
           : 0,
       deltaRows:
-        axis !== 'horizontal' && this.#cellHeight > 0
-          ? symmetricRound((event.clientY - this.#startY) / this.#cellHeight)
+        axis !== 'horizontal'
+          ? pxToTracks(event.clientY - this.#startY, this.#cellHeight)
           : 0,
     };
 
@@ -178,7 +177,7 @@ export class GridResizeHandleComponent {
 
   #stop(): void {
     this.isActive.set(false);
-    this.#renderer.removeClass(document.body, this.#cursorClass());
+    this.#renderer.removeClass(document.body, resizeCursorClass(this.axis()));
 
     if (this.#pointerId !== null) {
       try {
@@ -193,14 +192,4 @@ export class GridResizeHandleComponent {
     this.#cleanup = undefined;
   }
 
-  #cursorClass(): string {
-    switch (this.axis()) {
-      case 'horizontal':
-        return 'cursor-col-resize';
-      case 'vertical':
-        return 'cursor-row-resize';
-      default:
-        return 'cursor-nwse-resize';
-    }
-  }
 }

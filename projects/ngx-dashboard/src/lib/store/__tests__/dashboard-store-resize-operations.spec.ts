@@ -168,21 +168,21 @@ describe('DashboardStore - Resize Operations', () => {
 
     describe('horizontal resizing', () => {
       it('should increase column span by positive delta', () => {
-        store.updateResizePreview('horizontal', 2);
+        store.updateResizePreview('horizontal', { columns: 2, rows: 0 });
 
         expect(store.resizeData()?.previewColSpan).toBe(4);
         expect(store.resizeData()?.previewRowSpan).toBe(2); // unchanged
       });
 
       it('should decrease column span by negative delta', () => {
-        store.updateResizePreview('horizontal', -1);
+        store.updateResizePreview('horizontal', { columns: -1, rows: 0 });
 
         expect(store.resizeData()?.previewColSpan).toBe(1);
         expect(store.resizeData()?.previewRowSpan).toBe(2); // unchanged
       });
 
       it('should not allow column span below 1', () => {
-        store.updateResizePreview('horizontal', -5);
+        store.updateResizePreview('horizontal', { columns: -5, rows: 0 });
 
         expect(store.resizeData()?.previewColSpan).toBe(1);
       });
@@ -190,7 +190,7 @@ describe('DashboardStore - Resize Operations', () => {
       it('should respect grid boundaries', () => {
         // Widget at (5,5) with original colSpan 2, grid has 16 columns
         // So max possible colSpan is 16 - 5 + 1 = 12
-        store.updateResizePreview('horizontal', 20);
+        store.updateResizePreview('horizontal', { columns: 20, rows: 0 });
 
         expect(store.resizeData()?.previewColSpan).toBe(12);
       });
@@ -198,21 +198,21 @@ describe('DashboardStore - Resize Operations', () => {
 
     describe('vertical resizing', () => {
       it('should increase row span by positive delta', () => {
-        store.updateResizePreview('vertical', 3);
+        store.updateResizePreview('vertical', { columns: 0, rows: 3 });
 
         expect(store.resizeData()?.previewRowSpan).toBe(5);
         expect(store.resizeData()?.previewColSpan).toBe(2); // unchanged
       });
 
       it('should decrease row span by negative delta', () => {
-        store.updateResizePreview('vertical', -1);
+        store.updateResizePreview('vertical', { columns: 0, rows: -1 });
 
         expect(store.resizeData()?.previewRowSpan).toBe(1);
         expect(store.resizeData()?.previewColSpan).toBe(2); // unchanged
       });
 
       it('should not allow row span below 1', () => {
-        store.updateResizePreview('vertical', -10);
+        store.updateResizePreview('vertical', { columns: 0, rows: -10 });
 
         expect(store.resizeData()?.previewRowSpan).toBe(1);
       });
@@ -220,7 +220,7 @@ describe('DashboardStore - Resize Operations', () => {
       it('should respect grid boundaries', () => {
         // Widget at (5,5) with original rowSpan 2, grid has 16 rows
         // So max possible rowSpan is 16 - 5 + 1 = 12
-        store.updateResizePreview('vertical', 15);
+        store.updateResizePreview('vertical', { columns: 0, rows: 15 });
 
         expect(store.resizeData()?.previewRowSpan).toBe(12);
       });
@@ -264,7 +264,7 @@ describe('DashboardStore - Resize Operations', () => {
       });
 
       it('should apply a plain number delta to both axes', () => {
-        store.updateResizePreview('both', 1);
+        store.updateResizePreview('both', { columns: 1, rows: 1 });
 
         expect(store.resizeData()?.previewColSpan).toBe(3);
         expect(store.resizeData()?.previewRowSpan).toBe(3);
@@ -320,7 +320,7 @@ describe('DashboardStore - Resize Operations', () => {
       it('should be limited by horizontal collision', () => {
         // Widget at (5,5) with colSpan 2, blocking widget at (5,8)
         // Max possible expansion is to column 7 (colSpan = 3)
-        store.updateResizePreview('horizontal', 5);
+        store.updateResizePreview('horizontal', { columns: 5, rows: 0 });
 
         expect(store.resizeData()?.previewColSpan).toBe(3);
       });
@@ -341,7 +341,7 @@ describe('DashboardStore - Resize Operations', () => {
 
         // Widget at (5,5) with rowSpan 2, blocking widget at (8,5)
         // Max possible expansion is to row 7 (rowSpan = 3)
-        store.updateResizePreview('vertical', 10);
+        store.updateResizePreview('vertical', { columns: 0, rows: 10 });
 
         expect(store.resizeData()?.previewRowSpan).toBe(3);
       });
@@ -350,19 +350,19 @@ describe('DashboardStore - Resize Operations', () => {
     it('should handle no active resize data gracefully', () => {
       store.endResize(false); // Clear resize data
 
-      store.updateResizePreview('horizontal', 2);
+      store.updateResizePreview('horizontal', { columns: 2, rows: 0 });
 
       expect(store.resizeData()).toBeNull();
     });
 
     it('should handle multiple consecutive preview updates', () => {
-      store.updateResizePreview('horizontal', 1);
+      store.updateResizePreview('horizontal', { columns: 1, rows: 0 });
       expect(store.resizeData()?.previewColSpan).toBe(3);
 
-      store.updateResizePreview('horizontal', 2);
+      store.updateResizePreview('horizontal', { columns: 2, rows: 0 });
       expect(store.resizeData()?.previewColSpan).toBe(4);
 
-      store.updateResizePreview('vertical', 1);
+      store.updateResizePreview('vertical', { columns: 0, rows: 1 });
       expect(store.resizeData()?.previewRowSpan).toBe(3);
       expect(store.resizeData()?.previewColSpan).toBe(4); // Should remain unchanged
     });
@@ -388,8 +388,8 @@ describe('DashboardStore - Resize Operations', () => {
     });
 
     it('should apply resize changes when apply is true and preview differs', () => {
-      store.updateResizePreview('horizontal', 2);
-      store.updateResizePreview('vertical', 1);
+      store.updateResizePreview('horizontal', { columns: 2, rows: 0 });
+      store.updateResizePreview('vertical', { columns: 0, rows: 1 });
 
       store.endResize(true);
 
@@ -411,8 +411,8 @@ describe('DashboardStore - Resize Operations', () => {
     });
 
     it('should not apply changes when apply is false', () => {
-      store.updateResizePreview('horizontal', 3);
-      store.updateResizePreview('vertical', 2);
+      store.updateResizePreview('horizontal', { columns: 3, rows: 0 });
+      store.updateResizePreview('vertical', { columns: 0, rows: 2 });
 
       store.endResize(false);
 
@@ -433,7 +433,7 @@ describe('DashboardStore - Resize Operations', () => {
     });
 
     it('should handle partial changes (only one dimension changed)', () => {
-      store.updateResizePreview('horizontal', 1); // Only change colSpan
+      store.updateResizePreview('horizontal', { columns: 1, rows: 0 }); // Only change colSpan
 
       store.endResize(true);
 
@@ -461,8 +461,8 @@ describe('DashboardStore - Resize Operations', () => {
 
     it('should handle apply with maximum size changes', () => {
       // Try to resize to maximum grid size
-      store.updateResizePreview('horizontal', 20);
-      store.updateResizePreview('vertical', 20);
+      store.updateResizePreview('horizontal', { columns: 20, rows: 0 });
+      store.updateResizePreview('vertical', { columns: 0, rows: 20 });
 
       store.endResize(true);
 
@@ -497,8 +497,8 @@ describe('DashboardStore - Resize Operations', () => {
 
     it('should return preview cells for current resize operation', () => {
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', 1);
-      store.updateResizePreview('vertical', 1);
+      store.updateResizePreview('horizontal', { columns: 1, rows: 0 });
+      store.updateResizePreview('vertical', { columns: 0, rows: 1 });
 
       const previewCells = store.resizePreviewCells();
 
@@ -518,19 +518,19 @@ describe('DashboardStore - Resize Operations', () => {
       expect(previewCells.length).toBe(6); // 2x3
 
       // Update preview
-      store.updateResizePreview('horizontal', 2);
+      store.updateResizePreview('horizontal', { columns: 2, rows: 0 });
       previewCells = store.resizePreviewCells();
       expect(previewCells.length).toBe(10); // 2x5
 
-      store.updateResizePreview('vertical', 1);
+      store.updateResizePreview('vertical', { columns: 0, rows: 1 });
       previewCells = store.resizePreviewCells();
       expect(previewCells.length).toBe(15); // 3x5
     });
 
     it('should handle single cell preview', () => {
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', -2);
-      store.updateResizePreview('vertical', -1);
+      store.updateResizePreview('horizontal', { columns: -2, rows: 0 });
+      store.updateResizePreview('vertical', { columns: 0, rows: -1 });
 
       const previewCells = store.resizePreviewCells();
 
@@ -570,8 +570,8 @@ describe('DashboardStore - Resize Operations', () => {
 
     it('should contain cell IDs for all preview cells', () => {
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', 2);
-      store.updateResizePreview('vertical', 1);
+      store.updateResizePreview('horizontal', { columns: 2, rows: 0 });
+      store.updateResizePreview('vertical', { columns: 0, rows: 1 });
 
       const previewMap = store.resizePreviewMap();
 
@@ -590,18 +590,18 @@ describe('DashboardStore - Resize Operations', () => {
       let previewMap = store.resizePreviewMap();
       expect(previewMap.size).toBe(1);
 
-      store.updateResizePreview('horizontal', 1);
+      store.updateResizePreview('horizontal', { columns: 1, rows: 0 });
       previewMap = store.resizePreviewMap();
       expect(previewMap.size).toBe(2);
 
-      store.updateResizePreview('vertical', 1);
+      store.updateResizePreview('vertical', { columns: 0, rows: 1 });
       previewMap = store.resizePreviewMap();
       expect(previewMap.size).toBe(4);
     });
 
     it('should efficiently check cell membership', () => {
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', 1);
+      store.updateResizePreview('horizontal', { columns: 1, rows: 0 });
 
       const previewMap = store.resizePreviewMap();
 
@@ -633,10 +633,10 @@ describe('DashboardStore - Resize Operations', () => {
       expect(store.resizePreviewCells().length).toBe(1);
 
       // Update preview multiple times
-      store.updateResizePreview('horizontal', 2);
+      store.updateResizePreview('horizontal', { columns: 2, rows: 0 });
       expect(store.resizePreviewCells().length).toBe(3);
 
-      store.updateResizePreview('vertical', 1);
+      store.updateResizePreview('vertical', { columns: 0, rows: 1 });
       expect(store.resizePreviewCells().length).toBe(6);
 
       // Apply changes
@@ -665,8 +665,8 @@ describe('DashboardStore - Resize Operations', () => {
 
       // Start resize and make changes
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', -1);
-      store.updateResizePreview('vertical', -2);
+      store.updateResizePreview('horizontal', { columns: -1, rows: 0 });
+      store.updateResizePreview('vertical', { columns: 0, rows: -2 });
 
       // Cancel changes
       store.endResize(false);
@@ -702,8 +702,8 @@ describe('DashboardStore - Resize Operations', () => {
 
       // Try to resize widget at (1,1) - should be limited by other widgets
       store.startResize(widgets[0].cellId);
-      store.updateResizePreview('horizontal', 5);
-      store.updateResizePreview('vertical', 5);
+      store.updateResizePreview('horizontal', { columns: 5, rows: 0 });
+      store.updateResizePreview('vertical', { columns: 0, rows: 5 });
 
       // Should be limited by the widget at (1,4) horizontally and (3,1) vertically
       expect(store.resizeData()?.previewColSpan).toBe(3); // Limited by widget at (1,4)
@@ -725,8 +725,8 @@ describe('DashboardStore - Resize Operations', () => {
       store.addWidget(cell);
 
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', 5);
-      store.updateResizePreview('vertical', 5);
+      store.updateResizePreview('horizontal', { columns: 5, rows: 0 });
+      store.updateResizePreview('vertical', { columns: 0, rows: 5 });
 
       // Should be limited by grid boundaries
       expect(store.resizeData()?.previewRowSpan).toBe(1);

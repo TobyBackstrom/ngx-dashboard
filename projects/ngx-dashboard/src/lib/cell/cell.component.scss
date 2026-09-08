@@ -111,7 +111,12 @@
     cursor: col-resize;
     width: 16px;
     height: 100%;
-    right: -8px;
+    // Overhang only as far as the gutter allows. All cell hosts share
+    // `z-index: 1`, so an overhang that reached the next cell would be painted
+    // over by whichever comes later in DOM order -- re-creating the clipped
+    // hit area this handle placement exists to avoid, and swallowing clicks
+    // near the neighbour's edge.
+    right: calc(-1 * min(8px, var(--gutter-size, 8px)));
     top: 0;
     display: flex;
     align-items: center;
@@ -132,7 +137,7 @@
     cursor: row-resize;
     width: 100%;
     height: 16px;
-    bottom: -8px;
+    bottom: calc(-1 * min(8px, var(--gutter-size, 8px)));
     left: 0;
     display: flex;
     align-items: center;
@@ -150,12 +155,6 @@
   }
 
   // Bottom-right corner: resizes columns and rows in a single gesture.
-  //
-  // Unlike the edge handles this sits fully *inside* the cell (right/bottom 0,
-  // no negative offset). `.cell` hides overflow and rounds its corners, so a
-  // handle hanging outside would be clipped down to a few unhittable pixels --
-  // and `.cell:hover` lifts the cell 2px, moving that sliver out from under the
-  // pointer. Staying inside keeps the whole 18px square clickable.
   //
   // It overlaps the tail of both edge handles, so the higher z-index is what
   // makes the shared corner area resize diagonally instead of on one axis.
@@ -179,7 +178,10 @@
 }
 
 .resize-handle-line {
-  background-color: rgba(0, 0, 0, 0.1);
+  // Theme token rather than a black tint: the handles are revealed by
+  // `:host(:hover)` at this resting colour, and a black tint washes out
+  // against a dark surface.
+  background-color: var(--mat-sys-outline-variant);
   // transition: background-color 0.2s ease;
 
   .resize-handle--right & {
@@ -203,8 +205,8 @@
   bottom: 3px;
   width: 10px;
   height: 10px;
-  border-right: 3px solid rgba(0, 0, 0, 0.25);
-  border-bottom: 3px solid rgba(0, 0, 0, 0.25);
+  border-right: 3px solid var(--mat-sys-outline-variant);
+  border-bottom: 3px solid var(--mat-sys-outline-variant);
   border-bottom-right-radius: 3px;
 }
 
@@ -226,10 +228,15 @@
   z-index: 30;
 }
 
-.cell.is-resizing {
+:host(.is-resizing) .cell {
   opacity: 0.6;
+}
+
+:host(.is-resizing) {
   .resize-handle {
-    background-color: rgba(33, 150, 243, 0.5);
+    // Same tint the hover states use, so an in-progress resize follows the
+    // app's palette instead of a fixed blue.
+    background-color: color-mix(in srgb, var(--mat-sys-primary) 50%, transparent);
   }
 }
 

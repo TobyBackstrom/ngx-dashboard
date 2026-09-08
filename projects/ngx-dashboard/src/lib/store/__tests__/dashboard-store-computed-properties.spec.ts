@@ -85,7 +85,7 @@ describe('DashboardStore - Computed Properties', () => {
 
     it('should update preview cells when resize preview changes horizontally', () => {
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', 2); // colSpan becomes 5
+      store.updateResizePreview('horizontal', { columns: 2, rows: 0 }); // colSpan becomes 5
 
       const previewCells = store.resizePreviewCells();
 
@@ -98,7 +98,7 @@ describe('DashboardStore - Computed Properties', () => {
 
     it('should update preview cells when resize preview changes vertically', () => {
       store.startResize(cellId);
-      store.updateResizePreview('vertical', 1); // rowSpan becomes 3
+      store.updateResizePreview('vertical', { columns: 0, rows: 1 }); // rowSpan becomes 3
 
       const previewCells = store.resizePreviewCells();
 
@@ -110,8 +110,8 @@ describe('DashboardStore - Computed Properties', () => {
 
     it('should handle single cell preview when resized to minimum', () => {
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', -5); // Reduce to minimum
-      store.updateResizePreview('vertical', -5); // Reduce to minimum
+      store.updateResizePreview('horizontal', { columns: -5, rows: 0 }); // Reduce to minimum
+      store.updateResizePreview('vertical', { columns: 0, rows: -5 }); // Reduce to minimum
 
       const previewCells = store.resizePreviewCells();
 
@@ -121,8 +121,8 @@ describe('DashboardStore - Computed Properties', () => {
 
     it('should handle large preview sizes', () => {
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', 8); // colSpan becomes 11
-      store.updateResizePreview('vertical', 6); // rowSpan becomes 8
+      store.updateResizePreview('horizontal', { columns: 8, rows: 0 }); // colSpan becomes 11
+      store.updateResizePreview('vertical', { columns: 0, rows: 6 }); // rowSpan becomes 8
 
       const previewCells = store.resizePreviewCells();
 
@@ -138,15 +138,15 @@ describe('DashboardStore - Computed Properties', () => {
       expect(store.resizePreviewCells().length).toBe(6);
 
       // First change
-      store.updateResizePreview('horizontal', 1);
+      store.updateResizePreview('horizontal', { columns: 1, rows: 0 });
       expect(store.resizePreviewCells().length).toBe(8); // 2x4
 
       // Second change
-      store.updateResizePreview('vertical', 1);
+      store.updateResizePreview('vertical', { columns: 0, rows: 1 });
       expect(store.resizePreviewCells().length).toBe(12); // 3x4
 
       // Third change  
-      store.updateResizePreview('horizontal', -2);
+      store.updateResizePreview('horizontal', { columns: -2, rows: 0 });
       const finalResizeData = store.resizeData();
       expect(finalResizeData?.previewRowSpan).toBe(3);
       expect(finalResizeData?.previewColSpan).toBe(1);
@@ -178,8 +178,8 @@ describe('DashboardStore - Computed Properties', () => {
 
     it('should create map from preview cells', () => {
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', 2);
-      store.updateResizePreview('vertical', 1);
+      store.updateResizePreview('horizontal', { columns: 2, rows: 0 });
+      store.updateResizePreview('vertical', { columns: 0, rows: 1 });
 
       const previewMap = store.resizePreviewMap();
 
@@ -194,7 +194,7 @@ describe('DashboardStore - Computed Properties', () => {
 
     it('should not contain cells outside preview area', () => {
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', 1);
+      store.updateResizePreview('horizontal', { columns: 1, rows: 0 });
 
       const previewMap = store.resizePreviewMap();
 
@@ -211,11 +211,11 @@ describe('DashboardStore - Computed Properties', () => {
       let previewMap = store.resizePreviewMap();
       expect(previewMap.size).toBe(1);
 
-      store.updateResizePreview('horizontal', 1);
+      store.updateResizePreview('horizontal', { columns: 1, rows: 0 });
       previewMap = store.resizePreviewMap();
       expect(previewMap.size).toBe(2);
 
-      store.updateResizePreview('vertical', 2);
+      store.updateResizePreview('vertical', { columns: 0, rows: 2 });
       previewMap = store.resizePreviewMap();
       expect(previewMap.size).toBe(6);
     });
@@ -231,7 +231,7 @@ describe('DashboardStore - Computed Properties', () => {
 
     it('should be empty when widget is removed during resize', () => {
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', 2);
+      store.updateResizePreview('horizontal', { columns: 2, rows: 0 });
       
       const widget = store.cells().find(c => CellIdUtils.equals(c.cellId, cellId))!; store.removeWidget(widget.widgetId);
 
@@ -931,7 +931,7 @@ describe('DashboardStore - Computed Properties', () => {
       };
       store.addWidget(cell);
       store.startResize(cellId);
-      store.updateResizePreview('horizontal', 1);
+      store.updateResizePreview('horizontal', { columns: 1, rows: 0 });
 
       const previewCells = store.resizePreviewCells();
       const previewMap = store.resizePreviewMap();
