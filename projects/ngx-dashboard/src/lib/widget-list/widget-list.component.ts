@@ -33,6 +33,11 @@ interface WidgetDisplayItem extends WidgetMetadata {
 interface WidgetListGroup {
   label?: string;
   widgets: WidgetDisplayItem[];
+  /**
+   * Derived display state, memoized with the group rather than recomputed per
+   * change-detection pass from the template.
+   */
+  expanded: boolean;
 }
 
 @Component({
@@ -140,7 +145,7 @@ export class WidgetListComponent {
 
       let group = byLabel.get(label);
       if (!group) {
-        group = { label, widgets: [] };
+        group = { label, widgets: [], expanded: this.isGroupExpanded(label) };
         byLabel.set(label, group);
         labelled.push(group);
       }
@@ -148,7 +153,7 @@ export class WidgetListComponent {
     }
 
     return ungrouped.length > 0
-      ? [...labelled, { widgets: ungrouped }]
+      ? [...labelled, { widgets: ungrouped, expanded: true }]
       : labelled;
   });
 

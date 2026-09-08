@@ -51,12 +51,10 @@
   @if (collapsed()) {
   <!-- Icon-only rail: no room for headings, so the sections degrade to
        dividers and cannot be collapsed. -->
-  @for (group of widgetGroups(); track group.label ?? '') { @if ($index > 0) {
-  <mat-divider class="widget-group-divider" />
-  }
+  @for (group of widgetGroups(); track group.label ?? '') {
   <ng-container
     [ngTemplateOutlet]="widgetSection"
-    [ngTemplateOutletContext]="{ $implicit: group }"
+    [ngTemplateOutletContext]="{ $implicit: group, showDivider: $index > 0 }"
   />
   } } @else {
   <mat-accordion class="widget-group-accordion" multi displayMode="flat">
@@ -64,7 +62,7 @@
     as groupLabel) {
     <mat-expansion-panel
       class="widget-group-panel"
-      [expanded]="isGroupExpanded(groupLabel)"
+      [expanded]="group.expanded"
       (opened)="setGroupExpanded(groupLabel, true)"
       (closed)="setGroupExpanded(groupLabel, false)"
     >
@@ -79,14 +77,11 @@
       />
     </mat-expansion-panel>
     } @else {
-    <!-- Ungrouped widgets trail the labelled groups; without this they read as
-         part of the group above. -->
-    @if ($index > 0) {
-    <mat-divider class="widget-group-divider" />
-    }
+    <!-- Ungrouped widgets trail the labelled groups; without the divider they
+         read as part of the group above. -->
     <ng-container
       [ngTemplateOutlet]="widgetSection"
-      [ngTemplateOutletContext]="{ $implicit: group }"
+      [ngTemplateOutletContext]="{ $implicit: group, showDivider: $index > 0 }"
     />
     } }
   </mat-accordion>
@@ -95,7 +90,10 @@
 
 <!-- One list per section, so every rendered list owns listitem children even
      when other sections are collapsed. -->
-<ng-template #widgetSection let-group>
+<ng-template #widgetSection let-group let-showDivider="showDivider">
+  @if (showDivider) {
+  <mat-divider class="widget-group-divider" />
+  }
   <div class="widget-group" role="list" [attr.aria-label]="group.label">
     @for (widget of group.widgets; track widget.widgetTypeid) {
     <div

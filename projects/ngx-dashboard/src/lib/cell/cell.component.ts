@@ -30,6 +30,8 @@ import {
   Widget,
   CellResizeDirection,
   CellResizeDelta,
+  pxToTracks,
+  resizeCursorClass,
 } from '../models';
 import { DashboardStore } from '../store/dashboard-store';
 import { CellDisplayData } from '../models';
@@ -38,23 +40,6 @@ import {
   CellContextMenuService,
   CellContextMenuItem,
 } from './cell-context-menu.service';
-
-/** Body cursor class used for the duration of a resize gesture. */
-function resizeCursorClass(direction: CellResizeDirection): string {
-  switch (direction) {
-    case 'horizontal':
-      return 'cursor-col-resize';
-    case 'vertical':
-      return 'cursor-row-resize';
-    default:
-      return 'cursor-nwse-resize';
-  }
-}
-
-/** Convert a pixel drag distance into whole grid tracks. */
-function spanDelta(distance: number, cellSize: number): number {
-  return Math.round(distance / cellSize);
-}
 
 @Component({
   selector: 'lib-cell',
@@ -143,6 +128,9 @@ export class CellComponent {
   gridCellDimensions = this.#store.gridCellDimensions;
   private resizeDirection = signal<CellResizeDirection | null>(null);
   private resizeStartPos = signal({ x: 0, y: 0 });
+
+  /** Last delta actually emitted, used to drop no-op moves. Not reactive. */
+  #lastResizeDelta: CellResizeDelta | null = null;
 
   constructor() {
     // widget creation - triggers when factory or state changes
@@ -353,6 +341,7 @@ export class CellComponent {
     event.stopPropagation();
 
     this.resizeDirection.set(direction);
+    this.#lastResizeDelta = null;
     this.resizeStartPos.set({ x: event.clientX, y: event.clientY });
     this.resizeStart.emit({ cellId: this.cellId(), direction });
 
@@ -374,17 +363,28 @@ export class CellComponent {
     const startPos = this.resizeStartPos();
     const cellSize = this.gridCellDimensions();
 
-    // Edge handles report a single number for their own axis; the corner
-    // handle drives both at once, so it reports a per-axis delta instead.
-    const columns = spanDelta(event.clientX - startPos.x, cellSize.width);
-    const rows = spanDelta(event.clientY - startPos.y, cellSize.height);
+    // Zero the axis this handle does not drive, so every consumer downstream
+    // can read both fields without re-deriving that from the direction.
+    const delta: CellResizeDelta = {
+      columns:
+        direction === 'vertical'
+          ? 0
+          : pxToTracks(event.clientX - startPos.x, cellSize.width),
+      rows:
+        direction === 'horizontal'
+          ? 0
+          : pxToTracks(event.clientY - startPos.y, cellSize.height),
+    };
 
-    const delta: CellResizeDelta =
-      direction === 'horizontal'
-        ? columns
-        : direction === 'vertical'
-        ? rows
-        : { columns, rows };
+    // Pointer movement is continuous but the span delta is quantised to whole
+    // tracks, so most moves resolve to the delta already previewed. Emitting
+    // those anyway patches the store with a fresh object every time, which
+    // re-renders every drop zone in the editor for no visible change.
+    const last = this.#lastResizeDelta;
+    if (last && last.columns === delta.columns && last.rows === delta.rows) {
+      return;
+    }
+    this.#lastResizeDelta = delta;
 
     this.resizeMove.emit({
       cellId: this.cellId(),
@@ -410,6 +410,7 @@ export class CellComponent {
 
     this.resizeEnd.emit({ cellId: this.cellId(), apply: true });
     this.resizeDirection.set(null);
+    this.#lastResizeDelta = null;
   }
 
   /**

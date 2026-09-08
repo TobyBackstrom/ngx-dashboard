@@ -4,8 +4,8 @@ import {
   CellData,
   CellResizeDirection,
   CellResizeDelta,
-  normalizeCellResizeDelta,
 } from '../../../models';
+import { GridQueryInternalUtils } from './grid-query-internal.utils';
 
 export function getMaxColSpan(
   cellId: CellId,
@@ -14,16 +14,14 @@ export function getMaxColSpan(
   cells: CellData[],
   columns: number,
   /**
-   * How many rows the widget is assumed to occupy while widening. Defaults to
-   * its committed rowSpan; a corner resize passes the *preview* rowSpan so the
-   * two axes are checked against each other instead of against stale spans.
+   * How many rows the widget is assumed to occupy while widening. Callers pass
+   * the *preview* rowSpan so the two axes are checked against each other
+   * instead of against stale committed spans.
    */
-  rowSpan?: number,
+  rowSpan: number,
 ): number {
   const currentCell = cells.find((c) => CellIdUtils.equals(c.cellId, cellId));
   if (!currentCell) return 1;
-
-  const effectiveRowSpan = rowSpan ?? currentCell.rowSpan;
 
   // Start from current position and check each column until we hit a boundary or collision
   let maxSpan = 1;
@@ -32,24 +30,15 @@ export function getMaxColSpan(
     // Check if this column is free for all rows the widget spans
     let columnIsFree = true;
 
-    for (let testRow = row; testRow < row + effectiveRowSpan; testRow++) {
-      const occupied = cells.some((cell) => {
-        if (CellIdUtils.equals(cell.cellId, cellId)) return false;
-
-        const wStartCol = cell.col;
-        const wEndCol = cell.col + cell.colSpan - 1;
-        const wStartRow = cell.row;
-        const wEndRow = cell.row + cell.rowSpan - 1;
-
-        return (
-          testCol >= wStartCol &&
-          testCol <= wEndCol &&
-          testRow >= wStartRow &&
-          testRow <= wEndRow
-        );
-      });
-
-      if (occupied) {
+    for (let testRow = row; testRow < row + rowSpan; testRow++) {
+      if (
+        GridQueryInternalUtils.isCellOccupied(
+          cells,
+          testRow,
+          testCol,
+          currentCell.widgetId,
+        )
+      ) {
         columnIsFree = false;
         break;
       }
@@ -73,14 +62,12 @@ export function getMaxRowSpan(
   rows: number,
   /**
    * How many columns the widget is assumed to occupy while growing taller.
-   * Defaults to its committed colSpan; see `getMaxColSpan`'s `rowSpan`.
+   * See `getMaxColSpan`'s `rowSpan`.
    */
-  colSpan?: number,
+  colSpan: number,
 ): number {
   const currentCell = cells.find((c) => CellIdUtils.equals(c.cellId, cellId));
   if (!currentCell) return 1;
-
-  const effectiveColSpan = colSpan ?? currentCell.colSpan;
 
   // Start from current position and check each row until we hit a boundary or collision
   let maxSpan = 1;
@@ -89,24 +76,15 @@ export function getMaxRowSpan(
     // Check if this row is free for all columns the widget spans
     let rowIsFree = true;
 
-    for (let testCol = col; testCol < col + effectiveColSpan; testCol++) {
-      const occupied = cells.some((cell) => {
-        if (CellIdUtils.equals(cell.cellId, cellId)) return false;
-
-        const wStartRow = cell.row;
-        const wEndRow = cell.row + cell.rowSpan - 1;
-        const wStartCol = cell.col;
-        const wEndCol = cell.col + cell.colSpan - 1;
-
-        return (
-          testRow >= wStartRow &&
-          testRow <= wEndRow &&
-          testCol >= wStartCol &&
-          testCol <= wEndCol
-        );
-      });
-
-      if (occupied) {
+    for (let testCol = col; testCol < col + colSpan; testCol++) {
+      if (
+        GridQueryInternalUtils.isCellOccupied(
+          cells,
+          testRow,
+          testCol,
+          currentCell.widgetId,
+        )
+      ) {
         rowIsFree = false;
         break;
       }
@@ -143,8 +121,6 @@ export function calculateResizePreview(
   );
   if (!cell) return null;
 
-  const deltaSpans = normalizeCellResizeDelta(direction, delta);
-
   // Deltas are always measured from the span the gesture started with, so a
   // drag back towards the origin undoes itself exactly. An axis this handle
   // does not drive keeps whatever the gesture has already previewed.
@@ -152,10 +128,10 @@ export function calculateResizePreview(
   const drivesRows = direction !== 'horizontal';
 
   let colSpan = drivesColumns
-    ? Math.max(1, resizeData.originalColSpan + deltaSpans.columns)
+    ? Math.max(1, resizeData.originalColSpan + delta.columns)
     : resizeData.previewColSpan;
   let rowSpan = drivesRows
-    ? Math.max(1, resizeData.originalRowSpan + deltaSpans.rows)
+    ? Math.max(1, resizeData.originalRowSpan + delta.rows)
     : resizeData.previewRowSpan;
 
   // Clamp columns against the row extent the gesture is asking for, then rows

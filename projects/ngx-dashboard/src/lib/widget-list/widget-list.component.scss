@@ -47,15 +47,10 @@
 }
 
 // Each section is its own list, inheriting the outer column layout and gap so a
-// grouped list keeps the same rhythm as a flat one.
-.widget-group {
-  display: flex;
-  flex-direction: column;
-  gap: inherit;
-}
-
-// The accordion is a layout-neutral wrapper: it keeps the list's own column
-// rhythm so panels line up with ungrouped widgets.
+// grouped list keeps the same rhythm as a flat one. The accordion is a
+// layout-neutral wrapper needing the same treatment, so panels line up with
+// ungrouped widgets.
+.widget-group,
 .widget-group-accordion {
   display: flex;
   flex-direction: column;

@@ -198,7 +198,7 @@ describe('CellComponent - Resize Functionality', () => {
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
         direction: 'horizontal',
-        delta: 1,
+        delta: { columns: 1, rows: 0 },
       });
     });
 
@@ -221,7 +221,7 @@ describe('CellComponent - Resize Functionality', () => {
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
         direction: 'vertical',
-        delta: 2,
+        delta: { columns: 0, rows: 2 },
       });
     });
 
@@ -235,7 +235,7 @@ describe('CellComponent - Resize Functionality', () => {
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
         direction: 'horizontal',
-        delta: -1,
+        delta: { columns: -1, rows: 0 },
       });
     });
   });
@@ -527,7 +527,10 @@ describe('CellComponent - Resize Functionality', () => {
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
         direction: 'horizontal',
-        delta: jasmine.any(Number),
+        delta: {
+          columns: jasmine.any(Number),
+          rows: jasmine.any(Number),
+        },
       });
     });
 
@@ -541,7 +544,10 @@ describe('CellComponent - Resize Functionality', () => {
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
         direction: 'horizontal',
-        delta: jasmine.any(Number),
+        delta: {
+          columns: jasmine.any(Number),
+          rows: jasmine.any(Number),
+        },
       });
     });
 
@@ -555,7 +561,10 @@ describe('CellComponent - Resize Functionality', () => {
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
         direction: 'horizontal',
-        delta: jasmine.any(Number),
+        delta: {
+          columns: jasmine.any(Number),
+          rows: jasmine.any(Number),
+        },
       });
     });
   });
@@ -589,7 +598,7 @@ describe('CellComponent - Resize Functionality', () => {
       expect(component.resizeMove.emit).toHaveBeenCalledWith({
         cellId: mockCellId,
         direction: 'horizontal',
-        delta: 1,
+        delta: { columns: 1, rows: 0 },
       });
 
       // End resize
