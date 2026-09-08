@@ -179,7 +179,10 @@
 }
 
 .resize-handle-line {
-  background-color: rgba(0, 0, 0, 0.1);
+  // Theme token rather than a black tint: the handles are revealed by
+  // `:host(:hover)` at this resting colour, and a black tint washes out
+  // against a dark surface.
+  background-color: var(--mat-sys-outline-variant);
   // transition: background-color 0.2s ease;
 
   .resize-handle--right & {
@@ -203,8 +206,8 @@
   bottom: 3px;
   width: 10px;
   height: 10px;
-  border-right: 3px solid rgba(0, 0, 0, 0.25);
-  border-bottom: 3px solid rgba(0, 0, 0, 0.25);
+  border-right: 3px solid var(--mat-sys-outline-variant);
+  border-bottom: 3px solid var(--mat-sys-outline-variant);
   border-bottom-right-radius: 3px;
 }
 
@@ -229,7 +232,9 @@
 .cell.is-resizing {
   opacity: 0.6;
   .resize-handle {
-    background-color: rgba(33, 150, 243, 0.5);
+    // Same tint the hover states use, so an in-progress resize follows the
+    // app's palette instead of a fixed blue.
+    background-color: color-mix(in srgb, var(--mat-sys-primary) 50%, transparent);
   }
 }
 
