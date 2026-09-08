@@ -29,7 +29,8 @@
     "build:i18n:de": "ng build demo --configuration=production-de",
     "serve:es": "ng serve demo --configuration=es",
     "serve:fr": "ng serve demo --configuration=fr",
-    "serve:de": "ng serve demo --configuration=de"
+    "serve:de": "ng serve demo --configuration=de",
+    "smoke:dev-server": "node scripts/smoke-dev-server.mjs"
   },
   "prettier": {
     "overrides": [
