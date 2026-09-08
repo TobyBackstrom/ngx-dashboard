@@ -71,10 +71,24 @@
   height: 4px;
 }
 
+/*
+ * The corner keeps a corner shape, cut from the same grip: clipping the
+ * top-left quadrant off a square leaves a backwards L whose strokes are half
+ * its size -- 4px, the width of the edge grips. Drawing it this way rather than
+ * with borders keeps `background-color` the one property every grip recolours
+ * through, so the hover and active rules below cover all three axes.
+ *
+ * The edge grips are centred in their strip, so each 4px stroke here has to be
+ * centred on that same line: half the box, less half a stroke. The box is
+ * square and tracks the gutter, so the percentage holds at every gutter size.
+ */
 :host(.axis-both) .grip-line {
-  width: 6px;
-  height: 6px;
-  border-bottom-right-radius: 3px;
+  position: absolute;
+  right: calc(50% - 2px);
+  bottom: calc(50% - 2px);
+  width: 8px;
+  height: 8px;
+  clip-path: polygon(0 100%, 100% 100%, 100% 0, 50% 0, 50% 50%, 0 50%);
 }
 
 :host(:hover) .grip-line,

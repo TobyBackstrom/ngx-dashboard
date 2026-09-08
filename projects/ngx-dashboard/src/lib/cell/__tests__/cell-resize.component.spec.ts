@@ -476,6 +476,37 @@ describe('CellComponent - Resize Functionality', () => {
     });
   });
 
+  describe('Handle Visibility During Resize', () => {
+    // Regression: the resize style used to light up the handles -- at one point
+    // every handle's whole hit area, a full-height strip down the right edge
+    // and a full-width one along the bottom. The cell keeps its committed size
+    // until the gesture is applied, so a visible handle marks an edge the
+    // widget is no longer following.
+    const handles = (): HTMLElement[] =>
+      Array.from(fixture.nativeElement.querySelectorAll('.resize-handle'));
+
+    const opacities = (): string[] =>
+      handles().map((el) => getComputedStyle(el).opacity);
+
+    beforeEach(() => {
+      fixture.componentRef.setInput('isEditMode', true);
+      fixture.detectChanges();
+    });
+
+    it('should render all three handles in edit mode', () => {
+      expect(handles().length).toBe(3);
+    });
+
+    (['horizontal', 'vertical', 'both'] as const).forEach((direction) => {
+      it(`should hide every handle during a ${direction} gesture`, () => {
+        component.onResizeStart(new MouseEvent('mousedown'), direction);
+        fixture.detectChanges();
+
+        expect(opacities()).toEqual(['0', '0', '0']);
+      });
+    });
+  });
+
   describe('Store Integration - Public Behavior', () => {
     beforeEach(() => {
       store.setGridCellDimensions(100, 80);

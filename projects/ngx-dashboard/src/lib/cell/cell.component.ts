@@ -130,7 +130,8 @@ export class CellComponent {
 
   resizeData = this.#store.resizeData;
   gridCellDimensions = this.#store.gridCellDimensions;
-  private resizeDirection = signal<CellResizeDirection | null>(null);
+  /** Direction of the gesture in progress; null between gestures. */
+  private readonly resizeDirection = signal<CellResizeDirection | null>(null);
   private resizeStartPos = signal({ x: 0, y: 0 });
 
   /** Last delta actually emitted, used to drop no-op moves. Not reactive. */
