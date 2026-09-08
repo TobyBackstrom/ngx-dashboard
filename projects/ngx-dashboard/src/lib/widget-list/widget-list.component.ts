@@ -14,12 +14,14 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DashboardService } from '../services/dashboard.service';
 import { DashboardBridgeService } from '../services/dashboard-bridge.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+
+/** Distinguishes the DOM ids of several widget lists mounted at once. */
+let nextWidgetListId = 0;
 
 interface WidgetDisplayItem extends WidgetMetadata {
   safeSvgIcon?: SafeHtml;
@@ -38,6 +40,10 @@ interface WidgetListGroup {
    * change-detection pass from the template.
    */
   expanded: boolean;
+  /** Target of the heading button's `aria-controls`. */
+  sectionId: string;
+  /** The heading button's own id, for the region's `aria-labelledby`. */
+  headingId: string;
 }
 
 @Component({
@@ -46,7 +52,6 @@ interface WidgetListGroup {
   imports: [
     NgTemplateOutlet,
     MatTooltipModule,
-    MatExpansionModule,
     MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
@@ -73,6 +78,8 @@ export class WidgetListComponent {
    * editing surface.
    */
   readonly #collapsedGroups = signal<ReadonlySet<string>>(new Set<string>());
+
+  readonly #idPrefix = `ngx-dashboard-widget-group-${nextWidgetListId++}`;
 
   activeWidget = signal<string | null>(null);
 
@@ -145,7 +152,13 @@ export class WidgetListComponent {
 
       let group = byLabel.get(label);
       if (!group) {
-        group = { label, widgets: [], expanded: this.isGroupExpanded(label) };
+        group = {
+          label,
+          widgets: [],
+          expanded: this.isGroupExpanded(label),
+          sectionId: `${this.#idPrefix}-${labelled.length}`,
+          headingId: `${this.#idPrefix}-${labelled.length}-heading`,
+        };
         byLabel.set(label, group);
         labelled.push(group);
       }
@@ -153,7 +166,15 @@ export class WidgetListComponent {
     }
 
     return ungrouped.length > 0
-      ? [...labelled, { widgets: ungrouped, expanded: true }]
+      ? [
+          ...labelled,
+          {
+            widgets: ungrouped,
+            expanded: true,
+            sectionId: `${this.#idPrefix}-ungrouped`,
+            headingId: `${this.#idPrefix}-ungrouped-heading`,
+          },
+        ]
       : labelled;
   });
 
@@ -178,9 +199,7 @@ export class WidgetListComponent {
    * the expansion panel's `opened`/`closed` outputs.
    */
   setGroupExpanded(label: string | undefined, expanded: boolean): void {
-    // Filtering force-expands every group, so the panels' own open/close
-    // outputs would otherwise overwrite what the user collapsed before.
-    if (!label || this.isFiltering()) return;
+    if (!label) return;
 
     this.#collapsedGroups.update((collapsed) => {
       if (collapsed.has(label) === !expanded) return collapsed;

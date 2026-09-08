@@ -57,25 +57,45 @@
     [ngTemplateOutletContext]="{ $implicit: group, showDivider: $index > 0 }"
   />
   } } @else {
-  <mat-accordion class="widget-group-accordion" multi displayMode="flat">
+  <div class="widget-group-accordion">
     @for (group of widgetGroups(); track group.label ?? '') { @if (group.label;
     as groupLabel) {
-    <mat-expansion-panel
-      class="widget-group-panel"
-      [expanded]="group.expanded"
-      (opened)="setGroupExpanded(groupLabel, true)"
-      (closed)="setGroupExpanded(groupLabel, false)"
-    >
-      <mat-expansion-panel-header class="widget-group-label">
-        <mat-panel-title class="widget-group-title">
-          <span class="widget-group-label-text">{{ groupLabel }}</span>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <ng-container
-        [ngTemplateOutlet]="widgetSection"
-        [ngTemplateOutletContext]="{ $implicit: group }"
-      />
-    </mat-expansion-panel>
+    <section class="widget-group-panel">
+      <!-- The disclosure is ours rather than a mat-expansion-panel dressed down
+           to a chevron. The panel's (opened)/(closed) fire for the component's
+           own [expanded] binding as well as for user gestures, and telling the
+           two apart forced a filtering guard into the public
+           setGroupExpanded(). A button only fires when a user presses it.
+           Filtering force-expands every group, so the toggle is disabled while
+           a filter is active rather than silently ignored. -->
+      <button
+        type="button"
+        class="widget-group-label"
+        [id]="group.headingId"
+        [attr.aria-expanded]="group.expanded"
+        [attr.aria-controls]="group.sectionId"
+        [disabled]="isFiltering()"
+        (click)="toggleGroup(groupLabel)"
+      >
+        <span class="widget-group-label-text">{{ groupLabel }}</span>
+        <mat-icon class="widget-group-indicator">expand_more</mat-icon>
+      </button>
+      <!-- A collapsed section stays in the DOM but goes `inert`, so its widgets
+           are neither focusable, draggable nor exposed to assistive tech while
+           keeping their drag handlers registered. -->
+      <div
+        class="widget-group-region"
+        role="region"
+        [id]="group.sectionId"
+        [attr.aria-labelledby]="group.headingId"
+        [attr.inert]="group.expanded ? null : ''"
+      >
+        <ng-container
+          [ngTemplateOutlet]="widgetSection"
+          [ngTemplateOutletContext]="{ $implicit: group }"
+        />
+      </div>
+    </section>
     } @else {
     <!-- Ungrouped widgets trail the labelled groups; without the divider they
          read as part of the group above. -->
@@ -84,7 +104,7 @@
       [ngTemplateOutletContext]="{ $implicit: group, showDivider: $index > 0 }"
     />
     } }
-  </mat-accordion>
+  </div>
   }
 </div>
 
