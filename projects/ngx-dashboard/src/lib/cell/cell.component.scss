@@ -64,11 +64,6 @@
       border-color: #bdbdbd;
     }
   }
-
-  // prevent text selection during resize
-  &.resizing {
-    user-select: none;
-  }
 }
 
 .content-area {
@@ -103,55 +98,44 @@
 /// Resize stuff
 ///
 .resize-handle {
+  // Overhang only as far as the gutter allows. All cell hosts share
+  // `z-index: 1`, so an overhang that reached the next cell would be painted
+  // over by whichever comes later in DOM order -- re-creating the clipped hit
+  // area this handle placement exists to avoid, and swallowing clicks near the
+  // neighbour's edge.
+  --handle-overhang: min(8px, var(--gutter-size, 8px));
+
   position: absolute;
   z-index: 20;
-  // transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Handles rest invisible. `:host(:hover)` above reveals all three together --
+  // `:hover` matches ancestors, so hovering a handle directly is covered by the
+  // same rule -- and the grabbed one is held visible for the whole gesture by
+  // the `.is-active` rule at the end of this file.
+  opacity: 0;
+
+  // Direct hover picks out the handle under the pointer from the two the host
+  // rule has already revealed.
+  &:hover .resize-handle-line {
+    background-color: var(--mat-sys-primary-container);
+  }
 
   &--right {
     cursor: col-resize;
     width: 16px;
     height: 100%;
-    // Overhang only as far as the gutter allows. All cell hosts share
-    // `z-index: 1`, so an overhang that reached the next cell would be painted
-    // over by whichever comes later in DOM order -- re-creating the clipped
-    // hit area this handle placement exists to avoid, and swallowing clicks
-    // near the neighbour's edge.
-    right: calc(-1 * min(8px, var(--gutter-size, 8px)));
+    right: calc(-1 * var(--handle-overhang));
     top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-
-    &:hover {
-      opacity: 1;
-
-      .resize-handle-line {
-        background-color: var(--mat-sys-primary-container);
-        // background-color: #2196f3;
-      }
-    }
   }
 
   &--bottom {
     cursor: row-resize;
     width: 100%;
     height: 16px;
-    bottom: calc(-1 * min(8px, var(--gutter-size, 8px)));
+    bottom: calc(-1 * var(--handle-overhang));
     left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-
-    &:hover {
-      opacity: 1;
-
-      .resize-handle-line {
-        background-color: var(--mat-sys-primary-container);
-        // background-color: #2196f3;
-      }
-    }
   }
 
   // Bottom-right corner: resizes columns and rows in a single gesture.
@@ -165,15 +149,6 @@
     right: 0;
     bottom: 0;
     z-index: 21;
-    opacity: 0;
-
-    &:hover {
-      opacity: 1;
-
-      .resize-handle-grip {
-        border-color: var(--mat-sys-primary);
-      }
-    }
   }
 }
 
@@ -182,32 +157,36 @@
   // `:host(:hover)` at this resting colour, and a black tint washes out
   // against a dark surface.
   background-color: var(--mat-sys-outline-variant);
-  // transition: background-color 0.2s ease;
+  border-radius: 2px;
 
   .resize-handle--right & {
     width: 8px;
     height: 40px;
-    border-radius: 2px;
   }
 
   .resize-handle--bottom & {
     width: 40px;
     height: 8px;
-    border-radius: 2px;
   }
-}
 
-// Corner grip: an inset chevron hugging the cell's rounded corner, so the
-// diagonal affordance reads differently from the edge handles' bars.
-.resize-handle-grip {
-  position: absolute;
-  right: 3px;
-  bottom: 3px;
-  width: 10px;
-  height: 10px;
-  border-right: 3px solid var(--mat-sys-outline-variant);
-  border-bottom: 3px solid var(--mat-sys-outline-variant);
-  border-bottom-right-radius: 3px;
+  // The corner keeps a corner shape, cut from the same bar: clipping the
+  // top-left quadrant off a square leaves a backwards L whose strokes are half
+  // its size -- 8px, the width of the edge bars. Drawing it this way rather
+  // than with borders keeps `background-color` the one property every handle
+  // recolours through, so the hover and active rules cover all three.
+  //
+  // Each stroke lands on the bar it continues. An edge bar is 8px centred in a
+  // 16px handle, so its outer edge sits 4px inside that handle's outer edge --
+  // which overhangs the cell. The corner handle has no overhang of its own, so
+  // the bracket is pushed out by the difference to reach the same two lines.
+  .resize-handle--corner & {
+    position: absolute;
+    right: calc(4px - var(--handle-overhang));
+    bottom: calc(4px - var(--handle-overhang));
+    width: 16px;
+    height: 16px;
+    clip-path: polygon(0 100%, 100% 100%, 100% 0, 50% 0, 50% 50%, 0 50%);
+  }
 }
 
 .resize-preview {
@@ -232,12 +211,13 @@
   opacity: 0.6;
 }
 
-:host(.is-resizing) {
-  .resize-handle {
-    // Same tint the hover states use, so an in-progress resize follows the
-    // app's palette instead of a fixed blue.
-    background-color: color-mix(in srgb, var(--mat-sys-primary) 50%, transparent);
-  }
+// The cell keeps its committed size until the gesture is applied, so a handle
+// left visible would sit on an edge the widget is no longer following. All
+// three go away for the duration and the `.resize-preview` badge carries the
+// feedback instead. Placed after the `:host(:hover)` reveal, which it ties with
+// on specificity, so it wins while the pointer is still over the cell.
+:host(.is-resizing) .resize-handle {
+  opacity: 0;
 }
 
 // Global body cursor classes for resize operations live in the shared
