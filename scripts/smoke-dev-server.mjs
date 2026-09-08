@@ -63,14 +63,27 @@ function findChrome() {
   return candidates.find((p) => existsSync(p));
 }
 
+/** CI output is coloured, which splits literals like `localhost:4321`. */
+const stripAnsi = (text) => text.replace(/\u001B\[[0-9;]*[a-zA-Z]/g, '');
+
 /** Resolves once the dev server prints its local URL, or rejects on timeout. */
 function startDevServer() {
   return new Promise((resolve, reject) => {
     log(`starting ng serve on :${PORT}`);
+    // Angular disables its cache -- and with it dependency prebundling -- when
+    // CI is set. Prebundling is precisely where the linker runs over
+    // node_modules, i.e. the path this smoke test exists to cover, so the
+    // server is started as a developer's machine would run it.
+    const env = { ...process.env };
+    delete env.CI;
     const child = spawn(
       'npx',
       ['ng', 'serve', 'demo', '--port', String(PORT)],
-      { stdio: ['ignore', 'pipe', 'pipe'], shell: process.platform === 'win32' },
+      {
+        stdio: ['ignore', 'pipe', 'pipe'],
+        shell: process.platform === 'win32',
+        env,
+      },
     );
     children.push(child);
 
@@ -80,7 +93,7 @@ function startDevServer() {
     }, SERVE_TIMEOUT_MS);
 
     const onData = (buf) => {
-      const text = buf.toString();
+      const text = stripAnsi(buf.toString());
       output += text;
       // Surface build failures immediately rather than waiting for the timeout.
       if (/ERROR|Application bundle generation failed/.test(text)) {
