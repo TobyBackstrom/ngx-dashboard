@@ -46,5 +46,12 @@ jobs:
         run: |
           timeout 300 npx ng test demo --no-watch --browsers=ChromeHeadless --code-coverage
 
+      # Gates on what consumers of the published libraries actually install.
+      # Dev-only advisories are reported by the advisory step below instead of
+      # blocking the build, since the build toolchain never ships to consumers.
       - name: Security audit (BLOCKING)
+        run: npm audit --omit=dev --audit-level=moderate
+
+      - name: Security audit (dev deps, advisory)
         run: npm audit --audit-level=moderate
+        continue-on-error: true
