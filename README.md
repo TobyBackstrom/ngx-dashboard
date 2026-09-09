@@ -151,7 +151,6 @@ Subsystem deep dives live in [`docs/`](docs):
 - [Widget Shared State Guide](docs/widget-shared-state-guide.md) - Sharing configuration across all instances of a widget type
 - [Provider System Architecture](docs/provider-system-architecture.md) - Injection points for dialogs, menus, and persistence
 - [Empty Cell Context Provider](docs/empty-cell-context-provider.md) - Customizing right-click behavior on empty cells
-- [Dashboard Persistence](docs/dashboard-persistence.md) - Serialization and storage strategies
 - [Release Notes](docs/RELEASE_NOTES.md) - Version history for both libraries
 
 ## 🛠️ Development

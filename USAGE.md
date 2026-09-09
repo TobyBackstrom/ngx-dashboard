@@ -26,8 +26,14 @@ npm install @dragonworks/ngx-dashboard
 npm install @dragonworks/ngx-dashboard-widgets
 
 # Required peer dependencies
-npm install @angular/material @angular/cdk
+npm install @angular/material @angular/cdk @angular/localize
 ```
+
+Both libraries declare `@angular/common`, `@angular/core`, `@angular/localize`,
+`@angular/material` and `@angular/cdk` as peer dependencies, all at `^22.0.0` — the
+libraries track the Angular major. `@angular/localize` is needed because the library
+marks its user-facing strings with `$localize`; an app that ships a single language
+still needs the package present.
 
 ### Angular Material Theme Setup
 
@@ -36,23 +42,33 @@ Add a Material Design theme to your `styles.scss`:
 ```scss
 @use '@angular/material' as mat;
 
-@include mat.core();
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
 
-$primary: mat.define-palette(mat.$indigo-palette);
-$accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-$warn: mat.define-palette(mat.$red-palette);
+body {
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+```
 
-$theme: mat.define-light-theme((
-  color: (
-    primary: $primary,
-    accent: $accent,
-    warn: $warn,
-  ),
-  typography: mat.define-typography-config(),
-  density: 0,
-));
+`mat.theme()` emits the MD3 system variables (`--mat-sys-*`) that the dashboard and
+every bundled widget style against, and follows the user's light/dark preference on
+its own. The pre-v3 API (`mat.define-palette()`, `mat.define-light-theme()`,
+`mat.all-component-themes()`) is gone from Material 22 — the M2 mixins that remain
+are namespaced `mat.m2-*` and are not what these libraries expect.
 
-@include mat.all-component-themes($theme);
+To generate a palette from your own brand colour:
+
+```bash
+ng generate @angular/material:theme-color --primary-color=#37618E --is-scss=true
 ```
 
 ## Complete Setup
@@ -64,7 +80,7 @@ Create or update your `app.config.ts`:
 ```typescript
 import {
   ApplicationConfig,
-  provideZoneChangeDetection,
+  provideZonelessChangeDetection,
   provideEnvironmentInitializer,
   inject,
 } from '@angular/core';
@@ -82,9 +98,11 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    // Every component in both libraries is OnPush and signal-based, so they run
+    // zoneless. zone.js is not required at runtime.
+    provideZonelessChangeDetection(),
     provideRouter(routes),
-    provideHttpClient(), // Required for dashboard loading
+    provideHttpClient(), // Only needed if you load dashboards over HTTP
     
     // Register built-in widgets globally
     provideEnvironmentInitializer(() => {
@@ -397,6 +415,26 @@ this.dashboard().loadDashboard(dashboardData);
 this.dashboard().clearDashboard();
 ```
 
+### Reactive Binding vs. loadDashboard
+
+`dashboardData` is a **seed, not a binding**. The component loads the first non-null
+value it sees and then ignores the input, so that a re-emission — from a `toSignal()`
+over an HTTP observable, say — cannot silently overwrite an imperative
+`loadDashboard()` the user just triggered.
+
+```typescript
+// Does NOT swap the dashboard after the first load
+[dashboardData]="currentConfig()"
+
+// Correct: load imperatively
+this.dashboard().loadDashboard(nextConfig);
+```
+
+The `dashboardId` follows the same rule: the DTO's id is adopted on the first load
+only. Later imports keep the store's id and treat the incoming one as metadata about
+where the file came from, so exporting from one dashboard and importing into another
+works without rewriting ids by hand.
+
 ### Configuration Properties
 
 ```typescript
@@ -416,6 +454,65 @@ dashboardReservedSpace = computed((): ReservedSpace => ({
   right: editMode() ? 352 : 16, // Right padding + widget list
 }));
 ```
+
+### Inputs
+
+| Input | Type | Default | Description |
+| --- | --- | --- | --- |
+| `dashboardData` | `DashboardDataDto` | *required* | Initial dashboard. Read **once**, on the first non-null value — see [Reactive binding vs. loadDashboard](#reactive-binding-vs-loaddashboard) |
+| `editMode` | `boolean` | `false` | Switches between the editor and the viewer |
+| `reservedSpace` | `ReservedSpace` | — | Viewport insets, so the grid sizes itself around your own chrome |
+| `enableSelection` | `boolean` | `false` | Mounts the snap-to-grid selection overlay (viewer only) |
+| `selectionModifier` | `SelectionModifier \| null` | `null` | `'shift' \| 'ctrl' \| 'alt' \| 'meta'`. With `null` the overlay is always armed; with a modifier it arms only while that key is held, so widget clicks keep working |
+| `dragThreshold` | `number` | `4` | Minimum pointer travel in CSS pixels before a selection is emitted. `0` restores "every pointerup emits" |
+| `gutterSize` | `string` | — | CSS length for the gutter (`px`/`em`/`rem` only). A seed, not a binding: an invalid value is ignored, and a later `loadDashboard()` still wins |
+| `maxRows` | `number` | `64` | Ceiling for any resize. The clamp-to-content floor outranks it, so an imported dashboard never loses widgets |
+| `maxColumns` | `number` | `128` | As above, for columns |
+| `showWidgetNames` | `boolean` | `false` | Corner badge naming each widget's type — a reading aid for crowded grids. A view preference; it is not written to the exported DTO |
+
+### Outputs
+
+| Output | Payload | Fires when |
+| --- | --- | --- |
+| `selectionComplete` | `GridSelection` | A selection gesture ends above `dragThreshold`. The rectangle stays on screen afterwards so you can render confirm UX over it — call `clearSelection()` when done |
+| `gridResized` | `GridResizeResult` | The grid size changes. Carries `clamped`, so you can tell the user they hit a limit |
+| `gridConfigChanged` | `GridConfig` | Any committed geometry change, gutter included. The autosave hook — but every intermediate state of a live editor emits, so debounce |
+
+Neither `gridResized` nor `gridConfigChanged` fires for `loadDashboard()`: the host
+initiated that itself.
+
+### Methods and Signals
+
+```typescript
+const dashboard = viewChild.required<NgxDashboardComponent>('dashboard');
+
+// Data
+dashboard().exportDashboard();                  // DashboardDataDto
+dashboard().exportDashboard(selection, opts);   // only the selected region
+dashboard().loadDashboard(data);
+dashboard().clearDashboard();
+
+// Geometry
+dashboard().setGridSize(10, 20);                // GridResizeResult, reports clamping
+dashboard().setGutterSize('1em');               // returns the gutter actually applied
+
+// Selection
+dashboard().clearSelection();                   // drop the rectangle after confirm UX
+
+// Readonly signals
+dashboard().gridConfig();                       // committed geometry, never a drag preview
+dashboard().minGridSize();                      // clamp-to-content floor
+dashboard().gridSizeLimits();                   // ceiling from maxRows / maxColumns
+```
+
+`exportDashboard(selection, options)` filters to a region. `SelectionFilterOptions`
+takes `useMinimalBounds` (shrink to the tightest box containing the selected widgets,
+default `false`) and `padding` (empty cells added on every side afterwards, default
+`0`, clamped at the grid origin).
+
+`setGridSize()` and `setGutterSize()` both return what was *actually* applied rather
+than what was asked for — a gutter in a rejected unit keeps the previous value, and a
+size below the content floor snaps up to it.
 
 ## Creating Custom Widgets
 
@@ -576,9 +673,11 @@ export class MyWidgetComponent implements Widget {
   }
 
   /**
-   * Optional: Handle widget configuration/settings dialog
+   * Optional: Handle widget configuration/settings dialog.
+   * The `Widget` interface declares this optional, but an implementation
+   * declares it as a normal method - a class member cannot carry `?`.
    */
-  dashboardEditState?(): void {
+  dashboardEditState(): void {
     // Open settings dialog
     const dialogRef = this.dialog.open(MyWidgetSettingsDialog, {
       data: this.state(),
@@ -606,25 +705,24 @@ import { MyWidgetState } from './my-widget.component';
 
 @Component({
   selector: 'app-my-widget-settings',
-  standalone: true,
-  imports: [/* Material form components */],
+  imports: [MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   template: `
     <h2 mat-dialog-title>Widget Settings</h2>
     <div mat-dialog-content>
       <mat-form-field>
         <mat-label>Message</mat-label>
-        <input matInput [(ngModel)]="localState().message">
+        <input matInput [value]="message()" (input)="message.set($any($event.target).value)">
       </mat-form-field>
-      
+
       <mat-form-field>
         <mat-label>Background Color</mat-label>
-        <input matInput type="color" [(ngModel)]="localState().color">
+        <input matInput type="color" [value]="color()" (input)="color.set($any($event.target).value)">
       </mat-form-field>
     </div>
-    
+
     <div mat-dialog-actions>
       <button mat-button (click)="cancel()">Cancel</button>
-      <button mat-button cdkFocusInitial (click)="save()">Save</button>
+      <button mat-flat-button cdkFocusInitial (click)="save()">Save</button>
     </div>
   `,
 })
@@ -632,14 +730,22 @@ export class MyWidgetSettingsDialog {
   private dialogRef = inject(MatDialogRef<MyWidgetSettingsDialog>);
   private data = inject<MyWidgetState>(MAT_DIALOG_DATA);
 
-  localState = signal<MyWidgetState>({ ...this.data });
+  // One signal per field. `[(ngModel)]="state().message"` does not work: the
+  // left-hand side of a two-way binding has to be assignable, and a signal
+  // read is a function call.
+  readonly message = signal(this.data.message);
+  readonly color = signal(this.data.color ?? '#ffffff');
 
   cancel(): void {
     this.dialogRef.close();
   }
 
   save(): void {
-    this.dialogRef.close(this.localState());
+    this.dialogRef.close({
+      ...this.data,
+      message: this.message(),
+      color: this.color(),
+    });
   }
 }
 ```
@@ -660,33 +766,159 @@ const loadFromLocalStorage = (): DashboardDataDto | null => {
   return saved ? JSON.parse(saved) : null;
 };
 
-// Auto-save on changes
-effect(() => {
-  const data = this.dashboard().exportDashboard();
-  saveToLocalStorage(data);
-});
+// Saving on change: an effect around exportDashboard() will NOT work. It reads
+// live widget state through a callback rather than a signal, so the effect runs
+// once and never again. Save from the events that actually report a change:
+constructor() {
+  // Geometry changes (size and gutter, handle-driven or programmatic)
+  this.dashboard().gridConfigChanged.subscribe(() => this.save());
+}
+
+onEditModeExit(): void {
+  this.save(); // Widget add/move/resize/delete has no output - save on a
+}              // natural boundary such as leaving edit mode, or on a timer
+
+private save(): void {
+  saveToLocalStorage(this.dashboard().exportDashboard());
+}
 ```
+
+`gridConfigChanged` emits on every committed change, including the intermediate
+states of a settings dialog that applies as the user drags a slider — debounce, or
+persist once the value settles.
 
 ### HTTP-based Dashboard Loading
 
 ```typescript
 import { httpResource } from '@angular/common/http';
 
-// Load dashboard from HTTP endpoint
-protected dashboardResource = httpResource<DashboardDataDto>({
-  url: '/api/dashboards/my-dashboard'
-});
+// The request is a reactive function, not a plain object - read signals inside
+// it and the resource refetches when they change.
+protected dashboardResource = httpResource<DashboardDataDto>(
+  () => ({ url: `/api/dashboards/${this.dashboardId()}` })
+);
 
 constructor() {
-  // Auto-load when resource resolves
   effect(() => {
-    const dashboardData = this.dashboardResource.value();
-    if (dashboardData) {
-      this.dashboard().loadDashboard(dashboardData);
+    const data = this.dashboardResource.value();
+    // Wait for 'resolved': value() is undefined while loading and on error
+    if (data && this.dashboardResource.status() === 'resolved') {
+      // queueMicrotask defers past the current change detection pass, so the
+      // viewChild is resolved before the imperative call
+      queueMicrotask(() => this.dashboard().loadDashboard(data));
     }
   });
 }
 ```
+
+### Cell Selection
+
+The viewer can hand back a rectangle of grid coordinates — the demo uses it to zoom
+into a region, but it suits any "act on this area" gesture.
+
+```typescript
+@Component({
+  template: `
+    <ngx-dashboard
+      #dashboard
+      [dashboardData]="config"
+      [enableSelection]="true"
+      [selectionModifier]="'shift'"
+      [dragThreshold]="4"
+      (selectionComplete)="onSelection($event)"
+    />
+  `,
+})
+export class SelectableDashboardComponent {
+  private readonly dashboard = viewChild.required<NgxDashboardComponent>('dashboard');
+
+  async onSelection(selection: GridSelection): Promise<void> {
+    // The rectangle stays visible after the event, so confirm UX can render
+    // over it. Nothing clears it for you.
+    const confirmed = await this.confirmDialog(selection);
+    if (confirmed) {
+      // Selection is positional; the options argument is optional
+      const region = this.dashboard().exportDashboard(selection, {
+        useMinimalBounds: true, // tighten to the widgets actually inside
+        padding: 1,             // then add a one-cell margin
+      });
+      // ...
+    }
+    this.dashboard().clearSelection();
+  }
+}
+```
+
+`GridSelection` is `{ topLeft: { row, col }, bottomRight: { row, col } }`, normalized
+regardless of which way the drag went.
+
+Two inputs keep selection from fighting the widgets underneath it:
+
+- **`selectionModifier`** — with `null` (the default) the overlay is permanently
+  armed and swallows clicks meant for widgets. Set `'shift' | 'ctrl' | 'alt' |
+  'meta'` and it arms only while that key is held, so widget clicks and context menus
+  keep working the rest of the time.
+- **`dragThreshold`** — pointer travel, in CSS pixels, below which the gesture is
+  discarded. The `4` default matches OS click-vs-drag behaviour and stops a
+  stationary click emitting a 1×1 selection.
+
+Selection is pointer-based, so mouse, touch and pen all work. It is viewer-only —
+`editMode` takes precedence.
+
+### Grid Geometry at Runtime
+
+Rows, columns and gutter are all settable after load. The library owns the mechanics;
+the editing UI is yours.
+
+```typescript
+// Apply a size; the result reports what was actually applied
+const result: GridResizeResult = this.dashboard().setGridSize(rows, columns);
+if (result.clamped) {
+  this.notify(`Adjusted to ${result.rows} × ${result.columns}`);
+}
+
+// Gutter: px / em / rem only. Returns the gutter in force afterwards, which is
+// the previous one when the value was rejected.
+const applied = this.dashboard().setGutterSize('1em');
+
+// Bounds for your own controls
+const floor = this.dashboard().minGridSize();     // smallest size that still fits every widget
+const ceiling = this.dashboard().gridSizeLimits(); // from maxRows / maxColumns
+```
+
+Shrinking uses a **clamp-to-content** policy: a size that would push a widget out of
+bounds snaps up to the smallest size that still holds every widget, so a resize never
+orphans one. That floor also outranks `maxRows`/`maxColumns`, which is why a dashboard
+imported with more rows than the cap keeps them.
+
+Percentages and viewport units are rejected for the gutter: the cell size is computed
+with container-query arithmetic (`100cqi`), which they break.
+
+### Widget Name Badges
+
+```html
+<ngx-dashboard [dashboardData]="config" [showWidgetNames]="editMode()" />
+```
+
+Labels each cell with its widget type in a corner tab. There is no imperative setter
+and no read-back signal — hold the flag in your own signal and bind it. The badge
+text comes from `WidgetMetadata.name`, so it is already localized by whoever
+registered the widget. It is a view preference and is never written to the exported
+DTO.
+
+### Widget Family Shared State
+
+Register a provider alongside the widget to share configuration across every instance
+of that type:
+
+```typescript
+dashboardService.registerWidgetType(TemperatureWidgetComponent, TemperatureSharedState);
+```
+
+The framework collects shared state on export and restores it before widgets are
+instantiated on import — including for widget types that register later, such as
+lazy-loaded ones. See the
+[Widget Shared State Guide](docs/widget-shared-state-guide.md).
 
 ### Multiple Dashboards
 
@@ -706,13 +938,15 @@ constructor() {
     
     <ngx-dashboard
       #dashboard
-      [dashboardData]="currentConfig()"
+      [dashboardData]="dashboardConfigs[0]"
       [editMode]="editMode()"
     >
     </ngx-dashboard>
   `,
 })
 export class MultiDashboardComponent {
+  private readonly dashboard = viewChild.required<NgxDashboardComponent>('dashboard');
+
   dashboardConfigs = [
     createEmptyDashboard('dashboard-1', 8, 12),
     createEmptyDashboard('dashboard-2', 6, 16),
@@ -720,16 +954,26 @@ export class MultiDashboardComponent {
   ];
 
   activeDashboard = signal('dashboard-1');
-  
-  currentConfig = computed(() => 
-    this.dashboardConfigs.find(c => c.dashboardId === this.activeDashboard())!
-  );
 
+  // Switching is imperative. Rebinding [dashboardData] would do nothing - the
+  // input seeds the store once and is ignored afterwards.
   switchDashboard(dashboardId: string): void {
+    // Keep the outgoing dashboard's edits before swapping it out
+    const current = this.dashboard().exportDashboard();
+    const index = this.dashboardConfigs.findIndex(
+      (c) => c.dashboardId === this.activeDashboard()
+    );
+    this.dashboardConfigs[index] = current;
+
+    const next = this.dashboardConfigs.find((c) => c.dashboardId === dashboardId)!;
+    this.dashboard().loadDashboard(next);
     this.activeDashboard.set(dashboardId);
   }
 }
 ```
+
+Each `<ngx-dashboard>` instance owns one store, so several dashboards can also be
+mounted side by side, each with its own `[dashboardData]`.
 
 ## Common Patterns
 
@@ -832,9 +1076,11 @@ export class MyWidgetComponent implements Widget {
 - Ensure widgets are registered in `app.config.ts` using `provideEnvironmentInitializer()`
 - Verify widget metadata has unique `widgetTypeid`
 
-**2. Dashboard not responding to changes**
-- Use ViewChild and imperative methods (`loadDashboard`, `exportDashboard`)
-- Avoid reactive binding to dashboard data
+**2. Rebinding `[dashboardData]` does nothing**
+- Expected: the input seeds the store once, on the first non-null value, and is
+  ignored afterwards so a re-emitting source cannot clobber a user's edits
+- Swap dashboards with `dashboard().loadDashboard(data)` instead — see
+  [Reactive Binding vs. loadDashboard](#reactive-binding-vs-loaddashboard)
 
 **3. Styling issues**
 - Ensure Angular Material theme is properly configured
@@ -853,7 +1099,8 @@ export class MyWidgetComponent implements Widget {
 - Use `OnPush` change detection strategy
 - Minimize widget state updates
 - Use computed signals for derived state
-- Implement proper widget cleanup in `ngOnDestroy`
+- Clean widgets up with `inject(DestroyRef).onDestroy(...)` — the pattern both
+  libraries use in place of `ngOnDestroy`
 
 ### Debugging
 
@@ -870,5 +1117,8 @@ constructor() {
 
 - Explore the [demo application](./projects/demo) for complete implementation examples
 - Check out advanced widget examples in the widgets library
-- Review the [API documentation](./docs/api) for detailed component interfaces
+- [Widget System Architecture](docs/widget-system-architecture.md) — registration, factories, and the widget lifecycle
+- [Widget Shared State Guide](docs/widget-shared-state-guide.md) — configuration shared across every instance of a widget type
+- [Provider System Architecture](docs/provider-system-architecture.md) — replacing the built-in dialogs
+- [Empty Cell Context Provider](docs/empty-cell-context-provider.md) — right-click behaviour on empty cells
 - Consider implementing custom persistence services for your backend

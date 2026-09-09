@@ -217,6 +217,49 @@ When loading a dashboard:
 
 This ensures that when widgets are instantiated, the shared state is already available.
 
+### Late-Registered Widget Types
+
+The order does not have to hold. If `loadDashboard()` runs before a widget type is
+registered — the normal case for a lazy-loaded feature module —
+`restoreSharedStates()` keeps the unmatched entry in a pending buffer instead of
+dropping it, and `registerWidgetType()` drains that buffer as soon as the matching
+provider registers. A second `loadDashboard()` replaces anything still buffered, so
+the most recent import wins.
+
+This mirrors the factory self-healing that repoints the same dashboard's widgets at
+their real components when a type arrives late, so a lazy-loaded widget family gets
+both its component and its shared configuration regardless of registration order.
+
+## Editing Shared State from the Widget
+
+A widget can implement the optional `dashboardEditSharedState()` lifecycle method to
+open a dialog for the family's shared configuration:
+
+```typescript
+export class TemperatureWidgetComponent implements Widget {
+  readonly #sharedState = inject(TemperatureSharedState);
+  readonly #dialog = inject(MatDialog);
+
+  // Instance settings, as usual
+  dashboardEditState(): void {
+    this.#dialog.open(TemperatureSettingsDialogComponent, { data: this.state() });
+  }
+
+  // Family-wide settings — presence of this method is what surfaces the menu item
+  dashboardEditSharedState(): void {
+    this.#dialog.open(TemperatureSharedSettingsDialogComponent, {
+      data: this.#sharedState.getSharedState(),
+    });
+  }
+}
+```
+
+The cell context menu adds its "Edit Shared State" item only for widgets that
+implement the method, so a widget family without shared configuration shows exactly
+the menu it did before. Following the same pattern as `dashboardEditState()` keeps
+dialog ownership with the widget — the library never opens a dialog on the widget's
+behalf, and the shared state provider stays a plain data service.
+
 ## Best Practices
 
 ### 1. Use Signals for Reactive Updates

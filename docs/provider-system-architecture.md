@@ -4,6 +4,18 @@
 
 The ngx-dashboard library implements an **extensible provider pattern** that enables consumers to customize dialog implementations and other UI concerns without modifying the library's core code. This architecture follows SOLID principles and provides maximum flexibility for enterprise applications.
 
+The library ships two provider families:
+
+| Token | Contract | Default |
+|-------|----------|---------|
+| `CELL_SETTINGS_DIALOG_PROVIDER` | `CellSettingsDialogProvider` | `DefaultCellSettingsDialogProvider` (Angular Material dialog) |
+| `EMPTY_CELL_CONTEXT_PROVIDER` | `EmptyCellContextProvider` | `DefaultEmptyCellContextProvider` (prevents the browser menu, does nothing else) |
+
+This document covers the first in depth and uses it to illustrate the pattern. The
+second has a guide of its own — see
+[Empty Cell Context Menu Provider](empty-cell-context-provider.md), which also
+documents the ready-made `WidgetListContextMenuProvider`.
+
 ## Table of Contents
 
 - [Core Concepts](#core-concepts)
@@ -70,6 +82,17 @@ export abstract class CellSettingsDialogProvider {
   abstract openCellSettings(data: CellDisplayData): Promise<CellDisplayData | undefined>;
 }
 ```
+
+> **`CellDisplayData` is not exported from `@dragonworks/ngx-dashboard`.** The public
+> API is kept minimal, so a custom provider declares the shape itself — TypeScript
+> matches it structurally, and the examples below do exactly that:
+>
+> ```typescript
+> interface CellDisplayData {
+>   id: string;
+>   flat: boolean | undefined;
+> }
+> ```
 
 #### 2. Injection Token
 
@@ -140,7 +163,8 @@ export class CellComponent {
 
 ```typescript
 import { Injectable } from "@angular/core";
-import { CellSettingsDialogProvider, CellDisplayData } from "@dragonworks/ngx-dashboard";
+import { CellSettingsDialogProvider } from "@dragonworks/ngx-dashboard";
+import { CellDisplayData } from "./cell-display-data"; // your own declaration, see above
 
 @Injectable()
 export class NativeBrowserDialogProvider extends CellSettingsDialogProvider {
@@ -163,7 +187,8 @@ export class NativeBrowserDialogProvider extends CellSettingsDialogProvider {
 
 ```typescript
 import { Injectable, inject } from "@angular/core";
-import { CellSettingsDialogProvider, CellDisplayData } from "@dragonworks/ngx-dashboard";
+import { CellSettingsDialogProvider } from "@dragonworks/ngx-dashboard";
+import { CellDisplayData } from "./cell-display-data"; // your own declaration, see above
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { CustomSettingsModalComponent } from "./custom-settings-modal.component";
 
@@ -193,7 +218,8 @@ export class NgBootstrapDialogProvider extends CellSettingsDialogProvider {
 
 ```typescript
 import { Injectable, inject } from "@angular/core";
-import { CellSettingsDialogProvider, CellDisplayData } from "@dragonworks/ngx-dashboard";
+import { CellSettingsDialogProvider } from "@dragonworks/ngx-dashboard";
+import { CellDisplayData } from "./cell-display-data"; // your own declaration, see above
 import { Overlay, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal } from "@angular/cdk/portal";
 
@@ -260,7 +286,7 @@ export const appConfig: ApplicationConfig = {
 ```typescript
 @Component({
   selector: "app-dashboard-page",
-  template: `<ngx-dashboard-dashboard ...></ngx-dashboard-dashboard>`,
+  template: `<ngx-dashboard [dashboardData]="data" />`,
   providers: [
     {
       provide: CELL_SETTINGS_DIALOG_PROVIDER,
@@ -271,24 +297,33 @@ export const appConfig: ApplicationConfig = {
 export class DashboardPageComponent {}
 ```
 
-#### Module-Level Registration
+#### Route-Level Registration
+
+The library is standalone-only — there is no `DashboardModule` to import. To scope a
+provider to one part of the app, put it on the route instead:
 
 ```typescript
-@NgModule({
-  imports: [DashboardModule],
-  providers: [
-    {
-      provide: CELL_SETTINGS_DIALOG_PROVIDER,
-      useClass: CustomDialogProvider,
-    },
-  ],
-})
-export class FeatureModule {}
+export const routes: Routes = [
+  {
+    path: "dashboard",
+    loadComponent: () => import("./dashboard-page.component").then((m) => m.DashboardPageComponent),
+    providers: [
+      {
+        provide: CELL_SETTINGS_DIALOG_PROVIDER,
+        useClass: CustomDialogProvider,
+      },
+    ],
+  },
+];
 ```
 
 ## Persistence Provider Pattern
 
-The demo application extends this pattern for persistence operations:
+The demo application extends this pattern for persistence operations. The
+implementations below are simplified sketches that show the shape of the pattern.
+The demo's actual services, in `projects/demo/src/app/services/`, store named slots
+under an `ngx-dashboard-<slotName>` key with a separate metadata entry tracking
+version, save time, grid size and widget count.
 
 ### Abstract Service
 
@@ -423,7 +458,8 @@ describe("Dashboard Integration", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [DashboardModule],
+      // Standalone component, imported directly - the library ships no NgModule
+      imports: [DashboardComponent],
       providers: [
         CustomDialogProvider,
         {
@@ -433,7 +469,13 @@ describe("Dashboard Integration", () => {
       ],
     });
 
-    dashboardComponent = TestBed.createComponent(DashboardComponent).componentInstance;
+    const fixture = TestBed.createComponent(DashboardComponent);
+    // dashboardData is a required input
+    fixture.componentRef.setInput("dashboardData", createEmptyDashboard("test", 8, 16));
+    fixture.componentRef.setInput("editMode", true);
+    fixture.detectChanges();
+
+    dashboardComponent = fixture.componentInstance;
     customProvider = TestBed.inject(CustomDialogProvider);
   });
 

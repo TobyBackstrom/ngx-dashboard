@@ -18,7 +18,7 @@
 
 - **Widget Groups**
 
-  - Optional `group` on `WidgetMetadata` buckets the widget list into collapsible sections, built on `mat-expansion-panel`
+  - Optional `group` on `WidgetMetadata` buckets the widget list into collapsible sections, using the component's own disclosure button and an `inert` region
   - Omitting it everywhere renders exactly the previous flat list
 
 - **Searchable Widget List**

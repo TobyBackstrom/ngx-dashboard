@@ -194,7 +194,7 @@ Here's a simple provider that shows an alert when empty cells are right-clicked:
 
 ```typescript
 import { Injectable } from '@angular/core';
-import { EmptyCellContextProvider, EmptyCellContext } from 'ngx-dashboard';
+import { EmptyCellContextProvider, EmptyCellContext } from '@dragonworks/ngx-dashboard';
 
 @Injectable()
 export class AlertEmptyCellProvider extends EmptyCellContextProvider {
@@ -221,7 +221,7 @@ A complete implementation using Angular Material's MatMenu for a context menu:
 
 ```typescript
 import { Injectable, ApplicationRef, createComponent, EnvironmentInjector } from '@angular/core';
-import { EmptyCellContextProvider, EmptyCellContext } from 'ngx-dashboard';
+import { EmptyCellContextProvider, EmptyCellContext } from '@dragonworks/ngx-dashboard';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 
 @Injectable()
@@ -279,15 +279,16 @@ export class MaterialMenuEmptyCellProvider extends EmptyCellContextProvider {
     </div>
 
     <mat-menu #contextMenu="matMenu">
-      <button mat-menu-item (click)="addWidget('label')">
+      <!-- Pass the registered widgetTypeid, not a display name -->
+      <button mat-menu-item (click)="addWidget('@ngx-dashboard/label-widget')">
         <mat-icon>text_fields</mat-icon>
         <span>Add Label Widget</span>
       </button>
-      <button mat-menu-item (click)="addWidget('clock')">
+      <button mat-menu-item (click)="addWidget('@ngx-dashboard/clock-widget')">
         <mat-icon>schedule</mat-icon>
         <span>Add Clock Widget</span>
       </button>
-      <button mat-menu-item (click)="addWidget('gauge')">
+      <button mat-menu-item (click)="addWidget('@ngx-dashboard/radial-gauge-widget')">
         <mat-icon>speed</mat-icon>
         <span>Add Gauge Widget</span>
       </button>
@@ -313,11 +314,6 @@ export class EmptyCellMenuComponent {
 
   menuClosed = new EventEmitter<void>();
 
-  constructor(
-    private dashboardService: DashboardService,
-    private dashboardStore: DashboardStore
-  ) {}
-
   ngAfterViewInit() {
     this.menuTrigger.menuClosed.subscribe(() => {
       this.menuClosed.emit();
@@ -328,18 +324,10 @@ export class EmptyCellMenuComponent {
     this.menuTrigger.openMenu();
   }
 
-  addWidget(type: string) {
-    // Create widget at the clicked position
-    const factory = this.dashboardService.getFactory(type);
-    if (factory) {
-      this.dashboardStore.createWidget(
-        factory,
-        this.context.row,
-        this.context.col,
-        1, // rowSpan
-        1  // colSpan
-      );
-    }
+  addWidget(widgetTypeid: string) {
+    // Create the widget through the context callback. `DashboardStore` is
+    // internal to the library, so this is the supported way in.
+    this.context.createWidget?.(widgetTypeid);
   }
 
   configureGrid() {
@@ -357,7 +345,7 @@ Using Angular CDK Overlay for more control over positioning:
 import { Injectable } from '@angular/core';
 import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { EmptyCellContextProvider, EmptyCellContext } from 'ngx-dashboard';
+import { EmptyCellContextProvider, EmptyCellContext } from '@dragonworks/ngx-dashboard';
 
 @Injectable()
 export class CdkOverlayEmptyCellProvider extends EmptyCellContextProvider {
@@ -434,7 +422,7 @@ export class CdkOverlayEmptyCellProvider extends EmptyCellContextProvider {
       </div>
 
       <div class="actions">
-        <button mat-raised-button color="primary" (click)="addWidget()">
+        <button mat-flat-button (click)="addWidget()">
           <mat-icon>add</mat-icon>
           Add Widget Here
         </button>
@@ -504,7 +492,7 @@ For applications that want to show a custom browser-native context menu:
 
 ```typescript
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { EmptyCellContextProvider, EmptyCellContext } from 'ngx-dashboard';
+import { EmptyCellContextProvider, EmptyCellContext } from '@dragonworks/ngx-dashboard';
 
 @Injectable()
 export class NativeMenuEmptyCellProvider extends EmptyCellContextProvider {
@@ -675,7 +663,7 @@ The optional `createWidget` callback provides a convenient way to programmatical
 handleEmptyCellContext(event: MouseEvent, context: EmptyCellContext): void {
   if (context.createWidget) {
     // Create a clock widget at the clicked position
-    const success = context.createWidget('clock-widget');
+    const success = context.createWidget('@ngx-dashboard/clock-widget');
 
     if (success) {
       console.log('Widget created successfully');
@@ -719,18 +707,16 @@ handleEmptyCellContext(event: MouseEvent, context: EmptyCellContext): void {
 
 ## Best Practices
 
-### 1. Always Check Edit Mode
+### 1. Edit Mode Is Already Guaranteed
 
-While the provider is only called in edit mode, it's good practice to verify:
+The drop zone only calls the provider in edit mode, so no guard is needed — and none
+is possible from application code anyway, since `DashboardStore` is internal. Track
+the mode in your own component if a provider needs it for something else:
 
 ```typescript
 handleEmptyCellContext(event: MouseEvent, context: EmptyCellContext): void {
-  // Additional safety check (optional)
-  if (!this.dashboardStore.editMode()) {
-    return;
-  }
-
-  // Your implementation
+  // Called only when the dashboard is in edit mode and the cell is empty
+  this.showMenu(event, context);
 }
 ```
 
@@ -823,7 +809,7 @@ handleEmptyCellContext(event: MouseEvent, context: EmptyCellContext): void {
 
 ```typescript
 import { TestBed } from '@angular/core/testing';
-import { EmptyCellContext } from 'ngx-dashboard';
+import { EmptyCellContext } from '@dragonworks/ngx-dashboard';
 import { CustomEmptyCellProvider } from './custom-empty-cell-provider';
 
 describe('CustomEmptyCellProvider', () => {
@@ -893,19 +879,24 @@ describe('CustomEmptyCellProvider', () => {
 ```typescript
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DashboardComponent, EMPTY_CELL_CONTEXT_PROVIDER } from 'ngx-dashboard';
+import {
+  DashboardComponent,
+  EMPTY_CELL_CONTEXT_PROVIDER,
+  createEmptyDashboard,
+} from '@dragonworks/ngx-dashboard';
 import { CustomEmptyCellProvider } from './custom-empty-cell-provider';
 
 @Component({
+  imports: [DashboardComponent],
   template: `
-    <ngx-dashboard
-      [editMode]="true"
-      [rows]="8"
-      [columns]="16">
-    </ngx-dashboard>
+    <ngx-dashboard [dashboardData]="data" [editMode]="true" />
   `
 })
-class TestHostComponent {}
+class TestHostComponent {
+  // Grid geometry comes from the DTO - there are no [rows] / [columns] inputs,
+  // and [dashboardData] is required.
+  readonly data = createEmptyDashboard('test-dashboard', 8, 16);
+}
 
 describe('Empty Cell Context Integration', () => {
   let fixture: ComponentFixture<TestHostComponent>;
@@ -913,8 +904,8 @@ describe('Empty Cell Context Integration', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [DashboardComponent],
-      declarations: [TestHostComponent],
+      // Both components are standalone; nothing gets declared
+      imports: [TestHostComponent],
       providers: [
         {
           provide: EMPTY_CELL_CONTEXT_PROVIDER,
@@ -1027,25 +1018,25 @@ This is intentional behavior following standard UX patterns. If you need differe
 
 ### Coordinating with Widget Menus
 
+The library's own widget-cell menu service is internal and cannot be injected from
+an application, so a provider that wants to coordinate tracks its own menu state:
+
 ```typescript
 @Injectable()
 export class CoordinatedMenuProvider extends EmptyCellContextProvider {
-  constructor(
-    private cellMenuService: CellContextMenuService
-  ) {
-    super();
-  }
+  readonly #menuOpen = signal(false);
 
   handleEmptyCellContext(event: MouseEvent, context: EmptyCellContext): void {
-    // Check if a widget menu is currently open
-    if (this.cellMenuService.activeMenu()) {
-      // Widget menu will auto-close, don't show empty cell menu
-      // User will need to click again
+    // A right-click while our own menu is open closes it and stops there, so the
+    // next click opens a fresh menu at the new position — the same two-click
+    // pattern the library uses when a widget menu is open.
+    if (this.#menuOpen()) {
+      this.closeMenu();
       return;
     }
 
-    // Show empty cell menu
     this.showEmptyContextMenu(event, context);
+    this.#menuOpen.set(true);
   }
 }
 ```
@@ -1055,12 +1046,9 @@ export class CoordinatedMenuProvider extends EmptyCellContextProvider {
 ```typescript
 @Injectable()
 export class StateAwareMenuProvider extends EmptyCellContextProvider {
-  constructor(
-    private dashboardStore: DashboardStore,
-    private clipboardService: ClipboardService
-  ) {
-    super();
-  }
+  // Only application services here - `DashboardStore` is internal to the library.
+  // What the provider needs to know about the grid arrives in `EmptyCellContext`.
+  readonly #clipboardService = inject(ClipboardService);
 
   handleEmptyCellContext(event: MouseEvent, context: EmptyCellContext): void {
     const menuItems = this.buildContextMenuItems(context);
