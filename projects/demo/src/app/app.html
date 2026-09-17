@@ -9,15 +9,19 @@
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #navigationMenu="matMenu">
-      <button mat-menu-item (click)="navigateToDashboard()">
+      <button mat-menu-item routerLink="/">
         <mat-icon>dashboard</mat-icon>
         <span i18n="@@demo.navigation.dashboard">Dashboard</span>
       </button>
-      <button mat-menu-item (click)="navigateToRadialGaugeDemo()">
+      <button mat-menu-item routerLink="/error-views">
+        <mat-icon>broken_image</mat-icon>
+        <span i18n="@@demo.navigation.errorViews">Custom Error Views</span>
+      </button>
+      <button mat-menu-item routerLink="/radial-gauge-demo">
         <mat-icon>speed</mat-icon>
         <span i18n="@@demo.navigation.radialGaugeDemo">Radial Gauge Demo</span>
       </button>
-      <button mat-menu-item (click)="navigateToColors()">
+      <button mat-menu-item routerLink="/colors">
         <mat-icon>palette</mat-icon>
         <span i18n="@@demo.navigation.colors">Colors Overview</span>
       </button>

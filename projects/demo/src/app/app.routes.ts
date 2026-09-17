@@ -14,6 +14,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/radial-gauge-demo/radial-gauge-demo.component').then(m => m.RadialGaugeDemoComponent)
   },
   {
+    path: 'error-views',
+    loadComponent: () => import('./components/error-views/error-views.component').then(m => m.ErrorViewsComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

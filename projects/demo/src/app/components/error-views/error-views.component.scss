@@ -1,0 +1,51 @@
+.error-views-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.intro-card,
+.export-card {
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.dashboard-wrapper {
+  // Same shape as the main demo page: the dashboard keeps its own dimensions,
+  // the wrapper scrolls rather than clipping it.
+  height: clamp(280px, 40vh, 420px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  background-color: var(--mat-sys-surface-container);
+  overflow: auto;
+
+  ngx-dashboard {
+    flex-shrink: 0;
+  }
+}
+
+.export-json {
+  margin: 0;
+  padding: 16px;
+  max-height: 320px;
+  overflow: auto;
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
+  font-family: monospace;
+  font-size: 12px;
+}

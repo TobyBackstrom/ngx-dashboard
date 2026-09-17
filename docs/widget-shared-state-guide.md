@@ -420,6 +420,19 @@ registerWidgetType<T = unknown>(
 - `widget` - The widget component class with static metadata
 - `sharedStateProvider` - (Optional) Shared state provider service or instance
 
+### DashboardService.unregisterWidgetType()
+
+Drop a widget type again, for a session that loses access to it.
+
+```typescript
+unregisterWidgetType(widgetTypeid: string): boolean
+```
+
+The type's shared state provider is dropped with it, so a later
+`registerWidgetType()` starts from the new provider's own state. Any shared state
+still arriving for the type from `loadDashboard()` is buffered as it is for a type
+that was never registered.
+
 ### DashboardDataDto
 
 Extended to include optional shared states field.

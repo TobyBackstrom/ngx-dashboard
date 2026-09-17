@@ -1,6 +1,6 @@
 # Demo Application i18n Translation Keys
 
-This document lists all the translation keys used in the demo application. The demo app demonstrates comprehensive i18n support with 288 translation keys.
+This document lists all the translation keys used in the demo application. The demo app demonstrates comprehensive i18n support with 340 translation keys.
 
 ## Setup Requirements
 
@@ -28,9 +28,10 @@ To use i18n features with the demo application:
 
 ## Translation Keys by Category
 
-### Navigation (3 keys)
+### Navigation (4 keys)
 - `@@demo.navigation.dashboard` - "Dashboard"
 - `@@demo.navigation.radialGaugeDemo` - "Radial Gauge Demo"
+- `@@demo.navigation.errorViews` - "Custom Error Views"
 - `@@demo.navigation.colors` - "Colors Overview"
 
 ### App Level (4 keys)
@@ -87,6 +88,29 @@ To use i18n features with the demo application:
 - `@@demo.dashboard.cellSelection.dialog.dimensions` - "Dimensions"
 - `@@demo.dashboard.cellSelection.dialog.rows` - "Rows"
 - `@@demo.dashboard.cellSelection.dialog.cols` - "Columns"
+
+### Custom Error Views Page (21 keys)
+- `@@demo.errorViews.title` - "Custom Error Views"
+- `@@demo.errorViews.subtitle` - "What a cell shows when its widget type is not registered in this session"
+- `@@demo.errorViews.explanation` - Intro paragraph describing the resolver and the three cases
+- `@@demo.errorViews.toggleHint` - Paragraph explaining the register/unregister buttons
+- `@@demo.errorViews.load` - "Load \"{widgetName}\""
+- `@@demo.errorViews.unload` - "Unload \"{widgetName}\""
+- `@@demo.errorViews.export` - "Export JSON"
+- `@@demo.errorViews.exportTitle` - "Exported dashboard"
+- `@@demo.errorViews.exportSubtitle` - Note on state preservation for unresolved cells
+- `@@demo.errorViews.restrictedLabel` - "Not available here"
+- `@@demo.errorViews.restrictedTooltip` - "This session cannot use {widgetTypeid}"
+- `@@demo.errorViews.moduleMissingLabel` - "Module not loaded"
+- `@@demo.errorViews.moduleMissingTooltip` - "{widgetTypeid} ships with a feature module this session has not loaded"
+- `@@demo.errorViews.revenueTotal` - "Total"
+- `@@demo.errorViews.revenueWidgetName` - "Revenue Breakdown"
+- `@@demo.errorViews.revenueWidgetDescription` - "Revenue per sales channel"
+- `@@demo.errorViews.revenueWidgetGroup` - "Finance"
+- `@@demo.errorViews.siteMapWidgetName` - "Site Map"
+- `@@demo.errorViews.siteMapWidgetDescription` - "Store floor zones"
+- `@@demo.errorViews.forecastWidgetName` - "Revenue Forecast"
+- `@@demo.errorViews.forecastWidgetDescription` - "Projected revenue per week"
 
 ### Radial Gauge Demo - Controls (94 keys)
 

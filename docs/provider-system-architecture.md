@@ -4,17 +4,23 @@
 
 The ngx-dashboard library implements an **extensible provider pattern** that enables consumers to customize dialog implementations and other UI concerns without modifying the library's core code. This architecture follows SOLID principles and provides maximum flexibility for enterprise applications.
 
-The library ships two provider families:
+The library ships three customization points:
 
 | Token | Contract | Default |
 |-------|----------|---------|
 | `CELL_SETTINGS_DIALOG_PROVIDER` | `CellSettingsDialogProvider` | `DefaultCellSettingsDialogProvider` (Angular Material dialog) |
 | `EMPTY_CELL_CONTEXT_PROVIDER` | `EmptyCellContextProvider` | `DefaultEmptyCellContextProvider` (prevents the browser menu, does nothing else) |
+| `UNKNOWN_WIDGET_RESOLVER` | `UnknownWidgetResolver` (a function, not a class) | answers `null`, i.e. the library's own error view |
 
 This document covers the first in depth and uses it to illustrate the pattern. The
 second has a guide of its own — see
 [Empty Cell Context Menu Provider](empty-cell-context-provider.md), which also
 documents the ready-made `WidgetListContextMenuProvider`.
+
+The third picks the error view for a cell whose widget type is not registered.
+It is a plain function rather than a provider class, because the only decision
+it makes is which component to render — see
+[Unresolved widget types](widget-system-architecture.md#unresolved-widget-types).
 
 ## Table of Contents
 

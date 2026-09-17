@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Injectable, signal } from '@angular/core';
 import { DashboardService } from '../dashboard.service';
 import {
+  UNKNOWN_WIDGET_TYPEID,
   WidgetComponentClass,
   WidgetSharedStateProvider,
 } from '../../models';
@@ -112,5 +113,53 @@ describe('DashboardService - shared state restoration with late registration', (
       'test-lazy-widget'
     ) as TestSharedState;
     expect(provider.getSharedState()).toEqual({ theme: 'dark', fontSize: 24 });
+  });
+});
+
+describe('DashboardService - unregistering a widget type', () => {
+  let service: DashboardService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(DashboardService);
+    TestBed.runInInjectionContext(() => {
+      service.registerWidgetType(
+        TestWidgetComponent as unknown as WidgetComponentClass,
+        TestSharedState
+      );
+    });
+  });
+
+  it('falls back to the error widget for a type that was unregistered', () => {
+    expect(service.getFactory('test-lazy-widget').widgetTypeid).toBe(
+      'test-lazy-widget'
+    );
+
+    expect(service.unregisterWidgetType('test-lazy-widget')).toBeTrue();
+
+    expect(service.getFactory('test-lazy-widget').widgetTypeid).toBe(
+      UNKNOWN_WIDGET_TYPEID
+    );
+    expect(service.widgetTypes()).toEqual([]);
+    expect(service.getSharedStateProvider('test-lazy-widget')).toBeUndefined();
+  });
+
+  it('reports an unknown type as not unregistered', () => {
+    expect(service.unregisterWidgetType('never-registered')).toBeFalse();
+    expect(service.widgetTypes().length).toBe(1);
+  });
+
+  it('can register the same type again afterwards', () => {
+    service.unregisterWidgetType('test-lazy-widget');
+
+    TestBed.runInInjectionContext(() => {
+      service.registerWidgetType(
+        TestWidgetComponent as unknown as WidgetComponentClass
+      );
+    });
+
+    expect(service.getFactory('test-lazy-widget').widgetTypeid).toBe(
+      'test-lazy-widget'
+    );
   });
 });

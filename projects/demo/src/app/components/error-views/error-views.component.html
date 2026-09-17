@@ -1,0 +1,68 @@
+<div class="error-views-container">
+  <mat-card class="intro-card">
+    <mat-card-header>
+      <mat-card-title i18n="@@demo.errorViews.title"
+        >Custom Error Views</mat-card-title
+      >
+      <mat-card-subtitle i18n="@@demo.errorViews.subtitle"
+        >What a cell shows when its widget type is not registered in this
+        session</mat-card-subtitle
+      >
+    </mat-card-header>
+
+    <mat-card-content>
+      <p i18n="@@demo.errorViews.explanation">
+        This board was saved by a session that had all three widget types. None
+        of them is registered here, so every cell asks
+        <code>UNKNOWN_WIDGET_RESOLVER</code> what to render instead - and this
+        page answers differently for each: the revenue breakdown is withheld
+        from the session, the site map belongs to a feature module that has not
+        loaded, and the forecast falls through to the library's default view,
+        because the resolver returns <code>null</code> for it.
+      </p>
+
+      <p i18n="@@demo.errorViews.toggleHint">
+        Loading a widget type registers it, unloading takes it away again. The
+        cell heals in place either way, keeping the state it was loaded with -
+        no reload, no second load of the dashboard data.
+      </p>
+
+      <div class="actions">
+        <button matButton="outlined" (click)="exportDashboard()">
+          <mat-icon>download</mat-icon>
+          <span i18n="@@demo.errorViews.export">Export JSON</span>
+        </button>
+      </div>
+
+      <div class="actions">
+        @for (widget of widgets; track widget) {
+        <button matButton="filled" (click)="toggle(widget)">
+          <mat-icon>{{ isLoaded(widget) ? "visibility_off" : "visibility" }}</mat-icon>
+          {{ label(widget) }}
+        </button>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="dashboard-wrapper">
+    <ngx-dashboard [dashboardData]="dashboardData"></ngx-dashboard>
+  </div>
+
+  @if (exportedJson(); as json) {
+  <mat-card class="export-card">
+    <mat-card-header>
+      <mat-card-title i18n="@@demo.errorViews.exportTitle"
+        >Exported dashboard</mat-card-title
+      >
+      <mat-card-subtitle i18n="@@demo.errorViews.exportSubtitle"
+        >Unresolved cells keep their widget type and their state, so saving from
+        this session cannot drop what it never showed</mat-card-subtitle
+      >
+    </mat-card-header>
+    <mat-card-content>
+      <pre class="export-json">{{ json }}</pre>
+    </mat-card-content>
+  </mat-card>
+  }
+</div>

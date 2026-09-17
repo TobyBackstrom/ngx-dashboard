@@ -1,22 +1,14 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  signal,
-  computed,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Widget, WidgetMetadata, UNKNOWN_WIDGET_TYPEID } from '../../models';
-
-export interface UnknownWidgetState {
-  originalWidgetTypeid: string;
-}
+import { WidgetMetadata, UNKNOWN_WIDGET_TYPEID } from '../../models';
+import { UNKNOWN_WIDGET_CONTEXT } from '../../providers/unknown-widget/unknown-widget.context';
 
 @Component({
   selector: 'lib-unknown-widget',
   imports: [MatIconModule, MatTooltipModule],
   template: `
-    <div class="unknown-widget-container" [matTooltip]="tooltipText()">
+    <div class="unknown-widget-container" [matTooltip]="tooltipText">
       <mat-icon class="unknown-widget-icon">error_outline</mat-icon>
     </div>
   `,
@@ -43,7 +35,9 @@ export interface UnknownWidgetState {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UnknownWidgetComponent implements Widget {
+// Deliberately not a `Widget`: the error view holds no state and has no edit
+// dialog, it only reads UNKNOWN_WIDGET_CONTEXT.
+export class UnknownWidgetComponent {
   static metadata: WidgetMetadata = {
     widgetTypeid: UNKNOWN_WIDGET_TYPEID,
     name: $localize`:@@ngx.dashboard.unknown.widget.name:Unknown Widget`,
@@ -52,21 +46,13 @@ export class UnknownWidgetComponent implements Widget {
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor"><path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/></svg>',
   };
 
-  readonly state = signal<UnknownWidgetState>({
-    originalWidgetTypeid: 'unknown',
-  });
+  readonly #context = inject(UNKNOWN_WIDGET_CONTEXT);
 
-  readonly tooltipText = computed(() => `${this.state().originalWidgetTypeid}`);
+  readonly tooltipText = this.#context.widgetTypeid;
 
-  dashboardSetState(state?: unknown): void {
-    if (state && typeof state === 'object' && 'originalWidgetTypeid' in state) {
-      this.state.set(state as UnknownWidgetState);
-    }
-  }
-
-  dashboardGetState(): UnknownWidgetState {
-    return this.state();
-  }
+  // No state round trip: dashboardGetState() is intentionally not implemented,
+  // so exporting a cell whose widget type is missing writes back the original
+  // widget's stored state untouched.
 
   // No edit dialog for error widgets - method intentionally not implemented
 }

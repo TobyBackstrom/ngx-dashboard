@@ -66,7 +66,7 @@ Core dashboard library providing the fundamental grid and widget management syst
 - **Widget Palette** - Collapsible widget groups, an opt-in search box, and optional per-cell name badges for reading a crowded grid
 - **Widget Family Shared State** - Configuration shared across every instance of a widget type, serialized alongside the dashboard ([detailed docs](docs/widget-shared-state-guide.md))
 - **Extensible Provider System** - Dependency injection-based architecture enabling custom dialog and UI implementations ([detailed docs](docs/provider-system-architecture.md))
-- **Error Handling** - Graceful fallback components for unknown widget types with state preservation, self-healing when a type registers late
+- **Error Handling** - Graceful fallback for unknown widget types with state preservation, a swappable error view for withheld or not-yet-loaded widgets, and self-healing in both directions as types register and unregister ([detailed docs](docs/widget-system-architecture.md#unresolved-widget-types))
 
 ### [@dragonworks/ngx-dashboard-widgets](./projects/ngx-dashboard-widgets)
 
@@ -88,6 +88,7 @@ Interactive demonstration showcasing real-world usage patterns:
 - **Theme System** - Material Design 3 theming with live theme switching and color token extraction
 - **Widget Gallery** - Drag-and-drop widget installation from a grouped, searchable palette
 - **Custom Widgets** - Sparkline and Sparkbar charts with theme-responsive colors, a Temperature widget demonstrating shared state, and a Realtime Gauge built by composition
+- **Custom Error Views** - A board of three cells whose widget types are all missing: `UNKNOWN_WIDGET_RESOLVER` answers with a "withheld" view, a "module not loaded" view, and the library's own default. Each type can be registered and unregistered to watch its cell heal in place
 - **Selection & Zoom** - Rectangle selection driving a non-destructive zoom into a minimal bounding box
 - **Persistence** - localStorage and file system persistence implementations
 
