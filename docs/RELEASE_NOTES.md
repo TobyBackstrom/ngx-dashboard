@@ -1,3 +1,37 @@
+# v22.3.0 Release Notes
+
+## ngx-dashboard (Core Library)
+
+### Features
+
+- **Custom Error Views for Unresolved Widget Types**
+
+  - `UNKNOWN_WIDGET_RESOLVER` picks the component a cell shows when its `widgetTypeid` is not registered — a widget withheld from the session, one whose feature module has not loaded, or data from a newer build
+  - The resolver is a function `(context: UnknownWidgetContext) => Type<unknown> | null`, read through the cell's own injector, so a single page or dashboard can have its own error views; `null` keeps the library's default view
+  - The error view is a plain component: no widget metadata, no `Widget` interface. It reads `UNKNOWN_WIDGET_CONTEXT` for the requested type id and the cell's stored state, and any `Widget` methods it defines are ignored
+  - New exports: `UNKNOWN_WIDGET_RESOLVER`, `UNKNOWN_WIDGET_CONTEXT`, `UnknownWidgetResolver`, `UnknownWidgetContext`
+  - `DashboardService.unregisterWidgetType(widgetTypeid)` drops a type again for a session that loses access; every cell of that type reverts to the error view with its state intact, including cells loaded while the type was registered, and the type's shared state is kept for export and restored if the type registers again
+  - The "unknown widget type" console warning now fires once per type, and only when no resolver answered for it — a type withheld on purpose is not reported as a fault
+  - Exporting an unresolved cell writes its original state back verbatim, and its context menu offers no edit actions; the error view is never asked for state (it previously gained an `originalWidgetTypeid` key)
+
+### Fixes
+
+- Shared state for a widget type the session has not registered is written back on export instead of dropped, so saving from such a session no longer loses that widget family's configuration
+
+## ngx-dashboard-widgets (Widget Library)
+
+- Released in lockstep with the core library; no functional changes
+
+## Demo Application
+
+### Features
+
+- Custom Error Views page: three cells whose widget types are missing, each answered differently by `UNKNOWN_WIDGET_RESOLVER`, with buttons to load and unload each type and watch its cell heal in place
+
+### Refactoring
+
+- The navigation menu uses `routerLink` instead of click handlers
+
 # v22.2.0 Release Notes
 
 ## ngx-dashboard (Core Library)
@@ -25,16 +59,6 @@
 
   - Opt-in `enableSearchBox` input filters by widget name, description or type id
   - Groups stay expanded while a filter is active so matches are never hidden; the user's own collapsed set is restored when the filter clears
-
-- **Custom Error Views for Unresolved Widget Types**
-
-  - `UNKNOWN_WIDGET_RESOLVER` picks the component a cell shows when its `widgetTypeid` is not registered — a widget withheld from the session, one whose feature module has not loaded, or data from a newer build
-  - The resolver is a function `(context: UnknownWidgetContext) => Type<unknown> | null`, read through the cell's own injector, so a single page or dashboard can have its own error views; `null` keeps the library's default view
-  - The error view is a plain component: no widget metadata, no `Widget` interface. It reads `UNKNOWN_WIDGET_CONTEXT` for the reason, the requested type id and the cell's stored state
-  - New exports: `UNKNOWN_WIDGET_RESOLVER`, `UNKNOWN_WIDGET_CONTEXT`, `UnknownWidgetResolver`, `UnknownWidgetContext`
-  - `DashboardService.unregisterWidgetType(widgetTypeid)` drops a type again for a session that loses access; cells still carrying the fallback revert to the error view with their state intact
-  - The "unknown widget type" console warning now fires once per type, and only when no resolver answered for it — a type withheld on purpose is not reported as a fault
-  - Exporting an unresolved cell writes its original state back verbatim; the error view is never asked for state (it previously gained an `originalWidgetTypeid` key)
 
 - **Multidirectional Cell Resize**
   - Bottom and corner handles join the existing right handle, so a widget can grow on both axes in a single gesture

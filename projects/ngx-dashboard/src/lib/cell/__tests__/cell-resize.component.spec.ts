@@ -439,6 +439,12 @@ describe('CellComponent - Resize Functionality', () => {
       // the right/bottom edge handle -- is what the pointer would land on.
       fixture.componentRef.setInput('isEditMode', true);
       const host: HTMLElement = fixture.nativeElement;
+      // Pinned to the viewport: elementFromPoint only sees what is on screen,
+      // and an in-flow fixture drifts down the page as the HTML reporter adds a
+      // symbol for every spec that has already run.
+      host.style.position = 'fixed';
+      host.style.top = '0';
+      host.style.left = '0';
       host.style.width = '200px';
       host.style.height = '120px';
       fixture.detectChanges();

@@ -59,11 +59,10 @@ export class DashboardService {
       const provider = this.#resolveProvider(sharedStateProvider);
       this.#sharedStateProviders.set(widgetTypeid, provider);
 
-      // Drain any buffered shared state from a prior loadDashboard that ran
-      // before this widget type was registered (e.g. lazy-loaded modules).
+      // Drain state buffered while the type had no provider: loaded before a
+      // lazy module registered it, or kept when the type was unregistered.
       if (this.#pendingSharedStates.has(widgetTypeid)) {
-        const registered = this.#sharedStateProviders.get(widgetTypeid)!;
-        registered.setSharedState(this.#pendingSharedStates.get(widgetTypeid));
+        provider.setSharedState(this.#pendingSharedStates.get(widgetTypeid) as T);
         this.#pendingSharedStates.delete(widgetTypeid);
       }
     }
@@ -75,15 +74,9 @@ export class DashboardService {
    * Remove a widget type again, for a session that loses access to it: a
    * revoked role, a disabled feature flag, an unloaded feature module.
    *
-   * Cells that were loaded without the type fall back to the error view again -
-   * the store re-resolves them through the `cells` computed, the same mechanism
-   * that heals them when a type registers late - and keep the widget state they
-   * were loaded with, so the type can come back without data loss.
-   *
-   * A cell that was *loaded* while the type was registered holds the real
-   * factory in store state and keeps rendering until the dashboard is loaded
-   * again: the healing computed only re-resolves cells that still carry the
-   * fallback factory.
+   * Every cell of that type shows the error view again with its stored state
+   * intact. The type's shared state moves to the pending buffer, so export
+   * keeps writing it back and registering the type again restores it.
    *
    * @returns true if the type was registered
    */
@@ -92,7 +85,12 @@ export class DashboardService {
       return false;
     }
 
+    const state = this.#sharedStateProviders.get(widgetTypeid)?.getSharedState();
+    if (state !== undefined) {
+      this.#pendingSharedStates.set(widgetTypeid, state);
+    }
     this.#sharedStateProviders.delete(widgetTypeid);
+
     this.#widgetTypes.set(
       this.#widgetTypes().filter(
         (widget) => widget.metadata.widgetTypeid !== widgetTypeid
@@ -112,6 +110,14 @@ export class DashboardService {
     return provider;
   }
 
+  /**
+   * The factory for a widget type, or a fallback that renders an error view
+   * when the type is not registered.
+   *
+   * Returns the same object for a type until that type's registration changes.
+   * Callers rely on it: the store's `cells` computed and `CellComponent` compare
+   * factories by reference, and a new factory rebuilds the cell's widget.
+   */
   getFactory(widgetTypeid: string): WidgetFactory {
     const factory = this.#widgetFactoryMap.get(widgetTypeid);
 
@@ -119,12 +125,9 @@ export class DashboardService {
       return factory;
     }
 
-    // Fallback factory. It keeps the library's sentinel metadata so healing,
-    // export and the widget list keep recognizing the cell as unresolved,
-    // while the rendered component comes from UNKNOWN_WIDGET_RESOLVER.
-    //
-    // Cached per type: the self-healing computed re-resolves every unresolved
-    // cell on each widget change, and the factory depends on nothing else.
+    // Keeps the library's sentinel metadata, so export, the widget list and the
+    // cell treat it as unresolved, while the rendered component comes from
+    // UNKNOWN_WIDGET_RESOLVER. Cached per type for the identity guarantee above.
     let fallback = this.#unknownWidgetFactories.get(widgetTypeid);
 
     if (!fallback) {
@@ -132,7 +135,6 @@ export class DashboardService {
         ...UnknownWidgetComponent.metadata,
         createInstance: (container, state) =>
           this.#createUnknownWidget(container, {
-            reason: 'unregistered',
             widgetTypeid,
             widgetState: state,
           }),
@@ -194,6 +196,10 @@ export class DashboardService {
    * Collect shared states for all widget types currently on the dashboard.
    * Called during dashboard export/serialization.
    *
+   * A type with no provider contributes the state still buffered for it, so a
+   * session that never registers a type - or unregistered it - does not drop
+   * that type's shared state when it saves.
+   *
    * @param activeWidgetTypes Set of widget type IDs that are currently in use
    * @returns Map of widget type IDs to their shared states
    */
@@ -202,11 +208,11 @@ export class DashboardService {
 
     for (const widgetTypeid of activeWidgetTypes) {
       const provider = this.#sharedStateProviders.get(widgetTypeid);
-      if (provider) {
-        const state = provider.getSharedState();
-        if (state !== undefined) {
-          sharedStates.set(widgetTypeid, state);
-        }
+      const state = provider
+        ? provider.getSharedState()
+        : this.#pendingSharedStates.get(widgetTypeid);
+      if (state !== undefined) {
+        sharedStates.set(widgetTypeid, state);
       }
     }
 

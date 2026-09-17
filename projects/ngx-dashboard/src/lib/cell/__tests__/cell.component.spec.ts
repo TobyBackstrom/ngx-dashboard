@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { ViewContainerRef, Renderer2 } from '@angular/core';
+import { ComponentRef, ViewContainerRef, Renderer2 } from '@angular/core';
 import { CellComponent } from '../cell.component';
 import { DashboardStore } from '../../store/dashboard-store';
 import { DashboardService } from '../../services/dashboard.service';
@@ -12,6 +12,7 @@ import {
   WidgetIdUtils,
   WidgetFactory,
   Widget,
+  UNKNOWN_WIDGET_TYPEID,
 } from '../../models';
 import { Component, signal } from '@angular/core';
 
@@ -306,6 +307,54 @@ describe('CellComponent - User Scenarios', () => {
 
       // Widget's shared state editor should be called
       expect(mockWidgetInstance.dashboardEditSharedState).toHaveBeenCalled();
+    });
+  });
+
+  describe('Error View Workflow', () => {
+    // An unresolved cell renders whatever UNKNOWN_WIDGET_RESOLVER picked; this
+    // one happens to define every Widget method.
+    let errorView: jasmine.SpyObj<Required<Widget>>;
+
+    beforeEach(async () => {
+      errorView = jasmine.createSpyObj('ErrorView', [
+        'dashboardGetState',
+        'dashboardSetState',
+        'dashboardEditState',
+        'dashboardEditSharedState',
+      ]);
+
+      fixture.componentRef.setInput('widgetId', mockWidgetId);
+      fixture.componentRef.setInput('cellId', mockCellId);
+      fixture.componentRef.setInput('row', 1);
+      fixture.componentRef.setInput('column', 1);
+      fixture.componentRef.setInput('widgetState', { stored: true });
+      fixture.componentRef.setInput('widgetFactory', {
+        ...mockWidgetFactory,
+        widgetTypeid: UNKNOWN_WIDGET_TYPEID,
+        createInstance: () =>
+          ({
+            instance: errorView,
+            destroy: jasmine.createSpy('destroy'),
+          }) as unknown as ComponentRef<Widget>,
+      });
+      fixture.detectChanges();
+      await fixture.whenStable();
+    });
+
+    it('should export the stored state without asking the error view', () => {
+      expect(component.getCurrentWidgetState()).toEqual({ stored: true });
+      expect(errorView.dashboardGetState).not.toHaveBeenCalled();
+    });
+
+    it('should offer no edit actions for the error view', () => {
+      expect(component.canEdit()).toBe(false);
+      expect(component.canEditSharedState()).toBe(false);
+
+      component.onEdit();
+      component.onEditSharedState();
+
+      expect(errorView.dashboardEditState).not.toHaveBeenCalled();
+      expect(errorView.dashboardEditSharedState).not.toHaveBeenCalled();
     });
   });
 

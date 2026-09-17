@@ -114,6 +114,23 @@ describe('DashboardService - shared state restoration with late registration', (
     ) as TestSharedState;
     expect(provider.getSharedState()).toEqual({ theme: 'dark', fontSize: 24 });
   });
+
+  it('collects buffered shared state for a type that never registers', () => {
+    service.restoreSharedStates(
+      new Map<string, unknown>([
+        ['test-lazy-widget', { theme: 'dark', fontSize: 24 }],
+      ])
+    );
+
+    // Saving from a session without the type must not drop its shared state
+    expect(
+      service.collectSharedStates(new Set(['test-lazy-widget']))
+    ).toEqual(
+      new Map<string, unknown>([
+        ['test-lazy-widget', { theme: 'dark', fontSize: 24 }],
+      ])
+    );
+  });
 });
 
 describe('DashboardService - unregistering a widget type', () => {
@@ -147,6 +164,38 @@ describe('DashboardService - unregistering a widget type', () => {
   it('reports an unknown type as not unregistered', () => {
     expect(service.unregisterWidgetType('never-registered')).toBeFalse();
     expect(service.widgetTypes().length).toBe(1);
+  });
+
+  describe('with shared state', () => {
+    beforeEach(() => {
+      TestBed.inject(TestSharedState).setSharedState({
+        theme: 'dark',
+        fontSize: 24,
+      });
+      service.unregisterWidgetType('test-lazy-widget');
+    });
+
+    it('keeps it for export', () => {
+      expect(
+        service
+          .collectSharedStates(new Set(['test-lazy-widget']))
+          .get('test-lazy-widget')
+      ).toEqual({ theme: 'dark', fontSize: 24 });
+    });
+
+    it('restores it when the type registers again', () => {
+      // A fresh provider, so the state can only have come from the buffer
+      const provider = new TestSharedState();
+      service.registerWidgetType(
+        TestWidgetComponent as unknown as WidgetComponentClass,
+        provider
+      );
+
+      expect(provider.getSharedState()).toEqual({
+        theme: 'dark',
+        fontSize: 24,
+      });
+    });
   });
 
   it('can register the same type again afterwards', () => {

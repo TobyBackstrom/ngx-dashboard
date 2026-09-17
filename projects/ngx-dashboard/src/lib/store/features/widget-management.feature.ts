@@ -9,7 +9,6 @@ import { computed, inject } from '@angular/core';
 import {
   CellIdUtils,
   CellData,
-  UNKNOWN_WIDGET_TYPEID,
   WidgetFactory,
   WidgetId,
   WidgetIdUtils,
@@ -28,42 +27,43 @@ export const withWidgetManagement = () =>
   signalStoreFeature(
     withState<WidgetManagementState>(initialWidgetManagementState),
 
-    // Computed cells array with self-healing for late-registered widget types.
-    // When loadDashboard() runs before all widget types are registered, unresolved
-    // cells get an unknown fallback factory. This computed transparently re-resolves
-    // them when new types register, so templates see real widgets replace placeholders.
+    // Computed cells array, re-resolved against the widget registry in both
+    // directions: a type that registers late heals its fallback into the real
+    // widget, and an unregistered type puts the fallback back. widgetsById keeps
+    // the factory each cell was created with, so either change can be undone.
     withComputed((store) => {
       const dashboardService = inject(DashboardService);
+      // The copy last derived for a stored cell, so a healed or reverted cell
+      // keeps its reference instead of being copied on every run.
+      const resolvedCells = new WeakMap<CellData, CellData>();
 
       return {
-        cells: computed(() => {
-          const widgets = Object.values(store.widgetsById());
+        cells: computed(
+          () => {
+            dashboardService.widgetTypes(); // re-run on every registry change
 
-          const hasUnresolved = widgets.some(
-            (cell) => cell.widgetFactory.widgetTypeid === UNKNOWN_WIDGET_TYPEID
-          );
+            return Object.values(store.widgetsById()).map((cell) => {
+              if (!cell.widgetTypeid) return cell;
 
-          // Fast path: skip widgetTypes() dependency when all widgets are resolved.
-          // This is safe because registerWidgetType() prevents re-registration of
-          // existing types, so once healed, a widget's factory cannot change.
-          if (!hasUnresolved) return widgets;
+              // Compared by reference, see getFactory()
+              const factory = dashboardService.getFactory(cell.widgetTypeid);
+              if (factory === cell.widgetFactory) return cell;
 
-          // Establishes reactive dependency on registration changes
-          dashboardService.widgetTypes();
+              const previous = resolvedCells.get(cell);
+              if (previous?.widgetFactory === factory) return previous;
 
-          return widgets.map((cell) => {
-            if (
-              cell.widgetFactory.widgetTypeid === UNKNOWN_WIDGET_TYPEID &&
-              cell.widgetTypeid
-            ) {
-              const resolvedFactory = dashboardService.getFactory(cell.widgetTypeid);
-              if (resolvedFactory.widgetTypeid !== UNKNOWN_WIDGET_TYPEID) {
-                return { ...cell, widgetFactory: resolvedFactory };
-              }
-            }
-            return cell;
-          });
-        }),
+              const resolved = { ...cell, widgetFactory: factory };
+              resolvedCells.set(cell, resolved);
+              return resolved;
+            });
+          },
+          {
+            // Every cell kept its reference: keep the array too, so a registry
+            // change that resolves nothing new recomputes nothing downstream.
+            equal: (a, b) =>
+              a.length === b.length && a.every((cell, i) => cell === b[i]),
+          }
+        ),
       };
     }),
 
