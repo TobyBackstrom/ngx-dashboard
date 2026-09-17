@@ -38,10 +38,10 @@
   the requested type, so the type survives an export→import round trip through a
   session that could not resolve it
 - `unregisterWidgetType(widgetTypeid)` - drops a type again, for a session that
-  loses access to it (revoked role, disabled feature flag, unloaded module). Cells
-  that still carry the fallback factory show the error view again and keep their
-  stored state, so the type can come back without data loss; a cell that was loaded
-  while the type was registered keeps rendering until the dashboard is loaded again
+  loses access to it (revoked role, disabled feature flag, unloaded module). Every
+  cell of that type shows the error view again and keeps its stored state, and the
+  type's shared state moves to the pending buffer, so the type can come back
+  without data loss
 - Exposes `widgetTypes` as readonly signal for UI consumption
 - Buffers shared state for types that are not registered yet, see
   [Late Registration](#late-registration) below
@@ -147,19 +147,20 @@ lazy-loaded modules do. Two mechanisms make that order-independent:
 
 - **Factory self-healing** - `CellData.widgetTypeid` keeps the type the DTO asked
   for, independently of the factory that was resolved for it. The `cells` computed
-  signal re-resolves any cell still holding the `UNKNOWN_WIDGET_TYPEID` factory
-  whenever `widgetTypes()` changes, so a widget that arrives late swaps its
-  placeholder for the real component. Healing happens in the computed only --
-  `widgetsById` is never mutated -- and the signal skips the `widgetTypes()`
-  dependency entirely once every cell is resolved, so a fully-resolved dashboard
-  pays nothing for it
+  signal re-resolves every cell against the registry whenever `widgetTypes()`
+  changes, in both directions: a widget that arrives late swaps its placeholder
+  for the real component, and `unregisterWidgetType()` puts the placeholder back,
+  including for cells that loaded while the type was registered. Healing happens
+  in the computed only -- `widgetsById` is never mutated. `getFactory()` returns
+  the same object for a type until its registration changes, and the computed
+  reuses the copy it made for a healed cell, so a registry change that resolves
+  nothing new keeps the previous array
 - **Shared state buffering** - `restoreSharedStates()` keeps entries it cannot match
-  to a registered provider in a pending map, and `registerWidgetType()` drains that
-  map when the matching provider shows up
-
-Healing runs in both directions: because it happens in the `cells` computed and
-never mutates `widgetsById`, `unregisterWidgetType()` puts the error view back for
-the same cells that healing resolved.
+  to a registered provider in a pending map, `unregisterWidgetType()` moves a
+  provider's state there, and `registerWidgetType()` drains the map when a matching
+  provider shows up. Until then `collectSharedStates()` writes the buffered entry
+  back on export, so a session without the type does not drop its shared state
+  when it saves
 
 ## Widget Implementation Pattern
 

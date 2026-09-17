@@ -226,6 +226,10 @@ dropping it, and `registerWidgetType()` drains that buffer as soon as the matchi
 provider registers. A second `loadDashboard()` replaces anything still buffered, so
 the most recent import wins.
 
+A buffered entry is also written back by `exportDashboard()` while its type has no
+provider, so a session that never registers the type (a widget family withheld from
+the current user, say) does not drop that family's configuration when it saves.
+
 This mirrors the factory self-healing that repoints the same dashboard's widgets at
 their real components when a type arrives late, so a lazy-loaded widget family gets
 both its component and its shared configuration regardless of registration order.
@@ -428,10 +432,9 @@ Drop a widget type again, for a session that loses access to it.
 unregisterWidgetType(widgetTypeid: string): boolean
 ```
 
-The type's shared state provider is dropped with it, so a later
-`registerWidgetType()` starts from the new provider's own state. Any shared state
-still arriving for the type from `loadDashboard()` is buffered as it is for a type
-that was never registered.
+The type's shared state provider is dropped with it, but its current state moves to
+the pending buffer and is treated like state for a type that was never registered
+(see [Late-Registered Widget Types](#late-registered-widget-types)).
 
 ### DashboardDataDto
 

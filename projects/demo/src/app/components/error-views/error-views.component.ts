@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Type,
   computed,
   inject,
@@ -77,8 +78,7 @@ export class ErrorViewsComponent {
   /**
    * The registry is the state: a type is either registered - and its cell shows
    * the real widget - or missing, and the cell shows an error view. Nothing is
-   * mirrored in a local flag, so returning to the page shows whichever side
-   * each toggle was left on.
+   * mirrored in a local flag.
    */
   protected readonly registered = computed(
     () =>
@@ -90,6 +90,18 @@ export class ErrorViewsComponent {
   );
 
   protected readonly exportedJson = signal<string | null>(null);
+
+  constructor() {
+    // DashboardService is application wide, so a type loaded here would stay
+    // behind in the main dashboard's widget list after leaving the page.
+    inject(DestroyRef).onDestroy(() => {
+      for (const widget of this.widgets) {
+        this.#dashboardService.unregisterWidgetType(
+          widget.metadata.widgetTypeid
+        );
+      }
+    });
+  }
 
   protected isLoaded(widget: DemoWidgetClass): boolean {
     return this.registered().has(widget.metadata.widgetTypeid);
