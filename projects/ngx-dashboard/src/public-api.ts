@@ -53,3 +53,9 @@ export { DefaultEmptyCellContextProvider } from './lib/providers/empty-cell-cont
 export { EmptyCellContextProvider } from './lib/providers/empty-cell-context/empty-cell-context.provider';
 export type { EmptyCellContext } from './lib/providers/empty-cell-context/empty-cell-context.provider';
 export { WidgetListContextMenuProvider } from './lib/providers/empty-cell-context/widget-list-context-menu.provider';
+
+// Error view for widget types the dashboard cannot resolve
+export { UNKNOWN_WIDGET_RESOLVER } from './lib/providers/unknown-widget/unknown-widget.resolver';
+export { UNKNOWN_WIDGET_CONTEXT } from './lib/providers/unknown-widget/unknown-widget.context';
+export type { UnknownWidgetContext } from './lib/providers/unknown-widget/unknown-widget.context';
+export type { UnknownWidgetResolver } from './lib/providers/unknown-widget/unknown-widget.resolver';

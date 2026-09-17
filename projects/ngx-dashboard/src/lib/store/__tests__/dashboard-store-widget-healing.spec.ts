@@ -115,6 +115,30 @@ describe('DashboardStore - Widget Type Healing', () => {
       expect(cells[0].widgetFactory).toBe(realFactory);
     });
 
+    it('should revert a healed cell when the type is unregistered again', () => {
+      mockDashboardService.getFactory.and.returnValue(unknownFactory);
+
+      store.loadDashboard(createTestDto([
+        { row: 1, col: 1, rowSpan: 1, colSpan: 1, widgetTypeid: 'lazy-widget', widgetState: { data: 'preserved' } },
+      ]));
+
+      mockDashboardService.getFactory.and.callFake((id: string) =>
+        id === 'lazy-widget' ? realFactory : unknownFactory
+      );
+      widgetTypesSignal.set([{}]);
+      expect(store.cells()[0].widgetFactory).toBe(realFactory);
+
+      // A session that loses access again: healing runs in the computed only,
+      // so dropping the registration puts the error view back.
+      mockDashboardService.getFactory.and.returnValue(unknownFactory);
+      widgetTypesSignal.set([]);
+
+      const cells = store.cells();
+      expect(cells[0].widgetFactory.widgetTypeid).toBe(UNKNOWN_WIDGET_TYPEID);
+      expect(cells[0].widgetTypeid).toBe('lazy-widget');
+      expect(cells[0].widgetState).toEqual({ data: 'preserved' });
+    });
+
     it('should preserve widget state after healing', () => {
       mockDashboardService.getFactory.and.returnValue(unknownFactory);
 

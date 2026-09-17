@@ -7,6 +7,12 @@
         <target>Dashboard</target>
       </segment>
     </unit>
+    <unit id="demo.navigation.errorViews">
+      <segment state="initial">
+        <source>Custom Error Views</source>
+        <target>Custom Error Views</target>
+      </segment>
+    </unit>
     <unit id="demo.navigation.menuAriaLabel">
       <segment state="initial">
         <source>Open navigation menu</source>
@@ -977,6 +983,132 @@
       <segment state="initial">
         <source>Realtime Gauge</source>
         <target>Realtime Gauge</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.explanation">
+      <segment state="initial">
+        <source> This board was saved by a session that had all three widget types. None of them is registered here, so every cell asks <pc id="0" equivStart="START_TAG_CODE" equivEnd="CLOSE_TAG_CODE" type="other" dispStart="&lt;code&gt;" dispEnd="&lt;/code&gt;">UNKNOWN_WIDGET_RESOLVER</pc> what to render instead - and this page answers differently for each: the revenue breakdown is withheld from the session, the site map belongs to a feature module that has not loaded, and the forecast falls through to the library&apos;s default view, because the resolver returns <pc id="1" equivStart="START_TAG_CODE" equivEnd="CLOSE_TAG_CODE" type="other" dispStart="&lt;code&gt;" dispEnd="&lt;/code&gt;">null</pc> for it. </source>
+        <target> This board was saved by a session that had all three widget types. None of them is registered here, so every cell asks <pc id="0" equivStart="START_TAG_CODE" equivEnd="CLOSE_TAG_CODE" type="other" dispStart="&lt;code&gt;" dispEnd="&lt;/code&gt;">UNKNOWN_WIDGET_RESOLVER</pc> what to render instead - and this page answers differently for each: the revenue breakdown is withheld from the session, the site map belongs to a feature module that has not loaded, and the forecast falls through to the library&apos;s default view, because the resolver returns <pc id="1" equivStart="START_TAG_CODE" equivEnd="CLOSE_TAG_CODE" type="other" dispStart="&lt;code&gt;" dispEnd="&lt;/code&gt;">null</pc> for it. </target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.export">
+      <segment state="initial">
+        <source>Export JSON</source>
+        <target>Export JSON</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.exportSubtitle">
+      <segment state="initial">
+        <source>Unresolved cells keep their widget type and their state, so saving from this session cannot drop what it never showed</source>
+        <target>Unresolved cells keep their widget type and their state, so saving from this session cannot drop what it never showed</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.exportTitle">
+      <segment state="initial">
+        <source>Exported dashboard</source>
+        <target>Exported dashboard</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.forecastWidgetDescription">
+      <segment state="initial">
+        <source>Projected revenue per week</source>
+        <target>Projected revenue per week</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.forecastWidgetName">
+      <segment state="initial">
+        <source>Revenue Forecast</source>
+        <target>Revenue Forecast</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.load">
+      <segment state="initial">
+        <source>Load &quot;<ph id="0" equiv="WIDGET_NAME" disp="name"/>&quot;</source>
+        <target>Load &quot;<ph id="0" equiv="WIDGET_NAME" disp="name"/>&quot;</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.moduleMissingLabel">
+      <segment state="initial">
+        <source>Module not loaded</source>
+        <target>Module not loaded</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.moduleMissingTooltip">
+      <segment state="initial">
+        <source><ph id="0" equiv="INTERPOLATION" disp="this.#context.widgetTypeid"/> ships with a feature module this session has not loaded</source>
+        <target><ph id="0" equiv="INTERPOLATION" disp="this.#context.widgetTypeid"/> ships with a feature module this session has not loaded</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.restrictedLabel">
+      <segment state="initial">
+        <source>Not available here</source>
+        <target>Not available here</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.restrictedTooltip">
+      <segment state="initial">
+        <source>This session cannot use <ph id="0" equiv="INTERPOLATION" disp="this.#context.widgetTypeid"/></source>
+        <target>This session cannot use <ph id="0" equiv="INTERPOLATION" disp="this.#context.widgetTypeid"/></target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.revenueTotal">
+      <segment state="initial">
+        <source>Total</source>
+        <target>Total</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.revenueWidgetDescription">
+      <segment state="initial">
+        <source>Revenue per sales channel</source>
+        <target>Revenue per sales channel</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.revenueWidgetGroup">
+      <segment state="initial">
+        <source>Finance</source>
+        <target>Finance</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.revenueWidgetName">
+      <segment state="initial">
+        <source>Revenue Breakdown</source>
+        <target>Revenue Breakdown</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.siteMapWidgetDescription">
+      <segment state="initial">
+        <source>Store floor zones</source>
+        <target>Store floor zones</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.siteMapWidgetName">
+      <segment state="initial">
+        <source>Site Map</source>
+        <target>Site Map</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.subtitle">
+      <segment state="initial">
+        <source>What a cell shows when its widget type is not registered in this session</source>
+        <target>What a cell shows when its widget type is not registered in this session</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.title">
+      <segment state="initial">
+        <source>Custom Error Views</source>
+        <target>Custom Error Views</target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.toggleHint">
+      <segment state="initial">
+        <source> Loading a widget type registers it, unloading takes it away again. The cell heals in place either way, keeping the state it was loaded with - no reload, no second load of the dashboard data. </source>
+        <target> Loading a widget type registers it, unloading takes it away again. The cell heals in place either way, keeping the state it was loaded with - no reload, no second load of the dashboard data. </target>
+      </segment>
+    </unit>
+    <unit id="demo.errorViews.unload">
+      <segment state="initial">
+        <source>Unload &quot;<ph id="0" equiv="WIDGET_NAME" disp="name"/>&quot;</source>
+        <target>Unload &quot;<ph id="0" equiv="WIDGET_NAME" disp="name"/>&quot;</target>
       </segment>
     </unit>
     <unit id="demo.widgets.group.charts">

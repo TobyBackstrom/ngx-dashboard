@@ -1,12 +1,24 @@
 // dashboard.service.ts
-import { Injectable, signal, inject, Type } from '@angular/core';
+import {
+  ComponentRef,
+  Injectable,
+  Type,
+  ViewContainerRef,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   createFactoryFromComponent,
+  Widget,
   WidgetComponentClass,
   WidgetFactory,
   WidgetSharedStateProvider,
 } from '../models';
 import { UnknownWidgetComponent } from '../internal-widgets/unknown-widget/unknown-widget.component';
+import {
+  UnknownWidgetContext,
+  resolveErrorView,
+} from '../providers/unknown-widget';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +28,8 @@ export class DashboardService {
   readonly #widgetFactoryMap = new Map<string, WidgetFactory>();
   readonly #sharedStateProviders = new Map<string, WidgetSharedStateProvider>();
   readonly #pendingSharedStates = new Map<string, unknown>();
-  readonly #unknownWidgetFactory = createFactoryFromComponent(UnknownWidgetComponent);
+  readonly #unknownWidgetFactories = new Map<string, WidgetFactory>();
+  readonly #warnedUnknownWidgetTypes = new Set<string>();
   readonly widgetTypes = this.#widgetTypes.asReadonly(); // make the widget list available as a readonly signal
 
   registerWidgetType<T = unknown>(
@@ -58,6 +71,37 @@ export class DashboardService {
     this.#widgetTypes.set([...this.#widgetTypes(), widget]);
   }
 
+  /**
+   * Remove a widget type again, for a session that loses access to it: a
+   * revoked role, a disabled feature flag, an unloaded feature module.
+   *
+   * Cells that were loaded without the type fall back to the error view again -
+   * the store re-resolves them through the `cells` computed, the same mechanism
+   * that heals them when a type registers late - and keep the widget state they
+   * were loaded with, so the type can come back without data loss.
+   *
+   * A cell that was *loaded* while the type was registered holds the real
+   * factory in store state and keeps rendering until the dashboard is loaded
+   * again: the healing computed only re-resolves cells that still carry the
+   * fallback factory.
+   *
+   * @returns true if the type was registered
+   */
+  unregisterWidgetType(widgetTypeid: string): boolean {
+    if (!this.#widgetFactoryMap.delete(widgetTypeid)) {
+      return false;
+    }
+
+    this.#sharedStateProviders.delete(widgetTypeid);
+    this.#widgetTypes.set(
+      this.#widgetTypes().filter(
+        (widget) => widget.metadata.widgetTypeid !== widgetTypeid
+      )
+    );
+
+    return true;
+  }
+
   #resolveProvider<T>(
     provider: WidgetSharedStateProvider<T> | Type<WidgetSharedStateProvider<T>>
   ): WidgetSharedStateProvider<T> {
@@ -75,22 +119,65 @@ export class DashboardService {
       return factory;
     }
 
-    // Return fallback factory for unknown widget types
+    // Fallback factory. It keeps the library's sentinel metadata so healing,
+    // export and the widget list keep recognizing the cell as unresolved,
+    // while the rendered component comes from UNKNOWN_WIDGET_RESOLVER.
+    //
+    // Cached per type: the self-healing computed re-resolves every unresolved
+    // cell on each widget change, and the factory depends on nothing else.
+    let fallback = this.#unknownWidgetFactories.get(widgetTypeid);
+
+    if (!fallback) {
+      fallback = {
+        ...UnknownWidgetComponent.metadata,
+        createInstance: (container, state) =>
+          this.#createUnknownWidget(container, {
+            reason: 'unregistered',
+            widgetTypeid,
+            widgetState: state,
+          }),
+      };
+      this.#unknownWidgetFactories.set(widgetTypeid, fallback);
+    }
+
+    return fallback;
+  }
+
+  /**
+   * Render the error view for a cell the dashboard cannot resolve.
+   *
+   * The context is provided to the component instead of being pushed through
+   * `dashboardSetState`, so the error view never has to implement the `Widget`
+   * contract - and the cell's original widget state stays untouched for export.
+   *
+   * An app that withholds widget types on purpose - a permission model, a
+   * feature flag - answers with its own error view, and that is not a fault to
+   * report. Only a type nothing answered for is warned about, once.
+   */
+  #createUnknownWidget(
+    container: ViewContainerRef,
+    context: UnknownWidgetContext
+  ): ComponentRef<Widget> {
+    const view = resolveErrorView(container.injector, context);
+
+    if (!view.answeredByApp) {
+      this.#warnUnresolvedOnce(context.widgetTypeid);
+    }
+
+    return container.createComponent(view.component as Type<Widget>, {
+      injector: view.injector,
+    });
+  }
+
+  /** Once per type: an unresolved type recurs for every cell that uses it. */
+  #warnUnresolvedOnce(widgetTypeid: string): void {
+    if (this.#warnedUnknownWidgetTypes.has(widgetTypeid)) {
+      return;
+    }
+    this.#warnedUnknownWidgetTypes.add(widgetTypeid);
     console.warn(
       `Unknown widget type: ${widgetTypeid}, using fallback error widget`
     );
-
-    // Create a custom factory that preserves the original widget type ID in state
-    return {
-      ...this.#unknownWidgetFactory,
-      createInstance: (container, state) => {
-        const ref = this.#unknownWidgetFactory.createInstance(container, {
-          originalWidgetTypeid: widgetTypeid,
-          ...(state && typeof state === 'object' ? state as Record<string, unknown> : {}),
-        });
-        return ref;
-      },
-    };
   }
 
   /**

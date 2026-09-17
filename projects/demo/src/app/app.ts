@@ -1,5 +1,5 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -12,6 +12,7 @@ import { ThemeService, type ThemePalette } from './services';
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    RouterLink,
     RouterOutlet,
     MatButtonModule,
     MatToolbarModule,
@@ -25,7 +26,6 @@ import { ThemeService, type ThemePalette } from './services';
 export class App {
   // Service injections
   themeService = inject(ThemeService);
-  private router = inject(Router);
 
   protected title = $localize`:@@demo.app.title:Dashboard Demo`;
 
@@ -68,27 +68,6 @@ export class App {
    */
   getGitHubLinkAriaLabel(): string {
     return $localize`:@@demo.github.viewOnGitHub:View source code on GitHub`;
-  }
-
-  /**
-   * Navigate to colors overview page
-   */
-  navigateToColors(): void {
-    this.router.navigate(['/colors']);
-  }
-
-  /**
-   * Navigate to dashboard page
-   */
-  navigateToDashboard(): void {
-    this.router.navigate(['/']);
-  }
-
-  /**
-   * Navigate to radial gauge demo page
-   */
-  navigateToRadialGaugeDemo(): void {
-    this.router.navigate(['/radial-gauge-demo']);
   }
 
   /**

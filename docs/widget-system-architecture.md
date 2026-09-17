@@ -31,10 +31,17 @@
   either as an instance or as a class token that the service injects. Registering a
   type twice throws
 - Maintains internal `widgetFactoryMap` for factory lookup
-- `getFactory()` - returns factory for widget instantiation with fallback to
-  `UnknownWidgetComponent`. The fallback factory carries the requested
-  `widgetTypeid` into the placeholder's state as `originalWidgetTypeid`, so the type
-  survives an export→import round trip through a session that could not resolve it
+- `getFactory()` - returns factory for widget instantiation with fallback to an
+  error view for types that are not registered, see
+  [Unresolved widget types](#unresolved-widget-types) below. The fallback factory
+  keeps `UNKNOWN_WIDGET_TYPEID` as its metadata while `CellData.widgetTypeid` keeps
+  the requested type, so the type survives an export→import round trip through a
+  session that could not resolve it
+- `unregisterWidgetType(widgetTypeid)` - drops a type again, for a session that
+  loses access to it (revoked role, disabled feature flag, unloaded module). Cells
+  that still carry the fallback factory show the error view again and keep their
+  stored state, so the type can come back without data loss; a cell that was loaded
+  while the type was registered keeps rendering until the dashboard is loaded again
 - Exposes `widgetTypes` as readonly signal for UI consumption
 - Buffers shared state for types that are not registered yet, see
   [Late Registration](#late-registration) below
@@ -79,6 +86,61 @@
 - `getCurrentWidgetState()` retrieves live state during export
 - Proper cleanup with DestroyRef patterns
 
+### Unresolved widget types:
+A cell whose `widgetTypeid` has no registered widget type gets an error view instead
+of a widget. That is the normal case for a dashboard behind a permission model: the
+app only registers the widget types the current user may see, so the rest render as
+unavailable.
+
+Which component is rendered comes from `UNKNOWN_WIDGET_RESOLVER`, a function
+`(context: UnknownWidgetContext) => Type<unknown> | null | undefined`. Returning
+`null` (or not providing the token) uses the library's default error view.
+
+```typescript
+providers: [
+  {
+    provide: UNKNOWN_WIDGET_RESOLVER,
+    useFactory: (): UnknownWidgetResolver => {
+      const permissions = inject(PermissionService);
+      return (context) =>
+        permissions.isGated(context.widgetTypeid) ? NoPermissionComponent : null;
+    },
+  },
+]
+```
+
+The resolved component needs no widget metadata and does not implement `Widget`; it
+is a plain component that reads `UNKNOWN_WIDGET_CONTEXT`:
+
+```typescript
+@Component({ /* ... */ })
+export class NoPermissionComponent {
+  readonly context = inject(UNKNOWN_WIDGET_CONTEXT);
+  // context.reason ('unregistered'), context.widgetTypeid, context.widgetState
+}
+```
+
+Notes:
+- The resolver runs in an injection context, so `inject()` works inside it as well
+  as in the factory that builds it. A resolver that throws is logged and falls back
+  to the default error view
+- It is called untracked, and once per widget instance: it picks a component, it is
+  not a reactive view. A signal it reads will not re-render the cell — drive that
+  from the registry instead (`registerWidgetType` / `unregisterWidgetType`), which
+  heals the cells in place
+- `context.widgetState` is the cell's stored state by reference. The error view must
+  treat it as read-only: it is written straight back on export
+- The fallback factory keeps the library's `UNKNOWN_WIDGET_TYPEID` metadata, so
+  self-healing, export filtering and the widget list treat the cell as unresolved no
+  matter which component was rendered
+- The error view is never asked for state. `CellComponent` falls back to the cell's
+  stored state on export, so an unresolved widget's state is written back untouched
+- The console warning fires once per type, and only when no resolver answered
+  for it. A widget type an app withholds on purpose is not reported as a fault
+- The resolver is read through the cell's own injector, so a single page or
+  dashboard can provide its own error views even though `DashboardService` is
+  application wide
+
 ### Late Registration:
 Widget types can register after `loadDashboard()` has already run, which is what
 lazy-loaded modules do. Two mechanisms make that order-independent:
@@ -94,6 +156,10 @@ lazy-loaded modules do. Two mechanisms make that order-independent:
 - **Shared state buffering** - `restoreSharedStates()` keeps entries it cannot match
   to a registered provider in a pending map, and `registerWidgetType()` drains that
   map when the matching provider shows up
+
+Healing runs in both directions: because it happens in the `cells` computed and
+never mutates `widgetsById`, `unregisterWidgetType()` puts the error view back for
+the same cells that healing resolved.
 
 ## Widget Implementation Pattern
 
