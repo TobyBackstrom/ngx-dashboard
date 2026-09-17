@@ -28,6 +28,7 @@ import {
   DragData,
   WidgetFactory,
   Widget,
+  UNKNOWN_WIDGET_TYPEID,
   CellResizeDirection,
   CellResizeDelta,
   pxToTracks,
@@ -105,6 +106,12 @@ export class CellComponent {
   });
 
   #widgetRef?: ComponentRef<Widget>;
+  /**
+   * The rendered instance's `Widget` methods, or undefined for an error view.
+   * An error view is a plain component: whatever methods it defines, the cell
+   * never asks it for state or offers to edit it.
+   */
+  #widget?: Widget;
 
   // Document event listeners cleanup function
   // Performance: Only created when actively resizing, not for every cell
@@ -159,9 +166,14 @@ export class CellComponent {
         container.clear();
         try {
           this.#widgetRef = factory.createInstance(container, state);
+          this.#widget =
+            factory.widgetTypeid === UNKNOWN_WIDGET_TYPEID
+              ? undefined
+              : this.#widgetRef.instance;
         } catch (error) {
           console.error('Failed to create widget:', error);
           this.#widgetRef = undefined;
+          this.#widget = undefined;
         }
       }
     });
@@ -170,6 +182,7 @@ export class CellComponent {
     this.#destroyRef.onDestroy(() => {
       this.#widgetRef?.destroy();
       this.#widgetRef = undefined;
+      this.#widget = undefined;
       // Clean up any active document listeners
       this.#cleanupDocumentListeners();
     });
@@ -292,28 +305,28 @@ export class CellComponent {
   }
 
   canEdit(): boolean {
-    if (this.#widgetRef?.instance?.dashboardEditState) {
+    if (this.#widget?.dashboardEditState) {
       return true;
     }
     return false;
   }
 
   canEditSharedState(): boolean {
-    return !!this.#widgetRef?.instance?.dashboardEditSharedState;
+    return !!this.#widget?.dashboardEditSharedState;
   }
 
   onEdit(): void {
     this.edit.emit(this.widgetId());
 
     // Call the widget's edit dialog method if it exists
-    if (this.#widgetRef?.instance?.dashboardEditState) {
-      this.#widgetRef.instance.dashboardEditState();
+    if (this.#widget?.dashboardEditState) {
+      this.#widget.dashboardEditState();
     }
   }
 
   onEditSharedState(): void {
-    if (this.#widgetRef?.instance?.dashboardEditSharedState) {
-      this.#widgetRef.instance.dashboardEditSharedState();
+    if (this.#widget?.dashboardEditSharedState) {
+      this.#widget.dashboardEditSharedState();
     }
   }
 
@@ -435,11 +448,12 @@ export class CellComponent {
     }
 
     // Call dashboardGetState() if the widget implements it
-    if (typeof this.#widgetRef.instance.dashboardGetState === 'function') {
-      return this.#widgetRef.instance.dashboardGetState();
+    if (typeof this.#widget?.dashboardGetState === 'function') {
+      return this.#widget.dashboardGetState();
     }
 
-    // Fall back to stored state if widget doesn't implement dashboardGetState
+    // Fall back to stored state if the widget doesn't implement
+    // dashboardGetState, or the cell shows an error view
     return this.widgetState();
   }
 }

@@ -116,7 +116,7 @@ is a plain component that reads `UNKNOWN_WIDGET_CONTEXT`:
 @Component({ /* ... */ })
 export class NoPermissionComponent {
   readonly context = inject(UNKNOWN_WIDGET_CONTEXT);
-  // context.reason ('unregistered'), context.widgetTypeid, context.widgetState
+  // context.widgetTypeid, context.widgetState
 }
 ```
 
@@ -131,10 +131,11 @@ Notes:
 - `context.widgetState` is the cell's stored state by reference. The error view must
   treat it as read-only: it is written straight back on export
 - The fallback factory keeps the library's `UNKNOWN_WIDGET_TYPEID` metadata, so
-  self-healing, export filtering and the widget list treat the cell as unresolved no
-  matter which component was rendered
-- The error view is never asked for state. `CellComponent` falls back to the cell's
-  stored state on export, so an unresolved widget's state is written back untouched
+  export filtering, the widget list and `CellComponent` treat the cell as unresolved
+  no matter which component was rendered
+- `CellComponent` ignores `Widget` methods on an error view, even ones it defines:
+  export writes the cell's stored state back untouched, and the context menu offers
+  no Edit or Edit Shared State
 - The console warning fires once per type, and only when no resolver answered
   for it. A widget type an app withholds on purpose is not reported as a fault
 - The resolver is read through the cell's own injector, so a single page or

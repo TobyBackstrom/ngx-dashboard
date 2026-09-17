@@ -20,7 +20,8 @@ import {
  *
  * The returned component needs no widget metadata and no `Widget` interface —
  * it is a plain component. It receives the {@link UnknownWidgetContext} through
- * `UNKNOWN_WIDGET_CONTEXT`.
+ * `UNKNOWN_WIDGET_CONTEXT`. `Widget` methods it happens to define are ignored:
+ * the cell exports its stored state and offers no edit actions.
  */
 export type UnknownWidgetResolver = (
   context: UnknownWidgetContext

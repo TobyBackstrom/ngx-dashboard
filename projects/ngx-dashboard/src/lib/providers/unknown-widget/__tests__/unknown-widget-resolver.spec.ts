@@ -8,7 +8,6 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { DashboardService } from '../../../services/dashboard.service';
 import { UnknownWidgetComponent } from '../../../internal-widgets/unknown-widget/unknown-widget.component';
-import { Widget } from '../../../models';
 import {
   UNKNOWN_WIDGET_CONTEXT,
   UnknownWidgetContext,
@@ -93,7 +92,6 @@ describe('UNKNOWN_WIDGET_RESOLVER', () => {
     });
 
     expect((ref.instance as NoPermissionComponent).context).toEqual({
-      reason: 'unregistered',
       widgetTypeid: 'gated-widget',
       widgetState: { value: 42 },
     });
@@ -109,7 +107,6 @@ describe('UNKNOWN_WIDGET_RESOLVER', () => {
 
     expect(seen).toEqual([
       {
-        reason: 'unregistered',
         widgetTypeid: 'gated-widget',
         widgetState: { value: 1 },
       },
@@ -194,13 +191,5 @@ describe('UNKNOWN_WIDGET_RESOLVER', () => {
 
     // A widget type withheld on purpose is not a fault to report.
     expect(consoleSpy).not.toHaveBeenCalled();
-  });
-
-  it('does not round trip state through the error view', () => {
-    const ref = createFallbackWidget(undefined, { value: 42 });
-
-    // No dashboardGetState() => CellComponent exports the cell's stored state
-    // unchanged, so a gated widget survives a load/save round trip.
-    expect((ref.instance as Widget).dashboardGetState).toBeUndefined();
   });
 });

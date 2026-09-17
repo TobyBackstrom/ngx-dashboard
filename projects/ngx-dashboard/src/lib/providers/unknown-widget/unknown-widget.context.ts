@@ -14,13 +14,7 @@ import { InjectionToken } from '@angular/core';
  * ```
  */
 export interface UnknownWidgetContext {
-  /**
-   * Why the real widget is not being rendered. Currently always
-   * `'unregistered'`: no widget type is registered for the type id the
-   * dashboard data asked for.
-   */
-  reason: 'unregistered';
-  /** The widget type id the dashboard data asked for. */
+  /** The widget type id the dashboard data asked for, which is not registered. */
   widgetTypeid: string;
   /**
    * The persisted state of the original widget, untouched. The error view must

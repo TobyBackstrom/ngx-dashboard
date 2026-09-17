@@ -125,8 +125,8 @@ export class DashboardService {
       return factory;
     }
 
-    // Keeps the library's sentinel metadata, so export and the widget list treat
-    // the cell as unresolved, while the rendered component comes from
+    // Keeps the library's sentinel metadata, so export, the widget list and the
+    // cell treat it as unresolved, while the rendered component comes from
     // UNKNOWN_WIDGET_RESOLVER. Cached per type for the identity guarantee above.
     let fallback = this.#unknownWidgetFactories.get(widgetTypeid);
 
@@ -135,7 +135,6 @@ export class DashboardService {
         ...UnknownWidgetComponent.metadata,
         createInstance: (container, state) =>
           this.#createUnknownWidget(container, {
-            reason: 'unregistered',
             widgetTypeid,
             widgetState: state,
           }),

@@ -35,8 +35,8 @@ import { UNKNOWN_WIDGET_CONTEXT } from '../../providers/unknown-widget/unknown-w
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-// Deliberately not a `Widget`: the error view holds no state and has no edit
-// dialog, it only reads UNKNOWN_WIDGET_CONTEXT.
+// Not a `Widget`: an error view only reads UNKNOWN_WIDGET_CONTEXT, and the cell
+// never asks one for state or offers to edit it.
 export class UnknownWidgetComponent {
   static metadata: WidgetMetadata = {
     widgetTypeid: UNKNOWN_WIDGET_TYPEID,
@@ -49,10 +49,4 @@ export class UnknownWidgetComponent {
   readonly #context = inject(UNKNOWN_WIDGET_CONTEXT);
 
   readonly tooltipText = this.#context.widgetTypeid;
-
-  // No state round trip: dashboardGetState() is intentionally not implemented,
-  // so exporting a cell whose widget type is missing writes back the original
-  // widget's stored state untouched.
-
-  // No edit dialog for error widgets - method intentionally not implemented
 }
